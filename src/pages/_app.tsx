@@ -1,3 +1,6 @@
+import 'inter-ui/inter.css'; // Strongly recommended.
+import '@fontsource/ibm-plex-mono'; // Import if using code textStyles.
+
 import type { NextPage } from 'next';
 import type { AppType, AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
