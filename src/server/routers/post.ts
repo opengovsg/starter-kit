@@ -16,9 +16,14 @@ import { prisma } from '~/server/prisma';
 const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   id: true,
   title: true,
-  text: true,
+  content: true,
   createdAt: true,
   updatedAt: true,
+  author: {
+    select: {
+      name: true,
+    },
+  },
 });
 
 export const postRouter = router({
@@ -26,7 +31,7 @@ export const postRouter = router({
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish(),
+        cursor: z.number().nullish(),
       }),
     )
     .query(async ({ input }) => {
@@ -70,7 +75,7 @@ export const postRouter = router({
   byId: publicProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.number(),
       }),
     )
     .query(async ({ input }) => {
@@ -90,9 +95,11 @@ export const postRouter = router({
   add: publicProcedure
     .input(
       z.object({
-        id: z.string().uuid().optional(),
+        id: z.coerce.number().int().optional(),
         title: z.string().min(1).max(32),
-        text: z.string().min(1),
+        content: z.string().min(1),
+        contentHtml: z.string().min(1),
+        authorId: z.string().cuid(),
       }),
     )
     .mutation(async ({ input }) => {

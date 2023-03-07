@@ -12,7 +12,7 @@ function PostItem(props: { post: PostByIdOutput }) {
       <h1>{post.title}</h1>
       <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
 
-      <p>{post.text}</p>
+      <p>{post.content}</p>
 
       <h2>Raw data:</h2>
       <pre>{JSON.stringify(post, null, 4)}</pre>
@@ -22,7 +22,7 @@ function PostItem(props: { post: PostByIdOutput }) {
 
 const PostViewPage: NextPageWithLayout = () => {
   const id = useRouter().query.id as string;
-  const postQuery = trpc.post.byId.useQuery({ id });
+  const postQuery = trpc.post.byId.useQuery({ id: Number(id) });
 
   if (postQuery.error) {
     return (

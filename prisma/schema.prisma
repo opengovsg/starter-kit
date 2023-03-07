@@ -7,17 +7,111 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.VarChar(2000)
+  refresh_token_expires_in Int?
+  access_token             String? @db.VarChar(2000)
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.VarChar(2000)
+  session_state            String? @db.VarChar(2000)
+  oauth_token_secret       String? @db.VarChar(2000)
+  oauth_token              String? @db.VarChar(2000)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Post {
-  id    String @id @default(uuid())
-  title String
-  text  String
-
+  id          Int          @id @default(autoincrement())
+  title       String       @db.VarChar(255)
+  content     String       @db.Text
+  contentHtml String       @db.Text
+  hidden      Boolean      @default(false)
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  likedBy     LikedPosts[]
+  comments    Comment[]
   // To return `Date`s intact through the API we use transformers
   // https://trpc.io/docs/data-transformers
   // This is unique so it can be used for cursor-based pagination
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+
+  @@index([authorId])
+}
+
+model LikedPosts {
+  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId    String
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String   @db.Text
+  contentHtml String   @db.Text
+  createdAt   DateTime @default(now())
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      Int
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+
+  @@index([authorId])
+  @@index([postId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  title         String?
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  likedPosts    LikedPosts[]
+  comments      Comment[]
+  role          Role         @default(USER)
 }
