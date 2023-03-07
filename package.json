@@ -1,6 +1,6 @@
 {
-  "name": "@examples/trpc-next-prisma-starter",
-  "version": "10.14.0",
+  "name": "starter-kit-v2-kr",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "generate": "prisma generate",
@@ -8,14 +8,15 @@
     "db-seed": "prisma db seed",
     "db-reset": "prisma migrate-dev reset",
     "dx:next": "run-s migrate-dev db-seed && next dev",
-    "dx:prisma-studio": "pnpm prisma-studio",
+    "dx:prisma-studio": "npm run prisma-studio",
     "dx": "run-p dx:* --print-label",
-    "dev": "pnpm dx:next",
+    "dev": "npm run dx:next",
     "prebuild": "run-s generate migrate",
     "build": "next build",
+    "build:theme": "npx chakra-cli tokens node_modules/@opengovsg/design-system-react/build/main/theme/theme.js",
     "start": "next start",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
-    "lint-fix": "pnpm lint --fix",
+    "lint-fix": "npm run lint --fix",
     "migrate-dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
@@ -34,6 +35,8 @@
     "singleQuote": true
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@opengovsg/design-system-react": "0.1.0-alpha.10",
     "@prisma/client": "^4.10.1",
     "@tanstack/react-query": "^4.3.8",
     "@trpc/client": "^10.14.0",
@@ -44,10 +47,12 @@
     "next": "^13.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.5",
     "superjson": "^1.7.4",
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.3.0",
     "@playwright/test": "^1.26.1",
     "@types/node": "^18.7.20",
     "@types/react": "^18.0.9",
