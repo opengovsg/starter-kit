@@ -1,7 +1,10 @@
 import type { NextPage } from 'next';
-import * as React from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
-export type NextPageWithAuthAndLayout = NextPage & {
+export type NextPageWithAuthAndLayout<
+  TProps = Record<string, unknown>,
+  TInitialProps = TProps,
+> = NextPage<TProps, TInitialProps> & {
   auth?: boolean;
-  getLayout?: (page: React.ReactElement) => React.ReactNode;
+  getLayout?: (page: ReactElement) => ReactNode;
 };

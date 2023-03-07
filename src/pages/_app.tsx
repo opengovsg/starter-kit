@@ -1,21 +1,13 @@
-import 'inter-ui/inter.css'; // Strongly recommended.
 import '@fontsource/ibm-plex-mono'; // Import if using code textStyles.
+import 'inter-ui/inter.css'; // Strongly recommended.
 
-import type { NextPage } from 'next';
-import type { AppType, AppProps } from 'next/app';
-import { PropsWithChildren, ReactElement, ReactNode, useEffect } from 'react';
-import { DefaultLayout } from '~/components/DefaultLayout';
-import { trpc } from '~/utils/trpc';
 import { ThemeProvider } from '@opengovsg/design-system-react';
 import { SessionProvider, signIn, useSession } from 'next-auth/react';
+import type { AppProps, AppType } from 'next/app';
+import { PropsWithChildren, useEffect } from 'react';
+import { DefaultLayout } from '~/components/DefaultLayout';
 import { NextPageWithAuthAndLayout } from '~/lib/types';
-
-export type NextPageWithLayout<
-  TProps = Record<string, unknown>,
-  TInitialProps = TProps,
-> = NextPage<TProps, TInitialProps> & {
-  getLayout?: (page: ReactElement) => ReactNode;
-};
+import { trpc } from '~/utils/trpc';
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithAuthAndLayout;
