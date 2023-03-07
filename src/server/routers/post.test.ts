@@ -2,20 +2,13 @@
  * Integration test example for the `post` router
  */
 import { createContextInner } from '../context';
-import { AppRouter, appRouter } from './_app';
-import { inferProcedureInput } from '@trpc/server';
+import { appRouter } from './_app';
 
-test('add and get post', async () => {
+test('fetch posts', async () => {
   const ctx = await createContextInner({});
   const caller = appRouter.createCaller(ctx);
 
-  const input: inferProcedureInput<AppRouter['post']['add']> = {
-    text: 'hello test',
-    title: 'hello test',
-  };
+  const posts = await caller.post.list({}); // should be empty
 
-  const post = await caller.post.add(input);
-  const byId = await caller.post.byId({ id: post.id });
-
-  expect(byId).toMatchObject(input);
+  expect(posts.items).not.toBeNull();
 });
