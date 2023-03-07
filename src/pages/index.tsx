@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import type { AppRouter } from '~/server/routers/_app';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
+import { Button } from '@opengovsg/design-system-react';
+import { signOut } from 'next-auth/react';
 
-const IndexPage: NextPageWithAuthAndLayout = () => {
+const Home: NextPageWithAuthAndLayout = () => {
   const utils = trpc.useContext();
   const postsQuery = trpc.post.list.useInfiniteQuery(
     {
@@ -126,11 +128,15 @@ const IndexPage: NextPageWithAuthAndLayout = () => {
           <p style={{ color: 'red' }}>{addPost.error.message}</p>
         )}
       </form>
+
+      <Button onClick={() => signOut()}>Sign out</Button>
     </>
   );
 };
 
-export default IndexPage;
+Home.auth = true;
+
+export default Home;
 
 /**
  * If you want to statically render this page
