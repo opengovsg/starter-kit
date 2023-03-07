@@ -7,9 +7,20 @@ import {
   LoginGridArea,
   NonMobileSidebarGridArea,
 } from './components/GridLayout';
-import { LoginImageSvgr } from './components/LoginImageSvgr';
 
-const SignIn = (): JSX.Element => {
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
+import { LoginImageSvgr } from './components/LoginImageSvgr';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '~/lib/auth';
+import { getProviders, signIn } from 'next-auth/react';
+import { Button } from '@opengovsg/design-system-react';
+
+const SignIn = ({
+  providers,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <BackgroundBox>
       <BaseGridLayout flex={1}>
@@ -41,6 +52,13 @@ const SignIn = (): JSX.Element => {
                 </Text>
               </Box>
             </Flex>
+            {Object.values(providers!).map((provider) => (
+              <Box key={provider.name}>
+                <Button onClick={() => signIn(provider.id)}>
+                  Sign in with {provider.name}
+                </Button>
+              </Box>
+            ))}
           </Box>
         </LoginGridArea>
       </BaseGridLayout>
@@ -53,6 +71,27 @@ const SignIn = (): JSX.Element => {
       </BaseGridLayout>
     </BackgroundBox>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  const providers = await getProviders();
+
+  if (session?.user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+      props: { providers },
+    };
+  }
+
+  return {
+    props: { providers },
+  };
 };
 
 export default SignIn;
