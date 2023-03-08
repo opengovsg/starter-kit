@@ -5,7 +5,7 @@ import { ThemeProvider } from '@opengovsg/design-system-react';
 import { SessionProvider, signIn, useSession } from 'next-auth/react';
 import type { AppProps, AppType } from 'next/app';
 import { PropsWithChildren, useEffect } from 'react';
-import { DefaultLayout } from '~/components/DefaultLayout';
+import { DefaultLayout } from '~/templates/layouts/DefaultLayout';
 import { NextPageWithAuthAndLayout } from '~/lib/types';
 import { trpc } from '~/utils/trpc';
 
