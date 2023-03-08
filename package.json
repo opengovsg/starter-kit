@@ -36,10 +36,14 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.1",
+    "@hookform/resolvers": "^2.9.11",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@opengovsg/design-system-react": "0.1.0-alpha.10",
     "@prisma/client": "^4.10.1",
     "@tanstack/react-query": "^4.3.8",
+    "@tiptap/pm": "^2.0.0-beta.220",
+    "@tiptap/react": "^2.0.0-beta.220",
+    "@tiptap/starter-kit": "^2.0.0-beta.220",
     "@trpc/client": "^10.14.0",
     "@trpc/next": "^10.14.0",
     "@trpc/react-query": "^10.14.0",
@@ -49,6 +53,7 @@
     "next-auth": "^4.20.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.5",
     "superjson": "^1.7.4",
     "zod": "^3.0.0"
   },

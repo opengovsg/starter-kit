@@ -96,7 +96,6 @@ const Home: NextPageWithAuthAndLayout = () => {
 
           const input: Input = {
             title: values.title as string,
-            content: values.text as string,
             contentHtml: values.text as string,
           };
           try {

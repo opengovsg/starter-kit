@@ -49,8 +49,7 @@ model VerificationToken {
 
 model Post {
   id          Int          @id @default(autoincrement())
-  title       String       @db.Text
-  content     String       @db.Text
+  title       String?      @db.Text
   contentHtml String       @map("content_html") @db.Text
   hidden      Boolean      @default(false)
   author      User?        @relation(fields: [authorId], references: [id], onDelete: Cascade)

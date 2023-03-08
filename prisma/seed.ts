@@ -18,7 +18,6 @@ async function main() {
       posts: {
         create: {
           title: 'Check out Prisma with Next.js',
-          content: 'This is an example post generated from `prisma/seed.ts',
           contentHtml: 'This is an example post generated from `prisma/seed.ts',
         },
       },

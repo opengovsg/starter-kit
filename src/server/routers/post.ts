@@ -7,6 +7,7 @@ import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { prisma } from '~/server/prisma';
+import { addPostSchema } from '../schemas/post';
 
 /**
  * Default selector for Post.
@@ -16,7 +17,7 @@ import { prisma } from '~/server/prisma';
 const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   id: true,
   title: true,
-  content: true,
+  contentHtml: true,
   createdAt: true,
   updatedAt: true,
   author: {
@@ -93,19 +94,16 @@ export const postRouter = router({
       return post;
     }),
   add: protectedProcedure
-    .input(
-      z.object({
-        id: z.coerce.number().int().optional(),
-        title: z.string().min(1).max(32),
-        content: z.string().min(1),
-        contentHtml: z.string().min(1),
-      }),
-    )
+    .input(addPostSchema)
     .mutation(async ({ input, ctx }) => {
       const post = await prisma.post.create({
         data: {
           ...input,
-          authorId: ctx.session.user.id,
+          author: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
         },
         select: defaultPostSelect,
       });

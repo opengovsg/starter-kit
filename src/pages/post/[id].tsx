@@ -12,7 +12,7 @@ function PostItem(props: { post: PostByIdOutput }) {
       <h1>{post.title}</h1>
       <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
 
-      <p>{post.content}</p>
+      <p>{post.contentHtml}</p>
 
       <h2>Raw data:</h2>
       <pre>{JSON.stringify(post, null, 4)}</pre>

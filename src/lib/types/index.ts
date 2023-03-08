@@ -8,3 +8,5 @@ export type NextPageWithAuthAndLayout<
   auth?: boolean;
   getLayout?: (page: ReactElement) => ReactNode;
 };
+
+export * from './trpc';
