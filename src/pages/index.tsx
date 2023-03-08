@@ -93,12 +93,11 @@ const Home: NextPageWithAuthAndLayout = () => {
           const $form = e.currentTarget;
           const values = Object.fromEntries(new FormData($form));
           type Input = inferProcedureInput<AppRouter['post']['add']>;
-          //    ^?
+
           const input: Input = {
             title: values.title as string,
             content: values.text as string,
             contentHtml: values.text as string,
-            authorId: 'clexs0ola0000xlcra9o2v082',
           };
           try {
             await addPost.mutateAsync(input);

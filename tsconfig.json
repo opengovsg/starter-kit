@@ -20,6 +20,7 @@
     "paths": {
       "~/*": ["src/*"]
     },
+    "typeRoots": ["./types"],
     "types": ["vitest/globals"]
   },
   "include": [
