@@ -52,12 +52,14 @@ model VerificationToken {
 model Post {
   id          Int          @id @default(autoincrement())
   title       String?      @db.Text
+  content     String       @db.Text
   contentHtml String       @map("content_html") @db.Text
   hidden      Boolean      @default(false)
   anonymous   Boolean      @default(false)
   author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String       @map("author_id")
   likedBy     LikedPosts[]
+  readBy      ReadPosts[]
   comments    Comment[]
   // To return `Date`s intact through the API we use transformers
   // https://trpc.io/docs/data-transformers
@@ -66,6 +68,18 @@ model Post {
   updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
 
   @@index([authorId])
+}
+
+model ReadPosts {
+  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  postId    Int      @map("post_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId    String   @map("user_id")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([postId, userId])
+  @@index([postId])
+  @@index([userId])
 }
 
 model LikedPosts {
@@ -117,4 +131,5 @@ model User {
   likedPosts    LikedPosts[]
   comments      Comment[]
   role          Role         @default(USER)
+  ReadPosts     ReadPosts[]
 }

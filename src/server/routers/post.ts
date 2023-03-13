@@ -8,6 +8,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { prisma } from '~/server/prisma';
 import { addPostSchema } from '../schemas/post';
+import { keyBy } from 'lodash';
 
 /**
  * Default selector for Post.
@@ -17,12 +18,15 @@ import { addPostSchema } from '../schemas/post';
 const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   id: true,
   title: true,
+  content: true,
   contentHtml: true,
   createdAt: true,
   updatedAt: true,
   anonymous: true,
+  authorId: true,
   author: {
     select: {
+      image: true,
       name: true,
     },
   },
@@ -36,7 +40,7 @@ export const postRouter = router({
         cursor: z.number().nullish(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       /**
        * For pagination docs you can have a look here
        * @see https://trpc.io/docs/useInfiniteQuery
@@ -47,10 +51,29 @@ export const postRouter = router({
       const { cursor } = input;
 
       const items = await prisma.post.findMany({
-        select: defaultPostSelect,
+        select: {
+          ...defaultPostSelect,
+          readBy: {
+            orderBy: {
+              updatedAt: 'asc',
+            },
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
-        where: {},
         cursor: cursor
           ? {
               id: cursor,
@@ -69,11 +92,44 @@ export const postRouter = router({
         nextCursor = nextItem.id;
       }
 
+      const processedItems = items
+        .map(({ authorId, ...item }) => {
+          if (item.anonymous) {
+            item.author.name = 'Anonymous';
+            item.author.image = null;
+            if (authorId === ctx.session.user.id) {
+              item.author.name += ' (you)';
+            }
+          }
+          return {
+            ...item,
+            readBy: keyBy(item.readBy, 'user.id'),
+          };
+        })
+        .reverse();
+
       return {
-        items: items.reverse(),
+        items: processedItems,
         nextCursor,
       };
     }),
+  unreadCount: protectedProcedure.query(async ({ ctx }) => {
+    const { user } = ctx.session;
+    const readCount = await prisma.readPosts.count({
+      where: {
+        userId: user.id,
+      },
+    });
+    const allVisiblePostsCount = await prisma.post.count({
+      where: {
+        hidden: false,
+      },
+    });
+    return {
+      unreadCount: allVisiblePostsCount - readCount,
+      totalCount: allVisiblePostsCount,
+    };
+  }),
   byId: protectedProcedure
     .input(
       z.object({

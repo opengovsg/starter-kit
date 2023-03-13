@@ -16,7 +16,7 @@ interface TextAreaFieldProps {
   value?: string;
   defaultValue?: string;
   isReadOnly?: boolean;
-  onChange?: (value?: string) => void;
+  onChange?: (value: string | undefined, rawValue?: string) => void;
 }
 
 const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
@@ -48,7 +48,8 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
         return onChange?.(undefined);
       }
       const json = editor.getJSON();
-      onChange?.(JSON.stringify(json));
+      const rawTextValue = editor.getText();
+      onChange?.(JSON.stringify(json), rawTextValue);
     },
   });
 

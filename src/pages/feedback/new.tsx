@@ -44,6 +44,7 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
   const {
     formState: { errors },
     handleSubmit,
+    setValue,
     watch,
     register,
     control,
@@ -94,7 +95,15 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
             <Controller
               control={control}
               name="contentHtml"
-              render={({ field }) => <RichText {...field} />}
+              render={({ field: { onChange, ...field } }) => (
+                <RichText
+                  {...field}
+                  onChange={(value, rawValue) => {
+                    onChange(value);
+                    setValue('content', rawValue ?? '');
+                  }}
+                />
+              )}
             />
             <FormErrorMessage>{errors.contentHtml?.message}</FormErrorMessage>
           </FormControl>
