@@ -1,9 +1,9 @@
 import {
-  chakra,
   Container,
   Flex,
   FormControl,
   HStack,
+  Stack,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -11,6 +11,8 @@ import {
   Button,
   FormErrorMessage,
   FormLabel,
+  Infobox,
+  Toggle,
 } from '@opengovsg/design-system-react';
 import { useRouter } from 'next/router';
 import { Controller } from 'react-hook-form';
@@ -27,6 +29,8 @@ import { RichText } from '~/components/RichText';
 const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
   const utils = trpc.useContext();
 
+  const { data: user } = trpc.me.get.useQuery();
+
   const router = useRouter();
 
   const mutation = trpc.post.add.useMutation({
@@ -40,10 +44,17 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
   const {
     formState: { errors },
     handleSubmit,
+    watch,
+    register,
     control,
   } = useZodForm({
     schema: addPostSchema,
+    defaultValues: {
+      anonymous: false,
+    },
   });
+
+  const isAnonymous = watch('anonymous');
 
   const handleSubmitFeedback = handleSubmit((values) =>
     mutation.mutate(values),
@@ -64,7 +75,9 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
           </VStack>
           <Image src={feedbackUncleSvg} aria-hidden alt="Feedback uncle" />
         </HStack>
-        <chakra.form
+        <Stack
+          spacing="2rem"
+          as="form"
           borderWidth="1px"
           borderRadius="lg"
           onSubmit={handleSubmitFeedback}
@@ -85,6 +98,20 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
             />
             <FormErrorMessage>{errors.contentHtml?.message}</FormErrorMessage>
           </FormControl>
+          <FormControl id="anonymous">
+            <Stack>
+              <Toggle label="Post anonymously?" {...register('anonymous')} />
+              {isAnonymous ? (
+                <Infobox>
+                  Only your team name will be visible. If your team has less
+                  than five members, we won’t reveal your team to protect your
+                  identity.
+                </Infobox>
+              ) : (
+                <Text>Posting as {user?.name}</Text>
+              )}
+            </Stack>
+          </FormControl>
           <Button
             mt="2.5rem"
             type="submit"
@@ -93,7 +120,7 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
           >
             Submit feedback
           </Button>
-        </chakra.form>
+        </Stack>
       </Container>
     </Flex>
   );

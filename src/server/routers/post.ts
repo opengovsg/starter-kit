@@ -20,6 +20,7 @@ const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   contentHtml: true,
   createdAt: true,
   updatedAt: true,
+  anonymous: true,
   author: {
     select: {
       name: true,
@@ -90,6 +91,9 @@ export const postRouter = router({
           code: 'NOT_FOUND',
           message: `No post with id '${id}'`,
         });
+      }
+      if (post.anonymous) {
+        post.author = null;
       }
       return post;
     }),
