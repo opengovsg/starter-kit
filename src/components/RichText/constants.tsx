@@ -7,7 +7,7 @@ export const TIP_TAP_STYLES = {
     'ul, ol': {
       padding: '0 1rem',
     },
-    'p.is-editor-empty:first-child::before': {
+    'p.is-editor-empty:first-of-type::before': {
       color: 'interaction.support.placeholder',
       content: 'attr(data-placeholder)',
       float: 'left',

@@ -24,7 +24,7 @@ const defaultMeSelect = Prisma.validator<Prisma.UserSelect>()({
 
 export const meRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
-    return prisma.user.findUnique({
+    return prisma.user.findUniqueOrThrow({
       where: { id: ctx.session.user.id },
       select: defaultMeSelect,
     });
