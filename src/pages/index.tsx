@@ -1,7 +1,8 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { Button } from '@opengovsg/design-system-react';
 import NextLink from 'next/link';
 import { AppNavbar } from '~/components/AppNavbar';
+import { DashSidebar } from '~/components/DashSidebar';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
 
 const Home: NextPageWithAuthAndLayout = () => {
@@ -20,7 +21,10 @@ Home.getLayout = (page) => {
   return (
     <Box>
       <AppNavbar />
-      {page}
+      <Flex>
+        <DashSidebar />
+        <Flex flex={1}>{page}</Flex>
+      </Flex>
     </Box>
   );
 };
