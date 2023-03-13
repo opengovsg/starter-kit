@@ -1,9 +1,8 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Button } from '@opengovsg/design-system-react';
 import NextLink from 'next/link';
-import { AppNavbar } from '~/components/AppNavbar';
-import { DashSidebar } from '~/components/DashSidebar';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
+import { AdminLayout } from '~/templates/layouts/AdminLayout';
 
 const Home: NextPageWithAuthAndLayout = () => {
   return (
@@ -17,17 +16,7 @@ const Home: NextPageWithAuthAndLayout = () => {
 
 Home.auth = true;
 
-Home.getLayout = (page) => {
-  return (
-    <Box>
-      <AppNavbar />
-      <Flex>
-        <DashSidebar />
-        <Flex flex={1}>{page}</Flex>
-      </Flex>
-    </Box>
-  );
-};
+Home.getLayout = AdminLayout;
 
 export default Home;
 
