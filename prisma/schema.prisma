@@ -2,9 +2,11 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider  = "postgres"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  // Since we want to use Prisma Migrate, specify a URL for the Prisma shadow database
+  // https://neon.tech/docs/guides/prisma/#configure-a-shadow-database-for-prisma-migrate
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -19,20 +21,20 @@ enum Role {
 
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String
+  userId                   String  @map("user_id")
   type                     String
   provider                 String
-  providerAccountId        String
-  refresh_token            String? @db.VarChar(2000)
+  providerAccountId        String  @map("provider_account_id")
+  refresh_token            String? @db.Text
   refresh_token_expires_in Int?
-  access_token             String? @db.VarChar(2000)
+  access_token             String? @db.Text
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String? @db.VarChar(2000)
-  session_state            String? @db.VarChar(2000)
-  oauth_token_secret       String? @db.VarChar(2000)
-  oauth_token              String? @db.VarChar(2000)
+  id_token                 String? @db.Text
+  session_state            String? @db.Text
+  oauth_token_secret       String? @db.Text
+  oauth_token              String? @db.Text
   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
@@ -49,29 +51,43 @@ model VerificationToken {
 
 model Post {
   id          Int          @id @default(autoincrement())
-  title       String       @db.VarChar(255)
+  title       String?      @db.Text
   content     String       @db.Text
-  contentHtml String       @db.Text
+  contentHtml String       @map("content_html") @db.Text
   hidden      Boolean      @default(false)
+  anonymous   Boolean      @default(false)
   author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId    String
+  authorId    String       @map("author_id")
   likedBy     LikedPosts[]
+  readBy      ReadPosts[]
   comments    Comment[]
   // To return `Date`s intact through the API we use transformers
   // https://trpc.io/docs/data-transformers
   // This is unique so it can be used for cursor-based pagination
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now()) @updatedAt
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
 
   @@index([authorId])
 }
 
+model ReadPosts {
+  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  postId    Int      @map("post_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId    String   @map("user_id")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
 model LikedPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    Int
+  postId    Int      @map("post_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId    String
-  createdAt DateTime @default(now())
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@id([postId, userId])
   @@index([postId])
@@ -81,12 +97,12 @@ model LikedPosts {
 model Comment {
   id          Int      @id @default(autoincrement())
   content     String   @db.Text
-  contentHtml String   @db.Text
-  createdAt   DateTime @default(now())
+  contentHtml String   @map("content_html") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
   post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int
+  postId      Int      @map("post_id")
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId    String
+  authorId    String   @map("author_id")
 
   @@index([authorId])
   @@index([postId])
@@ -94,8 +110,8 @@ model Comment {
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -106,7 +122,7 @@ model User {
   id            String       @id @default(cuid())
   name          String?
   email         String?      @unique
-  emailVerified DateTime?
+  emailVerified DateTime?    @map("email_verified")
   image         String?
   title         String?
   accounts      Account[]
@@ -115,4 +131,5 @@ model User {
   likedPosts    LikedPosts[]
   comments      Comment[]
   role          Role         @default(USER)
+  ReadPosts     ReadPosts[]
 }

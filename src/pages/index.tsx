@@ -1,136 +1,86 @@
-import { trpc } from '../utils/trpc';
-import { NextPageWithLayout } from './_app';
-import { inferProcedureInput } from '@trpc/server';
-import Link from 'next/link';
-import { Fragment } from 'react';
-import type { AppRouter } from '~/server/routers/_app';
+import {
+  Box,
+  Icon,
+  Skeleton,
+  Stack,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Text,
+} from '@chakra-ui/react';
+import { Button, Tab, Tabs } from '@opengovsg/design-system-react';
+import Image from 'next/image';
+import NextLink from 'next/link';
+import { BiPlus } from 'react-icons/bi';
+import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
+import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
+import { TeamFeedbackTab } from '~/features/feedback/components/TeamFeedbackTab';
+import type { NextPageWithAuthAndLayout } from '~/lib/types';
+import { AdminLayout } from '~/templates/layouts/AdminLayout';
+import { trpc } from '~/utils/trpc';
 
-const IndexPage: NextPageWithLayout = () => {
-  const utils = trpc.useContext();
-  const postsQuery = trpc.post.list.useInfiniteQuery(
-    {
-      limit: 5,
-    },
-    {
-      getPreviousPageParam(lastPage) {
-        return lastPage.nextCursor;
-      },
-    },
-  );
-
-  const addPost = trpc.post.add.useMutation({
-    async onSuccess() {
-      // refetches posts after a post is added
-      await utils.post.list.invalidate();
-    },
-  });
-
-  // prefetch all posts for instant navigation
-  // useEffect(() => {
-  //   const allPosts = postsQuery.data?.pages.flatMap((page) => page.items) ?? [];
-  //   for (const { id } of allPosts) {
-  //     void utils.post.byId.prefetch({ id });
-  //   }
-  // }, [postsQuery.data, utils]);
+const Home: NextPageWithAuthAndLayout = () => {
+  const { data: counts, isLoading: unreadCountIsLoading } =
+    trpc.post.unreadCount.useQuery();
 
   return (
-    <>
-      <h1>Welcome to your tRPC starter!</h1>
-      <p>
-        If you get stuck, check <a href="https://trpc.io">the docs</a>, write a
-        message in our <a href="https://trpc.io/discord">Discord-channel</a>, or
-        write a message in{' '}
-        <a href="https://github.com/trpc/trpc/discussions">
-          GitHub Discussions
-        </a>
-        .
-      </p>
-
-      <h2>
-        Latest Posts
-        {postsQuery.status === 'loading' && '(loading)'}
-      </h2>
-
-      <button
-        onClick={() => postsQuery.fetchPreviousPage()}
-        disabled={
-          !postsQuery.hasPreviousPage || postsQuery.isFetchingPreviousPage
-        }
-      >
-        {postsQuery.isFetchingPreviousPage
-          ? 'Loading more...'
-          : postsQuery.hasPreviousPage
-          ? 'Load More'
-          : 'Nothing more to load'}
-      </button>
-
-      {postsQuery.data?.pages.map((page, index) => (
-        <Fragment key={page.items[0]?.id || index}>
-          {page.items.map((item) => (
-            <article key={item.id}>
-              <h3>{item.title}</h3>
-              <Link href={`/post/${item.id}`}>View more</Link>
-            </article>
-          ))}
-        </Fragment>
-      ))}
-
-      <hr />
-
-      <h3>Add a Post</h3>
-
-      <form
-        onSubmit={async (e) => {
-          /**
-           * In a real app you probably don't want to use this manually
-           * Checkout React Hook Form - it works great with tRPC
-           * @see https://react-hook-form.com/
-           * @see https://kitchen-sink.trpc.io/react-hook-form
-           */
-          e.preventDefault();
-          const $form = e.currentTarget;
-          const values = Object.fromEntries(new FormData($form));
-          type Input = inferProcedureInput<AppRouter['post']['add']>;
-          //    ^?
-          const input: Input = {
-            title: values.title as string,
-            content: values.text as string,
-            contentHtml: values.text as string,
-            authorId: 'clexs0ola0000xlcra9o2v082',
-          };
-          try {
-            await addPost.mutateAsync(input);
-
-            $form.reset();
-          } catch (cause) {
-            console.error({ cause }, 'Failed to add post');
-          }
-        }}
-      >
-        <label htmlFor="title">Title:</label>
-        <br />
-        <input
-          id="title"
-          name="title"
-          type="text"
-          disabled={addPost.isLoading}
-        />
-
-        <br />
-        <label htmlFor="text">Text:</label>
-        <br />
-        <textarea id="text" name="text" disabled={addPost.isLoading} />
-        <br />
-        <input type="submit" disabled={addPost.isLoading} />
-        {addPost.error && (
-          <p style={{ color: 'red' }}>{addPost.error.message}</p>
-        )}
-      </form>
-    </>
+    <Box p="1.5rem" w="100%">
+      <FeedbackDrawer />
+      <Stack justify="space-between" flexDir="row">
+        <Stack flexDir="row" align="center">
+          <Image
+            height={72}
+            priority
+            style={{
+              transform: 'scale(-1,1)',
+            }}
+            src={feedbackUncleSvg}
+            aria-hidden
+            alt="Feedback uncle"
+          />
+          <Skeleton isLoaded={!unreadCountIsLoading}>
+            <Text textStyle="subhead-1" color="base.content.medium">
+              <Text as="span" textStyle="h4" color="base.content.default">
+                {counts?.unreadCount ?? 0}
+              </Text>{' '}
+              unread feedback of {counts?.totalCount ?? 0}
+            </Text>
+          </Skeleton>
+        </Stack>
+        <Button
+          as={NextLink}
+          href="/feedback/new"
+          leftIcon={<Icon fontSize="1.25rem" as={BiPlus} />}
+        >
+          Write feedback
+        </Button>
+      </Stack>
+      <Box bg="white" borderRadius="sm" borderWidth="1px">
+        <Tabs>
+          <TabList
+            py="0.75rem"
+            px="2rem"
+            borderBottomWidth="1px"
+            borderColor="base.divider.medium"
+          >
+            <Tab>Team</Tab>
+            <Tab>Personal</Tab>
+          </TabList>
+          <TabPanels>
+            <TeamFeedbackTab />
+            <TabPanel>Content of Personal feedback tab</TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
+    </Box>
   );
 };
 
-export default IndexPage;
+Home.auth = true;
+
+Home.getLayout = AdminLayout;
+
+export default Home;
 
 /**
  * If you want to statically render this page

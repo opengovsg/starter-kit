@@ -19,10 +19,13 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["./types"],
+    "types": ["vitest/globals"]
   },
   "include": [
     "next-env.d.ts",
+    "env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "./*.js",

@@ -1,6 +1,6 @@
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
-import { NextPageWithLayout } from '~/pages/_app';
+import { NextPageWithAuthAndLayout } from '~/lib/types';
 import { RouterOutput, trpc } from '~/utils/trpc';
 
 type PostByIdOutput = RouterOutput['post']['byId'];
@@ -12,7 +12,7 @@ function PostItem(props: { post: PostByIdOutput }) {
       <h1>{post.title}</h1>
       <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
 
-      <p>{post.content}</p>
+      <p>{post.contentHtml}</p>
 
       <h2>Raw data:</h2>
       <pre>{JSON.stringify(post, null, 4)}</pre>
@@ -20,9 +20,12 @@ function PostItem(props: { post: PostByIdOutput }) {
   );
 }
 
-const PostViewPage: NextPageWithLayout = () => {
-  const id = useRouter().query.id as string;
-  const postQuery = trpc.post.byId.useQuery({ id: Number(id) });
+const PostViewPage: NextPageWithAuthAndLayout = () => {
+  const router = useRouter();
+  const postQuery = trpc.post.byId.useQuery(
+    { id: Number(router.query.id) },
+    { enabled: router.isReady },
+  );
 
   if (postQuery.error) {
     return (

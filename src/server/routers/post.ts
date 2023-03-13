@@ -1,12 +1,10 @@
-/**
- *
- * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
- */
-import { router, publicProcedure } from '../trpc';
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
+import { keyBy } from 'lodash';
 import { z } from 'zod';
 import { prisma } from '~/server/prisma';
+import { addPostSchema } from '../schemas/post';
+import { protectedProcedure, router } from '../trpc';
 
 /**
  * Default selector for Post.
@@ -17,24 +15,90 @@ const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   id: true,
   title: true,
   content: true,
+  contentHtml: true,
   createdAt: true,
   updatedAt: true,
+  anonymous: true,
+  authorId: true,
   author: {
     select: {
+      image: true,
       name: true,
+    },
+  },
+  readBy: {
+    orderBy: {
+      updatedAt: 'asc',
+    },
+    select: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      comments: true,
     },
   },
 });
 
+const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
+  ...defaultPostSelect,
+  comments: {
+    orderBy: {
+      createdAt: 'asc',
+    },
+    select: {
+      id: true,
+      content: true,
+      contentHtml: true,
+      createdAt: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  },
+});
+
+// Infer the resulting payload type
+type MyPostPayload = Prisma.PostGetPayload<{
+  select: typeof withCommentsPostSelect;
+}>;
+
+const processFeedbackItem = <T extends MyPostPayload>(
+  { authorId, ...item }: T,
+  sessionUserId: string,
+) => {
+  if (item.anonymous) {
+    item.author.name = 'Anonymous';
+    item.author.image = null;
+    if (authorId === sessionUserId) {
+      item.author.name += ' (you)';
+    }
+  }
+  return {
+    ...item,
+    readBy: keyBy(item.readBy, 'user.id'),
+  };
+};
+
 export const postRouter = router({
-  list: publicProcedure
+  list: protectedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.number().nullish(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       /**
        * For pagination docs you can have a look here
        * @see https://trpc.io/docs/useInfiniteQuery
@@ -45,10 +109,9 @@ export const postRouter = router({
       const { cursor } = input;
 
       const items = await prisma.post.findMany({
-        select: defaultPostSelect,
+        select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
-        where: {},
         cursor: cursor
           ? {
               id: cursor,
@@ -67,22 +130,43 @@ export const postRouter = router({
         nextCursor = nextItem.id;
       }
 
+      const processedItems = items
+        .map((item) => processFeedbackItem(item, ctx.session.user.id))
+        .reverse();
+
       return {
-        items: items.reverse(),
+        items: processedItems,
         nextCursor,
       };
     }),
-  byId: publicProcedure
+  unreadCount: protectedProcedure.query(async ({ ctx }) => {
+    const { user } = ctx.session;
+    const readCount = await prisma.readPosts.count({
+      where: {
+        userId: user.id,
+      },
+    });
+    const allVisiblePostsCount = await prisma.post.count({
+      where: {
+        hidden: false,
+      },
+    });
+    return {
+      unreadCount: allVisiblePostsCount - readCount,
+      totalCount: allVisiblePostsCount,
+    };
+  }),
+  byId: protectedProcedure
     .input(
       z.object({
         id: z.number(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { id } = input;
       const post = await prisma.post.findUnique({
         where: { id },
-        select: defaultPostSelect,
+        select: withCommentsPostSelect,
       });
       if (!post) {
         throw new TRPCError({
@@ -90,23 +174,54 @@ export const postRouter = router({
           message: `No post with id '${id}'`,
         });
       }
-      return post;
+
+      return processFeedbackItem(post, ctx.session.user.id);
     }),
-  add: publicProcedure
-    .input(
-      z.object({
-        id: z.coerce.number().int().optional(),
-        title: z.string().min(1).max(32),
-        content: z.string().min(1),
-        contentHtml: z.string().min(1),
-        authorId: z.string().cuid(),
-      }),
-    )
-    .mutation(async ({ input }) => {
+  add: protectedProcedure
+    .input(addPostSchema)
+    .mutation(async ({ input, ctx }) => {
       const post = await prisma.post.create({
-        data: input,
+        data: {
+          ...input,
+          author: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
         select: defaultPostSelect,
       });
       return post;
+    }),
+  setRead: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id } = input;
+      const readPost = await prisma.readPosts.upsert({
+        where: {
+          postId_userId: {
+            userId: ctx.session.user.id,
+            postId: id,
+          },
+        },
+        update: {},
+        create: {
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+          post: {
+            connect: {
+              id,
+            },
+          },
+        },
+      });
+      return readPost;
     }),
 });
