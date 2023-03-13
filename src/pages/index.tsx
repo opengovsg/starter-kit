@@ -1,9 +1,17 @@
 import { Box } from '@chakra-ui/react';
+import { Button } from '@opengovsg/design-system-react';
+import NextLink from 'next/link';
 import { AppNavbar } from '~/components/AppNavbar';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
 
 const Home: NextPageWithAuthAndLayout = () => {
-  return <Box>This is home, truly, where I know I must be</Box>;
+  return (
+    <Box>
+      <Button as={NextLink} href="/feedback/new">
+        Write feedback
+      </Button>
+    </Box>
+  );
 };
 
 Home.auth = true;

@@ -8,6 +8,7 @@ import { PropsWithChildren, useEffect } from 'react';
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout';
 import { NextPageWithAuthAndLayout } from '~/lib/types';
 import { trpc } from '~/utils/trpc';
+import { theme } from '~/theme';
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithAuthAndLayout;
@@ -22,7 +23,7 @@ const MyApp = (({
 
   return (
     <SessionProvider session={session} refetchOnWindowFocus={false}>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         {Component.auth ? (
           <Auth>{getLayout(<Component {...pageProps} />)}</Auth>
         ) : (
