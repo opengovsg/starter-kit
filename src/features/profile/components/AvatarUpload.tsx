@@ -29,7 +29,7 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
 
     return uploadAvatarMutation.mutateAsync(file, {
       onSuccess: async (newPath) => {
-        setCurrentAvatarUrl(newPath);
+        setCurrentAvatarUrl(newPath ?? '');
         toast({
           description: 'Avatar uploaded successfully.',
         });
