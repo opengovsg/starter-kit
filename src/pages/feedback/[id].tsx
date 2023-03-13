@@ -21,8 +21,11 @@ function PostItem(props: { post: PostByIdOutput }) {
 }
 
 const PostViewPage: NextPageWithAuthAndLayout = () => {
-  const id = useRouter().query.id as string;
-  const postQuery = trpc.post.byId.useQuery({ id: Number(id) });
+  const router = useRouter();
+  const postQuery = trpc.post.byId.useQuery(
+    { id: Number(router.query.id) },
+    { enabled: router.isReady },
+  );
 
   if (postQuery.error) {
     return (
