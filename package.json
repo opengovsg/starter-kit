@@ -45,7 +45,7 @@
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/starter-kit": "^2.0.0-beta.220",
     "@trpc/client": "^10.14.0",
-    "@trpc/next": "^10.14.0",
+    "@trpc/next": "^10.15.0",
     "@trpc/react-query": "^10.14.0",
     "@trpc/server": "^10.14.0",
     "cloudinary": "^1.35.0",
