@@ -3,6 +3,7 @@ export const TIP_TAP_STYLES = {
     textStyle: 'body-2',
     outline: 'none',
     fontSize: 'md',
+    minH: '10rem',
     'ul, ol': {
       padding: '0 1rem',
     },
