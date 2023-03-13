@@ -1,22 +1,22 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { AppFooter } from '~/components/AppFooter';
-import {
-  BackgroundBox,
-  BaseGridLayout,
-  FooterGridArea,
-  LoginGridArea,
-  NonMobileSidebarGridArea,
-} from './components/GridLayout';
 
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { LoginImageSvgr } from './components/LoginImageSvgr';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '~/lib/auth';
 import { getProviders, signIn } from 'next-auth/react';
 import { Button } from '@opengovsg/design-system-react';
+import {
+  BackgroundBox,
+  BaseGridLayout,
+  FooterGridArea,
+  LoginGridArea,
+  LoginImageSvgr,
+  NonMobileSidebarGridArea,
+} from '~/features/sign-in/components';
 
 const SignIn = ({
   providers,
