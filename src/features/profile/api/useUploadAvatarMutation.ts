@@ -4,6 +4,7 @@ import { trpc } from '~/utils/trpc';
 
 export const useUploadAvatarMutation = () => {
   const utils = trpc.useContext();
+  const { data: user } = trpc.me.get.useQuery();
   // Pre-upload: Create a mutation to presign the upload request
   const presignImageUploadMutation = trpc.imageUpload.presign.useMutation();
 
@@ -14,23 +15,27 @@ export const useUploadAvatarMutation = () => {
 
   return useMutation(
     async (image: File) => {
-      const { signature, timestamp, apiKey, cloudName, folder } =
+      if (!user?.id) return;
+
+      const { signature, timestamp, apiKey, publicId, cloudName, folder } =
         await presignImageUploadMutation.mutateAsync({
+          publicId: user.id,
           folder: 'avatars',
         });
 
-      // The formData object MUST also contain `image_metadata` set to `true` as
+      // The formData object MUST also contain `media_metadata` set to `true` as
       // that is used in signature generation.
       // The formData object MUST also contain the `signature`, `timestamp` and
       // `folder` props, returned from the presigned function as the signature is
       // also derived from those parameters.
       const formData = new FormData();
       formData.append('file', image);
+      formData.append('public_id', publicId);
       formData.append('api_key', apiKey);
       formData.append('timestamp', String(timestamp));
       formData.append('signature', signature);
       formData.append('folder', folder);
-      formData.append('image_metadata', 'true');
+      formData.append('media_metadata', 'true');
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
@@ -40,6 +45,8 @@ export const useUploadAvatarMutation = () => {
         },
       );
       const data = (await response.json()) as UploadApiResponse;
+
+      if (data.error) throw new Error(data.error.message);
 
       return data.secure_url;
     },

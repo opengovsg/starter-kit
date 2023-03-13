@@ -14,16 +14,18 @@ export const imageUploadRouter = router({
     .input(
       z.object({
         folder: z.string(),
+        publicId: z.string(),
       }),
     )
-    .mutation(async ({ input: { folder } }) => {
+    .mutation(async ({ input: { folder, publicId } }) => {
       const timestamp = Math.round(new Date().getTime() / 1000);
 
       const signature = cloudinary.utils.api_sign_request(
         {
           timestamp,
           folder: folder,
-          image_metadata: true,
+          public_id: publicId,
+          media_metadata: true,
         },
         apiSecret,
       );
@@ -32,6 +34,7 @@ export const imageUploadRouter = router({
         timestamp,
         signature,
         folder,
+        publicId,
         apiKey,
         cloudName,
       };

@@ -1,8 +1,6 @@
 import {
   Button,
   ButtonGroup,
-  chakra,
-  Flex,
   FormControl,
   Heading,
   Modal,
@@ -23,7 +21,6 @@ import {
   Input,
 } from '@opengovsg/design-system-react';
 import { useMemo } from 'react';
-import { NextImage } from '~/components/NextImage';
 import { useZodForm } from '~/lib/form';
 import { updateMeSchema } from '~/server/schemas/me';
 import { trpc } from '~/utils/trpc';
@@ -98,7 +95,7 @@ export const EditProfileModal = ({
 
         <ModalFooter>
           <ButtonGroup borderTopWidth="1px">
-            <Button variant="outline" colorScheme="sub">
+            <Button variant="outline" colorScheme="sub" onClick={onClose}>
               Cancel
             </Button>
             <Button onClick={handleProfileUpdate}>Update my profile</Button>
