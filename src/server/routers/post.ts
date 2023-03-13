@@ -2,13 +2,13 @@
  *
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
-import { router, protectedProcedure } from '../trpc';
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
+import { keyBy } from 'lodash';
 import { z } from 'zod';
 import { prisma } from '~/server/prisma';
 import { addPostSchema } from '../schemas/post';
-import { keyBy } from 'lodash';
+import { protectedProcedure, router } from '../trpc';
 
 /**
  * Default selector for Post.
@@ -30,7 +30,69 @@ const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
       name: true,
     },
   },
+  readBy: {
+    orderBy: {
+      updatedAt: 'asc',
+    },
+    select: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      comments: true,
+    },
+  },
 });
+
+const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
+  ...defaultPostSelect,
+  comments: {
+    orderBy: {
+      createdAt: 'asc',
+    },
+    select: {
+      id: true,
+      content: true,
+      contentHtml: true,
+      createdAt: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  },
+});
+
+// Infer the resulting payload type
+type MyPostPayload = Prisma.PostGetPayload<{
+  select: typeof withCommentsPostSelect;
+}>;
+
+const processFeedbackItem = <T extends MyPostPayload>(
+  { authorId, ...item }: T,
+  sessionUserId: string,
+) => {
+  if (item.anonymous) {
+    item.author.name = 'Anonymous';
+    item.author.image = null;
+    if (authorId === sessionUserId) {
+      item.author.name += ' (you)';
+    }
+  }
+  return {
+    ...item,
+    readBy: keyBy(item.readBy, 'user.id'),
+  };
+};
 
 export const postRouter = router({
   list: protectedProcedure
@@ -51,27 +113,7 @@ export const postRouter = router({
       const { cursor } = input;
 
       const items = await prisma.post.findMany({
-        select: {
-          ...defaultPostSelect,
-          readBy: {
-            orderBy: {
-              updatedAt: 'asc',
-            },
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-          _count: {
-            select: {
-              comments: true,
-            },
-          },
-        },
+        select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
         cursor: cursor
@@ -93,19 +135,7 @@ export const postRouter = router({
       }
 
       const processedItems = items
-        .map(({ authorId, ...item }) => {
-          if (item.anonymous) {
-            item.author.name = 'Anonymous';
-            item.author.image = null;
-            if (authorId === ctx.session.user.id) {
-              item.author.name += ' (you)';
-            }
-          }
-          return {
-            ...item,
-            readBy: keyBy(item.readBy, 'user.id'),
-          };
-        })
+        .map((item) => processFeedbackItem(item, ctx.session.user.id))
         .reverse();
 
       return {
@@ -136,11 +166,11 @@ export const postRouter = router({
         id: z.number(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { id } = input;
       const post = await prisma.post.findUnique({
         where: { id },
-        select: defaultPostSelect,
+        select: withCommentsPostSelect,
       });
       if (!post) {
         throw new TRPCError({
@@ -148,10 +178,8 @@ export const postRouter = router({
           message: `No post with id '${id}'`,
         });
       }
-      if (post.anonymous) {
-        post.author.name = null;
-      }
-      return post;
+
+      return processFeedbackItem(post, ctx.session.user.id);
     }),
   add: protectedProcedure
     .input(addPostSchema)

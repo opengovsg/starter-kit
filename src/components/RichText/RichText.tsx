@@ -1,5 +1,5 @@
-import { memo, useEffect, useState } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { Box, Flex, FlexProps } from '@chakra-ui/react';
 
 import { dataAttr } from '@chakra-ui/utils';
 import Link from '@tiptap/extension-link';
@@ -11,8 +11,9 @@ import { safeJsonParse } from '~/utils/safeJsonParse';
 import { MenuBar } from './RichTextMenu';
 import { TIP_TAP_STYLES } from './constants';
 import Placeholder from '@tiptap/extension-placeholder';
+import { merge } from 'lodash';
 
-interface TextAreaFieldProps {
+interface TextAreaFieldProps extends Omit<FlexProps, 'value' | 'onChange'> {
   value?: string;
   defaultValue?: string;
   isReadOnly?: boolean;
@@ -20,8 +21,10 @@ interface TextAreaFieldProps {
 }
 
 const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
-  const { isReadOnly, value, defaultValue, onChange } = props;
+  const { isReadOnly, value, defaultValue, onChange, sx, ...flexProps } = props;
   const [isFocused, setIsFocused] = useState(false);
+
+  const componentStyles = useMemo(() => merge({}, TIP_TAP_STYLES, sx), [sx]);
 
   const editor = useEditor({
     extensions: [
@@ -69,7 +72,8 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
         shadow: 'focus',
       }}
       // TODO: Add error or invalid styling
-      sx={TIP_TAP_STYLES}
+      sx={componentStyles}
+      {...flexProps}
     >
       <Box>
         {!isReadOnly && <MenuBar editor={editor} />}

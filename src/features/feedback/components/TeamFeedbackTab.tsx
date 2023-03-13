@@ -3,15 +3,14 @@ import {
   Box,
   Flex,
   Grid,
-  Skeleton,
-  SkeletonText,
   Stack,
   StackDivider,
   TabPanel,
   Text,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
-import { useMemo } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useMemo } from 'react';
 import { RouterOutput, trpc } from '~/utils/trpc';
 import { TeamFeedbackTabSkeleton } from './TeamFeedbackTabSkeleton';
 
@@ -22,10 +21,17 @@ interface TeamFeedbackRowProps {
 }
 
 const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
+  const router = useRouter();
+
   const hasRead = useMemo(() => {
     if (!loggedInId) return false;
     return feedback.readBy[loggedInId] ?? false;
   }, [feedback.readBy, loggedInId]);
+
+  const handleOpenFeedback = useCallback(() => {
+    router.query.feedbackId = String(feedback.id);
+    router.push(router);
+  }, [feedback.id, router]);
 
   return (
     <Grid
@@ -34,6 +40,8 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
       gridTemplateColumns="5fr 1fr 1fr 1fr"
       gap="0.25rem"
       pos="relative"
+      cursor="pointer"
+      onClick={handleOpenFeedback}
     >
       {!hasRead && (
         <Box pos="absolute" w="4px" h="100%" bg="blue.200" top={0} left={0} />

@@ -13,6 +13,7 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { BiPlus } from 'react-icons/bi';
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
+import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
 import { TeamFeedbackTab } from '~/features/feedback/components/TeamFeedbackTab';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
 import { AdminLayout } from '~/templates/layouts/AdminLayout';
@@ -24,6 +25,7 @@ const Home: NextPageWithAuthAndLayout = () => {
 
   return (
     <Box p="1.5rem" w="100%">
+      <FeedbackDrawer />
       <Stack justify="space-between" flexDir="row">
         <Stack flexDir="row" align="center">
           <Image
