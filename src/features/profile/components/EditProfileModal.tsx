@@ -27,6 +27,7 @@ import { NextImage } from '~/components/NextImage';
 import { useZodForm } from '~/lib/form';
 import { updateMeSchema } from '~/server/schemas/me';
 import { trpc } from '~/utils/trpc';
+import { AvatarUpload } from './AvatarUpload';
 
 export type EditProfileModalProps = Pick<
   UseDisclosureReturn,
@@ -43,7 +44,6 @@ export const EditProfileModal = ({
 
   const mutation = trpc.me.update.useMutation({
     async onSuccess() {
-      // refetches posts after a post is added
       await utils.me.get.invalidate();
     },
   });
@@ -62,19 +62,17 @@ export const EditProfileModal = ({
     }, [me]),
   });
 
+  const handleProfileUpdate = handleSubmit(async (values) => {
+    return mutation.mutateAsync(values);
+  });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Stack direction="row" spacing="1rem">
-            <NextImage
-              src={me?.image ?? ''}
-              borderRadius="md"
-              width="4rem"
-              height="4rem"
-              alt="profile picture"
-            />
+            <AvatarUpload url={me?.image ?? ''} />
             <Stack spacing={0}>
               <Heading size="lg">{me?.name}</Heading>
               <Text textStyle="body-2">{me?.title}</Text>
@@ -103,11 +101,7 @@ export const EditProfileModal = ({
             <Button variant="outline" colorScheme="sub">
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmit((values) => mutation.mutateAsync(values))}
-            >
-              Update my profile
-            </Button>
+            <Button onClick={handleProfileUpdate}>Update my profile</Button>
           </ButtonGroup>
         </ModalFooter>
       </ModalContent>

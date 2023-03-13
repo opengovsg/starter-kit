@@ -29,6 +29,6 @@ module.exports = getConfig({
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   images: {
-    domains: ['avatars.githubusercontent.com'],
+    domains: ['avatars.githubusercontent.com', 'res.cloudinary.com'],
   },
 });
