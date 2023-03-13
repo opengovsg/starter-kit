@@ -93,7 +93,7 @@ export const postRouter = router({
         });
       }
       if (post.anonymous) {
-        post.author = null;
+        post.author.name = null;
       }
       return post;
     }),

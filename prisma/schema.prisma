@@ -55,8 +55,8 @@ model Post {
   contentHtml String       @map("content_html") @db.Text
   hidden      Boolean      @default(false)
   anonymous   Boolean      @default(false)
-  author      User?        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId    String?      @map("author_id")
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String       @map("author_id")
   likedBy     LikedPosts[]
   comments    Comment[]
   // To return `Date`s intact through the API we use transformers
