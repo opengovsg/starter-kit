@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { RichText } from '~/components/RichText';
 import { RouterOutput, trpc } from '~/utils/trpc';
+import { FeedbackCommentRichText } from './FeedbackCommentRichText';
 
 type PostByIdOutput = Pick<
   RouterOutput['post']['byId'],
@@ -46,7 +47,7 @@ const FeedbackComment = ({ post }: { post?: PostByIdOutput }) => {
   );
 };
 
-export const FeedbackDrawer = (): JSX.Element => {
+export const FeedbackDrawer = (): JSX.Element | null => {
   const router = useRouter();
 
   const isOpen = !!router.query.feedbackId;
@@ -63,6 +64,8 @@ export const FeedbackDrawer = (): JSX.Element => {
     router.push(router);
   }, [router]);
 
+  if (!data) return null;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -77,16 +80,18 @@ export const FeedbackDrawer = (): JSX.Element => {
 
         <DrawerBody>
           <FeedbackComment post={data} />
-          {data?.comments.map((comment) => (
-            <FeedbackComment key={comment.id} post={comment} />
-          ))}
+          <Stack spacing="1.5rem">
+            {data?.comments.map((comment) => (
+              <FeedbackComment key={comment.id} post={comment} />
+            ))}
+          </Stack>
         </DrawerBody>
 
         <DrawerFooter>
-          <Button variant="outline" mr={3} onClick={handleCloseDrawer}>
-            Cancel
-          </Button>
-          <Button colorScheme="blue">Save</Button>
+          <FeedbackCommentRichText
+            postId={data.id}
+            handleCancel={handleCloseDrawer}
+          />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

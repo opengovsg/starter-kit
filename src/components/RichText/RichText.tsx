@@ -58,10 +58,14 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
 
   // this is required as value will not be set after the first render
   useEffect(() => {
-    if (defaultValue && editor) {
+    if (!editor) return;
+    if (defaultValue) {
       editor.commands.setContent(safeJsonParse(defaultValue));
     }
-  }, [defaultValue, editor]);
+    if (!defaultValue && !value) {
+      editor.commands.clearContent();
+    }
+  }, [defaultValue, editor, value]);
 
   return (
     <Flex
