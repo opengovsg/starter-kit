@@ -48,11 +48,14 @@ export const AppBreadcrumbs = ({
     const nestedPaths =
       pathWithoutQuery?.split('/').filter((path) => path.length > 0) ?? [];
 
-    const crumbs: CrumbProps[] = nestedPaths.map((subpath, index) => {
-      const href = `/${nestedPaths.slice(0, index + 1).join('/')}`;
-      const label = transformLabel?.(subpath) ?? subpath;
-      return { href, label };
-    });
+    const crumbs: CrumbProps[] = nestedPaths
+      .map((subpath, index) => {
+        const href = `/${nestedPaths.slice(0, index + 1).join('/')}`;
+        const label = transformLabel?.(subpath) ?? subpath;
+        if (!label) return null;
+        return { href, label };
+      })
+      .filter(Boolean) as CrumbProps[];
 
     return [{ href: '/', label: rootLabel }, ...crumbs];
   }, [rootLabel, router.asPath, transformLabel]);

@@ -41,6 +41,8 @@
     "@opengovsg/design-system-react": "0.1.0-alpha.10",
     "@prisma/client": "^4.10.1",
     "@tanstack/react-query": "^4.3.8",
+    "@tiptap/extension-link": "^2.0.0-beta.220",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.220",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/starter-kit": "^2.0.0-beta.220",
