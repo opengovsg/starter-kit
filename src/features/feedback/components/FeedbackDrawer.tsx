@@ -1,15 +1,14 @@
 import {
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
-  Button,
-  Box,
-  Stack,
   Avatar,
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Stack,
   Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -49,13 +48,23 @@ const FeedbackComment = ({ post }: { post?: PostByIdOutput }) => {
 
 export const FeedbackDrawer = (): JSX.Element | null => {
   const router = useRouter();
+  const feedbackId = Number(router.query.feedbackId);
 
-  const isOpen = !!router.query.feedbackId;
+  const isOpen = !!feedbackId;
+
+  const utils = trpc.useContext();
+
+  const setReadMutation = trpc.readPost.set.useMutation({
+    onSuccess: () => {
+      utils.post.list.invalidate();
+    },
+  });
 
   const { data, isLoading } = trpc.post.byId.useQuery(
-    { id: Number(router.query.feedbackId) },
+    { id: feedbackId },
     {
       enabled: isOpen,
+      onSuccess: () => setReadMutation.mutate({ id: feedbackId }),
     },
   );
 
