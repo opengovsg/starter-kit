@@ -14,60 +14,93 @@
 
 ## Setup
 
-**yarn:**
+### Install dependencies
 
 ```bash
-yarn create next-app --example https://github.com/trpc/trpc --example-path examples/next-prisma-starter trpc-prisma-starter
-cd trpc-prisma-starter
-yarn
-yarn dx
+npm i
 ```
 
-**npm:**
+### Create a database
+
+- [Create a neon.tech project](https://neon.tech/docs/get-started-with-neon/setting-up-a-project)
+- Create two databases, one `app` and one `shadow` database to use with Prisma. As the name suggests, the `shadow` database is used to run migrations in a safe environment before applying them to the `app` database, and is recommended for Prisma migrations (`npx prisma migrate`) to work reliably.
+  - View how to [use Prisma with Neon](https://neon.tech/docs/guides/prisma-guide) for more information.
+- Set up the environment variables:
 
 ```bash
-npx create-next-app --example https://github.com/trpc/trpc --example-path examples/next-prisma-starter trpc-prisma-starter
-cd trpc-prisma-starter
-yarn
-yarn dx
+cp .env.example .env
 ```
+
+- Open `.env` and set the `DATABASE_URL` variable with the connection string from neon.tech.
+- Create the database schema:
+
+```bash
+npx prisma db push
+```
+
+### Configure authentication
+
+GitHub authentication settings are available as defaults, but thanks to NextAuth.js, you can configure this app with most other common authentication providers.
+
+- [Configuring GitHub authentication](docs/github_setup.md)
+
+The auth implementation in this application uses [NextAuth.js](https://next-auth.js.org/), so if you prefer to use one of the [many providers](https://next-auth.js.org/providers/) it supports, you can customize your own installation. Simply update the [`lib/auth.ts`](src/lib/auth.ts#L11) file to add your own provider.
+
+> TODO: Add implementation and docs for custom email auth and SGID login.
+
+### Enable image uploads
+
+> TODO: Make optional
+
+This app uses Cloudinary for storing uploaded images. You can [sign up for a free account](https://cloudinary.com/users/register/free).
+
+- On your Cloudinary dashboard, look for these values under your account settings: **Cloud Name**, **API Key**, **API Secret**.
+- Update `.env` with the following variables:
+  - `CLOUDINARY_CLOUD_NAME`: **Cloud Name**
+  - `CLOUDINARY_API_KEY`: **API Key**
+  - `CLOUDINARY_API_SECRET`: **API Secret**
+
+### Configure Slack notifications
+
+> TODO: Implement and documentation, mostly to show webhooks usage.
+
+WIP [instructions](docs/slack_setup.md).
 
 ### Requirements
 
 - Node >= 14
 - Postgres
 
-## Development
+## Running the app locally
 
 ### Start project
 
 ```bash
-yarn create next-app --example https://github.com/trpc/trpc --example-path examples/next-prisma-starter trpc-prisma-starter
-cd trpc-prisma-starter
-yarn
-yarn dx
+npm run dx
 ```
 
 ### Commands
 
 ```bash
-yarn build      # runs `prisma generate` + `prisma migrate` + `next build`
-yarn db-reset   # resets local db
-yarn dev        # starts next.js
-yarn dx         # starts postgres db + runs migrations + seeds + starts next.js
-yarn test-dev   # runs e2e tests on dev
-yarn test-start # runs e2e tests on `next start` - build required before
-yarn test:unit  # runs normal Vitest unit tests
-yarn test:e2e   # runs e2e tests
+npm run build      # runs `prisma generate` + `prisma migrate` + `next build`
+npm run db-reset   # resets local db
+npm run dev        # starts next.js
+npm run dx         # starts postgres db + runs migrations + seeds + starts next.js
+npm run test-dev   # runs e2e tests on dev
+npm run test-start # runs e2e tests on `next start` - build required before
+npm run test:unit  # runs normal Vitest unit tests
+npm run test:e2e   # runs e2e tests
 ```
 
 ## Deployment
 
-### Using [Render](https://render.com/)
+### Deploying to Vercel
 
-The project contains a [`render.yaml`](./render.yaml) [_"Blueprint"_](https://render.com/docs/blueprint-spec) which makes the project easily deployable on [Render](https://render.com/).
+One-click deploy:
 
-Go to [dashboard.render.com/blueprints](https://dashboard.render.com/blueprints) and connect to this Blueprint and see how the app and database automatically gets deployed.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2-kr&env=SHADOW_DATABASE_URL,DATABASE_URL,GITHUB_ID,GITHUB_SECRET,NEXTAUTH_SECRET,CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET)
+
+⚠️ Remember to update your callback URLs after deploying.
 
 ## Files of note
 
@@ -95,5 +128,3 @@ Go to [dashboard.render.com/blueprints](https://dashboard.render.com/blueprints)
 </table>
 
 ---
-
-Created by [@alexdotjs](https://twitter.com/alexdotjs).
