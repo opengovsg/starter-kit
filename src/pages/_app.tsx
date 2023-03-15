@@ -9,6 +9,7 @@ import { DefaultLayout } from '~/templates/layouts/DefaultLayout';
 import { NextPageWithAuthAndLayout } from '~/lib/types';
 import { trpc } from '~/utils/trpc';
 import { theme } from '~/theme';
+import { isAfter } from 'date-fns';
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithAuthAndLayout;
@@ -36,14 +37,23 @@ const MyApp = (({
 
 const Auth = ({ children }: PropsWithChildren) => {
   const { data: session, status } = useSession();
-  const isUser = !!session?.user;
 
   useEffect(() => {
     if (status === 'loading') return; // Do nothing while loading
-    if (!isUser) signIn(); // If not authenticated, force log in
-  }, [isUser, status]);
 
-  if (isUser) {
+    const interval = setInterval(() => {
+      if (
+        !session?.user ||
+        (session && isAfter(new Date(), new Date(session.expires)))
+      ) {
+        signIn();
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [session, status]);
+
+  if (session) {
     return <>{children}</>;
   }
 
