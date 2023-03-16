@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 import { BiPlus } from 'react-icons/bi';
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
 import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
-import { TeamFeedbackTab } from '~/features/feedback/components/TeamFeedbackTab';
+import { TeamFeedbackList } from '~/features/feedback/components';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
 import { AdminLayout } from '~/templates/layouts/AdminLayout';
 import { trpc } from '~/utils/trpc';
@@ -47,7 +47,7 @@ const Dashboard: NextPageWithAuthAndLayout = () => {
         </Button>
       </Stack>
       <Box bg="white" borderRadius="sm" borderWidth="1px">
-        <TeamFeedbackTab />
+        <TeamFeedbackList />
       </Box>
     </Box>
   );

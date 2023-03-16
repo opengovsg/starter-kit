@@ -8,6 +8,8 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Skeleton,
+  SkeletonCircle,
   Stack,
   Text,
 } from '@chakra-ui/react';
@@ -22,7 +24,21 @@ type PostByIdOutput = Pick<
   'author' | 'contentHtml' | 'createdAt'
 >;
 
-const FeedbackComment = ({ post }: { post?: PostByIdOutput }) => {
+interface FeedbackCommentProps {
+  post?: PostByIdOutput;
+  isLoading?: boolean;
+}
+
+const FeedbackComment = ({ post, isLoading }: FeedbackCommentProps) => {
+  if (isLoading) {
+    return (
+      <Stack direction="row">
+        <SkeletonCircle size="2rem" />
+        <Skeleton flex={1} h="2rem" />
+      </Stack>
+    );
+  }
+
   return (
     <Stack direction="row">
       <Avatar src={post?.author.image ?? undefined} size="xs" />
@@ -86,16 +102,16 @@ export const FeedbackDrawer = (): JSX.Element | null => {
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader borderBottomWidth="1px">{data?.author.name}</DrawerHeader>
-
         <DrawerBody>
-          <FeedbackComment post={data} />
           <Stack spacing="1.5rem">
-            {data?.comments.map((comment) => (
-              <FeedbackComment key={comment.id} post={comment} />
-            ))}
+            <FeedbackComment post={data} isLoading={isLoading} />
+            <Stack spacing="1.5rem">
+              {data?.comments.map((comment) => (
+                <FeedbackComment key={comment.id} post={comment} />
+              ))}
+            </Stack>
           </Stack>
         </DrawerBody>
-
         <DrawerFooter>
           <FeedbackCommentRichText
             postId={data.id}

@@ -11,7 +11,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { RouterOutput, trpc } from '~/utils/trpc';
-import { TeamFeedbackTabSkeleton } from './TeamFeedbackTabSkeleton';
+import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton';
 
 type ListFeedbackOutputItem = RouterOutput['post']['list']['items'][number];
 interface TeamFeedbackRowProps {
@@ -70,7 +70,7 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
   );
 };
 
-export const TeamFeedbackTab = (): JSX.Element => {
+export const TeamFeedbackList = (): JSX.Element => {
   const { data } = useSession();
   const { data: feedback, isLoading } = trpc.post.list.useQuery({
     limit: null,
@@ -78,7 +78,7 @@ export const TeamFeedbackTab = (): JSX.Element => {
   });
 
   if (isLoading) {
-    return <TeamFeedbackTabSkeleton />;
+    return <TeamFeedbackListSkeleton />;
   }
 
   return (
