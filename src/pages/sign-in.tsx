@@ -73,17 +73,19 @@ const SignIn = ({
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export const getServerSideProps = async ({
+  req,
+  res,
+  query,
+}: GetServerSidePropsContext) => {
+  const session = await getServerSession(req, res, authOptions);
+  const { callbackUrl } = query;
   const providers = await getProviders();
 
-  if (session?.user) {
+  if (session) {
     return {
       redirect: {
-        permanent: false,
-        destination: '/',
+        destination: callbackUrl ?? '/',
       },
       props: { providers },
     };
