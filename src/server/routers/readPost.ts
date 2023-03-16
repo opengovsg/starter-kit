@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { prisma } from '~/server/prisma';
 import { protectedProcedure, router } from '../trpc';
 
 export const readPostRouter = router({
@@ -11,7 +10,7 @@ export const readPostRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { id } = input;
-      return prisma.readPosts.upsert({
+      return ctx.prisma.readPosts.upsert({
         where: {
           postId_userId: {
             userId: ctx.session.user.id,
