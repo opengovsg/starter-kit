@@ -46,7 +46,9 @@ const Auth = ({ children }: PropsWithChildren) => {
         !session?.user ||
         (session && isAfter(new Date(), new Date(session.expires)))
       ) {
-        signIn();
+        signIn(undefined, {
+          callbackUrl: '/dashboard',
+        });
       }
     }, 1000);
 

@@ -5,7 +5,6 @@ import {
   Grid,
   Stack,
   StackDivider,
-  TabPanel,
   Text,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
@@ -83,16 +82,14 @@ export const TeamFeedbackTab = (): JSX.Element => {
   }
 
   return (
-    <TabPanel>
-      <Stack divider={<StackDivider />} spacing={0}>
-        {feedback?.items.map((feedback) => (
-          <TeamFeedbackRow
-            key={feedback.id}
-            loggedInId={data?.user.id}
-            feedback={feedback}
-          />
-        ))}
-      </Stack>
-    </TabPanel>
+    <Stack divider={<StackDivider />} spacing={0}>
+      {feedback?.items.map((feedback) => (
+        <TeamFeedbackRow
+          key={feedback.id}
+          loggedInId={data?.user.id}
+          feedback={feedback}
+        />
+      ))}
+    </Stack>
   );
 };

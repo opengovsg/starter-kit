@@ -54,7 +54,11 @@ const SignIn = ({
             </Flex>
             {Object.values(providers!).map((provider) => (
               <Box key={provider.name}>
-                <Button onClick={() => signIn(provider.id)}>
+                <Button
+                  onClick={() =>
+                    signIn(provider.id, { callbackUrl: '/dashboard' })
+                  }
+                >
                   Sign in with {provider.name}
                 </Button>
               </Box>

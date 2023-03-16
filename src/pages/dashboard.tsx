@@ -1,14 +1,5 @@
-import {
-  Box,
-  Icon,
-  Skeleton,
-  Stack,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Text,
-} from '@chakra-ui/react';
-import { Button, Tab, Tabs } from '@opengovsg/design-system-react';
+import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Button } from '@opengovsg/design-system-react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { BiPlus } from 'react-icons/bi';
@@ -19,7 +10,7 @@ import type { NextPageWithAuthAndLayout } from '~/lib/types';
 import { AdminLayout } from '~/templates/layouts/AdminLayout';
 import { trpc } from '~/utils/trpc';
 
-const Home: NextPageWithAuthAndLayout = () => {
+const Dashboard: NextPageWithAuthAndLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
     trpc.post.unreadCount.useQuery();
 
@@ -56,31 +47,17 @@ const Home: NextPageWithAuthAndLayout = () => {
         </Button>
       </Stack>
       <Box bg="white" borderRadius="sm" borderWidth="1px">
-        <Tabs>
-          <TabList
-            py="0.75rem"
-            px="2rem"
-            borderBottomWidth="1px"
-            borderColor="base.divider.medium"
-          >
-            <Tab>Team</Tab>
-            <Tab>Personal</Tab>
-          </TabList>
-          <TabPanels>
-            <TeamFeedbackTab />
-            <TabPanel>Content of Personal feedback tab</TabPanel>
-          </TabPanels>
-        </Tabs>
+        <TeamFeedbackTab />
       </Box>
     </Box>
   );
 };
 
-Home.auth = true;
+Dashboard.auth = true;
 
-Home.getLayout = AdminLayout;
+Dashboard.getLayout = AdminLayout;
 
-export default Home;
+export default Dashboard;
 
 /**
  * If you want to statically render this page
