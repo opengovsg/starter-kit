@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://api.id.gov.sg/v1/oauth/authorize',
         params: {
           scope: 'openid myinfo.name myinfo.email',
-          redirect_uri: `${env.VERCEL_URL}/api/auth/callback/sgid`,
+          redirect_uri: `${process.env.VERCEL_URL}/api/auth/callback/sgid`,
         },
       },
       token: {
