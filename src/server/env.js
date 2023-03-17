@@ -12,8 +12,6 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   DATABASE_URL: z.string().url(),
-  GITHUB_ID: z.string(),
-  GITHUB_SECRET: z.string(),
   NEXTAUTH_SECRET: z.string(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   SGID_CLIENT_ID: z.string(),
