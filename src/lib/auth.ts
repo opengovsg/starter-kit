@@ -5,10 +5,12 @@ import { env } from '~/server/env';
 import { SgidClient } from '@opengovsg/sgid-client';
 import { getBaseUrl } from '~/utils/getBaseUrl';
 
+const SGID_REDIRECT_URI = `${getBaseUrl()}/api/auth/callback/sgid`;
 const sgidClient = new SgidClient({
   clientId: env.SGID_CLIENT_ID,
   clientSecret: env.SGID_CLIENT_SECRET,
   privateKey: env.SGID_PRIVATE_KEY,
+  redirectUri: SGID_REDIRECT_URI,
   // The rest of the options are not required since they are already declared in NextAuth.
   // This client is solely used for token exchange and decryption.
 });
@@ -28,7 +30,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://api.id.gov.sg/v1/oauth/authorize',
         params: {
           scope: 'openid myinfo.name myinfo.email',
-          redirect_uri: `${getBaseUrl()}/api/auth/callback/sgid`,
+          redirect_uri: SGID_REDIRECT_URI,
         },
       },
       token: {
