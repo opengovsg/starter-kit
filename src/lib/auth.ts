@@ -3,6 +3,7 @@ import { NextAuthOptions } from 'next-auth';
 import { prisma } from '~/server/prisma';
 import { env } from '~/server/env';
 import { SgidClient } from '@opengovsg/sgid-client';
+import { getBaseUrl } from '~/utils/getBaseUrl';
 
 const sgidClient = new SgidClient({
   clientId: env.SGID_CLIENT_ID,
@@ -27,7 +28,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://api.id.gov.sg/v1/oauth/authorize',
         params: {
           scope: 'openid myinfo.name myinfo.email',
-          redirect_uri: `${process.env.VERCEL_URL}/api/auth/callback/sgid`,
+          redirect_uri: `${getBaseUrl()}/api/auth/callback/sgid`,
         },
       },
       token: {
