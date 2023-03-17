@@ -13,3 +13,13 @@ export const getBaseUrl = () => {
   // assume localhost
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };
+
+export const getNextAuthBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL;
+  }
+  return `${getBaseUrl()}/api/auth`;
+};
