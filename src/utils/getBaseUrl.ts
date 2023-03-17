@@ -21,5 +21,5 @@ export const getNextAuthBaseUrl = () => {
   if (process.env.NEXTAUTH_URL) {
     return process.env.NEXTAUTH_URL;
   }
-  return `${getBaseUrl()}/api/auth`;
+  return getBaseUrl();
 };
