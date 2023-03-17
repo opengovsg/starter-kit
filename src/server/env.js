@@ -12,15 +12,13 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   DATABASE_URL: z.string().url(),
-  GITHUB_ID: z.string(),
-  GITHUB_SECRET: z.string(),
   NEXTAUTH_SECRET: z.string(),
-  NEXTAUTH_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   SGID_CLIENT_ID: z.string(),
   SGID_CLIENT_SECRET: z.string(),
   SGID_PRIVATE_KEY: z.string(),
   SHADOW_DATABASE_URL: z.string().url(),
+  VERCEL_URL: z.string().url(),
 });
 
 const env = envSchema.safeParse(process.env);

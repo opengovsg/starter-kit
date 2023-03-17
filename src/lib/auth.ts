@@ -1,7 +1,6 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import { prisma } from '~/server/prisma';
-import GitHubProvider from 'next-auth/providers/github';
 import { env } from '~/server/env';
 import { SgidClient } from '@opengovsg/sgid-client';
 
@@ -17,10 +16,6 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   // Configure one or more authentication providers
   providers: [
-    GitHubProvider({
-      clientId: env.GITHUB_ID,
-      clientSecret: env.GITHUB_SECRET,
-    }),
     {
       id: 'sgid',
       name: 'SGID',
@@ -32,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://api.id.gov.sg/v1/oauth/authorize',
         params: {
           scope: 'openid myinfo.name myinfo.email',
-          redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/sgid`,
+          redirect_uri: `${env.VERCEL_URL}/api/auth/callback/sgid`,
         },
       },
       token: {
