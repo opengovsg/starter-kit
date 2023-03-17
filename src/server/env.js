@@ -18,7 +18,6 @@ const envSchema = z.object({
   SGID_CLIENT_SECRET: z.string(),
   SGID_PRIVATE_KEY: z.string(),
   SHADOW_DATABASE_URL: z.string().url(),
-  VERCEL_URL: z.string().url(),
 });
 
 const env = envSchema.safeParse(process.env);
