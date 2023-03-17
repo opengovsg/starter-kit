@@ -11,7 +11,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "filteredRelationCount"]
 }
 
 enum Role {
@@ -55,6 +55,7 @@ model Post {
   content     String       @db.Text
   contentHtml String       @map("content_html") @db.Text
   hidden      Boolean      @default(false)
+  published   Boolean      @default(true)
   anonymous   Boolean      @default(false)
   author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String       @map("author_id")

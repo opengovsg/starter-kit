@@ -6,7 +6,6 @@ import {
   SkeletonText,
   Stack,
   StackDivider,
-  TabPanel,
 } from '@chakra-ui/react';
 
 const TeamFeedbackRowSkeleton = () => {
@@ -26,16 +25,14 @@ const TeamFeedbackRowSkeleton = () => {
   );
 };
 
-export const TeamFeedbackTabSkeleton = (): JSX.Element => {
+export const TeamFeedbackListSkeleton = (): JSX.Element => {
   return (
-    <TabPanel>
-      <Stack divider={<StackDivider />}>
-        <TeamFeedbackRowSkeleton />
-        <TeamFeedbackRowSkeleton />
-        <TeamFeedbackRowSkeleton />
-        <TeamFeedbackRowSkeleton />
-        <TeamFeedbackRowSkeleton />
-      </Stack>
-    </TabPanel>
+    <Stack divider={<StackDivider />}>
+      <TeamFeedbackRowSkeleton />
+      <TeamFeedbackRowSkeleton />
+      <TeamFeedbackRowSkeleton />
+      <TeamFeedbackRowSkeleton />
+      <TeamFeedbackRowSkeleton />
+    </Stack>
   );
 };

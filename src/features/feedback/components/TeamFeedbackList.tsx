@@ -5,14 +5,14 @@ import {
   Grid,
   Stack,
   StackDivider,
-  TabPanel,
   Text,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { RouterOutput, trpc } from '~/utils/trpc';
-import { TeamFeedbackTabSkeleton } from './TeamFeedbackTabSkeleton';
+import { RouterOutput } from '~/utils/trpc';
+import { useFilterFeedback } from '../api/useFilterFeedback';
+import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton';
 
 type ListFeedbackOutputItem = RouterOutput['post']['list']['items'][number];
 interface TeamFeedbackRowProps {
@@ -71,28 +71,24 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
   );
 };
 
-export const TeamFeedbackTab = (): JSX.Element => {
-  const { data } = useSession();
-  const { data: feedback, isLoading } = trpc.post.list.useQuery({
-    limit: null,
-    cursor: null,
-  });
+export const TeamFeedbackList = (): JSX.Element => {
+  const { data: session } = useSession();
+
+  const { filteredFeedback, isLoading } = useFilterFeedback();
 
   if (isLoading) {
-    return <TeamFeedbackTabSkeleton />;
+    return <TeamFeedbackListSkeleton />;
   }
 
   return (
-    <TabPanel>
-      <Stack divider={<StackDivider />} spacing={0}>
-        {feedback?.items.map((feedback) => (
-          <TeamFeedbackRow
-            key={feedback.id}
-            loggedInId={data?.user.id}
-            feedback={feedback}
-          />
-        ))}
-      </Stack>
-    </TabPanel>
+    <Stack divider={<StackDivider />} spacing={0}>
+      {filteredFeedback?.items.map((feedback) => (
+        <TeamFeedbackRow
+          key={feedback.id}
+          loggedInId={session?.user.id}
+          feedback={feedback}
+        />
+      ))}
+    </Stack>
   );
 };

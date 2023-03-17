@@ -2,8 +2,11 @@ import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { keyBy } from 'lodash';
 import { z } from 'zod';
-import { prisma } from '~/server/prisma';
-import { addPostSchema } from '../schemas/post';
+import {
+  addPostSchema,
+  ListPostsInputSchema,
+  listPostsInputSchema,
+} from '../schemas/post';
 import { protectedProcedure, router } from '../trpc';
 
 /**
@@ -92,12 +95,7 @@ const processFeedbackItem = <T extends MyPostPayload>(
 
 export const postRouter = router({
   list: protectedProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.number().nullish(),
-      }),
-    )
+    .input(listPostsInputSchema)
     .query(async ({ input, ctx }) => {
       /**
        * For pagination docs you can have a look here
@@ -108,7 +106,58 @@ export const postRouter = router({
       const limit = input.limit ?? 50;
       const { cursor } = input;
 
-      const items = await prisma.post.findMany({
+      const getFilterWhereClause = (
+        filter: ListPostsInputSchema['filter'],
+      ): Prisma.PostWhereInput => {
+        switch (filter) {
+          case 'all':
+            return {};
+          case 'draft':
+            return {
+              published: false,
+            };
+          case 'unread':
+            return {
+              NOT: {
+                readBy: {
+                  some: {
+                    userId: ctx.session.user.id,
+                  },
+                },
+              },
+            };
+          case 'replied':
+            return {
+              comments: {
+                some: {},
+              },
+            };
+          case 'repliedByMe':
+            return {
+              comments: {
+                some: {
+                  authorId: ctx.session.user.id,
+                },
+              },
+            };
+          case 'unreplied':
+            return {
+              comments: {
+                none: {},
+              },
+            };
+          case 'unrepliedByMe':
+            return {
+              comments: {
+                none: {
+                  authorId: ctx.session.user.id,
+                },
+              },
+            };
+        }
+      };
+
+      const items = await ctx.prisma.post.findMany({
         select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
@@ -118,8 +167,9 @@ export const postRouter = router({
             }
           : undefined,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: input.order,
         },
+        where: getFilterWhereClause(input.filter),
       });
       let nextCursor: typeof cursor | undefined = undefined;
       if (items.length > limit) {
@@ -141,12 +191,12 @@ export const postRouter = router({
     }),
   unreadCount: protectedProcedure.query(async ({ ctx }) => {
     const { user } = ctx.session;
-    const readCount = await prisma.readPosts.count({
+    const readCount = await ctx.prisma.readPosts.count({
       where: {
         userId: user.id,
       },
     });
-    const allVisiblePostsCount = await prisma.post.count({
+    const allVisiblePostsCount = await ctx.prisma.post.count({
       where: {
         hidden: false,
       },
@@ -164,7 +214,7 @@ export const postRouter = router({
     )
     .query(async ({ input, ctx }) => {
       const { id } = input;
-      const post = await prisma.post.findUnique({
+      const post = await ctx.prisma.post.findUnique({
         where: { id },
         select: withCommentsPostSelect,
       });
@@ -180,7 +230,7 @@ export const postRouter = router({
   add: protectedProcedure
     .input(addPostSchema)
     .mutation(async ({ input, ctx }) => {
-      const post = await prisma.post.create({
+      const post = await ctx.prisma.post.create({
         data: {
           ...input,
           author: {
@@ -201,7 +251,7 @@ export const postRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { id } = input;
-      const readPost = await prisma.readPosts.upsert({
+      const readPost = await ctx.prisma.readPosts.upsert({
         where: {
           postId_userId: {
             userId: ctx.session.user.id,

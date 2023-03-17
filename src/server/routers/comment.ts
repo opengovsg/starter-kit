@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '~/server/prisma';
 import { addCommentSchema } from '../schemas/comment';
 import { protectedProcedure, router } from '../trpc';
 
@@ -26,7 +25,7 @@ export const commentRouter = router({
   add: protectedProcedure
     .input(addCommentSchema)
     .mutation(async ({ input: { postId, ...input }, ctx }) => {
-      const comment = await prisma.comment.create({
+      const comment = await ctx.prisma.comment.create({
         data: {
           ...input,
           author: {

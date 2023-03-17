@@ -4,7 +4,6 @@
  */
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
-import { prisma } from '~/server/prisma';
 import { updateMeSchema } from '../schemas/me';
 import { protectedProcedure, router } from '../trpc';
 
@@ -24,7 +23,7 @@ const defaultMeSelect = Prisma.validator<Prisma.UserSelect>()({
 
 export const meRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
-    return prisma.user.findUniqueOrThrow({
+    return ctx.prisma.user.findUniqueOrThrow({
       where: { id: ctx.session.user.id },
       select: defaultMeSelect,
     });
@@ -36,7 +35,7 @@ export const meRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return prisma.user.update({
+      return ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: {
           image: input.image,
@@ -47,7 +46,7 @@ export const meRouter = router({
   update: protectedProcedure
     .input(updateMeSchema)
     .mutation(async ({ ctx, input }) => {
-      return prisma.user.update({
+      return ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: input,
         select: defaultMeSelect,

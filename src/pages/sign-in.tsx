@@ -54,7 +54,11 @@ const SignIn = ({
             </Flex>
             {Object.values(providers!).map((provider) => (
               <Box key={provider.name}>
-                <Button onClick={() => signIn(provider.id)}>
+                <Button
+                  onClick={() =>
+                    signIn(provider.id, { callbackUrl: '/dashboard' })
+                  }
+                >
                   Sign in with {provider.name}
                 </Button>
               </Box>
@@ -73,17 +77,19 @@ const SignIn = ({
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export const getServerSideProps = async ({
+  req,
+  res,
+  query,
+}: GetServerSidePropsContext) => {
+  const session = await getServerSession(req, res, authOptions);
+  const { callbackUrl } = query;
   const providers = await getProviders();
 
-  if (session?.user) {
+  if (session) {
     return {
       redirect: {
-        permanent: false,
-        destination: '/',
+        destination: callbackUrl ?? '/',
       },
       props: { providers },
     };
