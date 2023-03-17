@@ -6,3 +6,22 @@ export const addPostSchema = z.object({
   contentHtml: z.string().min(1),
   anonymous: z.boolean().optional(),
 });
+
+export const listPostsInputSchema = z.object({
+  limit: z.number().min(1).max(100).nullish(),
+  cursor: z.number().nullish(),
+  filter: z
+    .enum([
+      'all',
+      'draft',
+      'replied',
+      'repliedByMe',
+      'unreplied',
+      'unrepliedByMe',
+      'unread',
+    ])
+    .default('all'),
+  order: z.enum(['asc', 'desc']).default('desc'),
+});
+
+export type ListPostsInputSchema = z.infer<typeof listPostsInputSchema>;

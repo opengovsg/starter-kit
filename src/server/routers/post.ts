@@ -2,7 +2,11 @@ import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { keyBy } from 'lodash';
 import { z } from 'zod';
-import { addPostSchema } from '../schemas/post';
+import {
+  addPostSchema,
+  ListPostsInputSchema,
+  listPostsInputSchema,
+} from '../schemas/post';
 import { protectedProcedure, router } from '../trpc';
 
 /**
@@ -91,12 +95,7 @@ const processFeedbackItem = <T extends MyPostPayload>(
 
 export const postRouter = router({
   list: protectedProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.number().nullish(),
-      }),
-    )
+    .input(listPostsInputSchema)
     .query(async ({ input, ctx }) => {
       /**
        * For pagination docs you can have a look here
@@ -106,6 +105,57 @@ export const postRouter = router({
 
       const limit = input.limit ?? 50;
       const { cursor } = input;
+
+      const getFilterWhereClause = (
+        filter: ListPostsInputSchema['filter'],
+      ): Prisma.PostWhereInput => {
+        switch (filter) {
+          case 'all':
+            return {};
+          case 'draft':
+            return {
+              published: false,
+            };
+          case 'unread':
+            return {
+              NOT: {
+                readBy: {
+                  some: {
+                    userId: ctx.session.user.id,
+                  },
+                },
+              },
+            };
+          case 'replied':
+            return {
+              comments: {
+                some: {},
+              },
+            };
+          case 'repliedByMe':
+            return {
+              comments: {
+                some: {
+                  authorId: ctx.session.user.id,
+                },
+              },
+            };
+          case 'unreplied':
+            return {
+              comments: {
+                none: {},
+              },
+            };
+          case 'unrepliedByMe':
+            return {
+              comments: {
+                none: {
+                  authorId: ctx.session.user.id,
+                },
+              },
+            };
+        }
+      };
 
       const items = await ctx.prisma.post.findMany({
         select: withCommentsPostSelect,
@@ -117,8 +167,9 @@ export const postRouter = router({
             }
           : undefined,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: input.order,
         },
+        where: getFilterWhereClause(input.filter),
       });
       let nextCursor: typeof cursor | undefined = undefined;
       if (items.length > limit) {

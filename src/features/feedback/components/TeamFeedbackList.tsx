@@ -10,7 +10,8 @@ import {
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { RouterOutput, trpc } from '~/utils/trpc';
+import { RouterOutput } from '~/utils/trpc';
+import { useFilterFeedback } from '../api/useFilterFeedback';
 import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton';
 
 type ListFeedbackOutputItem = RouterOutput['post']['list']['items'][number];
@@ -71,11 +72,9 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
 };
 
 export const TeamFeedbackList = (): JSX.Element => {
-  const { data } = useSession();
-  const { data: feedback, isLoading } = trpc.post.list.useQuery({
-    limit: null,
-    cursor: null,
-  });
+  const { data: session } = useSession();
+
+  const { filteredFeedback, isLoading } = useFilterFeedback();
 
   if (isLoading) {
     return <TeamFeedbackListSkeleton />;
@@ -83,10 +82,10 @@ export const TeamFeedbackList = (): JSX.Element => {
 
   return (
     <Stack divider={<StackDivider />} spacing={0}>
-      {feedback?.items.map((feedback) => (
+      {filteredFeedback?.items.map((feedback) => (
         <TeamFeedbackRow
           key={feedback.id}
-          loggedInId={data?.user.id}
+          loggedInId={session?.user.id}
           feedback={feedback}
         />
       ))}

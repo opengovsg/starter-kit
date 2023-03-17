@@ -9,6 +9,7 @@ import { TeamFeedbackList } from '~/features/feedback/components';
 import type { NextPageWithAuthAndLayout } from '~/lib/types';
 import { AdminLayout } from '~/templates/layouts/AdminLayout';
 import { trpc } from '~/utils/trpc';
+import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar';
 
 const Dashboard: NextPageWithAuthAndLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
@@ -47,6 +48,7 @@ const Dashboard: NextPageWithAuthAndLayout = () => {
         </Button>
       </Stack>
       <Box bg="white" borderRadius="sm" borderWidth="1px">
+        <TeamFeedbackFilterBar />
         <TeamFeedbackList />
       </Box>
     </Box>
