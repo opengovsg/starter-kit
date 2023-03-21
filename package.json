@@ -54,6 +54,7 @@
     "cloudinary": "^1.35.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.29.3",
+    "iron-session": "^6.3.1",
     "lodash": "^4.17.21",
     "next": "^13.2.1",
     "next-auth": "^4.20.1",
@@ -62,6 +63,7 @@
     "react-hook-form": "^7.43.5",
     "react-icons": "^4.8.0",
     "superjson": "^1.7.4",
+    "wretch": "^2.5.1",
     "zod": "^3.0.0"
   },
   "devDependencies": {

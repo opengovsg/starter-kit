@@ -1,14 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { AppFooter } from '~/components/AppFooter';
 
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '~/lib/auth';
-import { getProviders, signIn } from 'next-auth/react';
-import { Button } from '@opengovsg/design-system-react';
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -17,10 +9,9 @@ import {
   LoginImageSvgr,
   NonMobileSidebarGridArea,
 } from '~/features/sign-in/components';
+import { withSessionSsr } from '~/lib/withSession';
 
-const SignIn = ({
-  providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const SignIn = () => {
   return (
     <BackgroundBox>
       <BaseGridLayout flex={1}>
@@ -52,17 +43,6 @@ const SignIn = ({
                 </Text>
               </Box>
             </Flex>
-            {Object.values(providers!).map((provider) => (
-              <Box key={provider.name}>
-                <Button
-                  onClick={() =>
-                    signIn(provider.id, { callbackUrl: '/dashboard' })
-                  }
-                >
-                  Sign in with {provider.name}
-                </Button>
-              </Box>
-            ))}
           </Box>
         </LoginGridArea>
       </BaseGridLayout>
@@ -77,27 +57,24 @@ const SignIn = ({
   );
 };
 
-export const getServerSideProps = async ({
-  req,
-  res,
-  query,
-}: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-  const { callbackUrl } = query;
-  const providers = await getProviders();
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req, query }) {
+    const { callbackUrl } = query;
+    const user = req.session.user;
 
-  if (session) {
+    if (user) {
+      return {
+        redirect: {
+          destination: callbackUrl ?? '/dashboard',
+        },
+        props: {},
+      };
+    }
+
     return {
-      redirect: {
-        destination: callbackUrl ?? '/dashboard',
-      },
-      props: { providers },
+      props: {},
     };
-  }
-
-  return {
-    props: { providers },
-  };
-};
+  },
+);
 
 export default SignIn;

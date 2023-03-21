@@ -4,6 +4,7 @@ import { prisma } from '~/server/prisma';
 import { env } from '~/server/env';
 import { SgidClient } from '@opengovsg/sgid-client';
 import { getNextAuthBaseUrl } from '~/utils/getBaseUrl';
+import { IronSessionOptions } from 'iron-session';
 
 const SGID_REDIRECT_URI = `${getNextAuthBaseUrl()}/api/auth/callback/sgid`;
 
@@ -15,6 +16,14 @@ const SGID_CLIENT = new SgidClient({
   // The rest of the options are not required since they are already declared in NextAuth.
   // This client is solely used for token exchange and decryption.
 });
+
+export const sessionOptions: IronSessionOptions = {
+  password: {
+    '1': env.SESSION_SECRET,
+  },
+  cookieName: 'auth.session-token',
+  ttl: 60 * 60 * 24 * 7, // 7 days
+};
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
