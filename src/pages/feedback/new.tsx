@@ -6,11 +6,11 @@ import {
   Stack,
   Text,
   VStack,
+  FormLabel,
 } from '@chakra-ui/react';
 import {
   Button,
   FormErrorMessage,
-  FormLabel,
   Infobox,
   Toggle,
 } from '@opengovsg/design-system-react';
@@ -25,11 +25,11 @@ import Image from 'next/image';
 
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
 import { RichText } from '~/components/RichText';
+import { useUser } from '~/features/profile/api';
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext();
-
-  const { data: user } = trpc.me.get.useQuery();
+  const { user } = useUser();
 
   const router = useRouter();
 
@@ -117,7 +117,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
                   identity.
                 </Infobox>
               ) : (
-                <Text>Posting as {user?.name}</Text>
+                <Text>Posting as {user?.name ?? user?.email}</Text>
               )}
             </Stack>
           </FormControl>

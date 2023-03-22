@@ -1,10 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { UploadApiResponse } from 'cloudinary';
 import { trpc } from '~/utils/trpc';
+import { useUser } from './useUser';
 
 export const useUploadAvatarMutation = () => {
   const utils = trpc.useContext();
-  const { data: user } = trpc.me.get.useQuery();
+  const { user } = useUser();
   // Pre-upload: Create a mutation to presign the upload request
   const presignImageUploadMutation = trpc.imageUpload.presign.useMutation();
 
