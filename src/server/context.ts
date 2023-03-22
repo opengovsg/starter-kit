@@ -5,7 +5,7 @@ import { sessionOptions } from '~/lib/auth';
 import { prisma } from './prisma';
 
 interface CreateContextOptions {
-  session: IronSession | null;
+  session: IronSession;
 }
 
 /**

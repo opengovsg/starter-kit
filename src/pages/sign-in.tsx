@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import { AppFooter } from '~/components/AppFooter';
 
 import {
@@ -8,8 +9,28 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
+  EmailInput,
+  VerificationInput,
 } from '~/features/sign-in/components';
 import { withSessionSsr } from '~/lib/withSession';
+
+const EmailSignIn = () => {
+  const [email, setEmail] = useState('');
+  const [showVerificationStep, setShowVerificationStep] = useState(false);
+
+  if (showVerificationStep) {
+    return <VerificationInput email={email} />;
+  }
+
+  return (
+    <EmailInput
+      onSuccess={(email) => {
+        setEmail(email);
+        setShowVerificationStep(true);
+      }}
+    />
+  );
+};
 
 const SignIn = () => {
   return (
@@ -42,6 +63,7 @@ const SignIn = () => {
                   Vibes for days
                 </Text>
               </Box>
+              <EmailSignIn />
             </Flex>
           </Box>
         </LoginGridArea>
