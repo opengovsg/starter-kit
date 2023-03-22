@@ -1,7 +1,8 @@
-import { httpBatchLink, loggerLink } from '@trpc/client';
+import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { NextPageContext } from 'next';
+import Router from 'next/router';
 import superjson from 'superjson';
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
@@ -74,7 +75,24 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            retry: (failureCount, error) => {
+              if (error instanceof TRPCClientError) {
+                if (error.data.code === 'FORBIDDEN') {
+                  Router.push('/forbidden');
+                }
+
+                if (error.data.code === 'UNAUTHORIZED') {
+                  Router.push('/sign-in');
+                }
+              }
+              return failureCount < 3;
+            },
+          },
+        },
+      },
     };
   },
   /**

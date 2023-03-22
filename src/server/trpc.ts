@@ -37,7 +37,9 @@ const authMiddleware = t.middleware(({ next, ctx }) => {
   }
   return next({
     ctx: {
-      session: ctx.session,
+      session: {
+        user: ctx.session.user,
+      },
     },
   });
 });

@@ -25,7 +25,6 @@
   },
   "include": [
     "next-env.d.ts",
-    "env.d.ts",
     "src/lib/iron-session.d.ts",
     "**/*.ts",
     "**/*.tsx",

@@ -51,7 +51,7 @@ export const VerificationInput = ({
       },
       {
         onSuccess: () => {
-          router.push(String(router.query.callbackUrl) ?? '/dashboard');
+          router.push(String(router.query.callbackUrl ?? '/dashboard'));
         },
       },
     );

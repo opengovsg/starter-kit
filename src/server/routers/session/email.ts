@@ -1,19 +1,19 @@
-import { router, publicProcedure, protectedProcedure } from 'src/server/trpc';
+import { publicProcedure, router } from 'src/server/trpc';
 import { z } from 'zod';
 import { sendMail } from '~/lib/mail';
 import { env } from '~/server/env';
 import { getBaseUrl } from '~/utils/getBaseUrl';
 
-import { createTokenHash, createVfnToken } from '~/server/modules/auth/utils';
-import { useVerificationToken } from '~/server/modules/auth/api/useVerificationToken';
-import { VerificationError } from '~/server/modules/auth/errors';
-import { defaultUserSelect } from '~/server/modules/user/api/defaultUserSelect';
 import { TRPCError } from '@trpc/server';
+import {
+  createTokenHash,
+  createVfnToken,
+} from '~/server/modules/auth/auth.utils';
+import { useVerificationToken } from '~/server/modules/auth/auth.service';
+import { VerificationError } from '~/server/modules/auth/auth.errors';
+import { defaultUserSelect } from '~/server/modules/user/user.select';
 
 export const emailSessionRouter = router({
-  user: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.session.user;
-  }),
   // Generate OTP.
   login: publicProcedure
     .input(
@@ -28,20 +28,22 @@ export const emailSessionRouter = router({
 
       const url = new URL(getBaseUrl());
 
+      // May have one of them fail,
+      // so users may get an email but not have the token saved, but that should be fine.
       await Promise.all([
-        sendMail({
-          subject: `Sign in to ${url.host}`,
-          body: `Your OTP is <b>${token}</b>. It will expire on ${expires}.
-      Please use this to login to your account.
-      <p>If your OTP does not work, please request for a new one.</p>`,
-          recipient: email,
-        }),
         ctx.prisma.verificationToken.create({
           data: {
             identifier: email,
             token: hashedToken,
             expires,
           },
+        }),
+        sendMail({
+          subject: `Sign in to ${url.host}`,
+          body: `Your OTP is <b>${token}</b>. It will expire on ${expires}.
+      Please use this to login to your account.
+      <p>If your OTP does not work, please request for a new one.</p>`,
+          recipient: email,
         }),
       ]);
       return email;
@@ -87,8 +89,4 @@ export const emailSessionRouter = router({
       await ctx.session.save();
       return user;
     }),
-  logout: publicProcedure.mutation(async ({ ctx }) => {
-    ctx.session?.destroy();
-    return { isLoggedIn: false, login: '', avatarUrl: '' };
-  }),
 });

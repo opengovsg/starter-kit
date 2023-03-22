@@ -3,8 +3,8 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
+  Menu,
 } from '@chakra-ui/react';
-import { Menu } from '@opengovsg/design-system-react';
 import { ChevronMenuButton } from '~/components/ChevronMenuButton';
 import { useFilterFeedback } from '../api/useFilterFeedback';
 

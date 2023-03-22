@@ -37,7 +37,6 @@
   "dependencies": {
     "@chakra-ui/react": "^2.5.1",
     "@hookform/resolvers": "^2.9.11",
-    "@next-auth/prisma-adapter": "^1.0.5",
     "@opengovsg/design-system-react": "0.1.0-alpha.10",
     "@opengovsg/sgid-client": "^1.0.4",
     "@prisma/client": "^4.10.1",
@@ -58,7 +57,6 @@
     "iron-session": "^6.3.1",
     "lodash": "^4.17.21",
     "next": "^13.2.1",
-    "next-auth": "^4.20.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.5",

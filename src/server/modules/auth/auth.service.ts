@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-import { createTokenHash } from '../utils';
+import { createTokenHash } from './auth.utils';
 
 export const useVerificationToken = async (
   prisma: PrismaClient,

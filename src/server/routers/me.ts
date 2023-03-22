@@ -3,7 +3,7 @@
  * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
  */
 import { z } from 'zod';
-import { defaultUserSelect } from '../modules/user/api/defaultUserSelect';
+import { defaultUserSelect } from '../modules/user/user.select';
 import { updateMeSchema } from '../schemas/me';
 import { protectedProcedure, router } from '../trpc';
 

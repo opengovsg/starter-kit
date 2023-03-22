@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { Controller } from 'react-hook-form';
 import { FeedbackNavbar } from '~/features/feedback/components';
 import { useZodForm } from '~/lib/form';
-import { NextPageWithAuthAndLayout } from '~/lib/types';
+import { NextPageWithLayout } from '~/lib/types';
 import { addPostSchema } from '~/server/schemas/post';
 import { trpc } from '~/utils/trpc';
 import Image from 'next/image';
@@ -26,7 +26,7 @@ import Image from 'next/image';
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
 import { RichText } from '~/components/RichText';
 
-const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
+const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext();
 
   const { data: user } = trpc.me.get.useQuery();
@@ -134,7 +134,5 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
     </Flex>
   );
 };
-
-PostFeedbackPage.auth = true;
 
 export default PostFeedbackPage;
