@@ -1,14 +1,7 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Grid,
-  Stack,
-  StackDivider,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Flex, Grid, Stack, StackDivider, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { Avatar } from '~/components/Avatar';
 import { useUser } from '~/features/profile/api';
 import { RouterOutput } from '~/utils/trpc';
 import { useFilterFeedback } from '../api/useFilterFeedback';

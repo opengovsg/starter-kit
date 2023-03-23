@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Drawer,
   DrawerBody,
@@ -15,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { Avatar } from '~/components/Avatar';
 import { RichText } from '~/components/RichText';
 import { RouterOutput, trpc } from '~/utils/trpc';
 import { FeedbackCommentRichText } from './FeedbackCommentRichText';
