@@ -1,17 +1,23 @@
-import { Box, Flex, Icon } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Icon, Skeleton } from '@chakra-ui/react';
 import { Input, useToast } from '@opengovsg/design-system-react';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useMemo, useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
 import { NextImage } from '~/components/NextImage';
 import { useUploadAvatarMutation } from '../api';
 
 interface AvatarUploadProps {
-  url: string;
+  url?: string | null;
 }
 
 export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
-  const [currentAvatarUrl, setCurrentAvatarUrl] = useState(url);
+  // Will load this over `url` if provided for UX.
+  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>();
   const [isHover, setIsHover] = useState(false);
+
+  const avatarUrlToShow = useMemo(
+    () => uploadedAvatarUrl ?? url,
+    [uploadedAvatarUrl, url],
+  );
 
   const toast = useToast({
     status: 'success',
@@ -29,7 +35,7 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
 
     return uploadAvatarMutation.mutateAsync(file, {
       onSuccess: async (newPath) => {
-        setCurrentAvatarUrl(newPath ?? '');
+        setUploadedAvatarUrl(newPath);
         toast({
           description: 'Avatar uploaded successfully.',
         });
@@ -76,13 +82,21 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         />
         <Icon color="white" as={BiImageAdd} />
       </Flex>
-      <NextImage
-        src={currentAvatarUrl}
-        borderRadius="md"
-        width="4rem"
-        height="4rem"
-        alt="profile picture"
-      />
+      <Skeleton isLoaded={url !== undefined}>
+        {avatarUrlToShow ? (
+          <>
+            <NextImage
+              src={avatarUrlToShow}
+              borderRadius="md"
+              width="4rem"
+              height="4rem"
+              alt="profile picture"
+            />
+          </>
+        ) : (
+          <Avatar size="lg" borderRadius="md" />
+        )}
+      </Skeleton>
     </Box>
   );
 };
