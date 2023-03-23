@@ -22,13 +22,20 @@ import { trpc } from '~/utils/trpc';
 
 import Image from 'next/image';
 import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg';
+import { useToast } from '@opengovsg/design-system-react';
 
 const Profile: NextPageWithLayout = () => {
   const { user: me } = useUser();
   const utils = trpc.useContext();
+  const toast = useToast({
+    status: 'success',
+  });
 
   const mutation = trpc.me.update.useMutation({
     async onSuccess() {
+      toast({
+        description: 'Profile updated successfully.',
+      });
       await utils.me.get.invalidate();
     },
   });
@@ -65,13 +72,14 @@ const Profile: NextPageWithLayout = () => {
           alt="Profile aunty"
         />
       </Flex>
-      <Flex
+      <Stack
         bg="white"
         borderWidth="1px"
         borderRadius="md"
         flexDir="column"
         px="3.5rem"
         py="3rem"
+        spacing="2.5rem"
       >
         <Stack
           direction={{ base: 'column', md: 'row' }}
@@ -79,7 +87,7 @@ const Profile: NextPageWithLayout = () => {
           bg="white"
         >
           <AvatarUpload url={me?.image} />
-          <Stack>
+          <Stack flex={1}>
             <FormControl isInvalid={!!errors.name}>
               <FormLabel>Email</FormLabel>
               <Input isDisabled value={me?.email ?? ''} />
@@ -96,10 +104,10 @@ const Profile: NextPageWithLayout = () => {
             </FormControl>
           </Stack>
         </Stack>
-        <ButtonGroup borderTopWidth="1px">
+        <ButtonGroup justifyContent="end">
           <Button onClick={handleProfileUpdate}>Update my profile</Button>
         </ButtonGroup>
-      </Flex>
+      </Stack>
     </Box>
   );
 };
