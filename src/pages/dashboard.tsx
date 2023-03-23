@@ -6,12 +6,12 @@ import { BiPlus } from 'react-icons/bi';
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
 import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
 import { TeamFeedbackList } from '~/features/feedback/components';
-import type { NextPageWithAuthAndLayout } from '~/lib/types';
+import type { NextPageWithLayout } from '~/lib/types';
 import { AdminLayout } from '~/templates/layouts/AdminLayout';
 import { trpc } from '~/utils/trpc';
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar';
 
-const Dashboard: NextPageWithAuthAndLayout = () => {
+const Dashboard: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
     trpc.post.unreadCount.useQuery();
 
@@ -55,34 +55,6 @@ const Dashboard: NextPageWithAuthAndLayout = () => {
   );
 };
 
-Dashboard.auth = true;
-
 Dashboard.getLayout = AdminLayout;
 
 export default Dashboard;
-
-/**
- * If you want to statically render this page
- * - Export `appRouter` & `createContext` from [trpc].ts
- * - Make the `opts` object optional on `createContext()`
- *
- * @link https://trpc.io/docs/ssg
- */
-// export const getStaticProps = async (
-//   context: GetStaticPropsContext<{ filter: string }>,
-// ) => {
-//   const ssg = createProxySSGHelpers({
-//     router: appRouter,
-//     ctx: await createContext(),
-//   });
-//
-//   await ssg.post.all.fetch();
-//
-//   return {
-//     props: {
-//       trpcState: ssg.dehydrate(),
-//       filter: context.params?.filter ?? 'all',
-//     },
-//     revalidate: 1,
-//   };
-// };

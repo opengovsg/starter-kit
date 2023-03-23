@@ -13,17 +13,16 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  UseDisclosureReturn,
-} from '@chakra-ui/react';
-import {
-  FormErrorMessage,
   FormLabel,
   Input,
-} from '@opengovsg/design-system-react';
+  FormErrorMessage,
+  UseDisclosureReturn,
+} from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useZodForm } from '~/lib/form';
 import { updateMeSchema } from '~/server/schemas/me';
 import { trpc } from '~/utils/trpc';
+import { useUser } from '../api';
 import { AvatarUpload } from './AvatarUpload';
 
 export type EditProfileModalProps = Pick<
@@ -35,7 +34,7 @@ export const EditProfileModal = ({
   isOpen,
   onClose,
 }: EditProfileModalProps): JSX.Element => {
-  const { data: me } = trpc.me.get.useQuery();
+  const { user: me } = useUser();
 
   const utils = trpc.useContext();
 

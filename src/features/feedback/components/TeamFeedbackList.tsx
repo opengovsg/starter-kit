@@ -7,9 +7,9 @@ import {
   StackDivider,
   Text,
 } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { useUser } from '~/features/profile/api';
 import { RouterOutput } from '~/utils/trpc';
 import { useFilterFeedback } from '../api/useFilterFeedback';
 import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton';
@@ -72,7 +72,7 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
 };
 
 export const TeamFeedbackList = (): JSX.Element => {
-  const { data: session } = useSession();
+  const { user } = useUser();
 
   const { filteredFeedback, isLoading } = useFilterFeedback();
 
@@ -85,7 +85,7 @@ export const TeamFeedbackList = (): JSX.Element => {
       {filteredFeedback?.items.map((feedback) => (
         <TeamFeedbackRow
           key={feedback.id}
-          loggedInId={session?.user.id}
+          loggedInId={user?.id}
           feedback={feedback}
         />
       ))}

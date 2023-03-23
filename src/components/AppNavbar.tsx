@@ -5,16 +5,15 @@ import {
   Link,
   Menu,
 } from '@opengovsg/design-system-react';
-import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
 import ogpLogo from '~/assets/ogp-logo.svg';
 import { EditProfileModal } from '~/features/profile';
-import { trpc } from '~/utils/trpc';
+import { useUser } from '~/features/profile/api';
 
 export const AppNavbar = (): JSX.Element => {
-  const { data: user } = trpc.me.get.useQuery();
+  const { user, logout } = useUser();
   const { onOpen, isOpen, onClose } = useDisclosure();
 
   return (
@@ -43,7 +42,7 @@ export const AppNavbar = (): JSX.Element => {
           >
             <Menu.Item onClick={onOpen}>Edit profile</Menu.Item>
             <AvatarMenuDivider />
-            <Menu.Item onClick={() => signOut()}>Sign out</Menu.Item>
+            <Menu.Item onClick={() => logout()}>Sign out</Menu.Item>
           </AvatarMenu>
         </HStack>
       </Flex>

@@ -6,11 +6,11 @@ import {
   Stack,
   Text,
   VStack,
+  FormLabel,
 } from '@chakra-ui/react';
 import {
   Button,
   FormErrorMessage,
-  FormLabel,
   Infobox,
   Toggle,
 } from '@opengovsg/design-system-react';
@@ -18,18 +18,18 @@ import { useRouter } from 'next/router';
 import { Controller } from 'react-hook-form';
 import { FeedbackNavbar } from '~/features/feedback/components';
 import { useZodForm } from '~/lib/form';
-import { NextPageWithAuthAndLayout } from '~/lib/types';
+import { NextPageWithLayout } from '~/lib/types';
 import { addPostSchema } from '~/server/schemas/post';
 import { trpc } from '~/utils/trpc';
 import Image from 'next/image';
 
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
 import { RichText } from '~/components/RichText';
+import { useUser } from '~/features/profile/api';
 
-const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
+const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext();
-
-  const { data: user } = trpc.me.get.useQuery();
+  const { user } = useUser();
 
   const router = useRouter();
 
@@ -117,7 +117,7 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
                   identity.
                 </Infobox>
               ) : (
-                <Text>Posting as {user?.name}</Text>
+                <Text>Posting as {user?.name ?? user?.email}</Text>
               )}
             </Stack>
           </FormControl>
@@ -134,7 +134,5 @@ const PostFeedbackPage: NextPageWithAuthAndLayout = () => {
     </Flex>
   );
 };
-
-PostFeedbackPage.auth = true;
 
 export default PostFeedbackPage;
