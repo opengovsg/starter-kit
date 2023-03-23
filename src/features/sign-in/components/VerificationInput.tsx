@@ -13,8 +13,9 @@ import { emailSignInSchema } from './Emailnput';
 const emailVerificationSchema = emailSignInSchema.extend({
   token: z
     .string()
-    .min(1, 'Please enter the OTP.')
-    .length(6, 'Please enter exactly 6 characters.'),
+    .trim()
+    .min(1, 'OTP is required.')
+    .length(6, 'Please enter a 6 character OTP.'),
 });
 
 interface VerificationInputProps {
