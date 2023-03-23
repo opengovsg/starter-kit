@@ -13,7 +13,7 @@
     "dev": "npm run dx:next",
     "prebuild": "run-s generate migrate",
     "build": "next build",
-    "build:theme": "npx chakra-cli tokens node_modules/@opengovsg/design-system-react/build/main/theme/theme.js",
+    "build:theme": "npx chakra-cli tokens src/theme/index.ts",
     "start": "next start",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
     "lint-fix": "npm run lint --fix",

@@ -1,4 +1,4 @@
-import { Flex, HStack, useDisclosure } from '@chakra-ui/react';
+import { Flex, HStack } from '@chakra-ui/react';
 import {
   AvatarMenu,
   AvatarMenuDivider,
@@ -7,18 +7,17 @@ import {
 } from '@opengovsg/design-system-react';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 
 import ogpLogo from '~/assets/ogp-logo.svg';
-import { EditProfileModal } from '~/features/profile';
 import { useUser } from '~/features/profile/api';
 
 export const AppNavbar = (): JSX.Element => {
   const { user, logout } = useUser();
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const { pathname } = useRouter();
 
   return (
     <>
-      <EditProfileModal isOpen={isOpen} onClose={onClose} />
       <Flex
         justify="space-between"
         align="center"
@@ -38,9 +37,17 @@ export const AppNavbar = (): JSX.Element => {
             // @ts-expect-error missing type in design-system
             src={user?.image ?? undefined}
             name={user?.email ?? undefined}
+            variant="subtle"
+            bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}
           >
-            <Menu.Item onClick={onOpen}>Edit profile</Menu.Item>
+            <Menu.Item
+              disabled={pathname === '/profile'}
+              as={NextLink}
+              href="/profile"
+            >
+              Edit profile
+            </Menu.Item>
             <AvatarMenuDivider />
             <Menu.Item onClick={() => logout()}>Sign out</Menu.Item>
           </AvatarMenu>
