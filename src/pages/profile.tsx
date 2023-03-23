@@ -9,6 +9,7 @@ import {
   Input,
   Stack,
   Text,
+  Textarea,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useUser } from '~/features/profile/api';
@@ -41,7 +42,7 @@ const Profile: NextPageWithLayout = () => {
     values: useMemo(() => {
       return {
         name: me?.name ?? '',
-        title: me?.title ?? '',
+        bio: me?.bio ?? '',
       };
     }, [me]),
   });
@@ -79,15 +80,19 @@ const Profile: NextPageWithLayout = () => {
         >
           <AvatarUpload url={me?.image} />
           <Stack>
-            <FormControl isRequired id="name" isInvalid={!!errors.name}>
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel>Email</FormLabel>
+              <Input isDisabled value={me?.email ?? ''} />
+            </FormControl>
+            <FormControl id="name" isInvalid={!!errors.name}>
               <FormLabel>Name</FormLabel>
               <Input {...register('name')} />
               <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isRequired id="title" isInvalid={!!errors.title}>
-              <FormLabel>Job title</FormLabel>
-              <Input {...register('title')} />
-              <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+            <FormControl id="title" isInvalid={!!errors.bio}>
+              <FormLabel>Bio</FormLabel>
+              <Textarea {...register('bio')} />
+              <FormErrorMessage>{errors.bio?.message}</FormErrorMessage>
             </FormControl>
           </Stack>
         </Stack>

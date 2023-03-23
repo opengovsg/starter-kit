@@ -88,7 +88,7 @@ model User {
   email         String?      @unique
   emailVerified DateTime?    @map("email_verified")
   image         String?
-  title         String?
+  bio           String?
   posts         Post[]
   likedPosts    LikedPosts[]
   comments      Comment[]
