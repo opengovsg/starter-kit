@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Icon, Skeleton } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react';
 import { Input, useToast } from '@opengovsg/design-system-react';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
@@ -51,7 +51,6 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
   return (
     <Box
       pos="relative"
-      cursor="pointer"
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -59,7 +58,7 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         as="label"
         transitionProperty="opacity"
         transitionDuration="0.2s"
-        opacity={isHover ? 1 : 0}
+        opacity={isHover && !uploadAvatarMutation.isLoading ? 1 : 0}
         zIndex={1}
         position="absolute"
         top={0}
@@ -67,10 +66,12 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         right={0}
         bottom={0}
         bg="blackAlpha.600"
-        borderRadius="md"
+        borderRadius="full"
         align="center"
         justify="center"
-        cursor="pointer"
+        cursor={uploadAvatarMutation.isLoading ? 'default' : 'pointer'}
+        w="7rem"
+        h="7rem"
       >
         <Input
           isDisabled={uploadAvatarMutation.isLoading}
@@ -80,21 +81,34 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
           onChange={handleUploadAvatar}
           hidden
         />
-        <Icon color="white" as={BiImageAdd} />
+        <Icon color="white" fontSize="2rem" as={BiImageAdd} />
       </Flex>
-      <Skeleton isLoaded={url !== undefined}>
+      <Skeleton isLoaded={url !== undefined} pos="relative">
         {avatarUrlToShow ? (
-          <>
-            <NextImage
-              src={avatarUrlToShow}
-              borderRadius="md"
-              width="4rem"
-              height="4rem"
-              alt="profile picture"
-            />
-          </>
+          <NextImage
+            bg="base.canvas.brand-subtle"
+            src={avatarUrlToShow}
+            borderRadius="full"
+            width="7rem"
+            height="7rem"
+            alt="profile picture"
+          />
         ) : (
-          <Avatar size="lg" borderRadius="md" />
+          <Avatar w="7rem" h="7rem" />
+        )}
+        {uploadAvatarMutation.isLoading && (
+          <Flex
+            pos="absolute"
+            top={0}
+            left={0}
+            bottom={0}
+            right={0}
+            bg="whiteAlpha.800"
+            align="center"
+            justify="center"
+          >
+            <Spinner />
+          </Flex>
         )}
       </Skeleton>
     </Box>

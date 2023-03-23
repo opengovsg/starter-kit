@@ -37,6 +37,8 @@ export const AppNavbar = (): JSX.Element => {
             // @ts-expect-error missing type in design-system
             src={user?.image ?? undefined}
             name={user?.email ?? undefined}
+            variant="subtle"
+            bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}
           >
             <Menu.Item
