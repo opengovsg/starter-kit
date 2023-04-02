@@ -1,18 +1,18 @@
 import { env } from '~/server/env';
-import { SgidClient } from '@opengovsg/sgid-client';
-import { getNextAuthBaseUrl } from '~/utils/getBaseUrl';
+// import { SgidClient } from '@opengovsg/sgid-client';
+// import { getNextAuthBaseUrl } from '~/utils/getBaseUrl';
 import { IronSessionOptions } from 'iron-session';
 
-const SGID_REDIRECT_URI = `${getNextAuthBaseUrl()}/api/auth/callback/sgid`;
+// const SGID_REDIRECT_URI = `${getNextAuthBaseUrl()}/api/auth/callback/sgid`;
 
-const SGID_CLIENT = new SgidClient({
-  clientId: env.SGID_CLIENT_ID,
-  clientSecret: env.SGID_CLIENT_SECRET,
-  privateKey: env.SGID_PRIVATE_KEY,
-  redirectUri: SGID_REDIRECT_URI,
-  // The rest of the options are not required since they are already declared in NextAuth.
-  // This client is solely used for token exchange and decryption.
-});
+// const SGID_CLIENT = new SgidClient({
+//   clientId: env.SGID_CLIENT_ID,
+//   clientSecret: env.SGID_CLIENT_SECRET,
+//   privateKey: env.SGID_PRIVATE_KEY,
+//   redirectUri: SGID_REDIRECT_URI,
+//   // The rest of the options are not required since they are already declared in NextAuth.
+//   // This client is solely used for token exchange and decryption.
+// });
 
 export const sessionOptions: IronSessionOptions = {
   password: {
