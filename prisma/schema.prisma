@@ -15,11 +15,10 @@ generator client {
 }
 
 model VerificationToken {
-  identifier String
-  token      String   @unique
+  identifier String   @id
+  token      String
+  attempts   Int      @default(0)
   expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 model Post {

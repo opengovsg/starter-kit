@@ -1,13 +1,16 @@
-import { createHash, getRandomValues } from 'node:crypto'
-import { env } from '~/server/env'
+import { scryptSync, randomInt, timingSafeEqual } from 'node:crypto'
 
 export const createVfnToken = () => {
-  const random = getRandomValues(new Uint8Array(8))
-  return Buffer.from(random).toString('hex').slice(0, 6)
+  return randomInt(0, 1000000).toString().padStart(6, '0')
 }
 
-export const createTokenHash = (token: string) => {
-  return createHash('sha256')
-    .update(`${token}${env.OTP_HASH_SECRET}`)
-    .digest('hex')
+export const createTokenHash = (token: string, email: string) => {
+  return scryptSync(token, email, 64).toString('base64')
+}
+
+export const compareHash = (token: string, email: string, hash: string) => {
+  return timingSafeEqual(
+    Buffer.from(hash),
+    Buffer.from(createTokenHash(token, email))
+  )
 }

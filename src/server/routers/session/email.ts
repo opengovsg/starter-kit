@@ -24,15 +24,23 @@ export const emailSessionRouter = router({
     .mutation(async ({ ctx, input: { email } }) => {
       const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
       const token = createVfnToken()
-      const hashedToken = createTokenHash(token)
+      const hashedToken = createTokenHash(token, email)
 
       const url = new URL(getBaseUrl())
 
       // May have one of them fail,
       // so users may get an email but not have the token saved, but that should be fine.
       await Promise.all([
-        ctx.prisma.verificationToken.create({
-          data: {
+        ctx.prisma.verificationToken.upsert({
+          where: {
+            identifier: email,
+          },
+          update: {
+            token: hashedToken,
+            expires,
+            attempts: 0,
+          },
+          create: {
             identifier: email,
             token: hashedToken,
             expires,
@@ -56,19 +64,20 @@ export const emailSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input: { email, otp } }) => {
-      const invite = await useVerificationToken(ctx.prisma, {
-        token: otp,
-        email,
-      })
-      const hasInvite = !!invite
-      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
-      const invalidInvite = !hasInvite || expired
-      if (invalidInvite) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'OTP is invalid or expired.',
-          cause: new VerificationError({ hasInvite, expired }),
+      try {
+        await useVerificationToken(ctx.prisma, {
+          token: otp,
+          email,
         })
+      } catch (e) {
+        if (e instanceof VerificationError) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: e.message,
+            cause: e,
+          })
+        }
+        throw e
       }
 
       const user = await ctx.prisma.user.upsert({

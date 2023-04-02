@@ -11,6 +11,7 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { Context } from './context'
+import { prisma } from './prisma'
 
 const t = initTRPC.context<Context>().create({
   /**
@@ -32,7 +33,10 @@ const t = initTRPC.context<Context>().create({
 export const router = t.router
 
 const authMiddleware = t.middleware(({ next, ctx }) => {
-  if (!ctx.session?.user) {
+  if (
+    !ctx.session?.user ||
+    !prisma.user.findUnique({ where: { id: ctx.session.user.id } })
+  ) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
   return next({

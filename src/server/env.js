@@ -15,7 +15,6 @@ const envSchema = z.object({
   // NEXTAUTH_SECRET: z.string(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
-  OTP_HASH_SECRET: z.string().min(16),
   POSTMAN_API_KEY: z.string(),
   SESSION_SECRET: z.string().min(32),
   // SGID_CLIENT_ID: z.string(),
