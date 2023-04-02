@@ -65,7 +65,7 @@ export const VerificationInput = ({
         <Input maxLength={6} {...register('token')} />
         <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={verifyOtpMutation.isLoading}>
+      <Button type="submit" isLoading={verifyOtpMutation.isLoading} mt={4}>
         Sign in
       </Button>
     </form>

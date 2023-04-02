@@ -53,7 +53,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={loginMutation.isLoading}>
+      <Button type="submit" isLoading={loginMutation.isLoading} mt={4}>
         Log in
       </Button>
     </form>
