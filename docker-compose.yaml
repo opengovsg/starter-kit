@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:latest
+    ports:
+      - 26257:26257
+      - 8080:8080
+    environment:
+      - COCKROACH_DATABASE=app
+      - COCKROACH_USER=root
+    volumes:
+      - cockroach-volume:/cockroach/cockroach-data"
+    command: start-single-node --insecure
+
+volumes:
+  cockroach-volume:

@@ -5,9 +5,10 @@
   "scripts": {
     "generate": "prisma generate",
     "prisma-studio": "prisma studio",
+    "db-setup": "docker-compose up -d",
     "db-seed": "prisma db seed",
     "db-reset": "prisma migrate reset",
-    "dx:next": "run-s migrate-dev db-seed && next dev",
+    "dx:next": "run-s db-setup migrate-dev db-seed && next dev",
     "dx:prisma-studio": "npm run prisma-studio",
     "dx": "run-p dx:* --print-label",
     "dev": "next dev",
