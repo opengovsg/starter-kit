@@ -23,7 +23,7 @@ model VerificationToken {
 }
 
 model Post {
-  id          Int          @id @default(autoincrement())
+  id          String       @id @default(cuid())
   title       String?      @db.Text
   content     String       @db.Text
   contentHtml String       @map("content_html") @db.Text
@@ -46,7 +46,7 @@ model Post {
 
 model ReadPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    Int      @map("post_id")
+  postId    String   @map("post_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @map("user_id")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -58,7 +58,7 @@ model ReadPosts {
 
 model LikedPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    Int      @map("post_id")
+  postId    String   @map("post_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
@@ -69,12 +69,12 @@ model LikedPosts {
 }
 
 model Comment {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   content     String   @db.Text
   contentHtml String   @map("content_html") @db.Text
   createdAt   DateTime @default(now()) @map("created_at")
   post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int      @map("post_id")
+  postId      String   @map("post_id")
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String   @map("author_id")
 
