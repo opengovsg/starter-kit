@@ -209,7 +209,7 @@ export const postRouter = router({
   byId: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
       }),
     )
     .query(async ({ input, ctx }) => {
@@ -246,7 +246,7 @@ export const postRouter = router({
   setRead: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

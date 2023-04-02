@@ -37,7 +37,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     async onSuccess({ id }) {
       // refetches posts after a post is added
       await utils.post.list.invalidate();
-      router.push(`/feedback/${id}`);
+      router.push(`/dashboard?feedbackId=${id}`);
     },
   });
 

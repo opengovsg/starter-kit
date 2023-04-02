@@ -9,7 +9,7 @@ export const addPostSchema = z.object({
 
 export const listPostsInputSchema = z.object({
   limit: z.number().min(1).max(100).nullish(),
-  cursor: z.number().nullish(),
+  cursor: z.string().nullish(),
   filter: z
     .enum([
       'all',

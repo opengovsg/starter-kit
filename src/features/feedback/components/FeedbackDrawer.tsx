@@ -64,7 +64,7 @@ const FeedbackComment = ({ post, isLoading }: FeedbackCommentProps) => {
 
 export const FeedbackDrawer = (): JSX.Element | null => {
   const router = useRouter();
-  const feedbackId = Number(router.query.feedbackId);
+  const feedbackId = router.query.feedbackId as string;
 
   const isOpen = !!feedbackId;
 
@@ -80,7 +80,15 @@ export const FeedbackDrawer = (): JSX.Element | null => {
     { id: feedbackId },
     {
       enabled: isOpen,
-      onSuccess: () => setReadMutation.mutate({ id: feedbackId }),
+      onSuccess: () =>
+        setReadMutation.mutate(
+          { id: feedbackId },
+          {
+            onSuccess: () => {
+              utils.post.unreadCount.invalidate();
+            },
+          },
+        ),
     },
   );
 

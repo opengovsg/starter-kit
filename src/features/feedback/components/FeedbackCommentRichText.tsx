@@ -13,7 +13,7 @@ import { Controller } from 'react-hook-form';
 import { addCommentSchema } from '~/server/schemas/comment';
 
 interface FeedbackCommentRichTextProps {
-  postId: number;
+  postId: string;
   handleCancel: () => void;
 }
 
