@@ -22,6 +22,8 @@ export const emailSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input: { email } }) => {
+      // TODO: instead of storing expires, store issuedAt to calculate when the next otp can be re-issued
+      // TODO: rate limit this endpoint also
       const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
       const token = createVfnToken()
       const hashedToken = createTokenHash(token, email)
@@ -90,6 +92,8 @@ export const emailSessionRouter = router({
         select: defaultUserSelect,
       })
 
+      // TODO: Should only store user id in session.
+      // The rest of user details should be fetched from db in protectedProcedure.
       // Sign user in.
       ctx.session.user = user
 
