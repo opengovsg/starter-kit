@@ -1,9 +1,9 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { createTokenHash } from './auth.utils';
+import { Prisma, PrismaClient } from '@prisma/client'
+import { createTokenHash } from './auth.utils'
 
 export const useVerificationToken = async (
   prisma: PrismaClient,
-  { token, email }: { token: string; email: string },
+  { token, email }: { token: string; email: string }
 ) => {
   try {
     const verificationToken = await prisma.verificationToken.delete({
@@ -13,14 +13,14 @@ export const useVerificationToken = async (
           token: createTokenHash(token),
         },
       },
-    });
-    return verificationToken;
+    })
+    return verificationToken
   } catch (error) {
     // If token already used/deleted, just return null
     // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
     if ((error as Prisma.PrismaClientKnownRequestError).code === 'P2025') {
-      return null;
+      return null
     }
-    throw error;
+    throw error
   }
-};
+}

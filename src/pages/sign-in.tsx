@@ -1,6 +1,6 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { useState } from 'react';
-import { AppFooter } from '~/components/AppFooter';
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { useState } from 'react'
+import { AppFooter } from '~/components/AppFooter'
 
 import {
   BackgroundBox,
@@ -11,26 +11,26 @@ import {
   NonMobileSidebarGridArea,
   EmailInput,
   VerificationInput,
-} from '~/features/sign-in/components';
-import { withSessionSsr } from '~/lib/withSession';
+} from '~/features/sign-in/components'
+import { withSessionSsr } from '~/lib/withSession'
 
 const EmailSignIn = () => {
-  const [email, setEmail] = useState('');
-  const [showVerificationStep, setShowVerificationStep] = useState(false);
+  const [email, setEmail] = useState('')
+  const [showVerificationStep, setShowVerificationStep] = useState(false)
 
   if (showVerificationStep) {
-    return <VerificationInput email={email} />;
+    return <VerificationInput email={email} />
   }
 
   return (
     <EmailInput
       onSuccess={(email) => {
-        setEmail(email);
-        setShowVerificationStep(true);
+        setEmail(email)
+        setShowVerificationStep(true)
       }}
     />
-  );
-};
+  )
+}
 
 const SignIn = () => {
   return (
@@ -76,13 +76,13 @@ const SignIn = () => {
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>
-  );
-};
+  )
+}
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
-    const { callbackUrl } = query;
-    const user = req.session.user;
+    const { callbackUrl } = query
+    const user = req.session.user
 
     if (user) {
       return {
@@ -90,13 +90,13 @@ export const getServerSideProps = withSessionSsr(
           destination: callbackUrl ?? '/dashboard',
         },
         props: {},
-      };
+      }
     }
 
     return {
       props: {},
-    };
-  },
-);
+    }
+  }
+)
 
-export default SignIn;
+export default SignIn

@@ -1,13 +1,13 @@
-import { z } from 'zod';
-import { protectedProcedure, router } from '../trpc';
-import { cloudinary } from '~/lib/cloudinary';
+import { z } from 'zod'
+import { protectedProcedure, router } from '../trpc'
+import { cloudinary } from '~/lib/cloudinary'
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const apiSecret = cloudinary.config().api_secret!;
+const apiSecret = cloudinary.config().api_secret!
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const apiKey = cloudinary.config().api_key!;
+const apiKey = cloudinary.config().api_key!
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const cloudName = cloudinary.config().cloud_name!;
+const cloudName = cloudinary.config().cloud_name!
 
 export const imageUploadRouter = router({
   presign: protectedProcedure
@@ -15,10 +15,10 @@ export const imageUploadRouter = router({
       z.object({
         folder: z.string(),
         publicId: z.string(),
-      }),
+      })
     )
     .mutation(async ({ input: { folder, publicId } }) => {
-      const timestamp = Math.round(new Date().getTime() / 1000);
+      const timestamp = Math.round(new Date().getTime() / 1000)
 
       const signature = cloudinary.utils.api_sign_request(
         {
@@ -27,8 +27,8 @@ export const imageUploadRouter = router({
           public_id: publicId,
           media_metadata: true,
         },
-        apiSecret,
-      );
+        apiSecret
+      )
 
       return {
         timestamp,
@@ -37,6 +37,6 @@ export const imageUploadRouter = router({
         publicId,
         apiKey,
         cloudName,
-      };
+      }
     }),
-});
+})

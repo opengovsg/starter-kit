@@ -2,13 +2,13 @@ import {
   BreadcrumbItem,
   BreadcrumbItemProps,
   BreadcrumbLink,
-} from '@chakra-ui/react';
-import Link from 'next/link';
+} from '@chakra-ui/react'
+import Link from 'next/link'
 
 export interface CrumbProps extends BreadcrumbItemProps {
-  href: string;
-  label: string;
-  last?: boolean;
+  href: string
+  label: string
+  last?: boolean
 }
 // Props are required as Breadcrumb parent injects props into its crumb children.
 export const Crumb = ({ href, label, last = false, ...props }: CrumbProps) => {
@@ -28,7 +28,7 @@ export const Crumb = ({ href, label, last = false, ...props }: CrumbProps) => {
           {label}
         </BreadcrumbLink>
       </BreadcrumbItem>
-    );
+    )
   }
 
   return (
@@ -37,5 +37,5 @@ export const Crumb = ({ href, label, last = false, ...props }: CrumbProps) => {
         {label}
       </BreadcrumbLink>
     </BreadcrumbItem>
-  );
-};
+  )
+}

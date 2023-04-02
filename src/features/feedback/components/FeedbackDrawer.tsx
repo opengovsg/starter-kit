@@ -11,22 +11,22 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
-import { Avatar } from '~/components/Avatar';
-import { RichText } from '~/components/RichText';
-import { RouterOutput, trpc } from '~/utils/trpc';
-import { FeedbackCommentRichText } from './FeedbackCommentRichText';
+} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useCallback } from 'react'
+import { Avatar } from '~/components/Avatar'
+import { RichText } from '~/components/RichText'
+import { RouterOutput, trpc } from '~/utils/trpc'
+import { FeedbackCommentRichText } from './FeedbackCommentRichText'
 
 type PostByIdOutput = Pick<
   RouterOutput['post']['byId'],
   'author' | 'contentHtml' | 'createdAt'
->;
+>
 
 interface FeedbackCommentProps {
-  post?: PostByIdOutput;
-  isLoading?: boolean;
+  post?: PostByIdOutput
+  isLoading?: boolean
 }
 
 const FeedbackComment = ({ post, isLoading }: FeedbackCommentProps) => {
@@ -36,7 +36,7 @@ const FeedbackComment = ({ post, isLoading }: FeedbackCommentProps) => {
         <SkeletonCircle size="2rem" />
         <Skeleton flex={1} h="2rem" />
       </Stack>
-    );
+    )
   }
 
   return (
@@ -59,22 +59,22 @@ const FeedbackComment = ({ post, isLoading }: FeedbackCommentProps) => {
         </Stack>
       </Box>
     </Stack>
-  );
-};
+  )
+}
 
 export const FeedbackDrawer = (): JSX.Element | null => {
-  const router = useRouter();
-  const feedbackId = router.query.feedbackId as string;
+  const router = useRouter()
+  const feedbackId = router.query.feedbackId as string
 
-  const isOpen = !!feedbackId;
+  const isOpen = !!feedbackId
 
-  const utils = trpc.useContext();
+  const utils = trpc.useContext()
 
   const setReadMutation = trpc.readPost.set.useMutation({
     onSuccess: () => {
-      utils.post.list.invalidate();
+      utils.post.list.invalidate()
     },
-  });
+  })
 
   const { data, isLoading } = trpc.post.byId.useQuery(
     { id: feedbackId },
@@ -85,19 +85,19 @@ export const FeedbackDrawer = (): JSX.Element | null => {
           { id: feedbackId },
           {
             onSuccess: () => {
-              utils.post.unreadCount.invalidate();
+              utils.post.unreadCount.invalidate()
             },
-          },
+          }
         ),
-    },
-  );
+    }
+  )
 
   const handleCloseDrawer = useCallback(() => {
-    delete router.query.feedbackId;
-    router.push(router);
-  }, [router]);
+    delete router.query.feedbackId
+    router.push(router)
+  }, [router])
 
-  if (!data) return null;
+  if (!data) return null
 
   return (
     <Drawer
@@ -128,5 +128,5 @@ export const FeedbackDrawer = (): JSX.Element | null => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  );
-};
+  )
+}

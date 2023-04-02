@@ -1,52 +1,52 @@
-import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react';
-import { Input, useToast } from '@opengovsg/design-system-react';
-import { ChangeEventHandler, useMemo, useState } from 'react';
-import { BiImageAdd } from 'react-icons/bi';
-import { NextImage } from '~/components/NextImage';
-import { useUploadAvatarMutation } from '../api';
+import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react'
+import { Input, useToast } from '@opengovsg/design-system-react'
+import { ChangeEventHandler, useMemo, useState } from 'react'
+import { BiImageAdd } from 'react-icons/bi'
+import { NextImage } from '~/components/NextImage'
+import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
-  url?: string | null;
+  url?: string | null
 }
 
 export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
   // Will load this over `url` if provided for UX.
-  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>();
-  const [isHover, setIsHover] = useState(false);
+  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>()
+  const [isHover, setIsHover] = useState(false)
 
   const avatarUrlToShow = useMemo(
     () => uploadedAvatarUrl ?? url,
-    [uploadedAvatarUrl, url],
-  );
+    [uploadedAvatarUrl, url]
+  )
 
   const toast = useToast({
     status: 'success',
-  });
+  })
 
-  const uploadAvatarMutation = useUploadAvatarMutation();
+  const uploadAvatarMutation = useUploadAvatarMutation()
 
   const handleUploadAvatar: ChangeEventHandler<HTMLInputElement> = async (
-    event,
+    event
   ) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (!file) {
-      throw new Error('You must select an image to upload.');
+      throw new Error('You must select an image to upload.')
     }
 
     return uploadAvatarMutation.mutateAsync(file, {
       onSuccess: async (newPath) => {
-        setUploadedAvatarUrl(newPath);
+        setUploadedAvatarUrl(newPath)
         toast({
           description: 'Avatar uploaded successfully.',
-        });
+        })
       },
       onError: (x) =>
         toast({
           status: 'error',
           description: (x as Error)?.message ?? 'Failed to upload avatar.',
         }),
-    });
-  };
+    })
+  }
 
   return (
     <Box
@@ -112,5 +112,5 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         )}
       </Skeleton>
     </Box>
-  );
-};
+  )
+}

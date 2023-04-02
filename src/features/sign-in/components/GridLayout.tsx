@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren } from 'react';
-import { Flex, GridItem, GridProps } from '@chakra-ui/react';
+import { FC, PropsWithChildren } from 'react'
+import { Flex, GridItem, GridProps } from '@chakra-ui/react'
 
-import { AppGrid } from '~/templates/AppGrid';
+import { AppGrid } from '~/templates/AppGrid'
 
 // Component for the split blue/white background.
 export const BackgroundBox: FC<PropsWithChildren> = ({ children }) => (
@@ -20,12 +20,12 @@ export const BackgroundBox: FC<PropsWithChildren> = ({ children }) => (
   >
     {children}
   </Flex>
-);
+)
 
 // Component that controls the various grid areas according to responsive breakpoints.
 export const BaseGridLayout = (props: GridProps) => (
   <AppGrid templateRows={{ md: 'auto 1fr auto', lg: '1fr auto' }} {...props} />
-);
+)
 
 // Grid area styling for the login form.
 export const LoginGridArea: FC<PropsWithChildren> = ({ children }) => (
@@ -38,7 +38,7 @@ export const LoginGridArea: FC<PropsWithChildren> = ({ children }) => (
   >
     {children}
   </GridItem>
-);
+)
 
 // Grid area styling for the footer.
 export const FooterGridArea: FC<PropsWithChildren> = ({ children }) => (
@@ -50,7 +50,7 @@ export const FooterGridArea: FC<PropsWithChildren> = ({ children }) => (
   >
     {children}
   </GridItem>
-);
+)
 
 // Grid area styling for the left sidebar that only displays on tablet and desktop breakpoints.
 export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
@@ -68,4 +68,4 @@ export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
   >
     {children}
   </GridItem>
-);
+)

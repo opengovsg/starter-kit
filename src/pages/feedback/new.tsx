@@ -7,39 +7,39 @@ import {
   Text,
   VStack,
   FormLabel,
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'
 import {
   Button,
   FormErrorMessage,
   Infobox,
   Toggle,
-} from '@opengovsg/design-system-react';
-import { useRouter } from 'next/router';
-import { Controller } from 'react-hook-form';
-import { FeedbackNavbar } from '~/features/feedback/components';
-import { useZodForm } from '~/lib/form';
-import { NextPageWithLayout } from '~/lib/types';
-import { addPostSchema } from '~/server/schemas/post';
-import { trpc } from '~/utils/trpc';
-import Image from 'next/image';
+} from '@opengovsg/design-system-react'
+import { useRouter } from 'next/router'
+import { Controller } from 'react-hook-form'
+import { FeedbackNavbar } from '~/features/feedback/components'
+import { useZodForm } from '~/lib/form'
+import { NextPageWithLayout } from '~/lib/types'
+import { addPostSchema } from '~/server/schemas/post'
+import { trpc } from '~/utils/trpc'
+import Image from 'next/image'
 
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
-import { RichText } from '~/components/RichText';
-import { useUser } from '~/features/profile/api';
+import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
+import { RichText } from '~/components/RichText'
+import { useUser } from '~/features/profile/api'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
-  const utils = trpc.useContext();
-  const { user } = useUser();
+  const utils = trpc.useContext()
+  const { user } = useUser()
 
-  const router = useRouter();
+  const router = useRouter()
 
   const mutation = trpc.post.add.useMutation({
     async onSuccess({ id }) {
       // refetches posts after a post is added
-      await utils.post.list.invalidate();
-      router.push(`/dashboard?feedbackId=${id}`);
+      await utils.post.list.invalidate()
+      router.push(`/dashboard?feedbackId=${id}`)
     },
-  });
+  })
 
   const {
     formState: { errors },
@@ -53,13 +53,11 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     defaultValues: {
       anonymous: false,
     },
-  });
+  })
 
-  const isAnonymous = watch('anonymous');
+  const isAnonymous = watch('anonymous')
 
-  const handleSubmitFeedback = handleSubmit((values) =>
-    mutation.mutate(values),
-  );
+  const handleSubmitFeedback = handleSubmit((values) => mutation.mutate(values))
 
   return (
     <Flex flexDir="column" bg="base.canvas.brand-subtle" minH="$100vh">
@@ -99,8 +97,8 @@ const PostFeedbackPage: NextPageWithLayout = () => {
                 <RichText
                   {...field}
                   onChange={(value, rawValue) => {
-                    onChange(value);
-                    setValue('content', rawValue ?? '');
+                    onChange(value)
+                    setValue('content', rawValue ?? '')
                   }}
                 />
               )}
@@ -132,7 +130,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
         </Stack>
       </Container>
     </Flex>
-  );
-};
+  )
+}
 
-export default PostFeedbackPage;
+export default PostFeedbackPage

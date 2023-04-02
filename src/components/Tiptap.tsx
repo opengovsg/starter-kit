@@ -1,28 +1,28 @@
-import { Box } from '@chakra-ui/react';
-import { Tag } from '@opengovsg/design-system-react';
+import { Box } from '@chakra-ui/react'
+import { Tag } from '@opengovsg/design-system-react'
 import {
   useEditor,
   EditorContent,
   BubbleMenu,
   FloatingMenu,
-} from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { forwardRef } from 'react';
+} from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { forwardRef } from 'react'
 
 interface TiptapProps {
-  value: string;
-  onChange: (contentHtml: string) => void;
+  value: string
+  onChange: (contentHtml: string) => void
 }
 
 export const Tiptap = forwardRef<HTMLInputElement, TiptapProps>(
-  ({ value, onChange }, ref) => {
+  ({ value, onChange }, _ref) => {
     const editor = useEditor({
       extensions: [StarterKit],
       content: value,
       onUpdate: ({ editor }) => {
-        onChange(editor.getHTML());
+        onChange(editor.getHTML())
       },
-    });
+    })
 
     return (
       <Box borderWidth="1px">
@@ -94,8 +94,8 @@ export const Tiptap = forwardRef<HTMLInputElement, TiptapProps>(
 
         <EditorContent editor={editor} />
       </Box>
-    );
-  },
-);
+    )
+  }
+)
 
-Tiptap.displayName = 'Tiptap';
+Tiptap.displayName = 'Tiptap'

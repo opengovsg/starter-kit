@@ -1,14 +1,14 @@
-import { FC, useState } from 'react';
+import { FC, useState } from 'react'
 
-import Image, { ImageProps } from 'next/image';
+import Image, { ImageProps } from 'next/image'
 
-import { Skeleton, Box, BoxProps } from '@chakra-ui/react';
+import { Skeleton, Box, BoxProps } from '@chakra-ui/react'
 
 type Props = Omit<ImageProps, 'width' | 'height'> &
   BoxProps & {
-    alt: string;
-    fallbackSrc?: string;
-  };
+    alt: string
+    fallbackSrc?: string
+  }
 
 export const NextImage: FC<Props> = (props) => {
   const {
@@ -21,17 +21,17 @@ export const NextImage: FC<Props> = (props) => {
     priority,
     quality,
     ...rest
-  } = props;
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
+  } = props
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isError, setIsError] = useState(false)
   const handleLoad = (result: {
-    naturalWidth: number;
-    naturalHeight: number;
+    naturalWidth: number
+    naturalHeight: number
   }) => {
-    if (result.naturalWidth === 0) setIsError(true);
-    else setIsLoaded(true);
-  };
-  const handleError = () => setIsError(true);
+    if (result.naturalWidth === 0) setIsError(true)
+    else setIsLoaded(true)
+  }
+  const handleError = () => setIsError(true)
   return (
     <Box
       width={width}
@@ -70,5 +70,5 @@ export const NextImage: FC<Props> = (props) => {
         />
       </Skeleton>
     </Box>
-  );
-};
+  )
+}

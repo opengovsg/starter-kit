@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import { ReactNode } from 'react';
+import Head from 'next/head'
+import { ReactNode } from 'react'
 
-type DefaultLayoutProps = { children: ReactNode };
+type DefaultLayoutProps = { children: ReactNode }
 
 export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
@@ -13,5 +13,5 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 
       <main>{children}</main>
     </>
-  );
-};
+  )
+}

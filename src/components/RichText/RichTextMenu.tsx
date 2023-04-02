@@ -1,8 +1,8 @@
 // Hehe ripped from OpenSpace
 
-import { Divider, Icon, IconButton, Tooltip, Wrap } from '@chakra-ui/react';
-import { Editor } from '@tiptap/react';
-import { IconType } from 'react-icons';
+import { Divider, Icon, IconButton, Tooltip, Wrap } from '@chakra-ui/react'
+import { Editor } from '@tiptap/react'
+import { IconType } from 'react-icons'
 import {
   BiBold,
   BiCode,
@@ -14,22 +14,22 @@ import {
   BiStrikethrough,
   BiText,
   BiUndo,
-} from 'react-icons/bi';
-import { GoHorizontalRule } from 'react-icons/go';
-import { MdFormatClear } from 'react-icons/md';
-import { TbBlockquote, TbH1, TbH2 } from 'react-icons/tb';
+} from 'react-icons/bi'
+import { GoHorizontalRule } from 'react-icons/go'
+import { MdFormatClear } from 'react-icons/md'
+import { TbBlockquote, TbH1, TbH2 } from 'react-icons/tb'
 
 type MenuButton =
   | {
-      type: 'button';
-      label: string;
-      icon: IconType;
-      onClick: (editor: Editor) => void;
-      isActive?: (editor: Editor) => boolean;
+      type: 'button'
+      label: string
+      icon: IconType
+      onClick: (editor: Editor) => void
+      isActive?: (editor: Editor) => boolean
     }
   | {
-      type: 'divider';
-    };
+      type: 'divider'
+    }
 
 const MENU_BUTTONS: MenuButton[] = [
   {
@@ -154,11 +154,11 @@ const MENU_BUTTONS: MenuButton[] = [
     icon: BiRedo,
     onClick: (editor: Editor) => editor.chain().focus().redo().run(),
   },
-];
+]
 
 export const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
-    return null;
+    return null
   }
 
   return (
@@ -182,9 +182,9 @@ export const MenuBar = ({ editor }: { editor: Editor | null }) => {
               h="2.75rem"
               key={`rtm-divider-${index}`}
             />
-          );
+          )
         }
-        const { onClick, label, icon, isActive } = button;
+        const { onClick, label, icon, isActive } = button
         return (
           <Tooltip label={label} key={label}>
             <IconButton
@@ -196,8 +196,8 @@ export const MenuBar = ({ editor }: { editor: Editor | null }) => {
               icon={<Icon as={icon} />}
             />
           </Tooltip>
-        );
+        )
       })}
     </Wrap>
-  );
-};
+  )
+}

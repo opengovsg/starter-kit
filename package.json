@@ -6,17 +6,17 @@
     "generate": "prisma generate",
     "prisma-studio": "prisma studio",
     "db-seed": "prisma db seed",
-    "db-reset": "prisma migrate-dev reset",
+    "db-reset": "prisma migrate reset",
     "dx:next": "run-s migrate-dev db-seed && next dev",
     "dx:prisma-studio": "npm run prisma-studio",
     "dx": "run-p dx:* --print-label",
-    "dev": "npm run dx:next",
+    "dev": "next dev",
     "prebuild": "run-s generate migrate",
     "build": "next build",
     "build:theme": "npx chakra-cli tokens src/theme/index.ts",
     "start": "next start",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
-    "lint-fix": "npm run lint --fix",
+    "lint-fix": "npm run lint -- --fix",
     "migrate-dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
@@ -24,7 +24,7 @@
     "test:e2e": "playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
-    "postinstall": "prisma generate"
+    "postinstall": "npm run generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -80,7 +80,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.7",
     "prisma": "^4.10.1",
     "start-server-and-test": "^2.0.0",
     "tsx": "^3.12.3",

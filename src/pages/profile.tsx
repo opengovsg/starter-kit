@@ -10,35 +10,35 @@ import {
   Stack,
   Text,
   Textarea,
-} from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { useUser } from '~/features/profile/api';
-import { AvatarUpload } from '~/features/profile/components/AvatarUpload';
-import { useZodForm } from '~/lib/form';
-import { NextPageWithLayout } from '~/lib/types';
-import { updateMeSchema } from '~/server/schemas/me';
-import { AdminLayout } from '~/templates/layouts/AdminLayout';
-import { trpc } from '~/utils/trpc';
+} from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { useUser } from '~/features/profile/api'
+import { AvatarUpload } from '~/features/profile/components/AvatarUpload'
+import { useZodForm } from '~/lib/form'
+import { NextPageWithLayout } from '~/lib/types'
+import { updateMeSchema } from '~/server/schemas/me'
+import { AdminLayout } from '~/templates/layouts/AdminLayout'
+import { trpc } from '~/utils/trpc'
 
-import Image from 'next/image';
-import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg';
-import { useToast } from '@opengovsg/design-system-react';
+import Image from 'next/image'
+import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg'
+import { useToast } from '@opengovsg/design-system-react'
 
 const Profile: NextPageWithLayout = () => {
-  const { user: me } = useUser();
-  const utils = trpc.useContext();
+  const { user: me } = useUser()
+  const utils = trpc.useContext()
   const toast = useToast({
     status: 'success',
-  });
+  })
 
   const mutation = trpc.me.update.useMutation({
     async onSuccess() {
       toast({
         description: 'Profile updated successfully.',
-      });
-      await utils.me.get.invalidate();
+      })
+      await utils.me.get.invalidate()
     },
-  });
+  })
 
   const {
     formState: { errors },
@@ -50,13 +50,13 @@ const Profile: NextPageWithLayout = () => {
       return {
         name: me?.name ?? '',
         bio: me?.bio ?? '',
-      };
+      }
     }, [me]),
-  });
+  })
 
   const handleProfileUpdate = handleSubmit(async (values) => {
-    return mutation.mutateAsync(values);
-  });
+    return mutation.mutateAsync(values)
+  })
 
   return (
     <Box px="1.5rem" w="100%">
@@ -109,9 +109,9 @@ const Profile: NextPageWithLayout = () => {
         </ButtonGroup>
       </Stack>
     </Box>
-  );
-};
+  )
+}
 
-Profile.getLayout = AdminLayout;
+Profile.getLayout = AdminLayout
 
-export default Profile;
+export default Profile

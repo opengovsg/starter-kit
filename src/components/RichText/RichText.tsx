@@ -1,30 +1,30 @@
-import { memo, useEffect, useMemo, useState } from 'react';
-import { Box, Flex, FlexProps } from '@chakra-ui/react';
+import { memo, useEffect, useMemo, useState } from 'react'
+import { Box, Flex, FlexProps } from '@chakra-ui/react'
 
-import { dataAttr } from '@chakra-ui/utils';
-import Link from '@tiptap/extension-link';
-import { EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import { dataAttr } from '@chakra-ui/utils'
+import Link from '@tiptap/extension-link'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 
-import { safeJsonParse } from '~/utils/safeJsonParse';
+import { safeJsonParse } from '~/utils/safeJsonParse'
 
-import { MenuBar } from './RichTextMenu';
-import { TIP_TAP_STYLES } from './constants';
-import Placeholder from '@tiptap/extension-placeholder';
-import { merge } from 'lodash';
+import { MenuBar } from './RichTextMenu'
+import { TIP_TAP_STYLES } from './constants'
+import Placeholder from '@tiptap/extension-placeholder'
+import { merge } from 'lodash'
 
 interface TextAreaFieldProps extends Omit<FlexProps, 'value' | 'onChange'> {
-  value?: string;
-  defaultValue?: string;
-  isReadOnly?: boolean;
-  onChange?: (value: string | undefined, rawValue?: string) => void;
+  value?: string
+  defaultValue?: string
+  isReadOnly?: boolean
+  onChange?: (value: string | undefined, rawValue?: string) => void
 }
 
 const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
-  const { isReadOnly, value, defaultValue, onChange, sx, ...flexProps } = props;
-  const [isFocused, setIsFocused] = useState(false);
+  const { isReadOnly, value, defaultValue, onChange, sx, ...flexProps } = props
+  const [isFocused, setIsFocused] = useState(false)
 
-  const componentStyles = useMemo(() => merge({}, TIP_TAP_STYLES, sx), [sx]);
+  const componentStyles = useMemo(() => merge({}, TIP_TAP_STYLES, sx), [sx])
 
   const editor = useEditor({
     extensions: [
@@ -48,24 +48,24 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
     editable: !isReadOnly,
     onUpdate: ({ editor }) => {
       if (editor.isEmpty) {
-        return onChange?.(undefined);
+        return onChange?.(undefined)
       }
-      const json = editor.getJSON();
-      const rawTextValue = editor.getText();
-      onChange?.(JSON.stringify(json), rawTextValue);
+      const json = editor.getJSON()
+      const rawTextValue = editor.getText()
+      onChange?.(JSON.stringify(json), rawTextValue)
     },
-  });
+  })
 
   // this is required as value will not be set after the first render
   useEffect(() => {
-    if (!editor) return;
+    if (!editor) return
     if (defaultValue) {
-      editor.commands.setContent(safeJsonParse(defaultValue));
+      editor.commands.setContent(safeJsonParse(defaultValue))
     }
     if (!defaultValue && !value) {
-      editor.commands.clearContent();
+      editor.commands.clearContent()
     }
-  }, [defaultValue, editor, value]);
+  }, [defaultValue, editor, value])
 
   return (
     <Flex
@@ -102,7 +102,7 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
         </Box>
       </Box>
     </Flex>
-  );
-};
+  )
+}
 
-export const RichText = memo(UnmemoedRichText);
+export const RichText = memo(UnmemoedRichText)

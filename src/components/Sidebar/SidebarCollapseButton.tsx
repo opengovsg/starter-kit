@@ -1,20 +1,20 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo } from 'react'
 import {
   Button,
   Icon,
   SystemStyleObject,
   Text,
   usePrefersReducedMotion,
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'
 
-import { useSidebarContext } from './SidebarContext';
-import { SidebarSection } from './SidebarSection';
-import { BiArrowToLeft } from 'react-icons/bi';
+import { useSidebarContext } from './SidebarContext'
+import { SidebarSection } from './SidebarSection'
+import { BiArrowToLeft } from 'react-icons/bi'
 
 export const SidebarCollapseButton: FC = () => {
-  const { collapsed, onToggleCollapse } = useSidebarContext();
+  const { collapsed, onToggleCollapse } = useSidebarContext()
 
-  const reduceMotion = usePrefersReducedMotion();
+  const reduceMotion = usePrefersReducedMotion()
 
   const iconStyles: SystemStyleObject = useMemo(
     () => ({
@@ -23,8 +23,8 @@ export const SidebarCollapseButton: FC = () => {
       transition: reduceMotion ? undefined : 'transform 0.2s',
       transformOrigin: 'center',
     }),
-    [collapsed, reduceMotion],
-  );
+    [collapsed, reduceMotion]
+  )
 
   return (
     <SidebarSection collapsed={collapsed}>
@@ -41,5 +41,5 @@ export const SidebarCollapseButton: FC = () => {
         </Text>
       </Button>
     </SidebarSection>
-  );
-};
+  )
+}

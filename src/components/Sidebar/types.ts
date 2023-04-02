@@ -1,20 +1,20 @@
-import type { AccordionProps } from '@chakra-ui/react';
-import { type ButtonProps } from '@opengovsg/design-system-react';
+import type { AccordionProps } from '@chakra-ui/react'
+import { type ButtonProps } from '@opengovsg/design-system-react'
 
 export type BaseSidebarItem = {
-  label: string;
-  icon?: JSX.Element;
-};
+  label: string
+  icon?: JSX.Element
+}
 
 export interface SidebarChildItem extends BaseSidebarItem {
-  props?: ButtonProps;
+  props?: ButtonProps
 }
 
 export interface SidebarNestableItem extends BaseSidebarItem {
-  subItems: SidebarItemType[];
+  subItems: SidebarItemType[]
   props?: AccordionProps & {
-    [key: string]: any;
-  };
+    [key: string]: any
+  }
 }
 
-export type SidebarItemType = SidebarNestableItem | SidebarChildItem;
+export type SidebarItemType = SidebarNestableItem | SidebarChildItem

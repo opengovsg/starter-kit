@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
-import { addCommentSchema } from '../schemas/comment';
-import { protectedProcedure, router } from '../trpc';
+import { Prisma } from '@prisma/client'
+import { addCommentSchema } from '../schemas/comment'
+import { protectedProcedure, router } from '../trpc'
 
 /**
  * Default selector for Post.
@@ -19,7 +19,7 @@ const defaultCommentSelect = Prisma.validator<Prisma.CommentSelect>()({
       name: true,
     },
   },
-});
+})
 
 export const commentRouter = router({
   add: protectedProcedure
@@ -40,7 +40,7 @@ export const commentRouter = router({
           },
         },
         select: defaultCommentSelect,
-      });
-      return comment;
+      })
+      return comment
     }),
-});
+})

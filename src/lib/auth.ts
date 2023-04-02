@@ -1,7 +1,7 @@
-import { env } from '~/server/env';
+import { env } from '~/server/env'
 // import { SgidClient } from '@opengovsg/sgid-client';
 // import { getNextAuthBaseUrl } from '~/utils/getBaseUrl';
-import { IronSessionOptions } from 'iron-session';
+import { IronSessionOptions } from 'iron-session'
 
 // const SGID_REDIRECT_URI = `${getNextAuthBaseUrl()}/api/auth/callback/sgid`;
 
@@ -20,7 +20,7 @@ export const sessionOptions: IronSessionOptions = {
   },
   cookieName: 'auth.session-token',
   ttl: 60 * 60 * 24 * 7, // 7 days
-};
+}
 
 // export const authOptions: NextAuthOptions = {
 //   adapter: PrismaAdapter(prisma),

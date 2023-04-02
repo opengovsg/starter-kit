@@ -6,7 +6,7 @@ import {
   SkeletonText,
   Stack,
   StackDivider,
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'
 
 const TeamFeedbackRowSkeleton = () => {
   return (
@@ -22,8 +22,8 @@ const TeamFeedbackRowSkeleton = () => {
         skeletonHeight="1.25rem"
       />
     </Box>
-  );
-};
+  )
+}
 
 export const TeamFeedbackListSkeleton = (): JSX.Element => {
   return (
@@ -34,5 +34,5 @@ export const TeamFeedbackListSkeleton = (): JSX.Element => {
       <TeamFeedbackRowSkeleton />
       <TeamFeedbackRowSkeleton />
     </Stack>
-  );
-};
+  )
+}
