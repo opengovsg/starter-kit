@@ -11,7 +11,6 @@ const envSchema = z.object({
   R2_PUBLIC_HOSTNAME: z.string().optional(),
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   SESSION_SECRET: z.string().min(32),
-  SHADOW_DATABASE_URL: z.string().url(),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)

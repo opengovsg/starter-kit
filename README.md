@@ -2,7 +2,7 @@
 
 ## One-click deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop-ian&env=DATABASE_URL,POSTMAN_API_KEY&integration-ids=oac_h3yNIuHlhe4j9QVzVJ3TS2W0&skippable-integrations=1)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop-ian&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET&integration-ids=oac_h3yNIuHlhe4j9QVzVJ3TS2W0&skippable-integrations=1)
 
 ## Features
 

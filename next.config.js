@@ -25,6 +25,6 @@ module.exports = getConfig({
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   images: {
-    domains: [process.env.R2_PUBLIC_HOSTNAME],
+    domains: [process.env.R2_PUBLIC_HOSTNAME].filter((d) => d),
   },
 })
