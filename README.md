@@ -48,17 +48,9 @@ The auth implementation in this application uses [NextAuth.js](https://next-auth
 
 > TODO: Add implementation and docs for custom email auth and SGID login.
 
-### Enable image uploads
+### Enable image uploads on R2
 
-> TODO: Make optional
-
-This app uses Cloudinary for storing uploaded images. You can [sign up for a free account](https://cloudinary.com/users/register/free).
-
-- On your Cloudinary dashboard, look for these values under your account settings: **Cloud Name**, **API Key**, **API Secret**.
-- Update `.env` with the following variables:
-  - `CLOUDINARY_CLOUD_NAME`: **Cloud Name**
-  - `CLOUDINARY_API_KEY`: **API Key**
-  - `CLOUDINARY_API_SECRET`: **API Secret**
+See [R2 Readme](docs/r2_setup.md) for instructions.
 
 ### Configure Slack notifications
 

@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query'
-import { UploadApiResponse } from 'cloudinary'
 import { trpc } from '~/utils/trpc'
 import { useUser } from './useUser'
 
@@ -16,44 +15,28 @@ export const useUploadAvatarMutation = () => {
 
   return useMutation(
     async (image: File) => {
-      if (!user?.id) return
+      if (!user?.id) throw new Error('No user found')
 
-      const { signature, timestamp, apiKey, publicId, cloudName, folder } =
-        await presignImageUploadMutation.mutateAsync({
-          publicId: user.id,
-          folder: 'avatars',
-        })
+      const { url, key } = await presignImageUploadMutation.mutateAsync()
 
-      // The formData object MUST also contain `media_metadata` set to `true` as
-      // that is used in signature generation.
-      // The formData object MUST also contain the `signature`, `timestamp` and
-      // `folder` props, returned from the presigned function as the signature is
-      // also derived from those parameters.
-      const formData = new FormData()
-      formData.append('file', image)
-      formData.append('public_id', publicId)
-      formData.append('api_key', apiKey)
-      formData.append('timestamp', String(timestamp))
-      formData.append('signature', signature)
-      formData.append('folder', folder)
-      formData.append('media_metadata', 'true')
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        method: 'PUT',
+        body: image,
+      })
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
-      const data = (await response.json()) as UploadApiResponse
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error)
+      }
 
-      if (data.error) throw new Error(data.error.message)
-
-      return data.secure_url
+      return key
     },
     {
-      onSuccess: (newAvatarUrl) => {
-        return updateAvatarLinkMutation.mutate({ image: newAvatarUrl })
+      onSuccess: (key) => {
+        return updateAvatarLinkMutation.mutate({ imageKey: key })
       },
     }
   )

@@ -1,7 +1,3 @@
-// @ts-check
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { env } = require('./src/server/env');
-
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -11,7 +7,7 @@ const { env } = require('./src/server/env');
  * @constraint {{import('next').NextConfig}}
  */
 function getConfig(config) {
-  return config;
+  return config
 }
 
 /**
@@ -24,11 +20,11 @@ module.exports = getConfig({
    * @link https://nextjs.org/docs/api-reference/next.config.js/runtime-configuration
    */
   publicRuntimeConfig: {
-    NODE_ENV: env.NODE_ENV,
+    NODE_ENV: process.env.NODE_ENV,
   },
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   images: {
-    domains: ['avatars.githubusercontent.com', 'res.cloudinary.com'],
+    domains: [process.env.R2_PUBLIC_HOSTNAME],
   },
-});
+})
