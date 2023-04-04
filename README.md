@@ -1,18 +1,24 @@
-# Prisma + tRPC
+# Starter Kit v2
+
+## One-click deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop-ian&env=DATABASE_URL,POSTMAN_API_KEY&integration-ids=oac_h3yNIuHlhe4j9QVzVJ3TS2W0&skippable-integrations=1)
 
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)
 - ⚡ Full-stack React with Next.js
-- ⚡ Database with Prisma
+- 🌈 Database with Prisma
+- 🪳 [CockroachDB](https://www.cockroachlabs.com/lp/serverless/)
+- 🌇 Image upload with [R2](https://developers.cloudflare.com/r2/)
 - ⚙️ VSCode extensions
 - 🎨 ESLint + Prettier
 - 💚 CI setup using GitHub Actions:
   - ✅ E2E testing with [Playwright](https://playwright.dev/)
   - ✅ Linting
-- 🔐 Validates your env vars on build and start
+- 🔐 Env var validation
 
-## Setup
+## Running the app locally
 
 ### Install dependencies
 
@@ -20,79 +26,56 @@
 npm i
 ```
 
-### Create a database
-
-- [Create a neon.tech project](https://neon.tech/docs/get-started-with-neon/setting-up-a-project)
-- Create two databases, one `app` and one `shadow` database to use with Prisma. As the name suggests, the `shadow` database is used to run migrations in a safe environment before applying them to the `app` database, and is recommended for Prisma migrations (`npx prisma migrate`) to work reliably.
-  - View how to [use Prisma with Neon](https://neon.tech/docs/guides/prisma-guide) for more information.
-- Set up the environment variables:
+### Set environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-- Open `.env` and set the `DATABASE_URL` variable with the connection string from neon.tech.
-- Create the database schema:
+Set `POSTMAN_API_KEY` - required for login
+
+### Start database
 
 ```bash
-npx prisma db push
+npm run setup
 ```
 
-### Configure authentication
+### Start server
 
-GitHub authentication settings are available as defaults, but thanks to NextAuth.js, you can configure this app with most other common authentication providers.
+```bash
+npm run dev
+```
 
-- [Configuring GitHub authentication](docs/github_setup.md)
+## Deployment
 
-The auth implementation in this application uses [NextAuth.js](https://next-auth.js.org/), so if you prefer to use one of the [many providers](https://next-auth.js.org/providers/) it supports, you can customize your own installation. Simply update the [`lib/auth.ts`](src/lib/auth.ts#L11) file to add your own provider.
+> TODO: CI/CD test with GitHub Actions
 
-> TODO: Add implementation and docs for custom email auth and SGID login.
+> TODO: Github branch protection rules
+
+# Cloud Features
 
 ### Enable image uploads on R2
 
 See [R2 Readme](docs/r2_setup.md) for instructions.
 
-### Configure Slack notifications
+### Creating Cockroach DB on Cloud
 
-> TODO: Implement and documentation, mostly to show webhooks usage.
+> TODO: Step by step guide to creating database on cloud
 
-WIP [instructions](docs/slack_setup.md).
+# Useful notes
 
-### Requirements
-
-- Node >= 14
-- Postgres
-
-## Running the app locally
-
-### Start project
-
-```bash
-npm run dx
-```
-
-### Commands
+## Commands
 
 ```bash
 npm run build      # runs `prisma generate` + `prisma migrate` + `next build`
-npm run db-reset   # resets local db
+npm run db:reset   # resets local db
 npm run dev        # starts next.js
-npm run dx         # starts postgres db + runs migrations + seeds + starts next.js
+npm run setup      # starts cockroach db + runs migrations + seed
 npm run test-dev   # runs e2e tests on dev
 npm run test-start # runs e2e tests on `next start` - build required before
 npm run test:unit  # runs normal Vitest unit tests
 npm run test:e2e   # runs e2e tests
 ```
-
-## Deployment
-
-### Deploying to Vercel
-
-One-click deploy:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2-kr&env=SHADOW_DATABASE_URL,DATABASE_URL,GITHUB_ID,GITHUB_SECRET,NEXTAUTH_SECRET,CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET)
-
-⚠️ Remember to update your callback URLs after deploying.
 
 ## Files of note
 
