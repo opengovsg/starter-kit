@@ -4,7 +4,8 @@ jobs:
   e2e:
     env:
       NODE_ENV: test
-      NEXTAUTH_SECRET: supersecret
+      POSTMAN_API_KEY: postmansupersecret
+      SESSION_SECRET: supersecret
       DATABASE_URL: postgres://root:root@localhost:26257/app
     runs-on: ${{ matrix.os }}
     strategy:
