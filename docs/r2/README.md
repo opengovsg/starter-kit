@@ -3,17 +3,17 @@
 ## Setup Instructions
 
 1. Copy Account ID and create a bucket.
-   ![](./images/create-bucket.png)
+   ![](./create-bucket.png)
 1. Create API Token with edit access. (Warning: this api token applies to all buckets)
-   ![](./images/create-api-token.png)
+   ![](./create-api-token.png)
 1. Copy api key and secret
-   ![](./images/api-token-success.png)
+   ![](./api-token-success.png)
 1. Allow public edit access to the bucket
-   ![](./images/allow-public-access.png)
+   ![](./allow-public-access.png)
 1. Set custom domain for the bucket
-   ![](./images/custom-domain.png)
+   ![](./custom-domain.png)
 1. Set CORS to allow for your domain
-   ![](./images/cors.png)
+   ![](./cors.png)
 
 Set the following environment variables:
 

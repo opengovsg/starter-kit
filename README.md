@@ -56,11 +56,11 @@ npm run dev
 
 ### Enable image uploads on R2
 
-See [R2 Readme](docs/r2_setup.md) for instructions.
+See [R2 Readme](docs/r2/README.md)
 
-### Creating Cockroach DB on Cloud
+### Creating Serverless Cockroach DB on Cloud
 
-> TODO: Step by step guide to creating database on cloud
+See [CockroachDB Readme](docs/cockroach/README.md)
 
 # Useful notes
 
