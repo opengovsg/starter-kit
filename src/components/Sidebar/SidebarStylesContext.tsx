@@ -1,6 +1,5 @@
-import { createStylesContext } from '@chakra-ui/react';
+import { createStylesContext } from '@chakra-ui/react'
 
-const [SidebarStylesProvider, useSidebarStyles] =
-  createStylesContext('Sidebar');
+const [SidebarStylesProvider, useSidebarStyles] = createStylesContext('Sidebar')
 
-export { SidebarStylesProvider, useSidebarStyles };
+export { SidebarStylesProvider, useSidebarStyles }

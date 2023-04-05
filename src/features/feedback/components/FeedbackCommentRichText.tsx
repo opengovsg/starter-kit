@@ -1,35 +1,35 @@
-import { RichText } from '~/components/RichText';
-import { useZodForm } from '~/lib/form';
-import { trpc } from '~/utils/trpc';
+import { RichText } from '~/components/RichText'
+import { useZodForm } from '~/lib/form'
+import { trpc } from '~/utils/trpc'
 
 import {
   Box,
   ButtonGroup,
   FormControl,
   FormErrorMessage,
-} from '@chakra-ui/react';
-import { Button } from '@opengovsg/design-system-react';
-import { Controller } from 'react-hook-form';
-import { addCommentSchema } from '~/server/schemas/comment';
+} from '@chakra-ui/react'
+import { Button } from '@opengovsg/design-system-react'
+import { Controller } from 'react-hook-form'
+import { addCommentSchema } from '~/server/schemas/comment'
 
 interface FeedbackCommentRichTextProps {
-  postId: number;
-  handleCancel: () => void;
+  postId: string
+  handleCancel: () => void
 }
 
 export const FeedbackCommentRichText = ({
   postId,
   handleCancel,
 }: FeedbackCommentRichTextProps): JSX.Element => {
-  const utils = trpc.useContext();
+  const utils = trpc.useContext()
   const mutation = trpc.comment.add.useMutation({
     async onSuccess() {
-      reset();
+      reset()
       // refetches posts after a comment is added
-      await utils.post.list.invalidate();
-      await utils.post.byId.invalidate({ id: postId });
+      await utils.post.list.invalidate()
+      await utils.post.byId.invalidate({ id: postId })
     },
-  });
+  })
 
   const {
     formState: { errors },
@@ -42,11 +42,11 @@ export const FeedbackCommentRichText = ({
     defaultValues: {
       postId,
     },
-  });
+  })
 
   const handleSubmitFeedback = handleSubmit((values) => {
-    return mutation.mutateAsync(values);
-  });
+    return mutation.mutateAsync(values)
+  })
 
   return (
     <Box>
@@ -58,8 +58,8 @@ export const FeedbackCommentRichText = ({
             <RichText
               {...field}
               onChange={(value, rawValue) => {
-                onChange(value);
-                setValue('content', rawValue ?? '');
+                onChange(value)
+                setValue('content', rawValue ?? '')
               }}
             />
           )}
@@ -73,5 +73,5 @@ export const FeedbackCommentRichText = ({
         <Button onClick={handleSubmitFeedback}>Save</Button>
       </ButtonGroup>
     </Box>
-  );
-};
+  )
+}

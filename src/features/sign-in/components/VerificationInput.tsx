@@ -1,14 +1,10 @@
-import { FormControl, FormLabel } from '@chakra-ui/react';
-import {
-  Button,
-  FormErrorMessage,
-  Input,
-} from '@opengovsg/design-system-react';
-import { useRouter } from 'next/router';
-import { z } from 'zod';
-import { useZodForm } from '~/lib/form';
-import { trpc } from '~/utils/trpc';
-import { emailSignInSchema } from './Emailnput';
+import { FormControl, FormLabel } from '@chakra-ui/react'
+import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
+import { useRouter } from 'next/router'
+import { z } from 'zod'
+import { useZodForm } from '~/lib/form'
+import { trpc } from '~/utils/trpc'
+import { emailSignInSchema } from './Emailnput'
 
 const emailVerificationSchema = emailSignInSchema.extend({
   token: z
@@ -16,16 +12,16 @@ const emailVerificationSchema = emailSignInSchema.extend({
     .trim()
     .min(1, 'OTP is required.')
     .length(6, 'Please enter a 6 character OTP.'),
-});
+})
 
 interface VerificationInputProps {
-  email: string;
+  email: string
 }
 
 export const VerificationInput = ({
   email,
 }: VerificationInputProps): JSX.Element => {
-  const router = useRouter();
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -36,13 +32,13 @@ export const VerificationInput = ({
     defaultValues: {
       email,
     },
-  });
+  })
 
   const verifyOtpMutation = trpc.session.email.verifyOtp.useMutation({
     onError: (error) => {
-      setError('token', { message: error.message });
+      setError('token', { message: error.message })
     },
-  });
+  })
 
   const handleVerifyOtp = handleSubmit(({ email, token }) => {
     return verifyOtpMutation.mutate(
@@ -52,11 +48,11 @@ export const VerificationInput = ({
       },
       {
         onSuccess: () => {
-          router.push(String(router.query.callbackUrl ?? '/dashboard'));
+          router.push(String(router.query.callbackUrl ?? '/dashboard'))
         },
-      },
-    );
-  });
+      }
+    )
+  })
 
   return (
     <form onSubmit={handleVerifyOtp}>
@@ -69,9 +65,9 @@ export const VerificationInput = ({
         <Input maxLength={6} {...register('token')} />
         <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={verifyOtpMutation.isLoading}>
+      <Button type="submit" isLoading={verifyOtpMutation.isLoading} mt={4}>
         Sign in
       </Button>
     </form>
-  );
-};
+  )
+}

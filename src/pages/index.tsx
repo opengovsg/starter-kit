@@ -1,14 +1,14 @@
-import { Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react'
 
-import { withSessionSsr } from '~/lib/withSession';
+import { withSessionSsr } from '~/lib/withSession'
 
 // TODO: Will be landing page in the future, now just a redirect to appropriate page.
 const Index = () => {
-  return <Box />;
-};
+  return <Box />
+}
 
 export const getServerSideProps = withSessionSsr(async ({ req }) => {
-  const user = req.session.user;
+  const user = req.session.user
 
   if (user) {
     return {
@@ -16,7 +16,7 @@ export const getServerSideProps = withSessionSsr(async ({ req }) => {
         destination: '/dashboard',
       },
       props: {},
-    };
+    }
   }
 
   return {
@@ -24,7 +24,7 @@ export const getServerSideProps = withSessionSsr(async ({ req }) => {
       destination: '/sign-in',
     },
     props: {},
-  };
-});
+  }
+})
 
-export default Index;
+export default Index

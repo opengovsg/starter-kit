@@ -1,15 +1,15 @@
-import { FC, PropsWithChildren } from 'react';
-import { StackProps, VStack } from '@chakra-ui/react';
-import { merge } from 'lodash';
+import { FC, PropsWithChildren } from 'react'
+import { StackProps, VStack } from '@chakra-ui/react'
+import { merge } from 'lodash'
 
-import { useSidebarContext } from './SidebarContext';
+import { useSidebarContext } from './SidebarContext'
 
 export interface SidebarSectionProps extends StackProps {
   /**
    * If true, the sidebar will be collapsed and the label text will be hidden.
    * @note If value is not `undefined`, the label text will be clamped to a single line for smoother expansion animation.
    */
-  collapsed?: boolean;
+  collapsed?: boolean
 }
 
 export const SidebarSection: FC<PropsWithChildren<SidebarSectionProps>> = ({
@@ -17,7 +17,7 @@ export const SidebarSection: FC<PropsWithChildren<SidebarSectionProps>> = ({
   sx,
   ...props
 }) => {
-  const { containerStyles } = useSidebarContext();
+  const { containerStyles } = useSidebarContext()
 
   return (
     <VStack
@@ -28,5 +28,5 @@ export const SidebarSection: FC<PropsWithChildren<SidebarSectionProps>> = ({
     >
       {children}
     </VStack>
-  );
-};
+  )
+}

@@ -1,22 +1,22 @@
-type ErrorCause = Record<string, unknown>;
+type ErrorCause = Record<string, unknown>
 
 class AuthError extends Error {
   constructor(message: string | Error | ErrorCause, cause?: ErrorCause) {
     if (message instanceof Error) {
       super(undefined, {
         cause: { err: message, ...(message.cause as any), ...cause },
-      });
+      })
     } else if (typeof message === 'string') {
       if (cause instanceof Error) {
-        cause = { err: cause, ...(cause.cause as any) };
+        cause = { err: cause, ...(cause.cause as any) }
       }
-      super(message, cause);
+      super(message, cause)
     } else {
-      super(undefined, message);
+      super(undefined, message)
     }
-    Error.captureStackTrace?.(this, this.constructor);
+    Error.captureStackTrace?.(this, this.constructor)
     this.name =
-      message instanceof AuthError ? message.name : this.constructor.name;
+      message instanceof AuthError ? message.name : this.constructor.name
   }
 }
 

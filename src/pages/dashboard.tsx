@@ -1,19 +1,19 @@
-import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react';
-import { Button } from '@opengovsg/design-system-react';
-import Image from 'next/image';
-import NextLink from 'next/link';
-import { BiPlus } from 'react-icons/bi';
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
-import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
-import { TeamFeedbackList } from '~/features/feedback/components';
-import type { NextPageWithLayout } from '~/lib/types';
-import { AdminLayout } from '~/templates/layouts/AdminLayout';
-import { trpc } from '~/utils/trpc';
-import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar';
+import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Button } from '@opengovsg/design-system-react'
+import Image from 'next/image'
+import NextLink from 'next/link'
+import { BiPlus } from 'react-icons/bi'
+import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
+import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer'
+import { TeamFeedbackList } from '~/features/feedback/components'
+import type { NextPageWithLayout } from '~/lib/types'
+import { AdminLayout } from '~/templates/layouts/AdminLayout'
+import { trpc } from '~/utils/trpc'
+import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
-    trpc.post.unreadCount.useQuery();
+    trpc.post.unreadCount.useQuery()
 
   return (
     <Box p="1.5rem" w="100%">
@@ -52,9 +52,9 @@ const Dashboard: NextPageWithLayout = () => {
         <TeamFeedbackList />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-Dashboard.getLayout = AdminLayout;
+Dashboard.getLayout = AdminLayout
 
-export default Dashboard;
+export default Dashboard

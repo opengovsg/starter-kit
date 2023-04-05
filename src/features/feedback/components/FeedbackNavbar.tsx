@@ -1,7 +1,7 @@
-import { Breadcrumb, Flex, HStack } from '@chakra-ui/react';
-import { Button } from '@opengovsg/design-system-react';
+import { Breadcrumb, Flex, HStack } from '@chakra-ui/react'
+import { Button } from '@opengovsg/design-system-react'
 
-import { Crumb, CrumbProps } from '~/components/Breadcrumb';
+import { Crumb, CrumbProps } from '~/components/Breadcrumb'
 
 const FEEDBACK_CRUMBS: CrumbProps[] = [
   {
@@ -13,7 +13,7 @@ const FEEDBACK_CRUMBS: CrumbProps[] = [
     last: true,
     href: '/feedback/new',
   },
-];
+]
 
 export const FeedbackNavbar = (): JSX.Element => {
   return (
@@ -34,5 +34,5 @@ export const FeedbackNavbar = (): JSX.Element => {
         <Button variant="outline">Save as draft</Button>
       </HStack>
     </Flex>
-  );
-};
+  )
+}

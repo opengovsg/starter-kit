@@ -1,5 +1,5 @@
-export * from './GridLayout';
-export * from './LoginImageSvgr';
+export * from './GridLayout'
+export * from './LoginImageSvgr'
 
-export * from './Emailnput';
-export * from './VerificationInput';
+export * from './Emailnput'
+export * from './VerificationInput'

@@ -4,13 +4,13 @@ import {
   MenuList,
   MenuOptionGroup,
   Menu,
-} from '@chakra-ui/react';
-import { ChevronMenuButton } from '~/components/ChevronMenuButton';
-import { useFilterFeedback } from '../api/useFilterFeedback';
+} from '@chakra-ui/react'
+import { ChevronMenuButton } from '~/components/ChevronMenuButton'
+import { useFilterFeedback } from '../api/useFilterFeedback'
 
 export const TeamFeedbackFilterBar = (): JSX.Element => {
   const { filter, order, handleFilterChange, handleOrderChange, isLoading } =
-    useFilterFeedback();
+    useFilterFeedback()
 
   return (
     <Box px="2rem" py="1.125rem" borderBottomWidth="1px">
@@ -63,5 +63,5 @@ export const TeamFeedbackFilterBar = (): JSX.Element => {
         )}
       </Menu>
     </Box>
-  );
-};
+  )
+}

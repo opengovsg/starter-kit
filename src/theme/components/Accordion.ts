@@ -1,10 +1,10 @@
-import { accordionAnatomy as parts } from '@chakra-ui/anatomy';
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
+import { accordionAnatomy as parts } from '@chakra-ui/anatomy'
+import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
 
-import { theme as ogpDsTheme } from '@opengovsg/design-system-react';
+import { theme as ogpDsTheme } from '@opengovsg/design-system-react'
 
 const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(parts.keys);
+  createMultiStyleConfigHelpers(parts.keys)
 
 const variantSidebar = definePartsStyle({
   root: {
@@ -41,12 +41,12 @@ const variantSidebar = definePartsStyle({
       outlineOffset: '-2px',
     },
   },
-});
+})
 
 const variants = {
   sidebar: variantSidebar,
-};
+}
 
 export const Accordion = defineMultiStyleConfig({
   variants,
-});
+})

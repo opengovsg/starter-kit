@@ -1,20 +1,20 @@
-import { Flex, HStack } from '@chakra-ui/react';
+import { Flex, HStack } from '@chakra-ui/react'
 import {
   AvatarMenu,
   AvatarMenuDivider,
   Link,
   Menu,
-} from '@opengovsg/design-system-react';
-import Image from 'next/image';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+} from '@opengovsg/design-system-react'
+import Image from 'next/image'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 
-import ogpLogo from '~/assets/ogp-logo.svg';
-import { useUser } from '~/features/profile/api';
+import ogpLogo from '~/assets/ogp-logo.svg'
+import { useUser } from '~/features/profile/api'
 
 export const AppNavbar = (): JSX.Element => {
-  const { user, logout } = useUser();
-  const { pathname } = useRouter();
+  const { user, logout } = useUser()
+  const { pathname } = useRouter()
 
   return (
     <>
@@ -54,5 +54,5 @@ export const AppNavbar = (): JSX.Element => {
         </HStack>
       </Flex>
     </>
-  );
-};
+  )
+}

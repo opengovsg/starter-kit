@@ -1,26 +1,50 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { createTokenHash } from './auth.utils';
+import { Prisma, PrismaClient } from '@prisma/client'
+import { VerificationError } from './auth.errors'
+import { compareHash } from './auth.utils'
 
 export const useVerificationToken = async (
   prisma: PrismaClient,
-  { token, email }: { token: string; email: string },
+  { token, email }: { token: string; email: string }
 ) => {
   try {
-    const verificationToken = await prisma.verificationToken.delete({
+    const verificationToken = await prisma.verificationToken.update({
       where: {
-        identifier_token: {
-          identifier: email,
-          token: createTokenHash(token),
+        identifier: email,
+      },
+      data: {
+        attempts: {
+          increment: 1,
         },
       },
-    });
-    return verificationToken;
-  } catch (error) {
-    // If token already used/deleted, just return null
-    // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
-    if ((error as Prisma.PrismaClientKnownRequestError).code === 'P2025') {
-      return null;
+    })
+
+    if (verificationToken.attempts > 5) {
+      throw new VerificationError('Too many attempts')
     }
-    throw error;
+
+    if (
+      verificationToken.expires.valueOf() < Date.now() ||
+      !compareHash(token, email, verificationToken.token)
+    ) {
+      throw new VerificationError('Token is invalid or has expired')
+    }
+
+    if (verificationToken.attempts > 5) {
+      throw new VerificationError('Too many attempts')
+    }
+
+    await prisma.verificationToken.delete({
+      where: {
+        identifier: email,
+      },
+    })
+
+    return
+  } catch (error) {
+    // see error code here: https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
+    if ((error as Prisma.PrismaClientKnownRequestError).code === 'P2025') {
+      throw new VerificationError('Invalid login email')
+    }
+    throw error
   }
-};
+}

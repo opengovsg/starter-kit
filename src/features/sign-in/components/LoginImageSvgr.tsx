@@ -1,5 +1,5 @@
-import { SVGProps } from 'react';
-import { chakra } from '@chakra-ui/react';
+import { SVGProps } from 'react'
+import { chakra } from '@chakra-ui/react'
 
 export const LoginImageSvgr = chakra((props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -682,4 +682,4 @@ export const LoginImageSvgr = chakra((props: SVGProps<SVGSVGElement>) => (
       strokeWidth={17.815}
     />
   </svg>
-));
+))

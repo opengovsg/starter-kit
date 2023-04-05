@@ -1,12 +1,12 @@
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { Button, FormErrorMessage } from '@opengovsg/design-system-react';
-import { z } from 'zod';
-import { useZodForm } from '~/lib/form';
-import { isAdminEmail } from '~/utils/auth';
-import { trpc } from '~/utils/trpc';
+import { FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
+import { z } from 'zod'
+import { useZodForm } from '~/lib/form'
+import { isAdminEmail } from '~/utils/auth'
+import { trpc } from '~/utils/trpc'
 
 interface EmailInputProps {
-  onSuccess: (email: string) => void;
+  onSuccess: (email: string) => void
 }
 
 export const emailSignInSchema = z.object({
@@ -18,7 +18,7 @@ export const emailSignInSchema = z.object({
     .refine(isAdminEmail, {
       message: 'Please sign in with a gov.sg email address.',
     }),
-});
+})
 
 export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
   const {
@@ -28,16 +28,16 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
     formState: { errors },
   } = useZodForm({
     schema: emailSignInSchema,
-  });
+  })
 
   const loginMutation = trpc.session.email.login.useMutation({
     onSuccess,
     onError: (error) => setError('email', { message: error.message }),
-  });
+  })
 
   const handleSignIn = handleSubmit(({ email }) => {
-    return loginMutation.mutate({ email });
-  });
+    return loginMutation.mutate({ email })
+  })
 
   return (
     <form onSubmit={handleSignIn}>
@@ -53,9 +53,9 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={loginMutation.isLoading}>
+      <Button type="submit" isLoading={loginMutation.isLoading} mt={4}>
         Log in
       </Button>
     </form>
-  );
-};
+  )
+}

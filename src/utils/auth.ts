@@ -1,4 +1,4 @@
-import isEmail from 'validator/lib/isEmail';
+import isEmail from 'validator/lib/isEmail'
 
 // Returns whether the passed value is a valid whitelist email for admins.
 export const isAdminEmail = (value: unknown) => {
@@ -6,5 +6,5 @@ export const isAdminEmail = (value: unknown) => {
     typeof value === 'string' &&
     isEmail(value) &&
     value.toString().endsWith('.gov.sg')
-  );
-};
+  )
+}

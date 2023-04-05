@@ -1,18 +1,18 @@
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
-import { anatomy } from '@chakra-ui/theme-tools';
-import { theme as ogpDsTheme } from '@opengovsg/design-system-react';
-import { Accordion } from './Accordion';
+import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
+import { anatomy } from '@chakra-ui/theme-tools'
+import { theme as ogpDsTheme } from '@opengovsg/design-system-react'
+import { Accordion } from './Accordion'
 
 const parts = anatomy('sidebar').parts(
   'container',
   'item',
   'parent',
   'child',
-  'icon',
-);
+  'icon'
+)
 
 const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(parts.keys);
+  createMultiStyleConfigHelpers(parts.keys)
 
 const sizes = {
   xs: definePartsStyle({
@@ -30,7 +30,7 @@ const sizes = {
       fontSize: '1.25rem',
     },
   }),
-};
+}
 
 const variantLine = definePartsStyle({
   container: {
@@ -71,11 +71,11 @@ const variantLine = definePartsStyle({
       color: 'interaction.main.hover',
     },
   },
-});
+})
 
 const variants = {
   line: variantLine,
-};
+}
 
 export const Sidebar = defineMultiStyleConfig({
   sizes,
@@ -95,4 +95,4 @@ export const Sidebar = defineMultiStyleConfig({
     variant: 'line',
     size: 'md',
   },
-});
+})
