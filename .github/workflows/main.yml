@@ -5,7 +5,7 @@ jobs:
     env:
       NODE_ENV: test
       POSTMAN_API_KEY: postmansupersecret
-      SESSION_SECRET: supersecret
+      SESSION_SECRET: supersecret_that_has_at_least_32_characters
       DATABASE_URL: postgres://root:root@localhost:26257/app
     runs-on: ${{ matrix.os }}
     strategy:
@@ -44,9 +44,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Start test containers
         run: npm run setup
-
-      - name: Setup Prisma
-        run: npm run prebuild
 
       - name: Build and test
         run: npm run build && npm run test-start && npm run test-dev
