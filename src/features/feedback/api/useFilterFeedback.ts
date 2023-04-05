@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import { z } from 'zod'
-import { listPostsInputSchema } from '~/server/schemas/post'
+import { listPostsInputSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 
 const LIST_POSTS_PARAMS_SCHEMA = z.object({

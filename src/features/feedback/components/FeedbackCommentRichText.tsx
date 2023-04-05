@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import { Controller } from 'react-hook-form'
-import { addCommentSchema } from '~/server/schemas/comment'
+import { addCommentSchema } from '~/schemas/comment'
 
 interface FeedbackCommentRichTextProps {
   postId: string

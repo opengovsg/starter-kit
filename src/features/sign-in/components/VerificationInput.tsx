@@ -34,7 +34,7 @@ export const VerificationInput = ({
     },
   })
 
-  const verifyOtpMutation = trpc.session.email.verifyOtp.useMutation({
+  const verifyOtpMutation = trpc.auth.email.verifyOtp.useMutation({
     onError: (error) => {
       setError('token', { message: error.message })
     },

@@ -2,20 +2,18 @@
  * This file contains the root router of your tRPC-backend
  */
 import { publicProcedure, router } from '../trpc'
-import { postRouter } from './post'
-import { meRouter } from './me'
-import { imageUploadRouter } from './imageUpload'
-import { commentRouter } from './comment'
-import { readPostRouter } from './readPost'
-import { sessionRouter } from './session'
+import { postRouter } from './post/post.router'
+import { meRouter } from './me/me.router'
+import { imageUploadRouter } from './imageUpload/imageUpload.router'
+import { commentRouter } from './comment/comment.router'
+import { authRouter } from './auth/auth.router'
 
 export const appRouter = router({
-  session: sessionRouter,
   healthcheck: publicProcedure.query(() => 'yay!'),
-  post: postRouter,
-  readPost: readPostRouter,
-  comment: commentRouter,
   me: meRouter,
+  auth: authRouter,
+  post: postRouter,
+  comment: commentRouter,
   imageUpload: imageUploadRouter,
 })
 

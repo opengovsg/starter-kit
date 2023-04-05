@@ -1,6 +1,6 @@
 import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
-import { ChangeEventHandler, useMemo, useState } from 'react'
+import { ChangeEventHandler, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { NextImage } from '~/components/NextImage'
 import { useUploadAvatarMutation } from '../api'
@@ -11,13 +11,7 @@ interface AvatarUploadProps {
 
 export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
   // Will load this over `url` if provided for UX.
-  const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>()
   const [isHover, setIsHover] = useState(false)
-
-  const avatarUrlToShow = useMemo(
-    () => uploadedAvatarUrl ?? url,
-    [uploadedAvatarUrl, url]
-  )
 
   const toast = useToast({
     status: 'success',
@@ -34,8 +28,7 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
     }
 
     return uploadAvatarMutation.mutateAsync(file, {
-      onSuccess: async (newPath) => {
-        setUploadedAvatarUrl(newPath)
+      onSuccess: async () => {
         toast({
           description: 'Avatar uploaded successfully.',
         })
@@ -84,10 +77,10 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         <Icon color="white" fontSize="2rem" as={BiImageAdd} />
       </Flex>
       <Skeleton isLoaded={url !== undefined} pos="relative">
-        {avatarUrlToShow ? (
+        {url ? (
           <NextImage
             bg="base.canvas.brand-subtle"
-            src={avatarUrlToShow}
+            src={url}
             borderRadius="full"
             width="7rem"
             height="7rem"

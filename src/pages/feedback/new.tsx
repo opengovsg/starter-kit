@@ -19,7 +19,7 @@ import { Controller } from 'react-hook-form'
 import { FeedbackNavbar } from '~/features/feedback/components'
 import { useZodForm } from '~/lib/form'
 import { NextPageWithLayout } from '~/lib/types'
-import { addPostSchema } from '~/server/schemas/post'
+import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 import Image from 'next/image'
 

@@ -1,97 +1,14 @@
 import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
-import { keyBy } from 'lodash'
 import { z } from 'zod'
 import {
   addPostSchema,
   ListPostsInputSchema,
   listPostsInputSchema,
-} from '../schemas/post'
-import { protectedProcedure, router } from '../trpc'
-
-/**
- * Default selector for Post.
- * It's important to always explicitly say which fields you want to return in order to not leak extra information
- * @see https://github.com/prisma/prisma/issues/9353
- */
-const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
-  id: true,
-  title: true,
-  content: true,
-  contentHtml: true,
-  createdAt: true,
-  updatedAt: true,
-  anonymous: true,
-  authorId: true,
-  author: {
-    select: {
-      image: true,
-      name: true,
-    },
-  },
-  readBy: {
-    orderBy: {
-      updatedAt: 'asc',
-    },
-    select: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  },
-  _count: {
-    select: {
-      comments: true,
-    },
-  },
-})
-
-const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
-  ...defaultPostSelect,
-  comments: {
-    orderBy: {
-      createdAt: 'asc',
-    },
-    select: {
-      id: true,
-      content: true,
-      contentHtml: true,
-      createdAt: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
-    },
-  },
-})
-
-// Infer the resulting payload type
-type MyPostPayload = Prisma.PostGetPayload<{
-  select: typeof withCommentsPostSelect
-}>
-
-const processFeedbackItem = <T extends MyPostPayload>(
-  { authorId, ...item }: T,
-  sessionUserId: string
-) => {
-  if (item.anonymous) {
-    item.author.name = 'Anonymous'
-    item.author.image = null
-    if (authorId === sessionUserId) {
-      item.author.name += ' (you)'
-    }
-  }
-  return {
-    ...item,
-    readBy: keyBy(item.readBy, 'user.id'),
-  }
-}
+} from '~/schemas/post'
+import { protectedProcedure, router } from '~/server/trpc'
+import { defaultPostSelect, withCommentsPostSelect } from './post.select'
+import { processFeedbackItem } from './post.util'
 
 export const postRouter = router({
   list: protectedProcedure

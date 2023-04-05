@@ -1,17 +1,13 @@
-import { publicProcedure, router } from 'src/server/trpc'
-import { z } from 'zod'
-import { sendMail } from '~/lib/mail'
-import { env } from '~/server/env'
-import { getBaseUrl } from '~/utils/getBaseUrl'
-
 import { TRPCError } from '@trpc/server'
-import {
-  createTokenHash,
-  createVfnToken,
-} from '~/server/modules/auth/auth.utils'
-import { useVerificationToken } from '~/server/modules/auth/auth.service'
-import { VerificationError } from '~/server/modules/auth/auth.errors'
+import { z } from 'zod'
+import { publicProcedure, router } from '~/server/trpc'
+import { env } from '~/server/env'
+import { sendMail } from '~/lib/mail'
+import { getBaseUrl } from '~/utils/getBaseUrl'
 import { defaultUserSelect } from '~/server/modules/user/user.select'
+import { createTokenHash, createVfnToken } from '../auth.util'
+import { verifyToken } from '../auth.service'
+import { VerificationError } from '../auth.error'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -67,7 +63,7 @@ export const emailSessionRouter = router({
     )
     .mutation(async ({ ctx, input: { email, otp } }) => {
       try {
-        await useVerificationToken(ctx.prisma, {
+        await verifyToken(ctx.prisma, {
           token: otp,
           email,
         })
