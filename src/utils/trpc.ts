@@ -80,11 +80,11 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
           queries: {
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
-                if (error.data.code === 'FORBIDDEN') {
+                if (error.data?.code === 'FORBIDDEN') {
                   Router.push('/forbidden')
                 }
 
-                if (error.data.code === 'UNAUTHORIZED') {
+                if (error.data?.code === 'UNAUTHORIZED') {
                   Router.push('/sign-in')
                 }
               }
