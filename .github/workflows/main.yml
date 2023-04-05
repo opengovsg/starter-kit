@@ -3,18 +3,16 @@ on: [push]
 jobs:
   e2e:
     services:
-      postgres:
-        image: postgres
+      cockroach:
+        image: cockroachdb/cockroach
         env:
-          POSTGRES_DATABASE: trpcdb
-          POSTGRES_USER: postgres
-          POSTGRES_HOST_AUTH_METHOD: trust
+          COCKROACH_ARGS: start-single-node --insecure
         ports:
-          - 5432:5432
+          - 26257:26257
     env:
       NODE_ENV: test
       NEXTAUTH_SECRET: supersecret
-      DATABASE_URL: postgresql://postgres:@localhost:5432/starter-kit-v2-kr
+      DATABASE_URL: postgres://root:root@localhost:26257/app
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
