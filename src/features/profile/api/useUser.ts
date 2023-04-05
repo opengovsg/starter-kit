@@ -23,7 +23,7 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     }
   }, [user, redirectIfFound, redirectTo, isFetching])
 
-  const logoutMutation = trpc.session.logout.useMutation()
+  const logoutMutation = trpc.auth.logout.useMutation()
 
   const logout = useCallback(
     (redirectToSignIn = true) => {

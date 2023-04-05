@@ -16,7 +16,7 @@ import { useUser } from '~/features/profile/api'
 import { AvatarUpload } from '~/features/profile/components/AvatarUpload'
 import { useZodForm } from '~/lib/form'
 import { NextPageWithLayout } from '~/lib/types'
-import { updateMeSchema } from '~/server/schemas/me'
+import { updateMeSchema } from '~/schemas/me'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 

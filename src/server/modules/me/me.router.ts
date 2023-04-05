@@ -4,9 +4,9 @@
  */
 import { z } from 'zod'
 import { env } from '~/server/env'
-import { defaultUserSelect } from '../modules/user/user.select'
-import { updateMeSchema } from '../schemas/me'
-import { protectedProcedure, router } from '../trpc'
+import { protectedProcedure, router } from '~/server/trpc'
+import { defaultUserSelect } from '~/server/modules/user/user.select'
+import { updateMeSchema } from '~/schemas/me'
 
 export const meRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {

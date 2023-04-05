@@ -70,7 +70,7 @@ export const FeedbackDrawer = (): JSX.Element | null => {
 
   const utils = trpc.useContext()
 
-  const setReadMutation = trpc.readPost.set.useMutation({
+  const setReadMutation = trpc.post.setRead.useMutation({
     onSuccess: () => {
       utils.post.list.invalidate()
     },

@@ -30,7 +30,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
     schema: emailSignInSchema,
   })
 
-  const loginMutation = trpc.session.email.login.useMutation({
+  const loginMutation = trpc.auth.email.login.useMutation({
     onSuccess,
     onError: (error) => setError('email', { message: error.message }),
   })

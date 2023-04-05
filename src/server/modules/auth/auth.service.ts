@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { VerificationError } from './auth.errors'
-import { compareHash } from './auth.utils'
+import { VerificationError } from './auth.error'
+import { compareHash } from './auth.util'
 
-export const useVerificationToken = async (
+export const verifyToken = async (
   prisma: PrismaClient,
   { token, email }: { token: string; email: string }
 ) => {

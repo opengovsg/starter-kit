@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { protectedProcedure, router } from '../trpc'
+import { protectedProcedure, router } from '~/server/trpc'
 import { generateSignedPutUrl } from '~/lib/r2'
 
 export const imageUploadRouter = router({
