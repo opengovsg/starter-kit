@@ -1,12 +1,13 @@
-import { httpBatchLink, loggerLink } from '@trpc/client';
-import { createTRPCNext } from '@trpc/next';
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
-import { NextPageContext } from 'next';
-import superjson from 'superjson';
+import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
+import { createTRPCNext } from '@trpc/next'
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
+import { NextPageContext } from 'next'
+import Router from 'next/router'
+import superjson from 'superjson'
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
-import type { AppRouter } from '~/server/routers/_app';
-import { getBaseUrl } from './getBaseUrl';
+import type { AppRouter } from '~/server/modules/_app'
+import { getBaseUrl } from './getBaseUrl'
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -20,7 +21,7 @@ export interface SSRContext extends NextPageContext {
    *   utils.ssrContext.status = 404;
    * }
    */
-  status?: number;
+  status?: number
 }
 
 /**
@@ -60,22 +61,39 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
               // This is so you can pass through things like cookies when we're server-side rendering
 
               // If you're using Node 18, omit the "connection" header
-              const { connection: _connection, ...headers } = ctx.req.headers;
+              const { connection: _connection, ...headers } = ctx.req.headers
               return {
                 ...headers,
                 // Optional: inform server that it's an SSR request
                 'x-ssr': '1',
-              };
+              }
             }
-            return {};
+            return {}
           },
         }),
       ],
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-    };
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            retry: (failureCount, error) => {
+              if (error instanceof TRPCClientError) {
+                if (error.data?.code === 'FORBIDDEN') {
+                  Router.push('/forbidden')
+                }
+
+                if (error.data?.code === 'UNAUTHORIZED') {
+                  Router.push('/sign-in')
+                }
+              }
+              return failureCount < 3
+            },
+          },
+        },
+      },
+    }
   },
   /**
    * @link https://trpc.io/docs/ssr
@@ -106,7 +124,7 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
 
   //   return {};
   // },
-});
+})
 
-export type RouterInput = inferRouterInputs<AppRouter>;
-export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type RouterInput = inferRouterInputs<AppRouter>
+export type RouterOutput = inferRouterOutputs<AppRouter>

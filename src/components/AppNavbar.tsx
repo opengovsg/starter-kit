@@ -1,25 +1,23 @@
-import { Flex, HStack, useDisclosure } from '@chakra-ui/react';
+import { Flex, HStack } from '@chakra-ui/react'
 import {
   AvatarMenu,
   AvatarMenuDivider,
   Link,
   Menu,
-} from '@opengovsg/design-system-react';
-import { signOut } from 'next-auth/react';
-import Image from 'next/image';
-import NextLink from 'next/link';
+} from '@opengovsg/design-system-react'
+import Image from 'next/image'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 
-import ogpLogo from '~/assets/ogp-logo.svg';
-import { EditProfileModal } from '~/features/profile';
-import { trpc } from '~/utils/trpc';
+import ogpLogo from '~/assets/ogp-logo.svg'
+import { useUser } from '~/features/profile/api'
 
 export const AppNavbar = (): JSX.Element => {
-  const { data: user } = trpc.me.get.useQuery();
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const { user, logout } = useUser()
+  const { pathname } = useRouter()
 
   return (
     <>
-      <EditProfileModal isOpen={isOpen} onClose={onClose} />
       <Flex
         justify="space-between"
         align="center"
@@ -28,7 +26,7 @@ export const AppNavbar = (): JSX.Element => {
         bg="white"
         borderBottomWidth="1px"
       >
-        <Link as={NextLink} title="Form Logo" href="/">
+        <Link as={NextLink} href="/">
           <Image src={ogpLogo} alt="OGP Logo" priority />
         </Link>
         <HStack
@@ -39,14 +37,22 @@ export const AppNavbar = (): JSX.Element => {
             // @ts-expect-error missing type in design-system
             src={user?.image ?? undefined}
             name={user?.email ?? undefined}
+            variant="subtle"
+            bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}
           >
-            <Menu.Item onClick={onOpen}>Edit profile</Menu.Item>
+            <Menu.Item
+              disabled={pathname === '/profile'}
+              as={NextLink}
+              href="/profile"
+            >
+              Edit profile
+            </Menu.Item>
             <AvatarMenuDivider />
-            <Menu.Item onClick={() => signOut()}>Sign out</Menu.Item>
+            <Menu.Item onClick={() => logout()}>Sign out</Menu.Item>
           </AvatarMenu>
         </HStack>
       </Flex>
     </>
-  );
-};
+  )
+}

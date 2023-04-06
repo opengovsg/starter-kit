@@ -1,15 +1,15 @@
-import { MenuButton, MenuButtonProps } from '@chakra-ui/react';
+import { MenuButton, MenuButtonProps } from '@chakra-ui/react'
 import {
   Button,
   ButtonProps,
   BxChevronDown,
   BxChevronUp,
-} from '@opengovsg/design-system-react';
-import { useMemo } from 'react';
+} from '@opengovsg/design-system-react'
+import { useMemo } from 'react'
 
 export interface ChevronMenuButtonProps extends MenuButtonProps, ButtonProps {
-  isOpen?: boolean;
-  showChevron?: boolean;
+  isOpen?: boolean
+  showChevron?: boolean
 }
 
 export const ChevronMenuButton = ({
@@ -19,15 +19,15 @@ export const ChevronMenuButton = ({
 }: ChevronMenuButtonProps): JSX.Element => {
   const rightIcon = useMemo(() => {
     if (!showChevron) {
-      return undefined;
+      return undefined
     }
 
     return isOpen ? (
       <BxChevronUp fontSize="1.25rem" />
     ) : (
       <BxChevronDown fontSize="1.25rem" />
-    );
-  }, [isOpen, showChevron]);
+    )
+  }, [isOpen, showChevron])
 
   return (
     <MenuButton
@@ -37,5 +37,5 @@ export const ChevronMenuButton = ({
       rightIcon={rightIcon}
       {...props}
     />
-  );
-};
+  )
+}

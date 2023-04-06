@@ -1,14 +1,6 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { AppFooter } from '~/components/AppFooter';
+import { Box, Flex, Text } from '@chakra-ui/react'
 
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '~/lib/auth';
-import { getProviders, signIn } from 'next-auth/react';
-import { Button } from '@opengovsg/design-system-react';
+import ogpLogoFull from '~/assets/ogp-logo-full.svg'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -16,13 +8,17 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
-} from '~/features/sign-in/components';
+  SignInForm,
+} from '~/features/sign-in/components'
+import { withSessionSsr } from '~/lib/withSession'
+import NextLink from 'next/link'
+import { Link, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import Image from 'next/image'
 
-const SignIn = ({
-  providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const SignIn = () => {
   return (
     <BackgroundBox>
+      <RestrictedGovtMasthead />
       <BaseGridLayout flex={1}>
         <NonMobileSidebarGridArea>
           <LoginImageSvgr maxW="100%" aria-hidden />
@@ -35,34 +31,15 @@ const SignIn = ({
                 textStyle="responsive-heading.heavy-1280"
                 mb="2.5rem"
               >
-                Vibes for days
+                OGP Starter Kit
               </Text>
               <Box display={{ base: 'initial', lg: 'none' }}>
                 <Box mb={{ base: '0.75rem', lg: '1.5rem' }}>
-                  <Text textStyle="h3">GovLogin</Text>
+                  <Text textStyle="h3">OGP Starter Kit</Text>
                 </Box>
-                <Text
-                  textStyle={{
-                    base: 'responsive-heading.heavy',
-                    md: 'responsive-heading.heavy-480',
-                    lg: 'responsive-heading.heavy-1280',
-                  }}
-                >
-                  Vibes for days
-                </Text>
               </Box>
+              <SignInForm />
             </Flex>
-            {Object.values(providers!).map((provider) => (
-              <Box key={provider.name}>
-                <Button
-                  onClick={() =>
-                    signIn(provider.id, { callbackUrl: '/dashboard' })
-                  }
-                >
-                  Sign in with {provider.name}
-                </Button>
-              </Box>
-            ))}
           </Box>
         </LoginGridArea>
       </BaseGridLayout>
@@ -70,34 +47,49 @@ const SignIn = ({
         bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
       >
         <FooterGridArea>
-          <AppFooter variant={{ lg: 'compact' }} />
+          <Text
+            display="flex"
+            alignItems="center"
+            whiteSpace="pre"
+            lineHeight="1rem"
+            fontWeight={500}
+            letterSpacing="0.08em"
+            textTransform="uppercase"
+            fontSize="0.625rem"
+          >
+            Built by{' '}
+            <Link
+              as={NextLink}
+              title="To OGP homepage"
+              href="https://open.gov.sg"
+            >
+              <Image src={ogpLogoFull} alt="OGP Logo" priority />
+            </Link>
+          </Text>
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>
-  );
-};
+  )
+}
 
-export const getServerSideProps = async ({
-  req,
-  res,
-  query,
-}: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-  const { callbackUrl } = query;
-  const providers = await getProviders();
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req, query }) {
+    const { callbackUrl } = query
+    const user = req.session.user
 
-  if (session) {
+    if (user) {
+      return {
+        redirect: {
+          destination: callbackUrl ?? '/dashboard',
+        },
+        props: {},
+      }
+    }
+
     return {
-      redirect: {
-        destination: callbackUrl ?? '/dashboard',
-      },
-      props: { providers },
-    };
+      props: {},
+    }
   }
+)
 
-  return {
-    props: { providers },
-  };
-};
-
-export default SignIn;
+export default SignIn

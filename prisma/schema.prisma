@@ -2,11 +2,11 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // Since we want to use Prisma Migrate, specify a URL for the Prisma shadow database
   // https://neon.tech/docs/guides/prisma/#configure-a-shadow-database-for-prisma-migrate
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -14,43 +14,15 @@ generator client {
   previewFeatures = ["fullTextSearch", "filteredRelationCount"]
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String  @map("user_id")
-  type                     String
-  provider                 String
-  providerAccountId        String  @map("provider_account_id")
-  refresh_token            String? @db.Text
-  refresh_token_expires_in Int?
-  access_token             String? @db.Text
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? @db.Text
-  session_state            String? @db.Text
-  oauth_token_secret       String? @db.Text
-  oauth_token              String? @db.Text
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-}
-
 model VerificationToken {
-  identifier String
-  token      String   @unique
+  identifier String   @id
+  token      String
+  attempts   Int      @default(0)
   expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 model Post {
-  id          Int          @id @default(autoincrement())
+  id          String       @id @default(cuid())
   title       String?      @db.Text
   content     String       @db.Text
   contentHtml String       @map("content_html") @db.Text
@@ -73,7 +45,7 @@ model Post {
 
 model ReadPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    Int      @map("post_id")
+  postId    String   @map("post_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @map("user_id")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -85,7 +57,7 @@ model ReadPosts {
 
 model LikedPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    Int      @map("post_id")
+  postId    String   @map("post_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
@@ -96,27 +68,17 @@ model LikedPosts {
 }
 
 model Comment {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   content     String   @db.Text
   contentHtml String   @map("content_html") @db.Text
   createdAt   DateTime @default(now()) @map("created_at")
   post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int      @map("post_id")
+  postId      String   @map("post_id")
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    String   @map("author_id")
 
   @@index([authorId])
   @@index([postId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model User {
@@ -125,12 +87,9 @@ model User {
   email         String?      @unique
   emailVerified DateTime?    @map("email_verified")
   image         String?
-  title         String?
-  accounts      Account[]
-  sessions      Session[]
+  bio           String?
   posts         Post[]
   likedPosts    LikedPosts[]
   comments      Comment[]
-  role          Role         @default(USER)
   ReadPosts     ReadPosts[]
 }

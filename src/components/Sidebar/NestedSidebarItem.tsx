@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useMemo } from 'react';
+import { FC, PropsWithChildren, useMemo } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -9,31 +9,31 @@ import {
   Flex,
   Text,
   VStack,
-} from '@chakra-ui/react';
-import { merge } from 'lodash';
+} from '@chakra-ui/react'
+import { merge } from 'lodash'
 
-import { useSidebarContext } from './SidebarContext';
-import { useSidebarStyles } from './SidebarStylesContext';
-import type { BaseSidebarItem } from './types';
+import { useSidebarContext } from './SidebarContext'
+import { useSidebarStyles } from './SidebarStylesContext'
+import type { BaseSidebarItem } from './types'
 
 export interface NestedSidebarItemProps extends BaseSidebarItem {
   /**
    * Whether the item is the root item of the sidebar. Determines styling.
    */
-  root?: boolean;
-  props?: AccordionProps;
+  root?: boolean
+  props?: AccordionProps
 }
 
 export const NestedSidebarItem: FC<
   PropsWithChildren<NestedSidebarItemProps>
 > = ({ icon, label, props, root, children }) => {
-  const styles = useSidebarStyles();
+  const styles = useSidebarStyles()
 
-  const { labelStyles, collapsed } = useSidebarContext();
+  const { labelStyles, collapsed } = useSidebarContext()
 
   const itemStyles = useMemo(() => {
-    return merge({}, styles.parent, root ? {} : styles.child, styles.item);
-  }, [root, styles.child, styles.item, styles.parent]);
+    return merge({}, styles.parent, root ? {} : styles.child, styles.item)
+  }, [root, styles.child, styles.item, styles.parent])
 
   return (
     <Accordion variant="sidebar" colorScheme="main" allowToggle {...props}>
@@ -64,5 +64,5 @@ export const NestedSidebarItem: FC<
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  );
-};
+  )
+}

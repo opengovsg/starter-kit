@@ -1,29 +1,29 @@
-import { useMemo } from 'react';
-import { forwardRef, Text } from '@chakra-ui/react';
-import { dataAttr } from '@chakra-ui/utils';
-import { cloneDeep, mergeWith } from 'lodash';
+import { useMemo } from 'react'
+import { forwardRef, Text } from '@chakra-ui/react'
+import { dataAttr } from '@chakra-ui/utils'
+import { cloneDeep, mergeWith } from 'lodash'
 
-import { useSidebarContext } from './SidebarContext';
-import { useSidebarStyles } from './SidebarStylesContext';
-import type { BaseSidebarItem } from './types';
-import { Button, type ButtonProps } from '@opengovsg/design-system-react';
+import { useSidebarContext } from './SidebarContext'
+import { useSidebarStyles } from './SidebarStylesContext'
+import type { BaseSidebarItem } from './types'
+import { Button, type ButtonProps } from '@opengovsg/design-system-react'
 
 export interface SidebarItemProps extends BaseSidebarItem, ButtonProps {
-  isActive?: boolean;
-  root?: boolean;
+  isActive?: boolean
+  root?: boolean
 }
 
 export const SidebarItem = forwardRef<SidebarItemProps, 'button'>(
   ({ isActive, label, icon, as, root, ...props }, ref): JSX.Element => {
-    const styles = useSidebarStyles();
-    const { labelStyles, collapsed } = useSidebarContext();
+    const styles = useSidebarStyles()
+    const { labelStyles, collapsed } = useSidebarContext()
 
     const itemStyles = useMemo(() => {
       return mergeWith(
         cloneDeep(styles.item),
-        cloneDeep(root ? styles.parent : styles.child),
-      );
-    }, [root, styles.child, styles.item, styles.parent]);
+        cloneDeep(root ? styles.parent : styles.child)
+      )
+    }, [root, styles.child, styles.item, styles.parent])
 
     return (
       <Button
@@ -43,6 +43,6 @@ export const SidebarItem = forwardRef<SidebarItemProps, 'button'>(
           {label}
         </Text>
       </Button>
-    );
-  },
-);
+    )
+  }
+)

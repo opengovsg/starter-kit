@@ -1,1 +1,2 @@
-export * from './useUploadAvatarMutation';
+export * from './useUploadAvatarMutation'
+export * from './useUser'

@@ -1,4 +1,4 @@
-import { Grid, GridProps } from '@chakra-ui/react';
+import { Grid, GridProps } from '@chakra-ui/react'
 
 /**
  * Component that controls the various grid areas according to the app's
@@ -11,4 +11,4 @@ export const AppGrid = (props: GridProps) => (
     templateColumns={{ base: 'repeat(4, 1fr)', md: 'repeat(12, 1fr)' }}
     {...props}
   />
-);
+)

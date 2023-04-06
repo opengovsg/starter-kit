@@ -1,37 +1,30 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Grid,
-  Stack,
-  StackDivider,
-  Text,
-} from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useCallback, useMemo } from 'react';
-import { RouterOutput } from '~/utils/trpc';
-import { useFilterFeedback } from '../api/useFilterFeedback';
-import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton';
+import { Box, Flex, Grid, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useCallback, useMemo } from 'react'
+import { Avatar } from '~/components/Avatar'
+import { useUser } from '~/features/profile/api'
+import { RouterOutput } from '~/utils/trpc'
+import { useFilterFeedback } from '../api/useFilterFeedback'
+import { TeamFeedbackListSkeleton } from './TeamFeedbackListSkeleton'
 
-type ListFeedbackOutputItem = RouterOutput['post']['list']['items'][number];
+type ListFeedbackOutputItem = RouterOutput['post']['list']['items'][number]
 interface TeamFeedbackRowProps {
-  loggedInId?: string;
-  feedback: ListFeedbackOutputItem;
+  loggedInId?: string
+  feedback: ListFeedbackOutputItem
 }
 
 const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   const hasRead = useMemo(() => {
-    if (!loggedInId) return false;
-    return feedback.readBy[loggedInId] ?? false;
-  }, [feedback.readBy, loggedInId]);
+    if (!loggedInId) return false
+    return feedback.readBy[loggedInId] ?? false
+  }, [feedback.readBy, loggedInId])
 
   const handleOpenFeedback = useCallback(() => {
-    router.query.feedbackId = String(feedback.id);
-    router.push(router);
-  }, [feedback.id, router]);
+    router.query.feedbackId = String(feedback.id)
+    router.push(router)
+  }, [feedback.id, router])
 
   return (
     <Grid
@@ -68,16 +61,16 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
         {feedback._count.comments || 'No replies yet'}
       </Text>
     </Grid>
-  );
-};
+  )
+}
 
 export const TeamFeedbackList = (): JSX.Element => {
-  const { data: session } = useSession();
+  const { user } = useUser()
 
-  const { filteredFeedback, isLoading } = useFilterFeedback();
+  const { filteredFeedback, isLoading } = useFilterFeedback()
 
   if (isLoading) {
-    return <TeamFeedbackListSkeleton />;
+    return <TeamFeedbackListSkeleton />
   }
 
   return (
@@ -85,10 +78,10 @@ export const TeamFeedbackList = (): JSX.Element => {
       {filteredFeedback?.items.map((feedback) => (
         <TeamFeedbackRow
           key={feedback.id}
-          loggedInId={session?.user.id}
+          loggedInId={user?.id}
           feedback={feedback}
         />
       ))}
     </Stack>
-  );
-};
+  )
+}

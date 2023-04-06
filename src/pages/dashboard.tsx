@@ -1,19 +1,19 @@
-import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react';
-import { Button } from '@opengovsg/design-system-react';
-import Image from 'next/image';
-import NextLink from 'next/link';
-import { BiPlus } from 'react-icons/bi';
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg';
-import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer';
-import { TeamFeedbackList } from '~/features/feedback/components';
-import type { NextPageWithAuthAndLayout } from '~/lib/types';
-import { AdminLayout } from '~/templates/layouts/AdminLayout';
-import { trpc } from '~/utils/trpc';
-import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar';
+import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Button } from '@opengovsg/design-system-react'
+import Image from 'next/image'
+import NextLink from 'next/link'
+import { BiPlus } from 'react-icons/bi'
+import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
+import { FeedbackDrawer } from '~/features/feedback/components/FeedbackDrawer'
+import { TeamFeedbackList } from '~/features/feedback/components'
+import type { NextPageWithLayout } from '~/lib/types'
+import { AdminLayout } from '~/templates/layouts/AdminLayout'
+import { trpc } from '~/utils/trpc'
+import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
 
-const Dashboard: NextPageWithAuthAndLayout = () => {
+const Dashboard: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
-    trpc.post.unreadCount.useQuery();
+    trpc.post.unreadCount.useQuery()
 
   return (
     <Box p="1.5rem" w="100%">
@@ -52,37 +52,9 @@ const Dashboard: NextPageWithAuthAndLayout = () => {
         <TeamFeedbackList />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-Dashboard.auth = true;
+Dashboard.getLayout = AdminLayout
 
-Dashboard.getLayout = AdminLayout;
-
-export default Dashboard;
-
-/**
- * If you want to statically render this page
- * - Export `appRouter` & `createContext` from [trpc].ts
- * - Make the `opts` object optional on `createContext()`
- *
- * @link https://trpc.io/docs/ssg
- */
-// export const getStaticProps = async (
-//   context: GetStaticPropsContext<{ filter: string }>,
-// ) => {
-//   const ssg = createProxySSGHelpers({
-//     router: appRouter,
-//     ctx: await createContext(),
-//   });
-//
-//   await ssg.post.all.fetch();
-//
-//   return {
-//     props: {
-//       trpcState: ssg.dehydrate(),
-//       filter: context.params?.filter ?? 'all',
-//     },
-//     revalidate: 1,
-//   };
-// };
+export default Dashboard

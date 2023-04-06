@@ -71,4 +71,4 @@ export const TIP_TAP_STYLES = {
   '.ProseMirror-focused': {
     outline: 'none',
   },
-};
+}

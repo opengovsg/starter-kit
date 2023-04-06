@@ -1,15 +1,15 @@
-import { FC, PropsWithChildren } from 'react';
-import { Flex, FlexProps, useMultiStyleConfig } from '@chakra-ui/react';
+import { FC, PropsWithChildren } from 'react'
+import { Flex, FlexProps, useMultiStyleConfig } from '@chakra-ui/react'
 
-import { SidebarProvider } from './SidebarContext';
-import { SidebarStylesProvider } from './SidebarStylesContext';
+import { SidebarProvider } from './SidebarContext'
+import { SidebarStylesProvider } from './SidebarStylesContext'
 
 export interface SidebarContainerProps extends FlexProps {
   /**
    * If true, the sidebar will be collapsed and the label text will be hidden.
    * @note If value is not `undefined`, the label text will be clamped to a single line for smoother expansion animation.
    */
-  collapsed?: boolean;
+  collapsed?: boolean
 }
 
 export const SidebarContainer: FC<PropsWithChildren<SidebarContainerProps>> = ({
@@ -17,7 +17,7 @@ export const SidebarContainer: FC<PropsWithChildren<SidebarContainerProps>> = ({
   collapsed,
   ...flexProps
 }) => {
-  const styles = useMultiStyleConfig('Sidebar', {});
+  const styles = useMultiStyleConfig('Sidebar', {})
 
   return (
     <Flex flex={1} flexDir="column" {...flexProps}>
@@ -25,5 +25,5 @@ export const SidebarContainer: FC<PropsWithChildren<SidebarContainerProps>> = ({
         <SidebarStylesProvider value={styles}>{children}</SidebarStylesProvider>
       </SidebarProvider>
     </Flex>
-  );
-};
+  )
+}

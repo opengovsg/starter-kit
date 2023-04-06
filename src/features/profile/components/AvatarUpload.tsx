@@ -1,51 +1,49 @@
-import { Box, Flex, Icon } from '@chakra-ui/react';
-import { Input, useToast } from '@opengovsg/design-system-react';
-import { ChangeEventHandler, useState } from 'react';
-import { BiImageAdd } from 'react-icons/bi';
-import { NextImage } from '~/components/NextImage';
-import { useUploadAvatarMutation } from '../api';
+import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react'
+import { Input, useToast } from '@opengovsg/design-system-react'
+import { ChangeEventHandler, useState } from 'react'
+import { BiImageAdd } from 'react-icons/bi'
+import { NextImage } from '~/components/NextImage'
+import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
-  url: string;
+  url?: string | null
 }
 
 export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
-  const [currentAvatarUrl, setCurrentAvatarUrl] = useState(url);
-  const [isHover, setIsHover] = useState(false);
+  // Will load this over `url` if provided for UX.
+  const [isHover, setIsHover] = useState(false)
 
   const toast = useToast({
     status: 'success',
-  });
+  })
 
-  const uploadAvatarMutation = useUploadAvatarMutation();
+  const uploadAvatarMutation = useUploadAvatarMutation()
 
   const handleUploadAvatar: ChangeEventHandler<HTMLInputElement> = async (
-    event,
+    event
   ) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (!file) {
-      throw new Error('You must select an image to upload.');
+      throw new Error('You must select an image to upload.')
     }
 
     return uploadAvatarMutation.mutateAsync(file, {
-      onSuccess: async (newPath) => {
-        setCurrentAvatarUrl(newPath ?? '');
+      onSuccess: async () => {
         toast({
           description: 'Avatar uploaded successfully.',
-        });
+        })
       },
       onError: (x) =>
         toast({
           status: 'error',
           description: (x as Error)?.message ?? 'Failed to upload avatar.',
         }),
-    });
-  };
+    })
+  }
 
   return (
     <Box
       pos="relative"
-      cursor="pointer"
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -53,7 +51,7 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         as="label"
         transitionProperty="opacity"
         transitionDuration="0.2s"
-        opacity={isHover ? 1 : 0}
+        opacity={isHover && !uploadAvatarMutation.isLoading ? 1 : 0}
         zIndex={1}
         position="absolute"
         top={0}
@@ -61,10 +59,12 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         right={0}
         bottom={0}
         bg="blackAlpha.600"
-        borderRadius="md"
+        borderRadius="full"
         align="center"
         justify="center"
-        cursor="pointer"
+        cursor={uploadAvatarMutation.isLoading ? 'default' : 'pointer'}
+        w="7rem"
+        h="7rem"
       >
         <Input
           isDisabled={uploadAvatarMutation.isLoading}
@@ -74,15 +74,36 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
           onChange={handleUploadAvatar}
           hidden
         />
-        <Icon color="white" as={BiImageAdd} />
+        <Icon color="white" fontSize="2rem" as={BiImageAdd} />
       </Flex>
-      <NextImage
-        src={currentAvatarUrl}
-        borderRadius="md"
-        width="4rem"
-        height="4rem"
-        alt="profile picture"
-      />
+      <Skeleton isLoaded={url !== undefined} pos="relative">
+        {url ? (
+          <NextImage
+            bg="base.canvas.brand-subtle"
+            src={url}
+            borderRadius="full"
+            width="7rem"
+            height="7rem"
+            alt="profile picture"
+          />
+        ) : (
+          <Avatar w="7rem" h="7rem" />
+        )}
+        {uploadAvatarMutation.isLoading && (
+          <Flex
+            pos="absolute"
+            top={0}
+            left={0}
+            bottom={0}
+            right={0}
+            bg="whiteAlpha.800"
+            align="center"
+            justify="center"
+          >
+            <Spinner />
+          </Flex>
+        )}
+      </Skeleton>
     </Box>
-  );
-};
+  )
+}

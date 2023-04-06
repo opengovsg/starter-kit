@@ -1,33 +1,30 @@
-import { Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react'
 
-import type { GetServerSidePropsContext } from 'next';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '~/lib/auth';
+import { withSessionSsr } from '~/lib/withSession'
 
 // TODO: Will be landing page in the future, now just a redirect to appropriate page.
 const Index = () => {
-  return <Box />;
-};
+  return <Box />
+}
 
-export const getServerSideProps = async ({
-  req,
-  res,
-}: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
+export const getServerSideProps = withSessionSsr(async ({ req }) => {
+  const user = req.session.user
 
-  if (session) {
+  if (user) {
     return {
       redirect: {
         destination: '/dashboard',
       },
-    };
+      props: {},
+    }
   }
 
   return {
     redirect: {
       destination: '/sign-in',
     },
-  };
-};
+    props: {},
+  }
+})
 
-export default Index;
+export default Index

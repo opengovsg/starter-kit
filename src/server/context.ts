@@ -1,12 +1,11 @@
-import * as trpc from '@trpc/server';
-import type { CreateNextContextOptions } from '@trpc/server/adapters/next';
-import { Session } from 'next-auth';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '~/lib/auth';
-import { prisma } from './prisma';
+import * as trpc from '@trpc/server'
+import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
+import { getIronSession, IronSession } from 'iron-session'
+import { sessionOptions } from '~/lib/auth'
+import { prisma } from './prisma'
 
 interface CreateContextOptions {
-  session: Session | null;
+  session: IronSession
 }
 
 /**
@@ -17,7 +16,7 @@ export async function createContextInner(opts: CreateContextOptions) {
   return {
     session: opts.session,
     prisma,
-  };
+  }
 }
 
 /**
@@ -25,11 +24,11 @@ export async function createContextInner(opts: CreateContextOptions) {
  * @link https://trpc.io/docs/context
  */
 export const createContext = async (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
-  const session = await getServerSession(req, res, authOptions);
+  const { req, res } = opts
+  const session = await getIronSession(req, res, sessionOptions)
   return await createContextInner({
     session,
-  });
-};
+  })
+}
 
-export type Context = trpc.inferAsyncReturnType<typeof createContext>;
+export type Context = trpc.inferAsyncReturnType<typeof createContext>
