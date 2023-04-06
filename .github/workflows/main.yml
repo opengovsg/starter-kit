@@ -2,19 +2,11 @@ name: E2E-testing
 on: [push]
 jobs:
   e2e:
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_DATABASE: trpcdb
-          POSTGRES_USER: postgres
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports:
-          - 5432:5432
     env:
       NODE_ENV: test
-      NEXTAUTH_SECRET: supersecret
-      DATABASE_URL: postgresql://postgres:@localhost:5432/starter-kit-v2-kr
+      POSTMAN_API_KEY: postmansupersecret
+      SESSION_SECRET: supersecret_that_has_at_least_32_characters
+      DATABASE_URL: postgres://root:root@localhost:26257/app
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -50,11 +42,14 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
-      - name: Setup Prisma
-        run: npm run prebuild
+      - name: Start test containers
+        run: npm run setup
 
       - name: Build and test
         run: npm run build && npm run test-start && npm run test-dev
+
+      - name: Stop test containers
+        run: npm run teardown
 
       - name: Upload test results
         if: ${{ always() }}
