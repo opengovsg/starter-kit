@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { useState } from 'react'
 
 import ogpLogoFull from '~/assets/ogp-logo-full.svg'
 import {
@@ -9,31 +8,12 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
-  EmailInput,
-  VerificationInput,
+  SignInForm,
 } from '~/features/sign-in/components'
 import { withSessionSsr } from '~/lib/withSession'
 import NextLink from 'next/link'
 import { Link, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import Image from 'next/image'
-
-const EmailSignIn = () => {
-  const [email, setEmail] = useState('')
-  const [showVerificationStep, setShowVerificationStep] = useState(false)
-
-  if (showVerificationStep) {
-    return <VerificationInput email={email} />
-  }
-
-  return (
-    <EmailInput
-      onSuccess={(email) => {
-        setEmail(email)
-        setShowVerificationStep(true)
-      }}
-    />
-  )
-}
 
 const SignIn = () => {
   return (
@@ -58,7 +38,7 @@ const SignIn = () => {
                   <Text textStyle="h3">OGP Starter Kit</Text>
                 </Box>
               </Box>
-              <EmailSignIn />
+              <SignInForm />
             </Flex>
           </Box>
         </LoginGridArea>

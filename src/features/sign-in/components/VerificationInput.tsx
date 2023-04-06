@@ -62,7 +62,7 @@ export const VerificationInput = ({
         isReadOnly={verifyOtpMutation.isLoading}
       >
         <FormLabel htmlFor="email">Enter OTP sent to {email}</FormLabel>
-        <Input maxLength={6} {...register('token')} />
+        <Input autoFocus maxLength={6} {...register('token')} />
         <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
       </FormControl>
       <Button type="submit" isLoading={verifyOtpMutation.isLoading} mt={4}>
