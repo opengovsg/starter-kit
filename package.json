@@ -9,7 +9,7 @@
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
     "setup": "run-s --print-label db:setup db:sleep migrate:dev db:seed",
-    "teardown": "docker-compose down",
+    "teardown": "docker compose down",
     "dev": "next dev",
     "prebuild": "run-s generate migrate",
     "build": "next build",
