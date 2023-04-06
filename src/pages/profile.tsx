@@ -86,7 +86,7 @@ const Profile: NextPageWithLayout = () => {
           spacing="2rem"
           bg="white"
         >
-          <AvatarUpload url={me?.image} />
+          <AvatarUpload url={me?.image} name={me?.name} />
           <Stack flex={1}>
             <FormControl isInvalid={!!errors.name}>
               <FormLabel>Email</FormLabel>

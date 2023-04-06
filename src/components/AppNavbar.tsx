@@ -36,7 +36,7 @@ export const AppNavbar = (): JSX.Element => {
           <AvatarMenu
             // @ts-expect-error missing type in design-system
             src={user?.image ?? undefined}
-            name={user?.email ?? undefined}
+            name={user?.name ?? undefined}
             variant="subtle"
             bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}

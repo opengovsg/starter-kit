@@ -1,15 +1,19 @@
 import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
-import { ChangeEventHandler, useState } from 'react'
+import { ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
+import { browserEnv } from '~/browserEnv'
 import { NextImage } from '~/components/NextImage'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
+  name?: string | null
   url?: string | null
 }
 
-export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
+const CAN_UPLOAD = !!browserEnv.NEXT_PUBLIC_ENABLE_STORAGE
+
+export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
   // Will load this over `url` if provided for UX.
   const [isHover, setIsHover] = useState(false)
 
@@ -41,13 +45,20 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
     })
   }
 
+  const hoverProps = useMemo(() => {
+    if (!CAN_UPLOAD) {
+      return {}
+    }
+    return {
+      onMouseOver: () => setIsHover(true),
+      onMouseLeave: () => setIsHover(false),
+    }
+  }, [])
+
   return (
-    <Box
-      pos="relative"
-      onMouseOver={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-    >
+    <Box pos="relative">
       <Flex
+        {...hoverProps}
         as="label"
         transitionProperty="opacity"
         transitionDuration="0.2s"
@@ -62,12 +73,14 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
         borderRadius="full"
         align="center"
         justify="center"
-        cursor={uploadAvatarMutation.isLoading ? 'default' : 'pointer'}
+        cursor={
+          !CAN_UPLOAD || uploadAvatarMutation.isLoading ? 'default' : 'pointer'
+        }
         w="7rem"
         h="7rem"
       >
         <Input
-          isDisabled={uploadAvatarMutation.isLoading}
+          isDisabled={!CAN_UPLOAD || uploadAvatarMutation.isLoading}
           type="file"
           id="avatar-upload"
           accept="image/*"
@@ -87,7 +100,14 @@ export const AvatarUpload = ({ url }: AvatarUploadProps): JSX.Element => {
             alt="profile picture"
           />
         ) : (
-          <Avatar w="7rem" h="7rem" />
+          <Avatar
+            name={name ?? ''}
+            size="2xl"
+            w="7rem"
+            h="7rem"
+            variant="subtle"
+            bg="base.canvas.brand-subtle"
+          />
         )}
         {uploadAvatarMutation.isLoading && (
           <Flex
