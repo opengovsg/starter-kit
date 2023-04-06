@@ -26,7 +26,7 @@ export const AppNavbar = (): JSX.Element => {
         bg="white"
         borderBottomWidth="1px"
       >
-        <Link as={NextLink} title="Form Logo" href="/">
+        <Link as={NextLink} href="/">
           <Image src={ogpLogo} alt="OGP Logo" priority />
         </Link>
         <HStack

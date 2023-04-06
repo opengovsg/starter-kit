@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input } from '@chakra-ui/react'
 import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
-import { isAdminEmail } from '~/utils/auth'
+import { isOgpEmail } from '~/utils/auth'
 import { trpc } from '~/utils/trpc'
 
 interface EmailInputProps {
@@ -15,8 +15,8 @@ export const emailSignInSchema = z.object({
     .trim()
     .min(1, 'Please enter an email address.')
     .email({ message: 'Please enter a valid email address.' })
-    .refine(isAdminEmail, {
-      message: 'Please sign in with a gov.sg email address.',
+    .refine(isOgpEmail, {
+      message: 'Please sign in with an open.gov.sg email address.',
     }),
 })
 
@@ -48,13 +48,13 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         isReadOnly={loginMutation.isLoading}
       >
         <FormLabel requiredIndicator={<></>}>
-          Log in with your open.gov.sg
+          Log in with your open.gov.sg email
         </FormLabel>
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
       <Button type="submit" isLoading={loginMutation.isLoading} mt={4}>
-        Log in
+        Get OTP
       </Button>
     </form>
   )

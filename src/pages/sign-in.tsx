@@ -1,7 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { useState } from 'react'
-import { AppFooter } from '~/components/AppFooter'
 
+import ogpLogoFull from '~/assets/ogp-logo-full.svg'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -9,32 +8,17 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
-  EmailInput,
-  VerificationInput,
+  SignInForm,
 } from '~/features/sign-in/components'
 import { withSessionSsr } from '~/lib/withSession'
-
-const EmailSignIn = () => {
-  const [email, setEmail] = useState('')
-  const [showVerificationStep, setShowVerificationStep] = useState(false)
-
-  if (showVerificationStep) {
-    return <VerificationInput email={email} />
-  }
-
-  return (
-    <EmailInput
-      onSuccess={(email) => {
-        setEmail(email)
-        setShowVerificationStep(true)
-      }}
-    />
-  )
-}
+import NextLink from 'next/link'
+import { Link, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import Image from 'next/image'
 
 const SignIn = () => {
   return (
     <BackgroundBox>
+      <RestrictedGovtMasthead />
       <BaseGridLayout flex={1}>
         <NonMobileSidebarGridArea>
           <LoginImageSvgr maxW="100%" aria-hidden />
@@ -47,23 +31,14 @@ const SignIn = () => {
                 textStyle="responsive-heading.heavy-1280"
                 mb="2.5rem"
               >
-                Vibes for days
+                OGP Starter Kit
               </Text>
               <Box display={{ base: 'initial', lg: 'none' }}>
                 <Box mb={{ base: '0.75rem', lg: '1.5rem' }}>
-                  <Text textStyle="h3">GovLogin</Text>
+                  <Text textStyle="h3">OGP Starter Kit</Text>
                 </Box>
-                <Text
-                  textStyle={{
-                    base: 'responsive-heading.heavy',
-                    md: 'responsive-heading.heavy-480',
-                    lg: 'responsive-heading.heavy-1280',
-                  }}
-                >
-                  Vibes for days
-                </Text>
               </Box>
-              <EmailSignIn />
+              <SignInForm />
             </Flex>
           </Box>
         </LoginGridArea>
@@ -72,7 +47,25 @@ const SignIn = () => {
         bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
       >
         <FooterGridArea>
-          <AppFooter variant={{ lg: 'compact' }} />
+          <Text
+            display="flex"
+            alignItems="center"
+            whiteSpace="pre"
+            lineHeight="1rem"
+            fontWeight={500}
+            letterSpacing="0.08em"
+            textTransform="uppercase"
+            fontSize="0.625rem"
+          >
+            Built by{' '}
+            <Link
+              as={NextLink}
+              title="To OGP homepage"
+              href="https://open.gov.sg"
+            >
+              <Image src={ogpLogoFull} alt="OGP Logo" priority />
+            </Link>
+          </Text>
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>

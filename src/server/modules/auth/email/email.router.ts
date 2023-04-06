@@ -84,6 +84,7 @@ export const emailSessionRouter = router({
         create: {
           email,
           emailVerified: new Date(),
+          name: email.split('@')[0],
         },
         select: defaultUserSelect,
       })
