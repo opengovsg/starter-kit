@@ -4,7 +4,7 @@
 import { publicProcedure, router } from '../trpc'
 import { postRouter } from './post/post.router'
 import { meRouter } from './me/me.router'
-import { imageUploadRouter } from './imageUpload/imageUpload.router'
+import { storageRouter } from './storage/storage.router'
 import { commentRouter } from './comment/comment.router'
 import { authRouter } from './auth/auth.router'
 
@@ -14,7 +14,7 @@ export const appRouter = router({
   auth: authRouter,
   post: postRouter,
   comment: commentRouter,
-  imageUpload: imageUploadRouter,
+  storage: storageRouter,
 })
 
 export type AppRouter = typeof appRouter
