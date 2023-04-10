@@ -10,7 +10,16 @@ const browserEnvSchema = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
 })
 
-const parsedEnv = browserEnvSchema.safeParse(process.env)
+type BrowserEnv = {
+  [k in keyof z.infer<typeof browserEnvSchema>]: string | undefined
+}
+
+// Must add public env variables here explicitly so NextJS knows to expose them.
+const _browserEnv: BrowserEnv = {
+  NEXT_PUBLIC_ENABLE_STORAGE: process.env.NEXT_PUBLIC_ENABLE_STORAGE,
+}
+
+const parsedEnv = browserEnvSchema.safeParse(_browserEnv)
 
 if (!parsedEnv.success) {
   console.error(
@@ -18,6 +27,16 @@ if (!parsedEnv.success) {
     JSON.stringify(parsedEnv.error.format(), null, 4)
   )
   process.exit(1)
+}
+
+/**
+ * Validate client-side env are exposed to the client
+ */
+for (const key of Object.keys(parsedEnv.data)) {
+  if (!key.startsWith('NEXT_PUBLIC_')) {
+    console.warn('❌ Invalid public environment variable name:\n', key)
+    process.exit(1)
+  }
 }
 
 export const browserEnv = parsedEnv.data

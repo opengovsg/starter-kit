@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const envSchema = z.object({
+const serverEnvSchema = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
   OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
@@ -13,7 +13,7 @@ const envSchema = z.object({
   SESSION_SECRET: z.string().min(32),
 })
 
-const parsedEnv = envSchema.safeParse(process.env)
+const parsedEnv = serverEnvSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
   console.error(
