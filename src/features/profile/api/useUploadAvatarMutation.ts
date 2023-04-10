@@ -6,7 +6,7 @@ export const useUploadAvatarMutation = () => {
   const utils = trpc.useContext()
   const { user } = useUser()
   // Pre-upload: Create a mutation to presign the upload request
-  const presignImageUploadMutation = trpc.imageUpload.presign.useMutation()
+  const presignImageUploadMutation = trpc.storage.presignAvatar.useMutation()
 
   // Post-upload: Create a mutation to update the user's avatar link
   const updateAvatarLinkMutation = trpc.me.updateAvatar.useMutation({
@@ -17,7 +17,10 @@ export const useUploadAvatarMutation = () => {
     async (image: File) => {
       if (!user?.id) throw new Error('No user found')
 
-      const { url, key } = await presignImageUploadMutation.mutateAsync()
+      const presign = await presignImageUploadMutation.mutateAsync()
+      if (!presign) throw new Error('No presign generated')
+
+      const { url, key } = presign
 
       const response = await fetch(url, {
         headers: {
