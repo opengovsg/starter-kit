@@ -1,6 +1,7 @@
 import '@fontsource/ibm-plex-mono' // Import if using code textStyles.
 import 'inter-ui/inter.css' // Strongly recommended.
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import type { AppProps, AppType } from 'next/app'
 import { NextPageWithLayout } from '~/lib/types'
@@ -19,6 +20,9 @@ const MyApp = (({ Component, pageProps }: AppPropsWithAuthAndLayout) => {
   return (
     <ThemeProvider theme={theme}>
       {getLayout(<Component {...pageProps} />)}
+      {process.env.NODE_ENV !== 'production' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </ThemeProvider>
   )
 }) as AppType
