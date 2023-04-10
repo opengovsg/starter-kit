@@ -1,10 +1,15 @@
 import { z } from 'zod'
-import { protectedProcedure, router } from '~/server/trpc'
 import { generateSignedPutUrl } from '~/lib/r2'
 import { env } from '~/server/env'
+import { protectedProcedure, router } from '~/server/trpc'
 
 export const storageRouter = router({
   presignAvatar: protectedProcedure
+    .input(
+      z.object({
+        fileContentType: z.string(),
+      })
+    )
     .output(
       z
         .object({
@@ -13,12 +18,18 @@ export const storageRouter = router({
         })
         .or(z.null())
     )
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ ctx, input: { fileContentType } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_STORAGE) return null
       const imageKey = `avatar-${ctx.session.user.id}`
+
       return {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        url: await generateSignedPutUrl(imageKey, env.R2_AVATARS_BUCKET_NAME!),
+        url: await generateSignedPutUrl({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          Bucket: env.R2_AVATARS_BUCKET_NAME!,
+          Key: imageKey,
+          ACL: 'public-read',
+          ContentType: fileContentType,
+        }),
         key: imageKey,
       }
     }),

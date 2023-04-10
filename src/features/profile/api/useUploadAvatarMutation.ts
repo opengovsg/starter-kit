@@ -17,14 +17,16 @@ export const useUploadAvatarMutation = () => {
     async (image: File) => {
       if (!user?.id) throw new Error('No user found')
 
-      const presign = await presignImageUploadMutation.mutateAsync()
+      const presign = await presignImageUploadMutation.mutateAsync({
+        fileContentType: image.type,
+      })
       if (!presign) throw new Error('No presign generated')
 
       const { url, key } = presign
 
       const response = await fetch(url, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': image.type,
         },
         method: 'PUT',
         body: image,

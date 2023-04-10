@@ -1,9 +1,16 @@
-import { Avatar, Box, Flex, Icon, Skeleton, Spinner } from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Flex,
+  Icon,
+  Image,
+  SkeletonCircle,
+  Spinner,
+} from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
 import { ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { browserEnv } from '~/browserEnv'
-import { NextImage } from '~/components/NextImage'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
@@ -89,9 +96,14 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
         />
         <Icon color="white" fontSize="2rem" as={BiImageAdd} />
       </Flex>
-      <Skeleton isLoaded={url !== undefined} pos="relative">
+      <SkeletonCircle
+        w="7rem"
+        h="7rem"
+        isLoaded={url !== undefined}
+        pos="relative"
+      >
         {url ? (
-          <NextImage
+          <Image
             bg="base.canvas.brand-subtle"
             src={url}
             borderRadius="full"
@@ -123,7 +135,7 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
             <Spinner />
           </Flex>
         )}
-      </Skeleton>
+      </SkeletonCircle>
     </Box>
   )
 }
