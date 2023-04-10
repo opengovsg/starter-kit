@@ -20,7 +20,7 @@ export const storageRouter = router({
     )
     .mutation(async ({ ctx, input: { fileContentType } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_STORAGE) return null
-      const imageKey = `avatar-${ctx.session.user.id}`
+      const imageKey = `${ctx.session.user.id}/avatar-${Date.now()}`
 
       return {
         url: await generateSignedPutUrl({
