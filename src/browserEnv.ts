@@ -6,7 +6,7 @@ export const coerceBoolean = z
   .catch('false')
   .transform((value) => value.toLowerCase() === 'true' || value === '1')
 
-const browserEnvSchema = z.object({
+export const browserEnvSchema = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
 })
 
