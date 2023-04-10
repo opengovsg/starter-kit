@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 
-import ogpLogoFull from '~/assets/ogp-logo-full.svg'
+import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { MiniFooter } from '~/components/Footer/MiniFooter'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -11,9 +12,6 @@ import {
   SignInForm,
 } from '~/features/sign-in/components'
 import { withSessionSsr } from '~/lib/withSession'
-import NextLink from 'next/link'
-import { Link, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
-import Image from 'next/image'
 
 const SignIn = () => {
   return (
@@ -47,25 +45,7 @@ const SignIn = () => {
         bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
       >
         <FooterGridArea>
-          <Text
-            display="flex"
-            alignItems="center"
-            whiteSpace="pre"
-            lineHeight="1rem"
-            fontWeight={500}
-            letterSpacing="0.08em"
-            textTransform="uppercase"
-            fontSize="0.625rem"
-          >
-            Built by{' '}
-            <Link
-              as={NextLink}
-              title="To OGP homepage"
-              href="https://open.gov.sg"
-            >
-              <Image src={ogpLogoFull} alt="OGP Logo" priority />
-            </Link>
-          </Text>
+          <MiniFooter />
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>
