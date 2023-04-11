@@ -78,6 +78,7 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
       queryClientConfig: {
         defaultOptions: {
           queries: {
+            staleTime: 1000 * 10, // 10 seconds
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
                 if (error.data?.code === 'FORBIDDEN') {
