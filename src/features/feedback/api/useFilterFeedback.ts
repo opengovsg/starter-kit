@@ -70,12 +70,10 @@ export const useFilterFeedback = () => {
     data: filteredFeedback,
     isLoading,
     isFetching,
-  } = trpc.post.list.useQuery({
-    order,
-    filter,
-    cursor,
-    limit,
-  })
+  } = trpc.post.list.useQuery(
+    { order, filter, cursor, limit },
+    { keepPreviousData: true }
+  )
 
   return {
     filteredFeedback,
