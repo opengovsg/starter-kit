@@ -15,9 +15,9 @@ export const DashSidebar = () => {
             label: 'Feedback',
             icon: <BiMessageSquareEdit fontSize="1.5rem" />,
             props: {
-              isActive: pathname === '/',
+              isActive: pathname === '/dashboard',
               as: Link,
-              href: '/',
+              href: '/dashboard',
             },
           },
           {
