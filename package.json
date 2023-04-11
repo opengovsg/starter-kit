@@ -70,7 +70,7 @@
     "@chakra-ui/cli": "^2.3.0",
     "@playwright/test": "^1.26.1",
     "@types/node": "^18.7.20",
-    "@types/react": "^18.0.9",
+    "@types/react": "^18.0.34",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.47.0",
     "eslint": "^8.30.0",
