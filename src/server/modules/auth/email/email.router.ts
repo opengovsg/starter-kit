@@ -8,7 +8,7 @@ import { defaultUserSelect } from '~/server/modules/user/user.select'
 import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
-import { set } from 'lodash'
+import { generateUsername } from '../../user/user.service'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -79,13 +79,16 @@ export const emailSessionRouter = router({
         throw e
       }
 
+      const emailName = email.split('@')[0] ?? 'unknown'
+
       const user = await ctx.prisma.user.upsert({
         where: { email },
         update: {},
         create: {
           email,
           emailVerified: new Date(),
-          name: email.split('@')[0],
+          name: emailName,
+          username: generateUsername(emailName),
         },
         select: defaultUserSelect,
       })
