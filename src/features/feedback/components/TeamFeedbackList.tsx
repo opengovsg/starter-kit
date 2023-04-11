@@ -67,20 +67,18 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
 export const TeamFeedbackList = (): JSX.Element => {
   const { user } = useUser()
 
-  const { filteredFeedback, isLoading } = useFilterFeedback()
+  const { filteredFeedback, isFetching } = useFilterFeedback()
 
-  if (isLoading) {
+  if (!filteredFeedback) {
     return <TeamFeedbackListSkeleton />
   }
 
   return (
     <Stack divider={<StackDivider />} spacing={0}>
       {filteredFeedback?.items.map((feedback) => (
-        <TeamFeedbackRow
-          key={feedback.id}
-          loggedInId={user?.id}
-          feedback={feedback}
-        />
+        <Box key={feedback.id} opacity={isFetching ? 0.7 : 1}>
+          <TeamFeedbackRow loggedInId={user?.id} feedback={feedback} />
+        </Box>
       ))}
     </Stack>
   )
