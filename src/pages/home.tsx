@@ -12,6 +12,7 @@ import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
+import { TweetComposeForm } from '~/features/tweet/TweetComposeForm'
 
 const Home: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
@@ -19,7 +20,16 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <Box p="1.5rem" w="100%">
-      <FeedbackActionsModal />
+      <TweetComposeForm />
+      <Button
+        as={NextLink}
+        href="/feedback/new"
+        leftIcon={<Icon fontSize="1.25rem" as={BiPlus} />}
+      >
+        Write feedback
+      </Button>
+      <TeamFeedbackList />
+      {/* <FeedbackDrawer />
       <Stack justify="space-between" flexDir="row">
         <Stack flexDir="row" align="center">
           <Image
@@ -57,7 +67,7 @@ const Home: NextPageWithLayout = () => {
       >
         <TeamFeedbackFilterBar />
         <TeamFeedbackList />
-      </Box>
+      </Box> */}
     </Box>
   )
 }

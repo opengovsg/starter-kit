@@ -10,6 +10,7 @@ export const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   bio: true,
   email: true,
   emailVerified: true,
+  username: true,
   image: true,
   name: true,
 })

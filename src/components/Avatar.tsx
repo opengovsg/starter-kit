@@ -4,5 +4,7 @@ import {
 } from '@chakra-ui/react'
 
 export const Avatar = (props: ChakraAvatarProps) => {
-  return <ChakraAvatar bg="base.canvas.brand-subtle" {...props} />
+  return (
+    <ChakraAvatar variant="subtle" bg="base.canvas.brand-subtle" {...props} />
+  )
 }
