@@ -24,6 +24,7 @@ export const FeedbackNavbar = (): JSX.Element => {
       py="0.75rem"
       bg="white"
       borderBottomWidth="1px"
+      borderColor="base.divider.medium"
     >
       <Breadcrumb textStyle="body-2">
         {FEEDBACK_CRUMBS.map((crumb, index) => (

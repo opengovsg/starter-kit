@@ -78,6 +78,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
           spacing="2rem"
           as="form"
           borderWidth="1px"
+          borderColor="base.divider.medium"
           borderRadius="lg"
           onSubmit={handleSubmitFeedback}
           bg="white"

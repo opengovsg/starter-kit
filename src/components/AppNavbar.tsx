@@ -25,6 +25,7 @@ export const AppNavbar = (): JSX.Element => {
         py="0.75rem"
         bg="white"
         borderBottomWidth="1px"
+        borderColor="base.divider.medium"
       >
         <Link as={NextLink} href="/">
           <Image src={ogpLogo} alt="OGP Logo" priority />

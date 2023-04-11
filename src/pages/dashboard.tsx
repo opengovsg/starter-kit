@@ -47,7 +47,12 @@ const Dashboard: NextPageWithLayout = () => {
           Write feedback
         </Button>
       </Stack>
-      <Box bg="white" borderRadius="sm" borderWidth="1px">
+      <Box
+        bg="white"
+        borderRadius="sm"
+        borderWidth="1px"
+        borderColor="base.divider.medium"
+      >
         <TeamFeedbackFilterBar />
         <TeamFeedbackList />
       </Box>

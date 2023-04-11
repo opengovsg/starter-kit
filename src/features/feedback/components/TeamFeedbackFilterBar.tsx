@@ -53,7 +53,12 @@ export const TeamFeedbackFilterBar = (): JSX.Element => {
     useFilterFeedback()
 
   return (
-    <Box px="2rem" py="1.125rem" borderBottomWidth="1px">
+    <Box
+      px="2rem"
+      py="1.125rem"
+      borderBottomWidth="1px"
+      borderColor="base.divider.medium"
+    >
       <FilterSelect
         selection={filter}
         isDisabled={isLoading}

@@ -27,7 +27,7 @@ const TeamFeedbackRowSkeleton = () => {
 
 export const TeamFeedbackListSkeleton = (): JSX.Element => {
   return (
-    <Stack divider={<StackDivider />}>
+    <Stack divider={<StackDivider color="base.divider.medium" />}>
       <TeamFeedbackRowSkeleton />
       <TeamFeedbackRowSkeleton />
       <TeamFeedbackRowSkeleton />
