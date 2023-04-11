@@ -1,7 +1,8 @@
 import { Flex } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { BiMessageSquareEdit } from 'react-icons/bi'
+import { BiMessageSquareEdit, BiCog } from 'react-icons/bi'
+import { HOME } from '~/lib/routes'
 import { Sidebar } from './Sidebar'
 
 export const DashSidebar = () => {
@@ -15,9 +16,9 @@ export const DashSidebar = () => {
             label: 'Feedback',
             icon: <BiMessageSquareEdit fontSize="1.5rem" />,
             props: {
-              isActive: pathname === '/dashboard',
+              isActive: pathname === HOME,
               as: Link,
-              href: '/dashboard',
+              href: HOME,
             },
           },
         ]}

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useIntervalWhen } from 'rooks'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
+import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
 import { emailSignInSchema } from './Emailnput'
 import { ResendOtpButton } from './ResendOtpButton'
@@ -63,7 +64,7 @@ export const VerificationInput = ({
       },
       {
         onSuccess: () => {
-          router.push(String(router.query.callbackUrl ?? '/dashboard'))
+          router.push(String(router.query.callbackUrl ?? HOME))
         },
       }
     )

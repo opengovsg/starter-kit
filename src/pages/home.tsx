@@ -13,7 +13,7 @@ import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
 
-const Dashboard: NextPageWithLayout = () => {
+const Home: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
     trpc.post.unreadCount.useQuery()
 
@@ -62,6 +62,6 @@ const Dashboard: NextPageWithLayout = () => {
   )
 }
 
-Dashboard.getLayout = AdminLayout
+Home.getLayout = AdminLayout
 
-export default Dashboard
+export default Home

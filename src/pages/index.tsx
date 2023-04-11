@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react'
+import { HOME } from '~/lib/routes'
 
 import { withSessionSsr } from '~/lib/withSession'
 
@@ -13,7 +14,7 @@ export const getServerSideProps = withSessionSsr(async ({ req }) => {
   if (user) {
     return {
       redirect: {
-        destination: '/dashboard',
+        destination: HOME,
       },
       props: {},
     }

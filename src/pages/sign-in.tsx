@@ -12,6 +12,7 @@ import {
   NonMobileSidebarGridArea,
   SignInForm,
 } from '~/features/sign-in/components'
+import { HOME } from '~/lib/routes'
 import { withSessionSsr } from '~/lib/withSession'
 
 const title = browserEnv.NEXT_PUBLIC_APP_NAME
@@ -63,7 +64,7 @@ export const getServerSideProps = withSessionSsr(
     if (user) {
       return {
         redirect: {
-          destination: callbackUrl ?? '/dashboard',
+          destination: callbackUrl ?? HOME,
         },
         props: {},
       }

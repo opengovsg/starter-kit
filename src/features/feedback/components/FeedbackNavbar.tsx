@@ -1,11 +1,12 @@
 import { Breadcrumb, Flex } from '@chakra-ui/react'
 
 import { Crumb, CrumbProps } from '~/components/Breadcrumb'
+import { HOME } from '~/lib/routes'
 
 const DEFAULT_FEEDBACK_CRUMBS: CrumbProps[] = [
   {
-    label: 'All feedback',
-    href: '/dashboard',
+    label: 'Home',
+    href: HOME,
   },
   {
     label: 'New feedback',

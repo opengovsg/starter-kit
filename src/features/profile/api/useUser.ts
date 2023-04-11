@@ -6,7 +6,7 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
   const { data: user, isFetching, ...rest } = trpc.me.get.useQuery()
 
   useEffect(() => {
-    // if no redirect needed, just return (example: already on /dashboard)
+    // if no redirect needed, just return (example: already on routes.HOME)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
     if (!redirectTo || isFetching) return
 

@@ -23,8 +23,8 @@ import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 
 import { RichText } from '~/components/RichText'
-import { FEEDBACK } from '~/constants/routes'
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
+import { useUser } from '~/features/profile/api'
+import { HOME } from '~/lib/routes'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
@@ -38,10 +38,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     async onSuccess({ id }) {
       // refetches posts after a post is added
       await utils.post.list.invalidate()
-      router.push(`${FEEDBACK}/${id}`)
-    },
-    onError: (error) => {
-      toast({ description: error.message })
+      router.push(`${HOME}?feedbackId=${id}`)
     },
   })
 
