@@ -1,28 +1,12 @@
-import { InferGetServerSidePropsType } from 'next'
+import { Container, Flex, Stack, Text } from '@chakra-ui/react'
+import { type InferGetServerSidePropsType } from 'next'
+import { useMemo } from 'react'
+import { FeedbackComment, FeedbackNavbar } from '~/features/feedback/components'
+import { FeedbackCommentRichText } from '~/features/feedback/components/FeedbackCommentRichText'
 import { createSsgHelper } from '~/lib/ssg'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 import { withSessionSsr } from '~/lib/withSession'
-import { RouterOutput, trpc } from '~/utils/trpc'
-
-type PostByIdOutput = RouterOutput['post']['byId']
-
-interface FeedbackItemProps {
-  post: PostByIdOutput
-}
-
-const FeedbackItem = ({ post }: FeedbackItemProps) => {
-  return (
-    <>
-      <h1>{post.title}</h1>
-      <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
-
-      <p>{post.contentHtml}</p>
-
-      <h2>Raw data:</h2>
-      <pre>{JSON.stringify(post, null, 4)}</pre>
-    </>
-  )
-}
+import { trpc } from '~/utils/trpc'
 
 const PostViewPage: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -31,10 +15,57 @@ const PostViewPage: NextPageWithLayout<
   // This query will be immediately available as it's prefetched.
   const { data, isSuccess } = trpc.post.byId.useQuery({ id })
 
+  const viewPostCrumbs = useMemo(() => {
+    return [
+      {
+        label: 'All feedback',
+        href: '/dashboard',
+      },
+      {
+        label: data?.author.name ?? 'loading',
+        last: true,
+        href: `/feedback/${id}`,
+      },
+    ]
+  }, [data?.author.name, id])
+
   if (!isSuccess) {
     return <div>Should not happen</div>
   }
-  return <FeedbackItem post={data} />
+
+  return (
+    <Flex flexDir="column" bg="base.canvas.brand-subtle" minH="$100vh">
+      <FeedbackNavbar crumbs={viewPostCrumbs} />
+      <Container my="3.5rem">
+        <Stack mb="1.25rem">
+          <Text as="h1" textStyle="h4">
+            Feedback from {data.author.name}
+          </Text>
+          <Text textStyle="subhead-2" color="base.content.medium">
+            Reply to share your concerns and ideas directly.
+          </Text>
+        </Stack>
+        <Stack
+          mb="2rem"
+          spacing="1.5rem"
+          bg="white"
+          px="2rem"
+          py="2.5rem"
+          borderRadius="md"
+          borderWidth="1px"
+          borderColor="base.divider.medium"
+        >
+          <FeedbackComment post={data} />
+          <Stack spacing="1.5rem">
+            {data.comments.map((comment) => (
+              <FeedbackComment key={comment.id} post={comment} />
+            ))}
+          </Stack>
+          <FeedbackCommentRichText postId={data.id} />
+        </Stack>
+      </Container>
+    </Flex>
+  )
 }
 
 export const getServerSideProps = withSessionSsr(

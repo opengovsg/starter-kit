@@ -11,15 +11,14 @@ import {
 import { Button } from '@opengovsg/design-system-react'
 import { Controller } from 'react-hook-form'
 import { addCommentSchema } from '~/schemas/comment'
+import { BiSend } from 'react-icons/bi'
 
 interface FeedbackCommentRichTextProps {
   postId: string
-  handleCancel: () => void
 }
 
 export const FeedbackCommentRichText = ({
   postId,
-  handleCancel,
 }: FeedbackCommentRichTextProps): JSX.Element => {
   const utils = trpc.useContext()
   const mutation = trpc.comment.add.useMutation({
@@ -56,6 +55,7 @@ export const FeedbackCommentRichText = ({
           name="contentHtml"
           render={({ field: { onChange, ...field } }) => (
             <RichText
+              placeholder="Tip: Replying is caring"
               {...field}
               onChange={(value, rawValue) => {
                 onChange(value)
@@ -67,10 +67,13 @@ export const FeedbackCommentRichText = ({
         <FormErrorMessage>{errors.contentHtml?.message}</FormErrorMessage>
       </FormControl>
       <ButtonGroup w="100%" justifyContent="end" mt="1rem">
-        <Button variant="outline" mr={3} onClick={handleCancel}>
-          Cancel
+        <Button
+          isFullWidth
+          leftIcon={<BiSend fontSize="1.25rem" />}
+          onClick={handleSubmitFeedback}
+        >
+          Reply
         </Button>
-        <Button onClick={handleSubmitFeedback}>Save</Button>
       </ButtonGroup>
     </Box>
   )

@@ -1,9 +1,8 @@
-import { Breadcrumb, Flex, HStack } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
+import { Breadcrumb, Flex } from '@chakra-ui/react'
 
 import { Crumb, CrumbProps } from '~/components/Breadcrumb'
 
-const FEEDBACK_CRUMBS: CrumbProps[] = [
+const DEFAULT_FEEDBACK_CRUMBS: CrumbProps[] = [
   {
     label: 'All feedback',
     href: '/dashboard',
@@ -15,25 +14,28 @@ const FEEDBACK_CRUMBS: CrumbProps[] = [
   },
 ]
 
-export const FeedbackNavbar = (): JSX.Element => {
+interface FeedbackNavbarProps {
+  crumbs?: CrumbProps[]
+}
+
+export const FeedbackNavbar = ({
+  crumbs = DEFAULT_FEEDBACK_CRUMBS,
+}: FeedbackNavbarProps): JSX.Element => {
   return (
     <Flex
       justify="space-between"
       align="center"
       px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
-      py="0.75rem"
+      py="0.875rem"
       bg="white"
       borderBottomWidth="1px"
       borderColor="base.divider.medium"
     >
       <Breadcrumb textStyle="body-2">
-        {FEEDBACK_CRUMBS.map((crumb, index) => (
+        {crumbs.map((crumb, index) => (
           <Crumb key={index} {...crumb} />
         ))}
       </Breadcrumb>
-      <HStack textStyle="subhead-1" spacing={{ base: '0.75rem', md: '1.5rem' }}>
-        <Button variant="outline">Save as draft</Button>
-      </HStack>
     </Flex>
   )
 }

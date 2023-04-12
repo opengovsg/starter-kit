@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo, useState } from 'react'
-import { Box, Flex, FlexProps } from '@chakra-ui/react'
+import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/react'
 
 import { dataAttr } from '@chakra-ui/utils'
 import Link from '@tiptap/extension-link'
@@ -20,8 +20,58 @@ interface TextAreaFieldProps extends Omit<FlexProps, 'value' | 'onChange'> {
   onChange?: (value: string | undefined, rawValue?: string) => void
 }
 
-const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
-  const { isReadOnly, value, defaultValue, onChange, sx, ...flexProps } = props
+const ReadonlyContainer = ({
+  children,
+  ...boxProps
+}: PropsWithChildren<BoxProps>) => {
+  return (
+    <Box
+      borderRadius="md"
+      bg="interaction.neutral-subtle.default"
+      borderWidth="1px"
+      borderColor="base.divider.medium"
+      px="1rem"
+      py="0.5rem"
+      {...boxProps}
+    >
+      {children}
+    </Box>
+  )
+}
+
+const EditorContainer = ({
+  children,
+  ...boxProps
+}: PropsWithChildren<BoxProps>) => {
+  return (
+    <Box
+      borderBottomRadius="sm"
+      borderTopRadius={0}
+      mt="-px"
+      bg="white"
+      borderWidth="1px"
+      borderColor="base.divider.strong"
+      _focus={{
+        borderColor: 'utility.focus-default',
+      }}
+      px="1rem"
+      py="0.5rem"
+      {...boxProps}
+    >
+      {children}
+    </Box>
+  )
+}
+
+const UnmemoedRichText: React.FC<TextAreaFieldProps> = ({
+  isReadOnly,
+  value,
+  defaultValue,
+  onChange,
+  placeholder = 'Add details and give concrete examples to explain how you feel.',
+  sx,
+  ...flexProps
+}) => {
   const [isFocused, setIsFocused] = useState(false)
 
   const componentStyles = useMemo(() => merge({}, TIP_TAP_STYLES, sx), [sx])
@@ -32,8 +82,7 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
       Link,
       Placeholder.configure({
         // Use a placeholder:
-        placeholder:
-          'Add details and give concrete examples to explain how you feel.',
+        placeholder,
         // Use different placeholders depending on the node type:
         // placeholder: ({ node }) => {
         //   if (node.type.name === 'heading') {
@@ -55,6 +104,11 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
       onChange?.(JSON.stringify(json), rawTextValue)
     },
   })
+
+  const EditorWrapper = useMemo(
+    () => (isReadOnly ? ReadonlyContainer : EditorContainer),
+    [isReadOnly]
+  )
 
   // this is required as value will not be set after the first render
   useEffect(() => {
@@ -81,25 +135,13 @@ const UnmemoedRichText: React.FC<TextAreaFieldProps> = (props) => {
     >
       <Box>
         {!isReadOnly && <MenuBar editor={editor} />}
-        <Box
-          borderBottomRadius="sm"
-          borderTopRadius={isReadOnly ? 'sm' : 0}
-          mt={isReadOnly ? 0 : '-px'}
-          borderWidth="1px"
-          borderColor="base.divider.strong"
-          _focus={{
-            borderColor: 'utility.focus-default',
-          }}
-          px="1rem"
-          py="0.5rem"
-          data-focus={dataAttr(isFocused)}
-        >
+        <EditorWrapper data-focus={dataAttr(isFocused)}>
           <EditorContent
             editor={editor}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
-        </Box>
+        </EditorWrapper>
       </Box>
     </Flex>
   )
