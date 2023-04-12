@@ -1,6 +1,6 @@
 import { Container, Flex, Stack, Text } from '@chakra-ui/react'
 import { type InferGetServerSidePropsType } from 'next'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FeedbackComment, FeedbackNavbar } from '~/features/feedback/components'
 import { FeedbackCommentRichText } from '~/features/feedback/components/FeedbackCommentRichText'
 import { createSsgHelper } from '~/lib/ssg'
@@ -12,6 +12,24 @@ const PostViewPage: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { id } = props
+  const utils = trpc.useContext()
+
+  const { mutate } = trpc.post.setRead.useMutation()
+
+  useEffect(() => {
+    mutate(
+      { id },
+      {
+        onSuccess: () => {
+          utils.post.list.invalidate()
+          utils.post.unreadCount.invalidate()
+        },
+      }
+    )
+    // Only want to run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // This query will be immediately available as it's prefetched.
   const { data, isSuccess } = trpc.post.byId.useQuery({ id })
 
