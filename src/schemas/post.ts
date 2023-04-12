@@ -21,7 +21,7 @@ export const listPostsInputSchema = z.object({
       'unread',
     ])
     .default('all'),
-  order: z.enum(['asc', 'desc']).default('desc'),
+  order: z.enum(['asc', 'desc']).default('asc'),
 })
 
 export type ListPostsInputSchema = z.infer<typeof listPostsInputSchema>
