@@ -43,7 +43,7 @@
     "@tanstack/react-query": "^4.29.1",
     "@tanstack/react-query-devtools": "^4.29.1",
     "@tiptap/extension-link": "^2.0.0-beta.220",
-    "@tiptap/extension-placeholder": "^2.0.0-beta.220",
+    "@tiptap/extension-placeholder": "^2.0.2",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/starter-kit": "^2.0.0-beta.220",
