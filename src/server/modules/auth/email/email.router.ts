@@ -8,6 +8,7 @@ import { defaultUserSelect } from '~/server/modules/user/user.select'
 import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
+import { set } from 'lodash'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -92,9 +93,9 @@ export const emailSessionRouter = router({
       // TODO: Should only store user id in session.
       // The rest of user details should be fetched from db in protectedProcedure.
       // Sign user in.
-      ctx.session.user = user
+      set(ctx, 'session.user', user)
 
-      await ctx.session.save()
+      await ctx.session?.save()
       return user
     }),
 })

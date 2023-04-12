@@ -1,7 +1,8 @@
 import { Box, Flex, Grid, Stack, StackDivider, Text } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import Link from 'next/link'
+import { useMemo } from 'react'
 import { Avatar } from '~/components/Avatar'
+import { FEEDBACK } from '~/constants/routes'
 import { useUser } from '~/features/profile/api'
 import { RouterOutput } from '~/utils/trpc'
 import { useFilterFeedback } from '../api/useFilterFeedback'
@@ -14,17 +15,10 @@ interface TeamFeedbackRowProps {
 }
 
 const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
-  const router = useRouter()
-
   const hasRead = useMemo(() => {
     if (!loggedInId) return false
     return feedback.readBy[loggedInId] ?? false
   }, [feedback.readBy, loggedInId])
-
-  const handleOpenFeedback = useCallback(() => {
-    router.query.feedbackId = String(feedback.id)
-    router.push(router)
-  }, [feedback.id, router])
 
   return (
     <Grid
@@ -34,7 +28,8 @@ const TeamFeedbackRow = ({ feedback, loggedInId }: TeamFeedbackRowProps) => {
       gap="0.25rem"
       pos="relative"
       cursor="pointer"
-      onClick={handleOpenFeedback}
+      as={Link}
+      href={`${FEEDBACK}/${feedback.id}`}
     >
       {!hasRead && (
         <Box pos="absolute" w="4px" h="100%" bg="blue.200" top={0} left={0} />

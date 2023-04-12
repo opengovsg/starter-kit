@@ -26,6 +26,7 @@ import Image from 'next/image'
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
 import { RichText } from '~/components/RichText'
 import { useUser } from '~/features/profile/api'
+import { FEEDBACK } from '~/constants/routes'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
@@ -37,7 +38,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     async onSuccess({ id }) {
       // refetches posts after a post is added
       await utils.post.list.invalidate()
-      router.push(`/dashboard?feedbackId=${id}`)
+      router.push(`${FEEDBACK}/${id}`)
     },
   })
 
