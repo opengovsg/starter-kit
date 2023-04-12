@@ -1,38 +1,27 @@
 import { Grid, Box, Flex, Avatar, Text } from '@chakra-ui/react'
+import { IconButton } from '@opengovsg/design-system-react'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { BiTrash } from 'react-icons/bi'
 import { FEEDBACK } from '~/constants/routes'
 import { RouterOutput } from '~/utils/trpc'
 
 interface TeamFeedbackRowProps {
-  loggedInId?: string
   feedback: RouterOutput['post']['list']['items'][number]
 }
 
-export const TeamFeedbackRow = ({
-  feedback,
-  loggedInId,
-}: TeamFeedbackRowProps) => {
-  const hasRead = useMemo(() => {
-    if (!loggedInId) return false
-    return feedback.readBy[loggedInId] ?? false
-  }, [feedback.readBy, loggedInId])
-
+export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
   return (
     <Grid
       py="1.125rem"
       px="2rem"
-      gridTemplateColumns="5fr 1fr 1fr 1fr"
+      gridTemplateColumns="5fr 1fr 1fr 3rem"
       gap="0.25rem"
       pos="relative"
-      cursor="pointer"
-      as={Link}
-      href={`${FEEDBACK}/${feedback.id}`}
     >
-      {!hasRead && (
+      {!feedback.read && (
         <Box pos="absolute" w="4px" h="100%" bg="blue.200" top={0} left={0} />
       )}
-      <Box>
+      <Box cursor="pointer" as={Link} href={`${FEEDBACK}/${feedback.id}`}>
         <Flex gap="0.375rem" align="center">
           <Avatar src={feedback.author.image ?? undefined} size="2xs" />
           <Text textStyle="caption-2" color="base.content.medium">
@@ -53,6 +42,13 @@ export const TeamFeedbackRow = ({
       <Text textStyle="caption-1" color="base.content.brand" alignSelf="center">
         {feedback._count.comments || 'No replies yet'}
       </Text>
+      <IconButton
+        w={0}
+        variant="clear"
+        colorScheme="critical"
+        aria-label="Delete feedback"
+        icon={<BiTrash />}
+      />
     </Grid>
   )
 }

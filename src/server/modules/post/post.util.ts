@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client'
-import { keyBy } from 'lodash'
 import { withCommentsPostSelect } from './post.select'
 
 // Infer the resulting payload type
@@ -8,7 +7,7 @@ type MyPostPayload = Prisma.PostGetPayload<{
 }>
 
 export const processFeedbackItem = <T extends MyPostPayload>(
-  { authorId, ...item }: T,
+  { authorId, readBy, ...item }: T,
   sessionUserId: string
 ) => {
   if (item.anonymous) {
@@ -20,6 +19,6 @@ export const processFeedbackItem = <T extends MyPostPayload>(
   }
   return {
     ...item,
-    readBy: keyBy(item.readBy, 'user.id'),
+    read: readBy.some((read) => read.user.id === sessionUserId),
   }
 }

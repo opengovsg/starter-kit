@@ -16,9 +16,6 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
     },
   },
   readBy: {
-    orderBy: {
-      updatedAt: 'asc',
-    },
     select: {
       user: {
         select: {
