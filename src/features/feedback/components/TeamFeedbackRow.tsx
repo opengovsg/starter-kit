@@ -43,7 +43,7 @@ export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
       </Text>
       <FeedbackRowMenu
         role={feedback.canEdit ? 'owner' : 'viewer'}
-        id={feedback.id}
+        feedback={feedback}
       />
     </Grid>
   )

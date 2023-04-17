@@ -2,17 +2,18 @@ import { MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { IconButton, Menu } from '@opengovsg/design-system-react'
 import { useSetAtom } from 'jotai'
 import { BiDotsHorizontal } from 'react-icons/bi'
+import { RouterOutput } from '~/utils/trpc'
 import { actionStateAtom } from '../api/actionState'
 import { FeedbackRole } from '../api/types'
 
 interface FeedbackRowMenuProps {
   role: FeedbackRole
-  id: string
+  feedback: RouterOutput['post']['list']['items'][number]
 }
 
 const FeedbackRowMenuItems = ({
   role,
-  id,
+  feedback,
 }: FeedbackRowMenuProps): JSX.Element => {
   const setState = useSetAtom(actionStateAtom)
 
@@ -22,7 +23,7 @@ const FeedbackRowMenuItems = ({
         <MenuItem
           onClick={() => {
             setState({
-              postId: id,
+              post: feedback,
               state: 'edit',
             })
           }}
@@ -32,7 +33,7 @@ const FeedbackRowMenuItems = ({
         <MenuItem
           onClick={() => {
             setState({
-              postId: id,
+              post: feedback,
               state: 'delete',
             })
           }}
@@ -45,10 +46,7 @@ const FeedbackRowMenuItems = ({
   return <MenuList />
 }
 
-export const FeedbackRowMenu = ({
-  role,
-  id,
-}: FeedbackRowMenuProps): JSX.Element => {
+export const FeedbackRowMenu = (props: FeedbackRowMenuProps): JSX.Element => {
   return (
     <Menu isLazy>
       <MenuButton
@@ -57,7 +55,7 @@ export const FeedbackRowMenu = ({
         as={IconButton}
         icon={<BiDotsHorizontal />}
       />
-      <FeedbackRowMenuItems role={role} id={id} />
+      <FeedbackRowMenuItems {...props} />
     </Menu>
   )
 }

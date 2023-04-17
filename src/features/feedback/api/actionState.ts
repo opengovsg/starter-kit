@@ -1,12 +1,13 @@
 import { atom } from 'jotai'
+import { type RouterOutput } from '~/utils/trpc'
 
 type ActionState = {
-  postId: string | null
+  post: RouterOutput['post']['byId'] | null
   state: 'edit' | 'delete' | null
 }
 
 const INITIAL_STATE: ActionState = {
-  postId: null,
+  post: null,
   state: null,
 }
 
