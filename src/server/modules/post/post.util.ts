@@ -20,5 +20,6 @@ export const processFeedbackItem = <T extends MyPostPayload>(
   return {
     ...item,
     read: readBy.some((read) => read.user.id === sessionUserId),
+    canEdit: authorId === sessionUserId,
   }
 }

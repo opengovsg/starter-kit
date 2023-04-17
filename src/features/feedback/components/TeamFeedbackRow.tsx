@@ -1,9 +1,8 @@
-import { Grid, Box, Flex, Avatar, Text } from '@chakra-ui/react'
-import { IconButton } from '@opengovsg/design-system-react'
+import { Avatar, Box, Flex, Grid, Text } from '@chakra-ui/react'
 import Link from 'next/link'
-import { BiTrash } from 'react-icons/bi'
 import { FEEDBACK } from '~/constants/routes'
 import { RouterOutput } from '~/utils/trpc'
+import { DeleteFeedbackButton } from './DeleteFeedbackButton'
 
 interface TeamFeedbackRowProps {
   feedback: RouterOutput['post']['list']['items'][number]
@@ -42,13 +41,7 @@ export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
       <Text textStyle="caption-1" color="base.content.brand" alignSelf="center">
         {feedback._count.comments || 'No replies yet'}
       </Text>
-      <IconButton
-        w={0}
-        variant="clear"
-        colorScheme="critical"
-        aria-label="Delete feedback"
-        icon={<BiTrash />}
-      />
+      {feedback.canEdit && <DeleteFeedbackButton feedbackId={feedback.id} />}
     </Grid>
   )
 }

@@ -13,6 +13,7 @@ import {
   FormErrorMessage,
   Infobox,
   Toggle,
+  useToast,
 } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
@@ -30,6 +31,9 @@ import { FEEDBACK } from '~/constants/routes'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
+  const toast = useToast({
+    status: 'error',
+  })
   const { user } = useUser()
 
   const router = useRouter()
@@ -39,6 +43,9 @@ const PostFeedbackPage: NextPageWithLayout = () => {
       // refetches posts after a post is added
       await utils.post.list.invalidate()
       router.push(`${FEEDBACK}/${id}`)
+    },
+    onError: (error) => {
+      toast({ description: error.message })
     },
   })
 
