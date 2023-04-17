@@ -48,16 +48,12 @@ export const EditFeedbackContent = ({ onClose }: FeedbackContentProps) => {
   })
 
   const handleEditFeedback = handleSubmit((values) => {
-    console.log('editing')
     if (!post) return
-    console.log('now')
     return editMutation.mutate({
       id: post.id,
       ...values,
     })
   })
-
-  console.log('errors', errors)
 
   return (
     <ModalContent>
