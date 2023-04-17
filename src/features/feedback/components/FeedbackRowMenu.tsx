@@ -1,9 +1,9 @@
 import { MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { IconButton, Menu } from '@opengovsg/design-system-react'
+import { useSetAtom } from 'jotai'
 import { BiDotsHorizontal } from 'react-icons/bi'
-import { trpc } from '~/utils/trpc'
-
-type FeedbackRole = 'owner' | 'viewer'
+import { actionStateAtom } from '../api/actionState'
+import { FeedbackRole } from '../api/types'
 
 interface FeedbackRowMenuProps {
   role: FeedbackRole
@@ -14,18 +14,28 @@ const FeedbackRowMenuItems = ({
   role,
   id,
 }: FeedbackRowMenuProps): JSX.Element => {
-  const utils = trpc.useContext()
-  const deleteMutation = trpc.post.delete.useMutation({
-    onSuccess: () => utils.post.list.invalidate(),
-  })
+  const setState = useSetAtom(actionStateAtom)
 
   if (role === 'owner') {
     return (
       <MenuList>
-        <MenuItem>Edit</MenuItem>
         <MenuItem
-          disabled={deleteMutation.isLoading}
-          onClick={() => deleteMutation.mutate({ id })}
+          onClick={() => {
+            setState({
+              postId: id,
+              state: 'edit',
+            })
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setState({
+              postId: id,
+              state: 'delete',
+            })
+          }}
         >
           Delete
         </MenuItem>

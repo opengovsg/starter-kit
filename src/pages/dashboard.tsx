@@ -9,6 +9,7 @@ import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
+import { DeleteFeedbackModal } from '~/features/feedback/components/DeleteFeedbackModal'
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
@@ -16,6 +17,7 @@ const Dashboard: NextPageWithLayout = () => {
 
   return (
     <Box p="1.5rem" w="100%">
+      <DeleteFeedbackModal />
       <Stack justify="space-between" flexDir="row">
         <Stack flexDir="row" align="center">
           <Image
