@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Grid, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import { FEEDBACK } from '~/constants/routes'
 import { RouterOutput } from '~/utils/trpc'
-import { DeleteFeedbackButton } from './DeleteFeedbackButton'
+import { FeedbackRowMenu } from './FeedbackRowMenu'
 
 interface TeamFeedbackRowProps {
   feedback: RouterOutput['post']['list']['items'][number]
@@ -13,7 +13,7 @@ export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
     <Grid
       py="1.125rem"
       px="2rem"
-      gridTemplateColumns="5fr 1fr 1fr 3rem"
+      gridTemplateColumns="5fr 1fr 1fr auto"
       gap="0.25rem"
       pos="relative"
     >
@@ -41,7 +41,10 @@ export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
       <Text textStyle="caption-1" color="base.content.brand" alignSelf="center">
         {feedback._count.comments || 'No replies yet'}
       </Text>
-      {feedback.canEdit && <DeleteFeedbackButton feedbackId={feedback.id} />}
+      <FeedbackRowMenu
+        role={feedback.canEdit ? 'owner' : 'viewer'}
+        id={feedback.id}
+      />
     </Grid>
   )
 }
