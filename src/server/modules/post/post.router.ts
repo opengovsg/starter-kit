@@ -199,8 +199,8 @@ export const postRouter = router({
         where: {
           deletedAt: null,
           OR: [
-            { title: { contains: query } },
-            { content: { contains: query } },
+            { title: { contains: query, mode: 'insensitive' } },
+            { content: { contains: query, mode: 'insensitive' } },
           ],
         },
         select: defaultPostSelect,
