@@ -186,6 +186,26 @@ export const postRouter = router({
       })
       return updatedPost
     }),
+  search: protectedProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        limit: z.number().min(1).max(30).optional().default(10),
+      })
+    )
+    .query(async ({ input: { query, limit }, ctx }) => {
+      return await ctx.prisma.post.findMany({
+        take: limit,
+        where: {
+          deletedAt: null,
+          OR: [
+            { title: { contains: query } },
+            { content: { contains: query } },
+          ],
+        },
+        select: defaultPostSelect,
+      })
+    }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id }, ctx }) => {
