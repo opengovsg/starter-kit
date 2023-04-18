@@ -7,6 +7,10 @@ export const addPostSchema = z.object({
   anonymous: z.boolean().optional(),
 })
 
+export const editPostSchema = addPostSchema.extend({
+  id: z.string(),
+})
+
 export const listPostsInputSchema = z.object({
   limit: z.number().min(1).max(100).nullish(),
   cursor: z.string().nullish(),

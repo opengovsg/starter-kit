@@ -8,7 +8,7 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
+import { Button, useToast } from '@opengovsg/design-system-react'
 import { Controller } from 'react-hook-form'
 import { addCommentSchema } from '~/schemas/comment'
 import { BiSend } from 'react-icons/bi'
@@ -20,13 +20,20 @@ interface FeedbackCommentRichTextProps {
 export const FeedbackCommentRichText = ({
   postId,
 }: FeedbackCommentRichTextProps): JSX.Element => {
+  const toast = useToast({
+    status: 'error',
+  })
+
   const utils = trpc.useContext()
   const mutation = trpc.comment.add.useMutation({
-    async onSuccess() {
+    onSuccess: async () => {
       reset()
       // refetches posts after a comment is added
       await utils.post.list.invalidate()
       await utils.post.byId.invalidate({ id: postId })
+    },
+    onError: (error) => {
+      toast({ description: error.message })
     },
   })
 

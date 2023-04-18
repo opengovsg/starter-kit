@@ -8,6 +8,7 @@ import { NextPageWithLayout } from '~/lib/types'
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
+import { Provider } from 'jotai'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
@@ -18,12 +19,15 @@ const MyApp = (({ Component, pageProps }: AppPropsWithAuthAndLayout) => {
     Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return (
-    <ThemeProvider theme={theme}>
-      {getLayout(<Component {...pageProps} />)}
-      {process.env.NODE_ENV !== 'production' && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
-    </ThemeProvider>
+    // Must wrap Jotai's provider in SSR context, see https://jotai.org/docs/guides/nextjs#provider.
+    <Provider>
+      <ThemeProvider theme={theme}>
+        {getLayout(<Component {...pageProps} />)}
+        {process.env.NODE_ENV !== 'production' && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+      </ThemeProvider>
+    </Provider>
   )
 }) as AppType
 

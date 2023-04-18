@@ -4,7 +4,10 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 import { BiPlus } from 'react-icons/bi'
 import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
-import { TeamFeedbackList } from '~/features/feedback/components'
+import {
+  FeedbackActionsModal,
+  TeamFeedbackList,
+} from '~/features/feedback/components'
 import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
@@ -16,6 +19,7 @@ const Dashboard: NextPageWithLayout = () => {
 
   return (
     <Box p="1.5rem" w="100%">
+      <FeedbackActionsModal />
       <Stack justify="space-between" flexDir="row">
         <Stack flexDir="row" align="center">
           <Image

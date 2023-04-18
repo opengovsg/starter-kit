@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
   addPostSchema,
+  editPostSchema,
   ListPostsInputSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
@@ -86,7 +87,10 @@ export const postRouter = router({
         orderBy: {
           createdAt: input.order,
         },
-        where: getFilterWhereClause(input.filter),
+        where: {
+          ...getFilterWhereClause(input.filter),
+          deletedAt: null,
+        },
       })
       let nextCursor: typeof cursor | undefined = undefined
       if (items.length > limit) {
@@ -131,8 +135,8 @@ export const postRouter = router({
     )
     .query(async ({ input, ctx }) => {
       const { id } = input
-      const post = await ctx.prisma.post.findUnique({
-        where: { id },
+      const post = await ctx.prisma.post.findFirst({
+        where: { id, deletedAt: null },
         select: withCommentsPostSelect,
       })
       if (!post) {
@@ -158,6 +162,53 @@ export const postRouter = router({
         },
         select: defaultPostSelect,
       })
+      return post
+    }),
+  edit: protectedProcedure
+    .input(editPostSchema)
+    .mutation(async ({ input: { id, ...data }, ctx }) => {
+      const postToEdit = await ctx.prisma.post.findUnique({
+        where: { id },
+        select: defaultPostSelect,
+      })
+      const isUserOwner = postToEdit?.authorId === ctx.session.user.id
+      if (!isUserOwner) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: `No post with id '${id}'`,
+        })
+      }
+
+      const updatedPost = await ctx.prisma.post.update({
+        where: { id },
+        data,
+        select: defaultPostSelect,
+      })
+      return updatedPost
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input: { id }, ctx }) => {
+      const postToDelete = await ctx.prisma.post.findUnique({
+        where: { id },
+        select: defaultPostSelect,
+      })
+      if (!postToDelete) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No post with id '${id}'`,
+        })
+      }
+      if (postToDelete?.authorId !== ctx.session.user.id) {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+      const post = await ctx.prisma.post.update({
+        where: { id },
+        data: {
+          deletedAt: new Date(),
+        },
+      })
+
       return post
     }),
   setRead: protectedProcedure
