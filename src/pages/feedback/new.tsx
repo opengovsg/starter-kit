@@ -2,19 +2,18 @@ import {
   Container,
   Flex,
   FormControl,
+  FormLabel,
   HStack,
   Stack,
   Text,
   VStack,
-  FormLabel,
 } from '@chakra-ui/react'
 import {
   Button,
   FormErrorMessage,
-  Infobox,
-  Toggle,
   useToast,
 } from '@opengovsg/design-system-react'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
 import { FeedbackNavbar } from '~/features/feedback/components'
@@ -22,19 +21,16 @@ import { useZodForm } from '~/lib/form'
 import { NextPageWithLayout } from '~/lib/types'
 import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
-import Image from 'next/image'
 
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
 import { RichText } from '~/components/RichText'
-import { useUser } from '~/features/profile/api'
 import { FEEDBACK } from '~/constants/routes'
+import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
   const toast = useToast({
     status: 'error',
   })
-  const { user } = useUser()
 
   const router = useRouter()
 
@@ -53,17 +49,10 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     formState: { errors },
     handleSubmit,
     setValue,
-    watch,
-    register,
     control,
   } = useZodForm({
     schema: addPostSchema,
-    defaultValues: {
-      anonymous: false,
-    },
   })
-
-  const isAnonymous = watch('anonymous')
 
   const handleSubmitFeedback = handleSubmit((values) => mutation.mutate(values))
 
@@ -113,20 +102,6 @@ const PostFeedbackPage: NextPageWithLayout = () => {
               )}
             />
             <FormErrorMessage>{errors.contentHtml?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl id="anonymous">
-            <Stack>
-              <Toggle label="Post anonymously?" {...register('anonymous')} />
-              {isAnonymous ? (
-                <Infobox>
-                  Only your team name will be visible. If your team has less
-                  than five members, we won’t reveal your team to protect your
-                  identity.
-                </Infobox>
-              ) : (
-                <Text>Posting as {user?.name ?? user?.email}</Text>
-              )}
-            </Stack>
           </FormControl>
           <Button
             mt="2.5rem"

@@ -43,7 +43,6 @@ export const EditFeedbackContent = ({ onClose }: FeedbackContentProps) => {
     defaultValues: {
       contentHtml: post?.contentHtml,
       content: post?.content,
-      anonymous: post?.anonymous,
     },
   })
 

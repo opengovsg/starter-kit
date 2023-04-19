@@ -39,7 +39,7 @@ export const TeamFeedbackRow = ({ feedback }: TeamFeedbackRowProps) => {
         {feedback.createdAt.toDateString()}
       </Text>
       <Text textStyle="caption-1" color="base.content.brand" alignSelf="center">
-        {feedback._count.comments || 'No replies yet'}
+        {`${feedback._count.replies} replies` || 'No replies yet'}
       </Text>
       <FeedbackRowMenu
         role={feedback.canEdit ? 'owner' : 'viewer'}

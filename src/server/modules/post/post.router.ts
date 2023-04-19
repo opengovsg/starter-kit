@@ -30,10 +30,6 @@ export const postRouter = router({
         switch (filter) {
           case 'all':
             return {}
-          case 'draft':
-            return {
-              published: false,
-            }
           case 'unread':
             return {
               NOT: {
@@ -46,13 +42,13 @@ export const postRouter = router({
             }
           case 'replied':
             return {
-              comments: {
+              replies: {
                 some: {},
               },
             }
           case 'repliedByMe':
             return {
-              comments: {
+              replies: {
                 some: {
                   authorId: ctx.session.user.id,
                 },
@@ -60,13 +56,13 @@ export const postRouter = router({
             }
           case 'unreplied':
             return {
-              comments: {
+              replies: {
                 none: {},
               },
             }
           case 'unrepliedByMe':
             return {
-              comments: {
+              replies: {
                 none: {
                   authorId: ctx.session.user.id,
                 },
@@ -89,6 +85,7 @@ export const postRouter = router({
         },
         where: {
           ...getFilterWhereClause(input.filter),
+          parentPostId: null,
           deletedAt: null,
         },
       })
@@ -115,11 +112,14 @@ export const postRouter = router({
     const readCount = await ctx.prisma.readPosts.count({
       where: {
         userId: user.id,
+        post: {
+          parentPostId: null,
+        },
       },
     })
     const allVisiblePostsCount = await ctx.prisma.post.count({
       where: {
-        hidden: false,
+        parentPostId: null,
       },
     })
     return {

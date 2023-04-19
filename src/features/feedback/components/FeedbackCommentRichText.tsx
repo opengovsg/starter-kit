@@ -44,14 +44,11 @@ export const FeedbackCommentRichText = ({
     control,
     reset,
   } = useZodForm({
-    schema: addCommentSchema,
-    defaultValues: {
-      postId,
-    },
+    schema: addCommentSchema.omit({ postId: true }),
   })
 
   const handleSubmitFeedback = handleSubmit((values) => {
-    return mutation.mutateAsync(values)
+    return mutation.mutateAsync({ ...values, postId })
   })
 
   return (

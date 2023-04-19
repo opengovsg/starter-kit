@@ -7,7 +7,6 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   contentHtml: true,
   createdAt: true,
   updatedAt: true,
-  anonymous: true,
   authorId: true,
   author: {
     select: {
@@ -27,14 +26,14 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   },
   _count: {
     select: {
-      comments: true,
+      replies: true,
     },
   },
 })
 
 export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
   ...defaultPostSelect,
-  comments: {
+  replies: {
     orderBy: {
       createdAt: 'asc',
     },

@@ -7,20 +7,20 @@ export const commentRouter = router({
   add: protectedProcedure
     .input(addCommentSchema)
     .mutation(async ({ input: { postId, ...input }, ctx }) => {
-      const comment = await ctx.prisma.$transaction(async (tx) => {
-        const post = await tx.post.findFirst({
+      const reply = await ctx.prisma.$transaction(async (tx) => {
+        const parent = await tx.post.findFirst({
           where: {
             id: postId,
             deletedAt: null,
           },
         })
-        if (!post) {
+        if (!parent) {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: `Post '${postId}' does not exist`,
           })
         }
-        const comment = await ctx.prisma.comment.create({
+        const reply = await ctx.prisma.post.create({
           data: {
             ...input,
             author: {
@@ -28,7 +28,7 @@ export const commentRouter = router({
                 id: ctx.session.user.id,
               },
             },
-            post: {
+            parent: {
               connect: {
                 id: postId,
               },
@@ -36,9 +36,9 @@ export const commentRouter = router({
           },
           select: defaultCommentSelect,
         })
-        return comment
+        return reply
       })
 
-      return comment
+      return reply
     }),
 })
