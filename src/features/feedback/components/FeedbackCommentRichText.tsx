@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { Controller } from 'react-hook-form'
-import { addCommentSchema } from '~/schemas/comment'
+import { addReplySchema } from '~/schemas/thread'
 import { BiSend } from 'react-icons/bi'
 
 interface FeedbackCommentRichTextProps {
@@ -25,7 +25,7 @@ export const FeedbackCommentRichText = ({
   })
 
   const utils = trpc.useContext()
-  const mutation = trpc.comment.add.useMutation({
+  const mutation = trpc.thread.reply.useMutation({
     onSuccess: async () => {
       reset()
       // refetches posts after a comment is added
@@ -44,7 +44,7 @@ export const FeedbackCommentRichText = ({
     control,
     reset,
   } = useZodForm({
-    schema: addCommentSchema.omit({ postId: true }),
+    schema: addReplySchema.omit({ postId: true }),
   })
 
   const handleSubmitFeedback = handleSubmit((values) => {

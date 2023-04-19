@@ -1,13 +1,14 @@
 import { TRPCError } from '@trpc/server'
-import { addCommentSchema } from '~/schemas/comment'
+import { addReplySchema } from '~/schemas/thread'
 import { protectedProcedure, router } from '~/server/trpc'
-import { defaultCommentSelect } from './comment.select'
+import { defaultReplySelect } from './thread.select'
 
-export const commentRouter = router({
-  add: protectedProcedure
-    .input(addCommentSchema)
-    .mutation(async ({ input: { postId, ...input }, ctx }) => {
-      const reply = await ctx.prisma.$transaction(async (tx) => {
+export const threadRouter = router({
+  reply: protectedProcedure
+    .input(addReplySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { postId, ...replyData } = input
+      return await ctx.prisma.$transaction(async (tx) => {
         const parent = await tx.post.findFirst({
           where: {
             id: postId,
@@ -20,9 +21,9 @@ export const commentRouter = router({
             message: `Post '${postId}' does not exist`,
           })
         }
-        const reply = await ctx.prisma.post.create({
+        return await ctx.prisma.post.create({
           data: {
-            ...input,
+            ...replyData,
             author: {
               connect: {
                 id: ctx.session.user.id,
@@ -34,11 +35,8 @@ export const commentRouter = router({
               },
             },
           },
-          select: defaultCommentSelect,
+          select: defaultReplySelect,
         })
-        return reply
       })
-
-      return reply
     }),
 })
