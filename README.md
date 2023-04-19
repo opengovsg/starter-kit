@@ -1,6 +1,14 @@
 # Starter Kit v2
 
-## One-click deploy
+## Quickstart
+
+### Setting up your local environment
+
+- Use this codebase as a template for a new repository
+- Clone the repository to your local machine
+- Follow instructions for [running the app locally](#running-the-app-locally)
+
+### One-click deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
 
@@ -29,7 +37,7 @@ npm i
 ### Set environment variables
 
 ```bash
-cp .env.example .env
+cp .env.development .env.development.local
 ```
 
 Set `POSTMAN_API_KEY` - required for login
