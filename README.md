@@ -13,7 +13,7 @@
 - 🌇 Image upload with [R2](https://developers.cloudflare.com/r2/)
 - ⚙️ VSCode extensions
 - 🎨 ESLint + Prettier
-- 💚 CI setup using GitHub Actions:
+- 💚 CI setup using GitHub Actions:"
   - ✅ E2E testing with [Playwright](https://playwright.dev/)
   - ✅ Linting
 - 🔐 Env var validation
@@ -109,3 +109,7 @@ npm run test:e2e   # runs e2e tests
 </table>
 
 ---
+
+# Example feature
+
+[Adding replies to posts](docs/examples/replies.md)
