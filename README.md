@@ -1,17 +1,9 @@
 # Starter Kit v2
 
-## Quickstart
+A technical kit to quickly build new products from
+[Open Government Products](https://open.gov.sg), Singapore.
 
-### Setting up your local environment
-
-- Use this codebase as a template for a new repository
-- Clone the repository to your local machine
-- Follow instructions for [running the app locally](#running-the-app-locally)
-
-### One-click deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
-
+This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit-v2).
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)
@@ -26,6 +18,54 @@
   - ✅ Linting
 - 🔐 Env var validation
 
+## Quickstart
+
+Follow these instructions if you are familiar with building applications,
+and/or are in a hurry to prepare an environment to work on your product.
+
+If you are new, or exploring what else you can do with Starter Kit,
+a more comprehensive set of documentation, including tutorials,
+can be found [here](docs/README.md).
+
+### One-click deploy
+
+We recommend [Vercel](https://vercel.com) to deploy your application.
+A one-click deployment step is provided [below](#deployment), which will
+also set up your own copy of this codebase on GitHub for you to work on.
+
+This needs a few prerequisites, detailed below.
+
+#### Prerequisites
+
+The deployment needs a few environment variables to be set for it to function. They are:
+
+| Name | What It Is | How To Obtain |
+|-|-|-|
+|`DATABASE_URL`| Where the database resides for the deployed application | Follow this guide to set up [CockroachDB](docs/cockroach/README.md) |
+|`POSTMAN_API_KEY`| An API key to send email via Postman | Follow Postman's guide to [Generate your API Key](https://guide.postman.gov.sg/api-guide/generate-your-api-key) |
+|`SESSION_SECRET`| A sequence of random characters used to protect session identifiers | Run the command `npx uuid` from your terminal |
+
+#### Deployment
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
+
+## Working on your product
+
+You may work on the codebase with:
+- A [GitHub Codespace](#using-github-codespaces) provided by us, or;
+- With your [local machine](#using-your-local-developer-environment).
+
+### Using GitHub Codespaces
+
+Follow the official GitHub [guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository)
+for developing with a codespace.
+
+### Using your local developer environment
+
+In summary:
+- Clone the repository to your local machine
+- Follow instructions for [running the app locally](#running-the-app-locally)
+
 ## Running the app locally
 
 ### Install dependencies
@@ -37,7 +77,7 @@ npm i
 ### Set environment variables
 
 ```bash
-cp .env.development .env.development.local
+cp .env.example .env.development.local
 ```
 
 Set `POSTMAN_API_KEY` - required for login
@@ -60,21 +100,11 @@ npm run setup
 npm run dev
 ```
 
-## Deployment
+## Developer Operations
 
 > TODO: CI/CD test with GitHub Actions
 
 > TODO: Github branch protection rules
-
-# Cloud Features
-
-### Enable image uploads on R2
-
-See [R2 Readme](docs/r2/README.md)
-
-### Creating Serverless Cockroach DB on Cloud
-
-See [CockroachDB Readme](docs/cockroach/README.md)
 
 # Useful notes
 
