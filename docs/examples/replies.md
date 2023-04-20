@@ -2,10 +2,6 @@
 
 > 🗒️ This feature is already in the application, but here as documentation on how one could approach the problem.
 
-TODO: Add link to app folder structure
-
-> Refresher: [App folder structure](../docs/folder-structure.md)
-
 There are usually 3 main parts to adding a feature:
 
 - Making schema changes to the database (if needed)
@@ -13,6 +9,36 @@ There are usually 3 main parts to adding a feature:
 - Using new procedure in the application ("frontend" code)
 
 This document will describe the flow of adding such a feature to the application.
+
+### Refresher
+
+As a refresher, this application uses the the following technologies and frameworks:
+
+- [Next.js](https://nextjs.org/) for the React framework
+  - A lightly opinionated, heavily optimised framework for building React applications without requiring a separate backend.
+- [tRPC](https://trpc.io/) for the application API layer
+  - Allows end-to-end typesafe APIs, with a focus on developer experience.
+- [Prisma](https://www.prisma.io/) for the database ORM
+  - A database toolkit that allows for easy database schema migrations, and a typesafe database client. Works extremely well with tRPC.
+
+For more information on the technologies used, refer to the [Technologies README](../technology.md).
+
+## What we will be implementing
+
+> 🗒️ Screenshots may look different from the actual application.
+
+![End result](./end_result.png)
+
+There will be mainly changes to the following files:
+
+1. `prisma/schema.prisma`
+   - to add new fields to the `Post` model to accommodate replies
+2. `src/server/modules/thread/thread.router.ts`
+   - to add a new `reply` procedure
+
+There will also be new components to allow for the client to invoke the new procedure.
+
+---
 
 ## Making schema changes to the database
 
@@ -61,6 +87,8 @@ model Post {
 The changes to add could be as follows:
 
 ```prisma
+// prisma/schema.prisma
+
 model Post {
   // 🗒️ Previous fields still exist, just hidden for brevity
 
@@ -98,14 +126,24 @@ This will create a new migration file in `prisma/migrations` that will be applie
 
 We use tRPC for the application layer, and tRPC routers for the backend code.
 
-> TODO: Add documentation for folder structure
+> See our [folder structure documentation](../folder-structure.md) for more information on how the application is structured, and where tRPC routers are recommended to be located.
 
-See our [folder structure documentation](../docs/folder-structure.md) for more information on how the application is structured, and where tRPC routers are recommended to be located.
+### Vocabulary
+
+Below are some commonly used terms in the tRPC ecosystem. We'll be using these terms throughout the docs, so it's good to get familiar with them and how they relate to each other.
+| Term | Description |
+| --- | --- |
+| [Procedure](https://trpc.io/docs/server/procedures) | tRPC's equivalent to an API endpoint - can be a query, mutation, or a subscription |
+| Query | A procedure that gets some data |
+| Mutation | A procedure that creates/changes/deletes (i.e. mutates) some data |
+| [Subscription](https://trpc.io/docs/subscriptions) | A procedure that listens to changes and gets a stream of messages |
+| [Router](https://trpc.io/docs/server/routers) | A collection of procedures under a shared namespace. Can be nested with other routers. |
+| [Context](https://trpc.io/docs/server/context) | Stuff accessible to all procedures (e.g. session state, db connection) |
+| [Middleware](https://trpc.io/docs/server/middlewares) | Functions executed before and after procedures, can create new context |
 
 #### Related documentation
 
-- [tRPC quickstart](https://trpc.io/docs/quickstart) (helps to familiarise with terms like `procedure`, `query`, `router`, etc that will be used throughout the next section)
-- [tRPC context](https://trpc.io/docs/context) (helps to familiarise with the concept of context, which holds data that all tRPC procedures will have access to)
+- [tRPC quickstart](https://trpc.io/docs/quickstart)
 
 ### Adding new tRPC procedures ("backend")
 
@@ -128,6 +166,8 @@ export const threadRouter = router({
 #### Adding `reply` functionality
 
 Replying to a post is a mutation, and as such we will add a `reply` procedure to the `threadRouter`.
+
+> 🗒️ If the new feature was a READ database action, instead of a CREATE, UPDATE, or DELETE action, the procedure would have been a `query` instead of a `mutation`.
 
 ```ts
 // src/server/modules/thread/thread.router.ts
@@ -280,6 +320,19 @@ export const ReplyRichText () => {
 ```
 
 Code similar to the above example can be found in [this component](../../src/features/feedback/components/FeedbackCommentRichText.tsx)
+
+---
+
+## Recap
+
+To recap, we have added a new feature to the application, which is replying to posts.
+
+1. We updated the Prisma schema to add new `parent` and `replies` relations to the `Post` model.
+2. We ran the migration to update the database.
+3. A tRPC `thread` subrouter was created for this feature, and the new router was added to the application router.
+4. The `reply` mutation procedure was added to the `thread` subrouter, and the procedure's input was validated using `zod`.
+5. The new procedure can automatically be used in the client application using the `trpc.thread.reply.useMutation()` hook that was automatically exposed by tRPC.
+6. The input data can be validated using `zod` and `react-hook-form` before the mutation was called.
 
 ---
 
