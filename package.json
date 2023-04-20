@@ -1,10 +1,10 @@
 {
-  "name": "starter-kit-v2-kr",
+  "name": "starter-kit-v2",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "generate": "prisma generate",
-    "db:setup": "docker compose -f \"docker-compose.yaml\" up -d --wait",
+    "db:setup": "docker compose -f \"docker-compose.yml\" up -d --wait",
     "db:sleep": "sleep 3",
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",

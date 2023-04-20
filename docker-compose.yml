@@ -10,7 +10,7 @@ services:
       - COCKROACH_DATABASE=app
       - COCKROACH_USER=root
     volumes:
-      - cockroach-volume:/cockroach/cockroach-data"
+      - cockroach-volume:/cockroach/cockroach-data
     command: start-single-node --insecure
 
 volumes:
