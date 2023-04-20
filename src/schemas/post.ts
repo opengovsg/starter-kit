@@ -4,7 +4,6 @@ export const addPostSchema = z.object({
   title: z.string().min(1).max(32).optional(),
   content: z.string().min(1),
   contentHtml: z.string().min(1),
-  anonymous: z.boolean().optional(),
 })
 
 export const editPostSchema = addPostSchema.extend({
@@ -17,7 +16,6 @@ export const listPostsInputSchema = z.object({
   filter: z
     .enum([
       'all',
-      'draft',
       'replied',
       'repliedByMe',
       'unreplied',

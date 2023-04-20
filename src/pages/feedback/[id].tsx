@@ -75,8 +75,8 @@ const PostViewPage: NextPageWithLayout<
         >
           <FeedbackComment post={data} />
           <Stack spacing="1.5rem">
-            {data.comments.map((comment) => (
-              <FeedbackComment key={comment.id} post={comment} />
+            {data.replies.map((reply) => (
+              <FeedbackComment key={reply.id} post={reply} />
             ))}
           </Stack>
           <FeedbackCommentRichText postId={data.id} />

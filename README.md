@@ -147,3 +147,7 @@ npm run test:e2e   # runs e2e tests
 </table>
 
 ---
+
+# Example feature
+
+[Adding replies to posts](docs/examples/replies.md)

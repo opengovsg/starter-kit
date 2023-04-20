@@ -1,44 +1,42 @@
 import { TRPCError } from '@trpc/server'
-import { addCommentSchema } from '~/schemas/comment'
+import { addReplySchema } from '~/schemas/thread'
 import { protectedProcedure, router } from '~/server/trpc'
-import { defaultCommentSelect } from './comment.select'
+import { defaultReplySelect } from './thread.select'
 
-export const commentRouter = router({
-  add: protectedProcedure
-    .input(addCommentSchema)
-    .mutation(async ({ input: { postId, ...input }, ctx }) => {
-      const comment = await ctx.prisma.$transaction(async (tx) => {
-        const post = await tx.post.findFirst({
+export const threadRouter = router({
+  reply: protectedProcedure
+    .input(addReplySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { postId, ...replyData } = input
+      return await ctx.prisma.$transaction(async (tx) => {
+        const parent = await tx.post.findFirst({
           where: {
             id: postId,
             deletedAt: null,
           },
         })
-        if (!post) {
+        if (!parent) {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: `Post '${postId}' does not exist`,
           })
         }
-        const comment = await ctx.prisma.comment.create({
+        return await ctx.prisma.post.create({
           data: {
-            ...input,
+            ...replyData,
             author: {
               connect: {
                 id: ctx.session.user.id,
               },
             },
-            post: {
+            parent: {
               connect: {
                 id: postId,
               },
             },
           },
-          select: defaultCommentSelect,
+          select: defaultReplySelect,
         })
-        return comment
       })
-
-      return comment
     }),
 })

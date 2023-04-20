@@ -10,13 +10,6 @@ export const processFeedbackItem = <T extends MyPostPayload>(
   { authorId, readBy, ...item }: T,
   sessionUserId: string
 ) => {
-  if (item.anonymous) {
-    item.author.name = 'Anonymous'
-    item.author.image = null
-    if (authorId === sessionUserId) {
-      item.author.name += ' (you)'
-    }
-  }
   return {
     ...item,
     read: readBy.some((read) => read.user.id === sessionUserId),
