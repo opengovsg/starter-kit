@@ -46,7 +46,10 @@ model Post {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at") @db.Timestamp
 
-  @@index([authorId])
+  @@index([parentPostId])
+  @@index([parentPostId, deletedAt, id])
+  @@index([deletedAt])
+  @@index([createdAt])
 }
 
 model ReadPosts {
@@ -58,7 +61,6 @@ model ReadPosts {
 
   @@id([postId, userId])
   @@index([postId])
-  @@index([userId])
 }
 
 model LikedPosts {
@@ -69,8 +71,6 @@ model LikedPosts {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@id([postId, userId])
-  @@index([postId])
-  @@index([userId])
 }
 
 model User {
