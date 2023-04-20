@@ -10,7 +10,7 @@ There are usually 3 main parts to adding a feature:
 
 - Making schema changes to the database (if needed)
 - Updating application tRPC routers ("backend" code)
-- Using new data in the application ("frontend" code)
+- Using new procedure in the application ("frontend" code)
 
 This document will describe the flow of adding such a feature to the application.
 
@@ -107,7 +107,7 @@ See our [folder structure documentation](../docs/folder-structure.md) for more i
 - [tRPC quickstart](https://trpc.io/docs/quickstart) (helps to familiarise with terms like `procedure`, `query`, `router`, etc that will be used throughout the next section)
 - [tRPC context](https://trpc.io/docs/context) (helps to familiarise with the concept of context, which holds data that all tRPC procedures will have access to)
 
-### Adding new tRPC procedures
+### Adding new tRPC procedures ("backend")
 
 With the commenting feature (and other features), we usually need to add CRUD (create, read, update, delete) related code to the application. The following sections will describe how to add such code.
 
@@ -119,6 +119,7 @@ For other routing examples, look at each `*.router.ts` file in [`src/server/modu
 For this feature, we will create a new router in `src/server/modules/thread/thread.router.ts`, since the feature as a whole seems to be about threads, and not just replies.
 
 ```ts
+// src/server/modules/thread/thread.router.ts
 export const threadRouter = router({
   // Add queries and mutations here.
 });
@@ -129,6 +130,7 @@ export const threadRouter = router({
 Replying to a post is a mutation, and as such we will add a `reply` procedure to the `threadRouter`.
 
 ```ts
+// src/server/modules/thread/thread.router.ts
 export const threadRouter = router({
   reply: protectedProcedure // 🗒️ Exposed in src/server/trpc.ts to only allow authenticated users.
     .input(...)
@@ -139,6 +141,7 @@ export const threadRouter = router({
 tRPC uses `zod` under the hood, and you can provide a schema to control what is allowed in the mutation's `input`.
 
 ```ts
+// src/server/modules/thread/thread.router.ts
 import { z } from 'zod'
 
 export const threadRouter = router({
@@ -157,6 +160,7 @@ export const threadRouter = router({
 The mutation should then create a new reply `Post` in the database:
 
 ```ts
+// src/server/modules/thread/thread.router.ts
 export const threadRouter = router({
   reply: protectedProcedure.input(addReplySchema).mutation(
     async ({
@@ -208,6 +212,7 @@ export const threadRouter = router({
 This new router should be added to the application router, which is located in `src/server/modules/_app.ts`.
 
 ```ts
+// src/server/modules/_app.ts
 export const appRouter = router({
   ...
   thread: threadRouter,
@@ -217,3 +222,65 @@ export const appRouter = router({
 At this point, the new mutation will be available to the application.
 
 ---
+
+## Using new procedure in the application
+
+This section will talk about how to use the new procedure in the application. We will be skipping most component related code, and focus on how to use tRPC client code.
+
+#### Related documentation
+
+- [tRPC client](https://trpc.io/docs/client/introduction)
+- [tRPC NextJS integration](https://trpc.io/docs/nextjs/introduction)
+- [tRPC react-query integration](https://trpc.io/docs/reactjs/introduction)
+
+### Using the tRPC mutation ("frontend")
+
+In the component where the reply feature is to be submitted, we will use the tRPC mutation to submit the reply.
+
+```tsx
+// src/features/thread/components/ReplyRichText.tsx
+import { trpc } from '~/utils/trpc'
+
+export const ReplyRichText () => {
+  // Note the nesting, which comes from the router structure.
+  // `thread` is the name of the subrouter declared above, while
+  // `reply` is the name of the procedure declared in the subrouter.
+  const mutation = trpc.thread.reply.useMutation()
+}
+```
+
+The mutation can then be called with the input data, which in this instance is validated by `react-hook-form`.
+The application exposes the `useZodForm` hook, which is a wrapper around `react-hook-form` that uses `zod` for validation.
+Note how `addReplySchema` (originally used in the tRPC procedure's input) can be reused to validate the input data.
+
+```tsx
+import { useZodForm } from '~/lib/form'
+import { addReplySchema } from '~/schemas/thread'
+
+export const ReplyRichText () => {
+  const mutation = trpc.thread.reply.useMutation()
+
+  const {
+    formState: { errors },
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+  } = useZodForm({
+    schema: addReplySchema.omit({ postId: true }),
+  })
+
+  const handleSubmitFeedback = handleSubmit((values) => {
+    // Types will automatically be inferred from the tRPC procedure's input.
+    return mutation.mutateAsync({ ...values, postId })
+  })
+
+  // Component code...
+}
+```
+
+Code similar to the above example can be found in [this component](../../src/features/feedback/components/FeedbackCommentRichText.tsx)
+
+---
+
+We have come to the end of this example. If you have any questions, feel free to create an issue.
