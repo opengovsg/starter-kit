@@ -74,11 +74,8 @@ const PostViewPage: NextPageWithLayout<
           borderColor="base.divider.medium"
         >
           <FeedbackComment post={data} />
-          <Stack spacing="1.5rem">
-            {data.replies.map((reply) => (
-              <FeedbackComment key={reply.id} post={reply} />
-            ))}
-          </Stack>
+          {/* // TODO(example): Render all replies here when reply feature is added */}
+          <Stack spacing="1.5rem"></Stack>
           <FeedbackCommentRichText postId={data.id} />
         </Stack>
       </Container>

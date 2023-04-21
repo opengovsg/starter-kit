@@ -40,34 +40,15 @@ export const postRouter = router({
                 },
               },
             }
+          // TODO(example): Update filter when reply feature is added
           case 'replied':
-            return {
-              replies: {
-                some: {},
-              },
-            }
+          // TODO(example): Update filter when reply feature is added
           case 'repliedByMe':
-            return {
-              replies: {
-                some: {
-                  authorId: ctx.session.user.id,
-                },
-              },
-            }
+          // TODO(example): Update filter when reply feature is added
           case 'unreplied':
-            return {
-              replies: {
-                none: {},
-              },
-            }
+          // TODO(example): Update filter when reply feature is added
           case 'unrepliedByMe':
-            return {
-              replies: {
-                none: {
-                  authorId: ctx.session.user.id,
-                },
-              },
-            }
+            return {}
         }
       }
 
@@ -85,7 +66,8 @@ export const postRouter = router({
         },
         where: {
           ...getFilterWhereClause(input.filter),
-          parentPostId: null,
+          // TODO(example): Update filter when reply feature is added
+          // parentPostId: null,
           deletedAt: null,
         },
       })
@@ -112,15 +94,17 @@ export const postRouter = router({
     const readCount = await ctx.prisma.readPosts.count({
       where: {
         userId: user.id,
-        post: {
-          parentPostId: null,
-        },
+        // TODO(example): Update filter when reply feature is added
+        // post: {
+        //   parentPostId: null,
+        // },
       },
     })
     const allVisiblePostsCount = await ctx.prisma.post.count({
-      where: {
-        parentPostId: null,
-      },
+      // TODO(example): Update filter when reply feature is added
+      // where: {
+      //   parentPostId: null,
+      // },
     })
     return {
       unreadCount: allVisiblePostsCount - readCount,

@@ -1,6 +1,5 @@
 import { RichText } from '~/components/RichText'
 import { useZodForm } from '~/lib/form'
-import { trpc } from '~/utils/trpc'
 
 import {
   Box,
@@ -8,10 +7,10 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import { Button, useToast } from '@opengovsg/design-system-react'
+import { Button } from '@opengovsg/design-system-react'
 import { Controller } from 'react-hook-form'
-import { addReplySchema } from '~/schemas/thread'
 import { BiSend } from 'react-icons/bi'
+import { z } from 'zod'
 
 interface FeedbackCommentRichTextProps {
   postId: string
@@ -20,35 +19,22 @@ interface FeedbackCommentRichTextProps {
 export const FeedbackCommentRichText = ({
   postId,
 }: FeedbackCommentRichTextProps): JSX.Element => {
-  const toast = useToast({
-    status: 'error',
-  })
-
-  const utils = trpc.useContext()
-  const mutation = trpc.thread.reply.useMutation({
-    onSuccess: async () => {
-      reset()
-      // refetches posts after a comment is added
-      await utils.post.list.invalidate()
-      await utils.post.byId.invalidate({ id: postId })
-    },
-    onError: (error) => {
-      toast({ description: error.message })
-    },
-  })
+  // TODO(example): Use trpc.thread.reply mutation here to submit the reply.
 
   const {
     formState: { errors },
     handleSubmit,
     setValue,
     control,
-    reset,
   } = useZodForm({
-    schema: addReplySchema.omit({ postId: true }),
+    schema: z.object({
+      content: z.string().min(1),
+      contentHtml: z.string().min(1),
+    }),
   })
 
   const handleSubmitFeedback = handleSubmit((values) => {
-    return mutation.mutateAsync({ ...values, postId })
+    console.log({ postId, ...values })
   })
 
   return (

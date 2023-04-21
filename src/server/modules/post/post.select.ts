@@ -24,31 +24,33 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
       },
     },
   },
-  _count: {
-    select: {
-      replies: true,
-    },
-  },
+  // TODO(example): Update counter when reply feature is added
+  // _count: {
+  //   select: {
+  // replies: true,
+  // },
+  // },
 })
 
 export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
   ...defaultPostSelect,
-  replies: {
-    orderBy: {
-      createdAt: 'asc',
-    },
-    select: {
-      id: true,
-      content: true,
-      contentHtml: true,
-      createdAt: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
-    },
-  },
+  // TODO(example): Update select when reply feature is added
+  // replies: {
+  //   orderBy: {
+  //     createdAt: 'asc',
+  //   },
+  //   select: {
+  //     id: true,
+  //     content: true,
+  //     contentHtml: true,
+  //     createdAt: true,
+  //     author: {
+  //       select: {
+  //         id: true,
+  //         name: true,
+  //         image: true,
+  //       },
+  //     },
+  //   },
+  // },
 })

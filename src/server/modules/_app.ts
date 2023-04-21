@@ -6,14 +6,13 @@ import { postRouter } from './post/post.router'
 import { meRouter } from './me/me.router'
 import { storageRouter } from './storage/storage.router'
 import { authRouter } from './auth/auth.router'
-import { threadRouter } from './thread/thread.router'
 
 export const appRouter = router({
   healthcheck: publicProcedure.query(() => 'yay!'),
   me: meRouter,
   auth: authRouter,
   post: postRouter,
-  thread: threadRouter,
+  // TODO(example): Add thread sub-router here when router is implemented
   storage: storageRouter,
 })
 

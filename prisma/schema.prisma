@@ -22,22 +22,14 @@ model VerificationToken {
 }
 
 model Post {
-  id           String       @id @default(cuid())
-  title        String?      @db.Text
-  content      String       @db.Text
-  contentHtml  String       @map("content_html") @db.Text
-  authorId     String       @map("author_id")
-  author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likes        LikedPosts[]
-  readBy       ReadPosts[]
-  // This features the self-relation Prisma concept, specifically a one-to-many self relation.
-  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/self-relations
-  parentPostId String?      @map("parent_post_id")
-  // The parent post of this post, if it is a reply.
-  // @relation("PostToParent") is the name of the relation. See relation documentation below for more info.
-  parent       Post?        @relation("PostReplies", fields: [parentPostId], references: [id])
-  // The replies to this post.
-  replies      Post[]       @relation("PostReplies")
+  id          String       @id @default(cuid())
+  title       String?      @db.Text
+  content     String       @db.Text
+  contentHtml String       @map("content_html") @db.Text
+  authorId    String       @map("author_id")
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes       LikedPosts[]
+  readBy      ReadPosts[]
 
   // To return `Date`s intact through the API we use transformers
   // https://trpc.io/docs/data-transformers
@@ -46,8 +38,8 @@ model Post {
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at") @db.Timestamp
 
-  @@index([parentPostId])
-  @@index([parentPostId, deletedAt, id])
+  // TODO(example): Make relevant changes to allow for reply feature
+
   @@index([deletedAt])
   @@index([createdAt])
 }
