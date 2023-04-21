@@ -1,6 +1,7 @@
 # Example Feature: allowing replies on posts
 
 > 🗒️ This feature is already in the application, but here as documentation on how one could approach the problem.
+> If you want to follow along, you can check out the [`examples/no-replies`](https://github.com/opengovsg/starter-kit-v2/tree/examples/no-replies) branch that does not have this feature yet to follow along. Needed changes are marked with `TODO(example)`, or you may see the commit history for the changes needed.
 
 There are usually 3 main parts to adding a feature:
 
