@@ -132,15 +132,16 @@ We use tRPC for the application layer, and tRPC routers for the backend code.
 ### Vocabulary
 
 Below are some commonly used terms in the tRPC ecosystem. We'll be using these terms throughout the docs, so it's good to get familiar with them and how they relate to each other.
-| Term | Description |
-| --- | --- |
-| [Procedure](https://trpc.io/docs/server/procedures) | tRPC's equivalent to an API endpoint - can be a query, mutation, or a subscription |
-| Query | A procedure that gets some data |
-| Mutation | A procedure that creates/changes/deletes (i.e. mutates) some data |
-| [Subscription](https://trpc.io/docs/subscriptions) | A procedure that listens to changes and gets a stream of messages |
-| [Router](https://trpc.io/docs/server/routers) | A collection of procedures under a shared namespace. Can be nested with other routers. |
-| [Context](https://trpc.io/docs/server/context) | Stuff accessible to all procedures (e.g. session state, db connection) |
-| [Middleware](https://trpc.io/docs/server/middlewares) | Functions executed before and after procedures, can create new context |
+
+| Term                                                  | Description                                                                            |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [Procedure](https://trpc.io/docs/server/procedures)   | tRPC's equivalent to an API endpoint - can be a query, mutation, or a subscription     |
+| Query                                                 | A procedure that gets some data                                                        |
+| Mutation                                              | A procedure that creates/changes/deletes (i.e. mutates) some data                      |
+| [Subscription](https://trpc.io/docs/subscriptions)    | A procedure that listens to changes and gets a stream of messages                      |
+| [Router](https://trpc.io/docs/server/routers)         | A collection of procedures under a shared namespace. Can be nested with other routers. |
+| [Context](https://trpc.io/docs/server/context)        | Stuff accessible to all procedures (e.g. session state, db connection)                 |
+| [Middleware](https://trpc.io/docs/server/middlewares) | Functions executed before and after procedures, can create new context                 |
 
 #### Related documentation
 
@@ -174,16 +175,16 @@ Replying to a post is a mutation, and as such we will add a `reply` procedure to
 // src/server/modules/thread/thread.router.ts
 export const threadRouter = router({
   reply: protectedProcedure // 🗒️ Exposed in src/server/trpc.ts to only allow authenticated users.
-    .input(...)
-    .mutation(...)
-})
+    .input(/* ... */) // 🗒️ Input validation.
+    .mutation(/* ... */), // 🗒️ The actual mutation.
+});
 ```
 
 tRPC uses `zod` under the hood, and you can provide a schema to control what is allowed in the mutation's `input`.
 
 ```ts
 // src/server/modules/thread/thread.router.ts
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const threadRouter = router({
   reply: protectedProcedure
@@ -192,10 +193,10 @@ export const threadRouter = router({
         content: z.string().min(1),
         contentHtml: z.string().min(1),
         postId: z.string(),
-      })
+      }),
     )
-    .mutation(...)
-})
+    .mutation(/* ... */),
+});
 ```
 
 The mutation should then create a new reply `Post` in the database:
@@ -255,9 +256,9 @@ This new router should be added to the application router, which is located in `
 ```ts
 // src/server/modules/_app.ts
 export const appRouter = router({
-  ...
+  // ...,
   thread: threadRouter,
-})
+});
 ```
 
 At this point, the new mutation will be available to the application.
