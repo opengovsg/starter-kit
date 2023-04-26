@@ -8,6 +8,7 @@ export const coerceBoolean = z
 
 export const browserEnvSchema = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
+  NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit')
 })
 
 type BrowserEnv = {
@@ -17,6 +18,7 @@ type BrowserEnv = {
 // Must add public env variables here explicitly so NextJS knows to expose them.
 const _browserEnv: BrowserEnv = {
   NEXT_PUBLIC_ENABLE_STORAGE: process.env.NEXT_PUBLIC_ENABLE_STORAGE,
+  NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
 }
 
 const parsedEnv = browserEnvSchema.safeParse(_browserEnv)
