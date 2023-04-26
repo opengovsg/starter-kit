@@ -3,7 +3,7 @@
 A technical kit to quickly build new products from
 [Open Government Products](https://open.gov.sg), Singapore.
 
-This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit-v2).
+This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit).
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)
@@ -49,7 +49,7 @@ The deployment needs a few environment variables to be set for it to function. T
 
 #### Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit-v2%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
 
 ## Working on your product
 
