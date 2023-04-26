@@ -6,6 +6,13 @@
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
+	"secrets": {
+		"POSTMAN_API_KEY": {
+			"description": "Your API key from Postman to send emails. Required for OTP logins.",
+			"documentationUrl": "https://guide.postman.gov.sg/api-guide/generate-your-api-key"
+		}
+	},
+
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
@@ -14,7 +21,7 @@
 	"forwardPorts": [3000, 26257, 8080],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install && sed s/SESSION_SECRET=random_session_secret/SESSION_SECRET=`npx uuid`/ .env.example > .env.development.local && export $(grep DATABASE_URL .env.development.local | xargs) && npm run migrate"
+	"postCreateCommand": "npm install && sed s/SESSION_SECRET=random_session_secret/SESSION_SECRET=`npx uuid`/ .env.example  | sed s/POSTMAN_API_KEY=// > .env.development.local && export $(grep DATABASE_URL .env.development.local | xargs) && npm run migrate"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
