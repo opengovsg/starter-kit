@@ -14,7 +14,7 @@ const serverEnvSchema = z
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
-    POSTMAN_API_KEY: z.string(),
+    POSTMAN_API_KEY: z.string().optional(),
     SESSION_SECRET: z.string().min(32),
   })
   .merge(browserEnvSchema.merge(withR2Schema))
