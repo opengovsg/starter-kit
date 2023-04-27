@@ -5,7 +5,7 @@
 # previewsExpireAfterDays: 2
 services:
   - type: web
-    name: trpc-starter-app
+    name: starter-kit-app
     env: node
     plan: free
     ## 👇 Specify the plan for the PR deployment:
@@ -18,9 +18,9 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: trpc-starter-db
+          name: starter-kit-db
           property: connectionString
 
 databases:
-  - name: trpc-starter-db
+  - name: starter-kit-db
     plan: free

@@ -1,9 +1,9 @@
-# Starter Kit v2
+# Starter Kit
 
 A technical kit to quickly build new products from
 [Open Government Products](https://open.gov.sg), Singapore.
 
-This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit).
+<!-- This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit). -->
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)

@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { browserEnv } from '~/browserEnv'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
 import {
   BackgroundBox,
@@ -12,6 +13,8 @@ import {
   SignInForm,
 } from '~/features/sign-in/components'
 import { withSessionSsr } from '~/lib/withSession'
+
+const title = browserEnv.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
   return (
@@ -29,11 +32,11 @@ const SignIn = () => {
                 textStyle="responsive-heading.heavy-1280"
                 mb="2.5rem"
               >
-                OGP Starter Kit
+                {title}
               </Text>
               <Box display={{ base: 'initial', lg: 'none' }}>
                 <Box mb={{ base: '0.75rem', lg: '1.5rem' }}>
-                  <Text textStyle="h3">OGP Starter Kit</Text>
+                  <Text textStyle="h3">{title}</Text>
                 </Box>
               </Box>
               <SignInForm />
