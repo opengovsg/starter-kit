@@ -7,9 +7,19 @@ type SendMailParams = {
   subject: string
 }
 
-export const sendMail = async (params: SendMailParams) => {
-  return await wretch('https://api.postman.gov.sg/v1/transactional/email/send')
-    .auth(`Bearer ${env.POSTMAN_API_KEY}`)
-    .post(params)
-    .res()
+export const sendMail = async (params: SendMailParams): Promise<void> => {
+  if (!env.POSTMAN_API_KEY) {
+    console.warn(
+      'POSTMAN_API_KEY missing. Logging the following mail: ',
+      params
+    )
+    return
+  } else {
+    return await wretch(
+      'https://api.postman.gov.sg/v1/transactional/email/send'
+    )
+      .auth(`Bearer ${env.POSTMAN_API_KEY}`)
+      .post(params)
+      .res()
+  }
 }

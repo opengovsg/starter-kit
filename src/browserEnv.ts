@@ -8,7 +8,7 @@ export const coerceBoolean = z
 
 export const browserEnvSchema = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
-  NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit')
+  NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
 })
 
 type BrowserEnv = {
