@@ -1,8 +1,10 @@
+# Prisma
+
 Prisma is an ORM for TypeScript, that allows you to define your database schema and models in a `schema.prisma` file, and then generate a type-safe client that can be used to interact with your database from your backend.
 
 ## Prisma Client
 
-Located at `src/server/prisma.ts`, the Prisma Client is instantiated as a global variable (as recommended as [best practice](https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices#problem) by the team at Prisma) and exported to be used in your API routes. We include the Prisma Client in [Context](./trpc.md#serverapitrpcts) by default and recommend using this instead of importing it separately in each file.
+Located at `src/server/prisma.ts`, the Prisma Client is instantiated as a global variable (as recommended as [best practice](https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices#problem) by the team at Prisma) and exported to be used in your API routes. We include the Prisma Client in [Context](./trpc.md#srcservertrpcts) by default and recommend using this instead of importing it separately in each file.
 
 ## Schema
 
