@@ -6,7 +6,7 @@ It is a constant work-in-progress and subject to frequent change.
 
 ## Guides
 
-Guides, including the [Getting Started](./guides/getting-started-1/README.md) 
+Guides, including the [Getting Started](./guides/getting-started-1/README.md)
 guides, are found [here](./guides/README.md).
 
 ## Infrastructure Setup
@@ -16,4 +16,4 @@ guides, are found [here](./guides/README.md).
 
 ## Application setup
 
-- [Setting up a custom theme](./client/theming/README.md)
+- [Setting up a custom theme](./usage/application-theme.md)
