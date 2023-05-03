@@ -4,6 +4,7 @@ A technical kit to quickly build new products from
 [Open Government Products](https://open.gov.sg), Singapore.
 
 <!-- This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit). -->
+
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)
@@ -26,7 +27,7 @@ and/or are in a hurry to prepare an environment to work on your product.
 If you are new, see our [Getting Started guide](docs/guides/getting-started-1/README.md).
 
 If you are exploring what else you can do with Starter Kit,
-a more comprehensive set of documentation, including guides 
+a more comprehensive set of documentation, including guides
 and tutorials, can be found [here](docs/README.md).
 
 ### One-click deploy
@@ -41,19 +42,20 @@ This needs a few prerequisites, detailed below.
 
 The deployment needs a few environment variables to be set for it to function. They are:
 
-| Name | What It Is | How To Obtain |
-|-|-|-|
-|`DATABASE_URL`| Where the database resides for the deployed application | Follow this guide to set up [CockroachDB](docs/cockroach/README.md) |
-|`POSTMAN_API_KEY`| An API key to send email via Postman | Follow Postman's guide to [Generate your API Key](https://guide.postman.gov.sg/api-guide/generate-your-api-key) |
-|`SESSION_SECRET`| A sequence of random characters used to protect session identifiers | Run the command `npx uuid` from your terminal |
+| Name              | What It Is                                                          | How To Obtain                                                                                                   |
+| ----------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`    | Where the database resides for the deployed application             | Follow this guide to set up [CockroachDB](docs/cockroach/README.md)                                             |
+| `POSTMAN_API_KEY` | An API key to send email via Postman                                | Follow Postman's guide to [Generate your API Key](https://guide.postman.gov.sg/api-guide/generate-your-api-key) |
+| `SESSION_SECRET`  | A sequence of random characters used to protect session identifiers | Run the command `npx uuid` from your terminal                                                                   |
 
 #### Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit%2Ftree%2Fdevelop&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopengovsg%2Fstarter-kit%2Ftree%2Fexamples%2Fno-replies&env=DATABASE_URL,POSTMAN_API_KEY,SESSION_SECRET)
 
 ## Working on your product
 
 You may work on the codebase with:
+
 - A [GitHub Codespace](#using-github-codespaces) provided by us, or;
 - With your [local machine](#using-your-local-developer-environment).
 
@@ -65,6 +67,7 @@ for developing with a codespace.
 ### Using your local developer environment
 
 In summary:
+
 - Clone the repository to your local machine
 - Follow instructions for [running the app locally](#running-the-app-locally)
 
