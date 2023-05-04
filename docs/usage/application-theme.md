@@ -4,7 +4,7 @@ This application uses the [OGP Design System](https://github.com/opengovsg/desig
 
 ## Customising the theme
 
-The theme can be customised by editing the `theme` object in [src/client/theme.ts](../../../src/theme/index.ts).
+The theme can be customised by editing the `theme` object in [src/client/theme.ts](../../src/theme/index.ts).
 
 > 🗒️ If your product has a custom theme (inquire with your designer!), a custom `theme` object may have already been created for the product.
 
