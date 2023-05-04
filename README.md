@@ -3,7 +3,6 @@
 A technical kit to quickly build new products from
 [Open Government Products](https://open.gov.sg), Singapore.
 
-<!-- This README is also viewable as a [webpage](https://opengovsg.github.io/starter-kit). -->
 ## Features
 
 - 🧙‍♂️ E2E typesafety with [tRPC](https://trpc.io)
@@ -23,11 +22,11 @@ A technical kit to quickly build new products from
 Follow these instructions if you are familiar with building applications,
 and/or are in a hurry to prepare an environment to work on your product.
 
-If you are new, see our [Getting Started guide](docs/guides/getting-started-1/README.md).
+If you are new, see our [Getting Started guide](https://opengovsg.github.io/starter-kit-docs/docs/getting-started/prerequisites).
 
 If you are exploring what else you can do with Starter Kit,
 a more comprehensive set of documentation, including guides 
-and tutorials, can be found [here](docs/README.md).
+and tutorials, can be found [here](https://opengovsg.github.io/starter-kit-docs/).
 
 ### One-click deploy
 
