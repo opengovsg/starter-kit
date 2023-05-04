@@ -82,7 +82,7 @@ npm i
 ### Set environment variables
 
 ```bash
-cp .env.example .env.development.local
+cp .env.example .env
 ```
 
 Set `POSTMAN_API_KEY` - required for login
