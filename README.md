@@ -93,7 +93,8 @@ You will also need to update [src/browserEnv.ts](src/browserEnv.ts#L19) to expli
 ### Start database
 
 ```bash
-npm run setup
+# Assumes that you have previously copied .env.example to .env.development.local
+export $(grep DATABASE_URL .env.development.local | xargs) && npm run setup
 ```
 
 ### Start server
