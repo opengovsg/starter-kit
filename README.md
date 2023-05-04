@@ -82,7 +82,8 @@ npm i
 cp .env.example .env.development.local
 ```
 
-Set `POSTMAN_API_KEY` - required for login
+Optionally set `POSTMAN_API_KEY` to send login OTP emails via [Postman](https://postman.gov.sg).
+If not set, OTP emails will be logged to the console instead.e
 
 #### Retrieving client-side environment variables in code
 
