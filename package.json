@@ -52,6 +52,7 @@
     "@trpc/react-query": "^10.19.1",
     "@trpc/server": "^10.19.1",
     "@types/validator": "^13.7.14",
+    "@vercel/analytics": "^1.0.1",
     "date-fns": "^2.29.3",
     "iron-session": "^6.3.1",
     "jotai": "^2.0.4",

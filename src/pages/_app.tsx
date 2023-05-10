@@ -3,12 +3,13 @@ import 'inter-ui/inter.css' // Strongly recommended.
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@opengovsg/design-system-react'
+import { Analytics } from '@vercel/analytics/react'
+import { Provider } from 'jotai'
 import type { AppProps, AppType } from 'next/app'
 import { NextPageWithLayout } from '~/lib/types'
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
-import { Provider } from 'jotai'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
@@ -27,6 +28,7 @@ const MyApp = (({ Component, pageProps }: AppPropsWithAuthAndLayout) => {
           <ReactQueryDevtools initialIsOpen={false} />
         )}
       </ThemeProvider>
+      <Analytics />
     </Provider>
   )
 }) as AppType
