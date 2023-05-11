@@ -15,4 +15,7 @@ module.exports = {
   images: {
     domains: [process.env.R2_PUBLIC_HOSTNAME].filter((d) => d),
   },
+  experimental: {
+    instrumentationHook: true,
+  },
 }
