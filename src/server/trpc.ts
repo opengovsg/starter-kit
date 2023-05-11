@@ -9,6 +9,7 @@
  */
 
 import { initTRPC, TRPCError } from '@trpc/server'
+import { trace } from 'OTEL-initializer'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { Context } from './context'
@@ -34,6 +35,16 @@ const t = initTRPC.context<Context>().create({
       },
     }
   },
+})
+
+const tracingMiddleware = t.middleware(async ({ path, next }) => {
+  return trace.getTracer('trpc').startActiveSpan(path, async (span) => {
+    try {
+      return await next()
+    } finally {
+      span.end()
+    }
+  })
 })
 
 /**
@@ -71,12 +82,14 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
  * Create an unprotected procedure
  * @see https://trpc.io/docs/v10/procedures
  **/
-export const publicProcedure = t.procedure
+export const publicProcedure = t.procedure.use(tracingMiddleware)
 
 /**
  * Create a protected procedure
  **/
-export const protectedProcedure = t.procedure.use(authMiddleware)
+export const protectedProcedure = t.procedure
+  .use(tracingMiddleware)
+  .use(authMiddleware)
 
 /**
  * @see https://trpc.io/docs/v10/middlewares
