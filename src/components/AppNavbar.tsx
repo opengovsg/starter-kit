@@ -44,7 +44,7 @@ export const AppNavbar = (): JSX.Element => {
             <Menu.Item
               disabled={pathname === '/profile'}
               as={NextLink}
-              href="/profile"
+              href={`/profile/${user?.username}`}
             >
               Edit profile
             </Menu.Item>
