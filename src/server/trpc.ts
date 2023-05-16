@@ -42,13 +42,22 @@ const t = initTRPC.context<Context>().create({
  */
 export const router = t.router
 
-const authMiddleware = t.middleware(({ next, ctx }) => {
-  if (
-    !ctx.session?.user ||
-    !prisma.user.findUnique({ where: { id: ctx.session.user.id } })
-  ) {
+const authMiddleware = t.middleware(async ({ next, ctx }) => {
+  if (!ctx.session?.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
+
+  // this code path is needed if a user does not exist in the database as they were deleted, but the session was active before
+  const user = await prisma.user.findUnique({
+    where: { id: ctx.session.user.id },
+  })
+
+  if (user === null) {
+    ctx.session.destroy()
+
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
+  }
+
   return next({
     ctx: {
       session: {
