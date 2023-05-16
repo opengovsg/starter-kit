@@ -35,7 +35,6 @@ export const AppNavbar = (): JSX.Element => {
           spacing={{ base: '0.75rem', md: '1.5rem' }}
         >
           <AvatarMenu
-            // @ts-expect-error missing type in design-system
             src={user?.image ?? undefined}
             name={user?.name ?? undefined}
             variant="subtle"

@@ -1,28 +1,33 @@
-import { Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import { SidebarContainer, SidebarItem } from '@opengovsg/design-system-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { BiMessageSquareEdit, BiCog } from 'react-icons/bi'
-import { HOME } from '~/lib/routes'
-import { Sidebar } from './Sidebar'
+import { BiFace, BiHomeSmile } from 'react-icons/bi'
+import { HOME, PROFILE } from '~/lib/routes'
 
 export const DashSidebar = () => {
   const { pathname } = useRouter()
 
   return (
-    <Flex minW="13.5rem">
-      <Sidebar
-        items={[
-          {
-            label: 'Feedback',
-            icon: <BiMessageSquareEdit fontSize="1.5rem" />,
-            props: {
-              isActive: pathname === HOME,
-              as: Link,
-              href: HOME,
-            },
-          },
-        ]}
-      />
-    </Flex>
+    <Box minW="13.5rem">
+      <SidebarContainer>
+        <SidebarItem
+          icon={BiHomeSmile}
+          as={Link}
+          href={HOME}
+          isActive={pathname === HOME}
+        >
+          Home
+        </SidebarItem>
+        <SidebarItem
+          icon={BiFace}
+          as={Link}
+          href={PROFILE}
+          isActive={pathname === PROFILE}
+        >
+          Profile
+        </SidebarItem>
+      </SidebarContainer>
+    </Box>
   )
 }
