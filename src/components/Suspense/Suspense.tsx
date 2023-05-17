@@ -8,8 +8,8 @@ import {
 } from 'react'
 
 export default function Suspense(props: ComponentProps<typeof ReactSuspense>) {
-  // This is needed so we only attempt to render and fire the queries within the suspense wrapper on client side mount
-  // Not doing this will cause an error that the router instance has not been instantiated, and also will call queries outside of TRPC context
+  // Tracking mounted state is needed so we only attempt to render and fire the queries within the suspense wrapper on mount instead
+  // Not doing this will cause an error that the router instance has not been instantiated, and also will call trpc routes uninstantiated context
   const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()
 

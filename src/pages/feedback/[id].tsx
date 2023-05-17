@@ -61,10 +61,6 @@ const PostViewContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
 
-  if (!data) {
-    return <></>
-  }
-
   return (
     <>
       <FeedbackNavbar crumbs={viewPostCrumbs} />

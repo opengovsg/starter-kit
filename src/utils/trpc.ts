@@ -8,6 +8,13 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
+import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+
+const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
+  'UNAUTHORIZED',
+  'FORBIDDEN',
+  'NOT_FOUND',
+])
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -88,16 +95,8 @@ export const trpc = createTRPCNext<
               if (error instanceof TRPCClientError) {
                 const res = TRPCWithErrorCodeSchema.safeParse(error)
 
-                if (res.success) {
-                  const trpcCode = res.data
-
-                  switch (trpcCode) {
-                    // do not retry on these errors
-                    case 'NOT_FOUND':
-                    case 'UNAUTHORIZED':
-                    case 'FORBIDDEN':
-                      return false
-                  }
+                if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
+                  return false
                 }
               }
               return failureCount < 3
