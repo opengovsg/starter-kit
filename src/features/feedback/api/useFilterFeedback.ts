@@ -66,19 +66,13 @@ export const useFilterFeedback = () => {
     [router]
   )
 
-  const {
-    data: filteredFeedback,
-    isLoading,
-    isFetching,
-  } = trpc.post.list.useQuery(
+  const [filteredFeedback] = trpc.post.list.useSuspenseQuery(
     { order, filter, cursor, limit },
     { keepPreviousData: true }
   )
 
   return {
     filteredFeedback,
-    isLoading,
-    isFetching,
     filter: {
       value: filter,
       label: FILTER_VAL_TO_LABEL[filter],

@@ -2,8 +2,8 @@ import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { NextPageContext } from 'next'
-import Router from 'next/router'
 import superjson from 'superjson'
+import { TRPCWithErrorCodeSchema } from '~/utils/error'
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 import type { AppRouter } from '~/server/modules/_app'
@@ -86,12 +86,18 @@ export const trpc = createTRPCNext<
             useErrorBoundary: true,
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
-                if (error.data?.code === 'FORBIDDEN') {
-                  Router.push('/forbidden')
-                }
+                const res = TRPCWithErrorCodeSchema.safeParse(error)
 
-                if (error.data?.code === 'UNAUTHORIZED') {
-                  Router.push('/sign-in')
+                if (res.success) {
+                  const trpcCode = res.data
+
+                  switch (trpcCode) {
+                    // do not retry on these errors
+                    case 'NOT_FOUND':
+                    case 'UNAUTHORIZED':
+                    case 'FORBIDDEN':
+                      return false
+                  }
                 }
               }
               return failureCount < 3

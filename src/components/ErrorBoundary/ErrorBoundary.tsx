@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react'
 import { TRPCClientError } from '@trpc/client'
 import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { Component, ReactNode } from 'react'
+import { Component } from 'react'
 import { ErrorBoundaryProps, ErrorBoundaryState } from './ErrorBoundary.types'
-import { TRPCWithErrorCodeSchema } from './ErrorBoundary.utils'
+import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -36,17 +36,25 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
 
     if (error instanceof TRPCClientError) {
-      const isTRPCErrorShape = TRPCWithErrorCodeSchema.safeParse(error)
+      const res = TRPCWithErrorCodeSchema.safeParse(error)
 
-      if (!isTRPCErrorShape.success) return <UnexpectedErrorCard />
+      if (!res.success) return <UnexpectedErrorCard />
 
-      return getErrorComponent(isTRPCErrorShape.data.data.code)
+      // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
+      // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
+      // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
+      if (res.data === 'UNAUTHORIZED') {
+        window.location.href = 'sign-in'
+        return
+      }
+
+      return <ErrorComponent code={res.data} />
     }
   }
 }
 
 // TODO: Make custom components for these
-function getErrorComponent(code: TRPC_ERROR_CODE_KEY): ReactNode {
+function ErrorComponent({ code }: { code: TRPC_ERROR_CODE_KEY }) {
   switch (code) {
     case 'NOT_FOUND':
       return (
@@ -54,6 +62,7 @@ function getErrorComponent(code: TRPC_ERROR_CODE_KEY): ReactNode {
           Not found!
         </Box>
       )
+
     default:
       return <UnexpectedErrorCard />
   }

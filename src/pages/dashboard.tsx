@@ -1,64 +1,49 @@
-import { Box, Icon, Skeleton, Stack, Text } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
-import Image from 'next/image'
-import NextLink from 'next/link'
-import { BiPlus } from 'react-icons/bi'
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
+import { Box, Skeleton } from '@chakra-ui/react'
 import {
   FeedbackActionsModal,
   TeamFeedbackList,
 } from '~/features/feedback/components'
 import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
-import { trpc } from '~/utils/trpc'
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
+import Suspense from '~/components/Suspense/Suspense'
+import { TeamFeedbackListSkeleton } from '~/features/feedback/components/TeamFeedbackListSkeleton'
+import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary'
+import { FeedbackHeader } from '~/features/feedback/components/FeedbackHeader'
 
 const Dashboard: NextPageWithLayout = () => {
-  const { data: counts, isLoading: unreadCountIsLoading } =
-    trpc.post.unreadCount.useQuery()
-
   return (
     <Box p="1.5rem" w="100%">
+      <ErrorBoundary>
+        <Suspense fallback={<Skeleton height="100%" width="100%" />}>
+          <DashboardContainer />
+        </Suspense>
+      </ErrorBoundary>
+
       <FeedbackActionsModal />
-      <Stack justify="space-between" flexDir="row">
-        <Stack flexDir="row" align="center">
-          <Image
-            height={72}
-            priority
-            style={{
-              transform: 'scale(-1,1)',
-            }}
-            src={feedbackUncleSvg}
-            aria-hidden
-            alt="Feedback uncle"
-          />
-          <Skeleton isLoaded={!unreadCountIsLoading}>
-            <Text textStyle="subhead-1" color="base.content.medium">
-              <Text as="span" textStyle="h4" color="base.content.default">
-                {counts?.unreadCount ?? 0}
-              </Text>{' '}
-              unread feedback of {counts?.totalCount ?? 0}
-            </Text>
-          </Skeleton>
-        </Stack>
-        <Button
-          as={NextLink}
-          href="/feedback/new"
-          leftIcon={<Icon fontSize="1.25rem" as={BiPlus} />}
-        >
-          Write feedback
-        </Button>
-      </Stack>
-      <Box
-        bg="white"
-        borderRadius="sm"
-        borderWidth="1px"
-        borderColor="base.divider.medium"
-      >
-        <TeamFeedbackFilterBar />
-        <TeamFeedbackList />
-      </Box>
     </Box>
+  )
+}
+
+const DashboardContainer = () => {
+  return (
+    <>
+      <Suspense fallback={<Skeleton height="100px" width="100%" />}>
+        <FeedbackHeader />
+      </Suspense>
+
+      <Suspense fallback={<TeamFeedbackListSkeleton />}>
+        <Box
+          bg="white"
+          borderRadius="sm"
+          borderWidth="1px"
+          borderColor="base.divider.medium"
+        >
+          <TeamFeedbackFilterBar />
+          <TeamFeedbackList />
+        </Box>
+      </Suspense>
+    </>
   )
 }
 
