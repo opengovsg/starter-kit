@@ -4,12 +4,12 @@ import { publicProcedure, router } from '~/server/trpc'
 import { env } from '~/server/env'
 import { sendMail } from '~/lib/mail'
 import { getBaseUrl } from '~/utils/getBaseUrl'
-import { defaultUserSelect } from '~/server/modules/user/user.select'
 import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
-import { generateUsername } from '../../user/user.service'
 import { set } from 'lodash'
+import { defaultMeSelect } from '../../me/me.select'
+import { generateUsername } from '../../me/me.service'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -91,7 +91,7 @@ export const emailSessionRouter = router({
           name: emailName,
           username: generateUsername(emailName),
         },
-        select: defaultUserSelect,
+        select: defaultMeSelect,
       })
 
       // TODO: Should only store user id in session.

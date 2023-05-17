@@ -5,16 +5,16 @@
 import { z } from 'zod'
 import { env } from '~/server/env'
 import { protectedProcedure, router } from '~/server/trpc'
-import { defaultUserSelect } from '~/server/modules/user/user.select'
 import { updateMeSchema } from '~/schemas/me'
 import { TRPCError } from '@trpc/server'
 import { Prisma } from '@prisma/client'
+import { defaultMeSelect } from './me.select'
 
 export const meRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.user.findUniqueOrThrow({
       where: { id: ctx.session.user.id },
-      select: defaultUserSelect,
+      select: defaultMeSelect,
     })
   }),
   updateAvatar: protectedProcedure
@@ -29,7 +29,7 @@ export const meRouter = router({
         data: {
           image: `https://${env.R2_PUBLIC_HOSTNAME}/${input.imageKey}`,
         },
-        select: defaultUserSelect,
+        select: defaultMeSelect,
       })
     }),
   update: protectedProcedure
@@ -39,7 +39,7 @@ export const meRouter = router({
         return await ctx.prisma.user.update({
           where: { id: ctx.session.user.id },
           data: input,
-          select: defaultUserSelect,
+          select: defaultMeSelect,
         })
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
