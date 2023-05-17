@@ -9,6 +9,7 @@ import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { generateUsername } from '../../user/user.service'
+import { set } from 'lodash'
 
 export const emailSessionRouter = router({
   // Generate OTP.
