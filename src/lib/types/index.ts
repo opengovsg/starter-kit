@@ -1,11 +1,13 @@
 import type { NextPage } from 'next'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
+export type GetLayout = (page: ReactNode) => ReactNode
 
 export type NextPageWithLayout<
   TProps = Record<string, unknown>,
   TInitialProps = TProps
 > = NextPage<TProps, TInitialProps> & {
-  getLayout?: (page: ReactElement) => ReactNode
+  getLayout?: GetLayout
 }
 
 export * from './trpc'

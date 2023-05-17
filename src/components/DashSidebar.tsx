@@ -13,7 +13,10 @@ export const DashSidebar = () => {
 
   const isProfileActive = useMemo(() => {
     if (pathname === SETTINGS_PROFILE) return true
-    if (pathname === `${PROFILE}/[username]` && query.username === me?.username)
+    if (
+      pathname.startsWith(`${PROFILE}/[username]`) &&
+      query.username === me?.username
+    )
       return true
   }, [pathname, query.username, me?.username])
 
