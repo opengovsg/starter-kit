@@ -23,6 +23,8 @@ import { trpc } from '~/utils/trpc'
 import Image from 'next/image'
 import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg'
 import { useToast } from '@opengovsg/design-system-react'
+import Link from 'next/link'
+import { PROFILE } from '~/lib/routes'
 
 const Profile: NextPageWithLayout = () => {
   const { user: me } = useUser()
@@ -60,6 +62,9 @@ const Profile: NextPageWithLayout = () => {
 
   return (
     <Box px="1.5rem" w="100%">
+      <Box>
+        <Link href={`${PROFILE}/${me?.username}`}>Back to your profile</Link>
+      </Box>
       <Flex flexDir="row" align="center">
         <Text as="h1" textStyle="h4" mr="-0.5rem">
           User profile
