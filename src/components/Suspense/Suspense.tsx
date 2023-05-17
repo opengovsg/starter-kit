@@ -14,6 +14,8 @@ export default function Suspense(props: ComponentProps<typeof ReactSuspense>) {
   const router = useRouter()
 
   useEffect(() => {
+    // isReady conditional is needed so that suspenseQueries do not fire twice.
+    // Without this, the child component will fire a query with an `undefined` query param followed by the actual query with param defined
     if (router.isReady) {
       setIsMounted(true)
     }
