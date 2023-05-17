@@ -18,7 +18,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-restricted-imports": ["error", {
       "paths": [
-        {"name": "react", "importNames": ["Suspense"], "message": "Please user Suspense from /components instead. Default React 18 Suspense is not supported for SSR"}
+        {"name": "react", "importNames": ["Suspense"], "message": "Please use Suspense from /components instead. Default React 18 Suspense is not supported for SSR"}
       ]
     }],
     "react/react-in-jsx-scope": "off",
