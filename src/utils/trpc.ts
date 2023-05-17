@@ -28,11 +28,7 @@ export interface SSRContext extends NextPageContext {
  * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
  * @link https://trpc.io/docs/react#3-create-trpc-hooks
  */
-export const trpc = createTRPCNext<
-  AppRouter,
-  SSRContext,
-  'ExperimentalSuspense'
->({
+export const trpc = createTRPCNext<AppRouter, SSRContext>({
   config({ ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
