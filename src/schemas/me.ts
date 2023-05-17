@@ -7,6 +7,6 @@ export const updateMeSchema = z.object({
   username: z.string().nonempty({
     message: 'Username is required',
   }),
-  bio: z.string().optional(),
+  bio: z.string().max(200).optional(),
   image: z.string().optional(),
 })

@@ -5,6 +5,7 @@ import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import Image from 'next/image'
 import Link from 'next/link'
 import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg'
+import { SETTINGS_PROFILE } from '~/lib/routes'
 
 const Profile: NextPageWithLayout = () => {
   return (
@@ -30,7 +31,7 @@ const Profile: NextPageWithLayout = () => {
         py="3rem"
         spacing="2.5rem"
       >
-        <Link href="/settings/profile">Edit profile</Link>
+        <Link href={SETTINGS_PROFILE}>Edit profile</Link>
       </Stack>
     </Box>
   )
