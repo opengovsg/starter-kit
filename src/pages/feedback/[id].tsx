@@ -1,5 +1,4 @@
-import { Container, Flex, Stack, Text } from '@chakra-ui/react'
-import { Spinner } from '@opengovsg/design-system-react'
+import { Container, Flex, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary'
@@ -28,10 +27,8 @@ const PostViewContainer = () => {
 
   const utils = trpc.useContext()
 
-  const { data } = trpc.post.byId.useQuery(
-    { id },
-    { suspense: true, enabled: router.isReady }
-  )
+  const [data] = trpc.post.byId.useSuspenseQuery({ id })
+
   const { mutate } = trpc.post.setRead.useMutation()
 
   const viewPostCrumbs = useMemo(() => {
