@@ -16,6 +16,11 @@
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-restricted-imports": ["error", {
+      "paths": [
+        {"name": "react", "importNames": ["Suspense"], "message": "Please user Suspense from /components instead. Default React 18 Suspense is not supported for SSR"}
+      ]
+    }],
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
