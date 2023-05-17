@@ -3,6 +3,7 @@ import { Box, Flex, Text } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { browserEnv } from '~/browserEnv'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
+import { CALLBACK_URL_KEY } from '~/constants/params'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -57,7 +58,7 @@ const SignIn = () => {
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
-    const { callbackUrl } = query
+    const callbackUrl = query[CALLBACK_URL_KEY]
     const user = req.session.user
 
     if (user) {

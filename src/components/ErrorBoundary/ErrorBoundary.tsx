@@ -5,6 +5,7 @@ import { Component } from 'react'
 import { ErrorBoundaryProps, ErrorBoundaryState } from './ErrorBoundary.types'
 import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
+import { CALLBACK_URL_KEY } from '~/constants/params'
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -44,7 +45,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
       // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
       if (res.data === 'UNAUTHORIZED') {
-        window.location.href = 'sign-in'
+        const params = new URLSearchParams(window.location.search)
+
+        const callbackUrl = params.get('callbackUrl')
+
+        window.location.href = !!callbackUrl
+          ? `sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
+          : `sign-in`
+
         return
       }
 

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useIntervalWhen } from 'rooks'
 import { z } from 'zod'
+import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
 import { emailSignInSchema } from './Emailnput'
@@ -63,7 +64,7 @@ export const VerificationInput = ({
       },
       {
         onSuccess: () => {
-          router.push(String(router.query.callbackUrl ?? '/dashboard'))
+          router.push(String(router.query[CALLBACK_URL_KEY] ?? '/dashboard'))
         },
       }
     )
