@@ -1,9 +1,7 @@
 import { z } from 'zod'
 
 export const updateMeSchema = z.object({
-  name: z.string().nonempty({
-    message: 'Name is required',
-  }),
+  name: z.string(),
   username: z.string().nonempty({
     message: 'Username is required',
   }),

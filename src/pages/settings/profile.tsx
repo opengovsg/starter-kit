@@ -33,12 +33,10 @@ import { registerWithDebounce } from '~/utils/registerWithDebounce'
 import { z } from 'zod'
 import { isEmpty } from 'lodash'
 import { useMe } from '~/features/me/api'
-
-const PROFILE_GRID_TEMPLATE_COLUMN = {
-  base: 'repeat(4, 1fr)',
-  md: 'repeat(10, 1fr)',
-}
-const PROFILE_GRID_COLUMN = { base: '1 / 5', md: '2/10', lg: '3 / 7' }
+import {
+  PROFILE_GRID_COLUMN,
+  PROFILE_GRID_TEMPLATE_COLUMN,
+} from '~/constants/layouts'
 
 const Profile: NextPageWithLayout = () => {
   const { me } = useMe()
@@ -50,11 +48,16 @@ const Profile: NextPageWithLayout = () => {
   const usernameExistsMutation = trpc.profile.checkUsernameExists.useMutation()
 
   const updateMutation = trpc.me.update.useMutation({
-    async onSuccess() {
+    async onSuccess(updatedUser) {
       toast({
         description: 'Profile updated successfully.',
       })
       await utils.me.get.invalidate()
+      if (updatedUser.username) {
+        await utils.profile.byUsername.invalidate({
+          username: updatedUser.username,
+        })
+      }
     },
     onError: (err) => {
       toast({

@@ -1,38 +1,47 @@
-import { Box, Flex, Stack, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg'
-import { SETTINGS_PROFILE } from '~/lib/routes'
+import { useRouter } from 'next/router'
+import { useMe } from '~/features/me/api'
+import { ProfileDescription } from '~/features/profile/components/ProfileDescription'
+import { trpc } from '~/utils/trpc'
+import { useMemo } from 'react'
+import { AppGrid } from '~/templates/AppGrid'
+import {
+  PROFILE_GRID_COLUMN,
+  PROFILE_GRID_TEMPLATE_COLUMN,
+} from '~/constants/layouts'
 
 const Profile: NextPageWithLayout = () => {
+  const { me } = useMe()
+  const { isReady, query } = useRouter()
+  const username = String(query.username)
+
+  const { data, isLoading } = trpc.profile.byUsername.useQuery(
+    { username },
+    { enabled: isReady }
+  )
+
+  const isOwnProfile = useMemo(
+    () => me?.username === username,
+    [me?.username, username]
+  )
+
+  if (isLoading || !data) {
+    return <div>Loading</div>
+  }
+
   return (
-    <Box px="1.5rem" w="100%">
-      <Flex flexDir="row" align="center">
-        <Text as="h1" textStyle="h4" mr="-0.5rem">
-          User profile
-        </Text>
-        <Image
-          height={72}
-          priority
-          src={profileAuntySvg}
-          aria-hidden
-          alt="Profile aunty"
-        />
-      </Flex>
-      <Stack
-        bg="white"
-        borderWidth="1px"
-        borderRadius="md"
-        flexDir="column"
-        px="3.5rem"
-        py="3rem"
-        spacing="2.5rem"
+    <Box w="100%">
+      <AppGrid
+        templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
+        bg="base.canvas.brand-subtle"
       >
-        <Link href={SETTINGS_PROFILE}>Edit profile</Link>
-      </Stack>
+        <Box gridColumn={PROFILE_GRID_COLUMN}>
+          <ProfileDescription profile={data} isOwnProfile={isOwnProfile} />
+        </Box>
+      </AppGrid>
     </Box>
   )
 }
