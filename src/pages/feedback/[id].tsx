@@ -28,8 +28,11 @@ const PostViewContainer = () => {
 
   const utils = trpc.useContext()
 
+  const { data } = trpc.post.byId.useQuery(
+    { id },
+    { suspense: true, enabled: router.isReady }
+  )
   const { mutate } = trpc.post.setRead.useMutation()
-  const [data] = trpc.post.byId.useSuspenseQuery({ id })
 
   const viewPostCrumbs = useMemo(() => {
     return [
@@ -46,18 +49,24 @@ const PostViewContainer = () => {
   }, [data?.author.name, id])
 
   useEffect(() => {
-    mutate(
-      { id },
-      {
-        onSuccess: () => {
-          utils.post.list.invalidate()
-          utils.post.unreadCount.invalidate()
-        },
-      }
-    )
+    if (router.isReady) {
+      mutate(
+        { id },
+        {
+          onSuccess: () => {
+            utils.post.list.invalidate()
+            utils.post.unreadCount.invalidate()
+          },
+        }
+      )
+    }
     // Only want to run once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [router.isReady])
+
+  if (!data) {
+    return <></>
+  }
 
   return (
     <>
