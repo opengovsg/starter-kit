@@ -1,16 +1,9 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Icon,
-  Image,
-  SkeletonCircle,
-  Spinner,
-} from '@chakra-ui/react'
+import { Box, Flex, Icon, SkeletonCircle, Spinner } from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
 import { ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { browserEnv } from '~/browserEnv'
+import { Avatar } from '~/components/Avatar'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
@@ -102,25 +95,16 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
         isLoaded={url !== undefined}
         pos="relative"
       >
-        {url ? (
-          <Image
-            bg="base.canvas.brand-subtle"
-            src={url}
-            borderRadius="full"
-            width="7rem"
-            height="7rem"
-            alt="profile picture"
-          />
-        ) : (
-          <Avatar
-            name={name ?? ''}
-            size="2xl"
-            w="7rem"
-            h="7rem"
-            variant="subtle"
-            bg="base.canvas.brand-subtle"
-          />
-        )}
+        <Avatar
+          src={url}
+          name={name}
+          size="2xl"
+          w="7rem"
+          h="7rem"
+          variant="subtle"
+          bg="base.canvas.brand-subtle"
+          aria-label="profile picture"
+        />
         {uploadAvatarMutation.isLoading && (
           <Flex
             pos="absolute"
