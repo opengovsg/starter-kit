@@ -1,36 +1,39 @@
-import { Flex, HStack } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import {
   AvatarMenu,
   AvatarMenuDivider,
   Link,
   Menu,
+  Searchbar,
 } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
-import { useRouter } from 'next/router'
 
 import ogpLogo from '~/assets/ogp-logo.svg'
 import { useUser } from '~/features/profile/api'
+import { SETTINGS_PROFILE } from '~/lib/routes'
+import { AppGrid } from '~/templates/AppGrid'
 
 export const AppNavbar = (): JSX.Element => {
   const { user, logout } = useUser()
-  const { pathname } = useRouter()
 
   return (
     <>
-      <Flex
-        justify="space-between"
-        align="center"
-        px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
+      <AppGrid
+        alignItems="center"
         py="0.75rem"
         bg="white"
         borderBottomWidth="1px"
         borderColor="base.divider.medium"
       >
-        <Link as={NextLink} href="/">
+        <Link as={NextLink} href="/" px="1.5rem">
           <Image src={ogpLogo} alt="OGP Logo" priority />
         </Link>
+        <Box gridColumn={{ md: '4 / 10', lg: '5 / 9' }}>
+          <Searchbar isExpanded />
+        </Box>
         <HStack
+          gridColumnStart={{ base: 4, md: 12 }}
           textStyle="subhead-1"
           spacing={{ base: '0.75rem', md: '1.5rem' }}
         >
@@ -41,18 +44,14 @@ export const AppNavbar = (): JSX.Element => {
             bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}
           >
-            <Menu.Item
-              disabled={pathname === '/profile'}
-              as={NextLink}
-              href={`/profile/${user?.username}`}
-            >
+            <Menu.Item as={NextLink} href={SETTINGS_PROFILE}>
               Edit profile
             </Menu.Item>
             <AvatarMenuDivider />
             <Menu.Item onClick={() => logout()}>Sign out</Menu.Item>
           </AvatarMenu>
         </HStack>
-      </Flex>
+      </AppGrid>
     </>
   )
 }

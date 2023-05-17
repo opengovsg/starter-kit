@@ -3,19 +3,20 @@ import { AppNavbar } from '~/components/AppNavbar'
 import { DashSidebar } from '~/components/DashSidebar'
 import { useUser } from '~/features/profile/api'
 import { NextPageWithLayout } from '~/lib/types'
+import { AppGrid } from '../AppGrid'
 
 export const AdminLayout: NextPageWithLayout['getLayout'] = (page) => {
   useUser({ redirectTo: '/sign-in' })
 
   return (
-    <Flex minH="$100vh" flexDir="column">
+    <Flex minH="$100vh" flexDir="column" bg="base.canvas.backdrop">
       <AppNavbar />
-      <Flex flex={1}>
+      <AppGrid flex={1}>
         <DashSidebar />
-        <Flex flex={1} bg="base.canvas.alt">
+        <Flex gridColumn={{ md: '3/13' }} flex={1} bg="base.canvas.alt">
           {page}
         </Flex>
-      </Flex>
+      </AppGrid>
     </Flex>
   )
 }

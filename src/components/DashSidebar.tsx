@@ -5,14 +5,14 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { BiFace, BiHomeSmile } from 'react-icons/bi'
 import { useUser } from '~/features/profile/api'
-import { HOME, PROFILE } from '~/lib/routes'
+import { HOME, PROFILE, SETTINGS_PROFILE } from '~/lib/routes'
 
 export const DashSidebar = () => {
   const { user } = useUser()
   const { pathname, query } = useRouter()
 
   const isProfileActive = useMemo(() => {
-    if (pathname === '/settings/profile') return true
+    if (pathname === SETTINGS_PROFILE) return true
     if (
       pathname === `${PROFILE}/[username]` &&
       query.username === user?.username
@@ -21,7 +21,7 @@ export const DashSidebar = () => {
   }, [pathname, query.username, user?.username])
 
   return (
-    <Box minW="13.5rem">
+    <Box gridColumn={{ md: '1/3' }} bg="white">
       <SidebarContainer>
         <SidebarItem
           icon={BiHomeSmile}
