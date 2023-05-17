@@ -7,11 +7,11 @@ import { RichText } from '~/components/RichText'
 import { useZodForm } from '~/lib/form'
 import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
-import { useUser } from '../profile/api'
+import { useMe } from '../me/api'
 
 export const TweetComposeForm = (): JSX.Element => {
   const utils = trpc.useContext()
-  const { user } = useUser()
+  const { me } = useMe()
 
   const router = useRouter()
 
@@ -37,7 +37,7 @@ export const TweetComposeForm = (): JSX.Element => {
 
   return (
     <Box>
-      <Avatar name={user?.name ?? ''} src={user?.image ?? ''} />
+      <Avatar name={me?.name ?? ''} src={me?.image ?? ''} />
       <Stack
         spacing="2rem"
         as="form"

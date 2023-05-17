@@ -1,12 +1,12 @@
 import { Flex } from '@chakra-ui/react'
 import { AppNavbar } from '~/components/AppNavbar'
 import { DashSidebar } from '~/components/DashSidebar'
-import { useUser } from '~/features/profile/api'
+import { useMe } from '~/features/me/api'
 import { NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '../AppGrid'
 
 export const AdminLayout: NextPageWithLayout['getLayout'] = (page) => {
-  useUser({ redirectTo: '/sign-in' })
+  useMe({ redirectTo: '/sign-in' })
 
   return (
     <Flex minH="$100vh" flexDir="column" bg="base.canvas.backdrop">

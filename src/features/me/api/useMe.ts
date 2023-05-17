@@ -2,8 +2,8 @@ import { useCallback, useEffect } from 'react'
 import Router from 'next/router'
 import { trpc } from '~/utils/trpc'
 
-export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
-  const { data: user, isFetching, ...rest } = trpc.me.get.useQuery()
+export const useMe = ({ redirectTo = '', redirectIfFound = false } = {}) => {
+  const { data: me, isFetching, ...rest } = trpc.me.get.useQuery()
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on routes.HOME)
@@ -14,14 +14,14 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
       // If redirectTo is set,
       redirectTo &&
       // redirect if the user was not found.
-      ((!redirectIfFound && !user) ||
+      ((!redirectIfFound && !me) ||
         // If redirectIfFound is also set, redirect if the user was found
-        (redirectIfFound && user))
+        (redirectIfFound && me))
 
     if (shouldRedirect) {
       Router.push(redirectTo)
     }
-  }, [user, redirectIfFound, redirectTo, isFetching])
+  }, [me, redirectIfFound, redirectTo, isFetching])
 
   const logoutMutation = trpc.auth.logout.useMutation()
 
@@ -36,5 +36,5 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     [logoutMutation]
   )
 
-  return { user, isFetching, ...rest, logout }
+  return { me, isFetching, ...rest, logout }
 }

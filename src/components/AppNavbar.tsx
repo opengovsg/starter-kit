@@ -10,12 +10,12 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import ogpLogo from '~/assets/ogp-logo.svg'
-import { useUser } from '~/features/profile/api'
+import { useMe } from '~/features/me/api'
 import { SETTINGS_PROFILE } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 
 export const AppNavbar = (): JSX.Element => {
-  const { user, logout } = useUser()
+  const { me, logout } = useMe()
 
   return (
     <>
@@ -38,8 +38,8 @@ export const AppNavbar = (): JSX.Element => {
           spacing={{ base: '0.75rem', md: '1.5rem' }}
         >
           <AvatarMenu
-            src={user?.image ?? undefined}
-            name={user?.name ?? undefined}
+            src={me?.image ?? undefined}
+            name={me?.name ?? undefined}
             variant="subtle"
             bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}

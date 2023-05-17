@@ -13,8 +13,7 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { useUser } from '~/features/profile/api'
-import { AvatarUpload } from '~/features/profile/components/AvatarUpload'
+import { AvatarUpload } from '~/features/settings/components/AvatarUpload'
 import { useZodForm } from '~/lib/form'
 import { NextPageWithLayout } from '~/lib/types'
 import { updateMeSchema } from '~/schemas/me'
@@ -33,6 +32,7 @@ import { AppGrid } from '~/templates/AppGrid'
 import { registerWithDebounce } from '~/utils/registerWithDebounce'
 import { z } from 'zod'
 import { isEmpty } from 'lodash'
+import { useMe } from '~/features/me/api'
 
 const PROFILE_GRID_TEMPLATE_COLUMN = {
   base: 'repeat(4, 1fr)',
@@ -41,7 +41,7 @@ const PROFILE_GRID_TEMPLATE_COLUMN = {
 const PROFILE_GRID_COLUMN = { base: '1 / 5', md: '2/10', lg: '3 / 7' }
 
 const Profile: NextPageWithLayout = () => {
-  const { user: me } = useUser()
+  const { me } = useMe()
   const utils = trpc.useContext()
   const toast = useToast({
     status: 'success',

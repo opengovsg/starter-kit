@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
+import { useMe } from '~/features/me/api'
 import { trpc } from '~/utils/trpc'
-import { useUser } from './useUser'
 
 export const useUploadAvatarMutation = () => {
   const utils = trpc.useContext()
-  const { user } = useUser()
+  const { me } = useMe()
   // Pre-upload: Create a mutation to presign the upload request
   const presignImageUploadMutation = trpc.storage.presignAvatar.useMutation()
 
@@ -15,7 +15,7 @@ export const useUploadAvatarMutation = () => {
 
   return useMutation(
     async (image: File) => {
-      if (!user?.id) throw new Error('No user found')
+      if (!me?.id) throw new Error('No user found')
 
       const presign = await presignImageUploadMutation.mutateAsync({
         fileContentType: image.type,

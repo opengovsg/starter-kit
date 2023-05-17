@@ -8,11 +8,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import {
-  Button,
-  FormErrorMessage,
-  useToast,
-} from '@opengovsg/design-system-react'
+import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
@@ -23,15 +19,10 @@ import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 
 import { RichText } from '~/components/RichText'
-import { useUser } from '~/features/profile/api'
 import { HOME } from '~/lib/routes'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
-  const toast = useToast({
-    status: 'error',
-  })
-
   const router = useRouter()
 
   const mutation = trpc.post.add.useMutation({
