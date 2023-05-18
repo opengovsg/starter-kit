@@ -20,7 +20,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
   componentDidCatch(error: Error) {
     // You can use your own error logging service here
-    console.log({ error })
+    console.error(error)
   }
 
   render() {
