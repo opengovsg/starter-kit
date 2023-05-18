@@ -33,6 +33,7 @@ export const postRouter = router({
         author: {
           username: input.username,
         },
+        parentPostId: null,
         deletedAt: null,
       },
     })
