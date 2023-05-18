@@ -19,7 +19,7 @@ export const formatRelativeTime = (
 
   if (deltaSeconds < 60) {
     t = `${Math.floor(deltaSeconds)}s`
-  } else if (deltaSeconds < 2700) {
+  } else if (deltaSeconds < 3600) {
     t = `${Math.floor(deltaSeconds / 60)}m`
   } else if (deltaSeconds < 86400) {
     t = `${Math.floor(deltaSeconds / 3600)}h`
