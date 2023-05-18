@@ -9,7 +9,6 @@ const Index = () => {
 
 export const getServerSideProps = withSessionSsr(async ({ req }) => {
   const user = req.session.user
-
   if (user) {
     return {
       redirect: {

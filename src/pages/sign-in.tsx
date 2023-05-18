@@ -1,8 +1,11 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { noop } from 'lodash'
+import { useRouter } from 'next/router'
 import { browserEnv } from '~/browserEnv'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
+import Suspense from '~/components/Suspense/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import {
   BackgroundBox,
@@ -13,11 +16,14 @@ import {
   NonMobileSidebarGridArea,
   SignInForm,
 } from '~/features/sign-in/components'
-import { withSessionSsr } from '~/lib/withSession'
+import { SignInContextProvider } from '~/features/sign-in/components/SignInContext'
+import { trpc } from '~/utils/trpc'
 
 const title = browserEnv.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
+  useShowSignInForm()
+
   return (
     <BackgroundBox>
       <RestrictedGovtMasthead />
@@ -40,7 +46,12 @@ const SignIn = () => {
                   <Text textStyle="h3">{title}</Text>
                 </Box>
               </Box>
-              <SignInForm />
+
+              <SignInContextProvider>
+                <Suspense fallback={<Skeleton w="100vw" h="100vh" />}>
+                  <SignInForm />
+                </Suspense>
+              </SignInContextProvider>
             </Flex>
           </Box>
         </LoginGridArea>
@@ -56,24 +67,27 @@ const SignIn = () => {
   )
 }
 
-export const getServerSideProps = withSessionSsr(
-  async function getServerSideProps({ req, query }) {
-    const callbackUrl = query[CALLBACK_URL_KEY]
-    const user = req.session.user
+// This hook is only meant to be used in `sign-in` page
+function useShowSignInForm() {
+  const router = useRouter()
 
-    if (user) {
-      return {
-        redirect: {
-          destination: callbackUrl ?? '/dashboard',
-        },
-        props: {},
-      }
-    }
+  const callbackUrl =
+    router.query[CALLBACK_URL_KEY] !== undefined
+      ? String(router.query[CALLBACK_URL_KEY])
+      : '/dashboard'
 
-    return {
-      props: {},
-    }
-  }
-)
+  const { isLoading } = trpc.me.get.useQuery(undefined, {
+    // Just stay on this page on error
+    onError: noop,
+    onSuccess: () => {
+      router.push(callbackUrl)
+    },
+    // This is intentionally set to false for sign in page since we do not want the root ErrorBoundary to catch unauthorized errors
+    // If we do catch it, there will be an infinite redirect to `/sign-in`
+    useErrorBoundary: false,
+  })
+
+  return { isLoading }
+}
 
 export default SignIn

@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { useIntervalWhen } from 'rooks'
 import { z } from 'zod'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
+import { useSignInContext } from './SignInContext'
 import { emailSignInSchema } from './Emailnput'
 import { ResendOtpButton } from './ResendOtpButton'
 
@@ -18,14 +18,18 @@ const emailVerificationSchema = emailSignInSchema.extend({
     .length(6, 'Please enter a 6 character OTP.'),
 })
 
-interface VerificationInputProps {
-  email: string
-}
-
-export const VerificationInput = ({
-  email,
-}: VerificationInputProps): JSX.Element => {
+export const VerificationInput = (): JSX.Element => {
   const router = useRouter()
+
+  const { email, timer, setTimer } = useSignInContext()
+
+  useIntervalWhen(
+    () => setTimer(timer - 1),
+    /* intervalDurationMs= */ 1000,
+    // Stop interval if timer hits 0.
+    /* when= */ timer > 0
+  )
+
   const {
     register,
     handleSubmit,
@@ -38,14 +42,6 @@ export const VerificationInput = ({
     },
   })
 
-  const [timer, setTimer] = useState(60)
-  useIntervalWhen(
-    () => setTimer(timer - 1),
-    /* intervalDurationMs= */ 1000,
-    // Stop interval if timer hits 0.
-    /* when= */ timer > 0
-  )
-
   const verifyOtpMutation = trpc.auth.email.verifyOtp.useMutation({
     onError: (error) => {
       setError('token', { message: error.message })
@@ -57,6 +53,7 @@ export const VerificationInput = ({
   })
 
   const handleVerifyOtp = handleSubmit(({ email, token }) => {
+    console.log('>>> submitting')
     return verifyOtpMutation.mutate(
       {
         email,
@@ -64,7 +61,11 @@ export const VerificationInput = ({
       },
       {
         onSuccess: () => {
+          console.log('>> testing')
           router.push(String(router.query[CALLBACK_URL_KEY] ?? '/dashboard'))
+        },
+        onError: (e) => {
+          console.log('>>> error', e)
         },
       }
     )
