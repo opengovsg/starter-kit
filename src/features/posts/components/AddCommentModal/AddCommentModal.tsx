@@ -7,12 +7,13 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Stack,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { useZodForm } from '~/lib/form'
 import { addReplySchema } from '~/schemas/thread'
 import { RouterOutput, trpc } from '~/utils/trpc'
-import { Post } from '../Post'
+import { PostView } from '../Post/PostView'
 import { ComposeComment } from './ComposeComment'
 
 interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
@@ -57,8 +58,16 @@ export const AddCommentModal = ({
       <ModalContent>
         <ModalHeader>Reply post</ModalHeader>
         <ModalBody>
-          <Post post={parentPost} hideActions />
-          <ComposeComment {...formMethods} />
+          <Stack spacing="1.5rem">
+            <PostView
+              containerProps={{
+                padding: 0,
+              }}
+              post={parentPost}
+              hideActions
+            />
+            <ComposeComment {...formMethods} />
+          </Stack>
         </ModalBody>
         <ModalFooter>
           <ButtonGroup>

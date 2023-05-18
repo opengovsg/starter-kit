@@ -12,7 +12,7 @@ export const BackBannerLink = ({
   ...props
 }: BackBannerLinkProps): JSX.Element => {
   return (
-    <Link size="sm" variant="standalone" {...props} as={NextLink}>
+    <Link textStyle="subhead-2" variant="standalone" {...props} as={NextLink}>
       <Icon as={BiLeftArrowAlt} aria-hidden fontSize="1.25rem" mr="0.25rem" />
       {children}
     </Link>

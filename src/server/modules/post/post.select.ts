@@ -39,19 +39,6 @@ export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
     orderBy: {
       createdAt: 'asc',
     },
-    select: {
-      id: true,
-      content: true,
-      contentHtml: true,
-      createdAt: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          username: true,
-        },
-      },
-    },
+    select: defaultPostSelect,
   },
 })

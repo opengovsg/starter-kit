@@ -324,7 +324,36 @@ export const postRouter = router({
         })
       }
 
-      return processFeedbackItem(post, ctx.session.user.id)
+      let augmentedPost: typeof post & { likedByMe?: boolean } = post
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            postId: {
+              in: [post.id, ...post.replies.map((r) => r.id)],
+            },
+          },
+        })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        const augmentedReplies = post.replies.map((r) => {
+          return {
+            ...r,
+            likedByMe: likedUserPosts[r.id],
+          }
+        })
+        augmentedPost = {
+          ...post,
+          likedByMe: likedUserPosts[post.id],
+          replies: augmentedReplies,
+        }
+      }
+
+      return augmentedPost
     }),
   add: protectedProcedure
     .input(addPostSchema)

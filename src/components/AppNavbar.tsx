@@ -23,7 +23,7 @@ export const AppNavbar = (): JSX.Element => {
     <AppGrid
       position="sticky"
       top={0}
-      zIndex="banner"
+      zIndex="docked"
       alignItems="center"
       bg="white"
       height="appNavbar"
