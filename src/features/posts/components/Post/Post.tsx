@@ -7,9 +7,10 @@ import { PostActions } from '../PostActions'
 
 export interface PostProps {
   post: RouterOutput['post']['byUser']['posts'][number]
+  hideActions?: boolean
 }
 
-export const Post = ({ post }: PostProps): JSX.Element => {
+export const Post = ({ post, hideActions }: PostProps): JSX.Element => {
   const relativeDate = useMemo(() => formatRelativeTime(post.createdAt), [post])
 
   return (
@@ -32,7 +33,7 @@ export const Post = ({ post }: PostProps): JSX.Element => {
           </Text>
         </Stack>
         <RichText defaultValue={post?.contentHtml} isReadOnly />
-        <PostActions post={post} />
+        {!hideActions && <PostActions post={post} />}
       </Stack>
     </Stack>
   )

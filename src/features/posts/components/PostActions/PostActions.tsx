@@ -1,9 +1,10 @@
 import { ButtonGroup } from '@chakra-ui/react'
 import { Button, BxsHeart, IconButton } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { BiHeart, BiLink, BiMessageRounded, BiSync } from 'react-icons/bi'
+import { BiHeart, BiLink, BiSync } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
 import { RouterOutput, trpc } from '~/utils/trpc'
+import { AddCommentAction } from './AddCommentAction'
 import { DeletePostAction } from './DeletePostAction'
 
 export interface PostActionsProps {
@@ -95,12 +96,7 @@ export const PostActions = ({ post }: PostActionsProps): JSX.Element => {
       <Button aria-label="Repost" leftIcon={<BiSync fontSize="1.25rem" />}>
         65
       </Button>
-      <Button
-        aria-label="Comment"
-        leftIcon={<BiMessageRounded fontSize="1.25rem" />}
-      >
-        {post._count.replies}
-      </Button>
+      <AddCommentAction post={post} />
       <IconButton
         aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}
