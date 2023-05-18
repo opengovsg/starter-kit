@@ -1,6 +1,4 @@
 import {
-  Box,
-  BoxProps,
   createStylesContext,
   forwardRef,
   Stack,

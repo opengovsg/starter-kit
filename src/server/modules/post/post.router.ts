@@ -1,16 +1,13 @@
-import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
   addPostSchema,
   byUserSchema,
   editPostSchema,
-  ListPostsInputSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
-import { processFeedbackItem } from './post.util'
 
 export const postRouter = router({
   likedByUser: publicProcedure
@@ -97,11 +94,7 @@ export const postRouter = router({
       select: defaultPostSelect,
       // get an extra item at the end which we'll use as next cursor
       take: limit + 1,
-      cursor: cursor
-        ? {
-            id: cursor,
-          }
-        : undefined,
+      cursor: cursor ? { id: cursor } : undefined,
       orderBy: {
         createdAt: input.order,
       },
@@ -202,53 +195,6 @@ export const postRouter = router({
       const limit = input.limit ?? 50
       const { cursor } = input
 
-      const getFilterWhereClause = (
-        filter: ListPostsInputSchema['filter']
-      ): Prisma.PostWhereInput => {
-        switch (filter) {
-          case 'all':
-            return {}
-          case 'unread':
-            return {
-              NOT: {
-                readBy: {
-                  some: {
-                    userId: ctx.session.user.id,
-                  },
-                },
-              },
-            }
-          case 'replied':
-            return {
-              replies: {
-                some: {},
-              },
-            }
-          case 'repliedByMe':
-            return {
-              replies: {
-                some: {
-                  authorId: ctx.session.user.id,
-                },
-              },
-            }
-          case 'unreplied':
-            return {
-              replies: {
-                none: {},
-              },
-            }
-          case 'unrepliedByMe':
-            return {
-              replies: {
-                none: {
-                  authorId: ctx.session.user.id,
-                },
-              },
-            }
-        }
-      }
-
       const items = await ctx.prisma.post.findMany({
         select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
@@ -262,7 +208,6 @@ export const postRouter = router({
           createdAt: input.order,
         },
         where: {
-          ...getFilterWhereClause(input.filter),
           parentPostId: null,
           deletedAt: null,
         },
@@ -276,12 +221,8 @@ export const postRouter = router({
         nextCursor = nextItem.id
       }
 
-      const processedItems = items
-        .map((item) => processFeedbackItem(item, ctx.session.user.id))
-        .reverse()
-
       return {
-        items: processedItems,
+        items,
         nextCursor,
       }
     }),
