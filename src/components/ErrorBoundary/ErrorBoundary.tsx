@@ -62,7 +62,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 // TODO: Make custom components for these
-function ErrorComponent({ code }: { code: TRPC_ERROR_CODE_KEY }) {
+function ErrorComponent({
+  code,
+}: {
+  code: Exclude<TRPC_ERROR_CODE_KEY, 'UNAUTHORIZED'>
+}) {
   switch (code) {
     case 'NOT_FOUND':
       return (
