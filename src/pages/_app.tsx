@@ -17,22 +17,14 @@ type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-const MyApp = (({
-  Component,
-  pageProps,
-  ...props
-}: AppPropsWithAuthAndLayout) => {
+const MyApp = ((props: AppPropsWithAuthAndLayout) => {
   return (
     // Must wrap Jotai's provider in SSR context, see https://jotai.org/docs/guides/nextjs#provider.
     <Provider>
       <ThemeProvider theme={theme}>
         <ErrorBoundary>
           <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
-            <ChildWithLayout
-              Component={Component}
-              pageProps={pageProps}
-              {...props}
-            />
+            <ChildWithLayout {...props} />
             {process.env.NODE_ENV !== 'production' && (
               <ReactQueryDevtools initialIsOpen={false} />
             )}
