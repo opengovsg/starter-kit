@@ -4,16 +4,16 @@ import { useRouter } from 'next/router'
 import { BiHeart, BiLink, BiMessageRounded, BiSync } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
 import { RouterOutput, trpc } from '~/utils/trpc'
-import { DeleteTweet } from './DeleteTweet'
+import { DeletePostAction } from './DeletePostAction'
 
-export interface TweetActionsProps {
-  tweet: RouterOutput['post']['byUser']['posts'][number]
+export interface PostActionsProps {
+  post: RouterOutput['post']['byUser']['posts'][number]
 }
 
-export const TweetActions = ({ tweet }: TweetActionsProps): JSX.Element => {
+export const PostActions = ({ post }: PostActionsProps): JSX.Element => {
   const { me } = useMe()
   const { query } = useRouter()
-  const isOwnTweet = me?.username === tweet.author.username
+  const isOwnPost = me?.username === post.author.username
 
   const utils = trpc.useContext()
 
@@ -28,7 +28,7 @@ export const TweetActions = ({ tweet }: TweetActionsProps): JSX.Element => {
           if (oldQueryData) {
             // Update toggle state on old query data
             const dataIndex = oldQueryData.posts.findIndex(
-              (item) => item.id === tweet.id
+              (item) => item.id === post.id
             )
             if (dataIndex >= 0) {
               const dataAtIndex = oldQueryData.posts[dataIndex]
@@ -66,7 +66,7 @@ export const TweetActions = ({ tweet }: TweetActionsProps): JSX.Element => {
   const handleLikeClick = () => {
     if (!me) return
     return toggleLikeMutation.mutate({
-      postId: tweet.id,
+      postId: post.id,
     })
   }
 
@@ -78,10 +78,10 @@ export const TweetActions = ({ tweet }: TweetActionsProps): JSX.Element => {
       justifyContent="space-between"
     >
       <Button
-        colorScheme={tweet.likedByMe ? 'main' : 'neutral'}
-        aria-label="Like tweet"
+        colorScheme={post.likedByMe ? 'main' : 'neutral'}
+        aria-label="Like post"
         leftIcon={
-          tweet.likedByMe ? (
+          post.likedByMe ? (
             <BxsHeart fontSize="1.25rem" />
           ) : (
             <BiHeart fontSize="1.25rem" />
@@ -90,22 +90,22 @@ export const TweetActions = ({ tweet }: TweetActionsProps): JSX.Element => {
         onClick={handleLikeClick}
         isLoading={toggleLikeMutation.isLoading}
       >
-        {tweet._count.likes}
+        {post._count.likes}
       </Button>
-      <Button aria-label="Retweet" leftIcon={<BiSync fontSize="1.25rem" />}>
+      <Button aria-label="Repost" leftIcon={<BiSync fontSize="1.25rem" />}>
         65
       </Button>
       <Button
         aria-label="Comment"
         leftIcon={<BiMessageRounded fontSize="1.25rem" />}
       >
-        {tweet._count.replies}
+        {post._count.replies}
       </Button>
       <IconButton
-        aria-label="Link to tweet"
+        aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}
       />
-      {isOwnTweet && <DeleteTweet />}
+      {isOwnPost && <DeletePostAction />}
     </ButtonGroup>
   )
 }

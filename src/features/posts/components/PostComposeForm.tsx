@@ -1,19 +1,16 @@
 import { Box, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
-import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
 import { Avatar } from '~/components/Avatar'
 import { RichText } from '~/components/RichText'
+import { useMe } from '~/features/me/api'
 import { useZodForm } from '~/lib/form'
 import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
-import { useMe } from '../me/api'
 
-export const TweetComposeForm = (): JSX.Element => {
+export const PostComposeForm = (): JSX.Element => {
   const utils = trpc.useContext()
   const { me } = useMe()
-
-  const router = useRouter()
 
   const mutation = trpc.post.add.useMutation({
     async onSuccess() {
@@ -26,8 +23,6 @@ export const TweetComposeForm = (): JSX.Element => {
     formState: { errors },
     handleSubmit,
     setValue,
-    watch,
-    register,
     control,
   } = useZodForm({
     schema: addPostSchema,
@@ -49,7 +44,7 @@ export const TweetComposeForm = (): JSX.Element => {
         py="2.5rem"
         px="3.5rem"
       >
-        <FormControl id="tweet" isRequired isInvalid={!!errors.contentHtml}>
+        <FormControl id="post" isRequired isInvalid={!!errors.contentHtml}>
           <Controller
             control={control}
             name="contentHtml"
@@ -72,7 +67,7 @@ export const TweetComposeForm = (): JSX.Element => {
           isLoading={mutation.isLoading}
           isFullWidth
         >
-          Tweet
+          Post
         </Button>
       </Stack>
     </Box>

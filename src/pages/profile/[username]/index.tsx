@@ -1,6 +1,6 @@
 import { Box, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { Tweet } from '~/features/tweet/components'
+import { Post } from '~/features/posts/components'
 import { NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
@@ -19,9 +19,9 @@ const Profile: NextPageWithLayout = () => {
   }
 
   return (
-    <Stack spacing={0} divider={<StackDivider />}>
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
       {data?.posts.map((p) => (
-        <Tweet key={p.id} tweet={p} />
+        <Post key={p.id} post={p} />
       ))}
     </Stack>
   )
