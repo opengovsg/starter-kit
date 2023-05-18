@@ -36,6 +36,7 @@ export const postRouter = router({
         deletedAt: null,
       },
     })
+
     let nextCursor: typeof cursor | undefined = undefined
     if (posts.length > limit) {
       // Remove the last item and use it as next cursor
@@ -45,11 +46,73 @@ export const postRouter = router({
       nextCursor = nextItem.id
     }
 
+    let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+      posts
+
+    if (ctx.session?.user?.id) {
+      // From posts, get whether current user liked each post
+      const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          postId: {
+            in: posts.map((post) => post.id),
+          },
+        },
+      })
+      const likedUserPosts = Object.fromEntries(
+        userLikedPosts.map((likedPost) => [likedPost.postId, true])
+      )
+      // Augment posts with whether current user liked each post
+      augmentedPosts = posts.map((post) => {
+        return {
+          ...post,
+          likedByMe: likedUserPosts[post.id],
+        }
+      })
+    }
+
     return {
-      posts,
+      posts: augmentedPosts,
       nextCursor,
     }
   }),
+  toggleLikePost: protectedProcedure
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ input: { postId }, ctx }) => {
+      return await ctx.prisma.$transaction(async (tx) => {
+        const currentLike = await tx.likedPosts.findFirst({
+          where: {
+            userId: ctx.session.user.id,
+            postId,
+          },
+        })
+        if (currentLike) {
+          await tx.likedPosts.delete({
+            where: {
+              postId_userId: {
+                userId: ctx.session.user.id,
+                postId,
+              },
+            },
+          })
+        } else {
+          return await tx.likedPosts.create({
+            data: {
+              user: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+              post: {
+                connect: {
+                  id: postId,
+                },
+              },
+            },
+          })
+        }
+      })
+    }),
   list: protectedProcedure
     .input(listPostsInputSchema)
     .query(async ({ input, ctx }) => {

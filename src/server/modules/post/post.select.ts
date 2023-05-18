@@ -28,6 +28,7 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   _count: {
     select: {
       replies: true,
+      likes: true,
     },
   },
 })
