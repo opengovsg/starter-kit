@@ -1,6 +1,6 @@
-import { Box, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { Box, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { Tweet } from '~/features/tweet/Tweet'
+import { Tweet } from '~/features/tweet/components'
 import { NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
@@ -10,9 +10,7 @@ const Profile: NextPageWithLayout = () => {
   const { query, isReady } = useRouter()
 
   const { data, isLoading } = trpc.post.byUser.useQuery(
-    {
-      username: String(query.username),
-    },
+    { username: String(query.username) },
     { enabled: isReady }
   )
 

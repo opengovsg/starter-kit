@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { RichText } from '~/components/RichText'
 import { formatRelativeTime } from '~/lib/dates'
 import { RouterOutput } from '~/utils/trpc'
+import { TweetActions } from './TweetActions'
 
 export interface TweetProps {
   tweet: RouterOutput['post']['byUser']['posts'][number]
@@ -34,6 +35,7 @@ export const Tweet = ({ tweet }: TweetProps): JSX.Element => {
           </Text>
         </Stack>
         <RichText defaultValue={tweet?.contentHtml} isReadOnly />
+        <TweetActions tweet={tweet} />
       </Stack>
     </Stack>
   )
