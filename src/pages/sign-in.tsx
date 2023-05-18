@@ -22,7 +22,7 @@ import { trpc } from '~/utils/trpc'
 const title = browserEnv.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
-  useShowSignInForm()
+  useRedirectIfSignedIn()
 
   return (
     <BackgroundBox>
@@ -68,7 +68,7 @@ const SignIn = () => {
 }
 
 // This hook is only meant to be used in `sign-in` page
-function useShowSignInForm() {
+function useRedirectIfSignedIn() {
   const router = useRouter()
 
   const callbackUrl =
