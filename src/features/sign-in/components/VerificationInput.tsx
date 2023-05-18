@@ -53,7 +53,6 @@ export const VerificationInput = (): JSX.Element => {
   })
 
   const handleVerifyOtp = handleSubmit(({ email, token }) => {
-    console.log('>>> submitting')
     return verifyOtpMutation.mutate(
       {
         email,
@@ -61,11 +60,7 @@ export const VerificationInput = (): JSX.Element => {
       },
       {
         onSuccess: () => {
-          console.log('>> testing')
           router.push(String(router.query[CALLBACK_URL_KEY] ?? '/dashboard'))
-        },
-        onError: (e) => {
-          console.log('>>> error', e)
         },
       }
     )
