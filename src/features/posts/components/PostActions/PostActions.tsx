@@ -1,6 +1,6 @@
 import { ButtonGroup } from '@chakra-ui/react'
 import { Button, BxsHeart, IconButton } from '@opengovsg/design-system-react'
-import { useState } from 'react'
+import { MouseEventHandler, useState } from 'react'
 import { BiHeart, BiLink, BiSync } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
 import { RouterOutput, trpc } from '~/utils/trpc'
@@ -50,7 +50,8 @@ export const PostActions = ({
     }))
   }
 
-  const handleLikeClick = () => {
+  const handleLikeClick: MouseEventHandler = (e) => {
+    e.stopPropagation()
     if (!me) return
     return toggleLikeMutation.mutate({
       postId: post.id,
@@ -65,6 +66,7 @@ export const PostActions = ({
       justifyContent="space-between"
     >
       <Button
+        data-value="post-action"
         colorScheme={post.likedByMe ? 'main' : 'neutral'}
         aria-label="Like post"
         leftIcon={
@@ -79,11 +81,16 @@ export const PostActions = ({
       >
         {post._count.likes}
       </Button>
-      <Button aria-label="Repost" leftIcon={<BiSync fontSize="1.25rem" />}>
+      <Button
+        data-value="post-action"
+        aria-label="Repost"
+        leftIcon={<BiSync fontSize="1.25rem" />}
+      >
         65
       </Button>
       <AddCommentAction post={post} onSuccess={incrementReplyCount} />
       <IconButton
+        data-value="post-action"
         aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}
       />

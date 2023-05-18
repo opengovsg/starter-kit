@@ -1,5 +1,6 @@
 import { useDisclosure } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
+import { MouseEventHandler } from 'react'
 import { BiMessageRounded } from 'react-icons/bi'
 import { RouterOutput } from '~/utils/trpc'
 import { AddCommentModal } from '../AddCommentModal'
@@ -14,10 +15,17 @@ export const AddCommentAction = ({
   onSuccess,
 }: AddCommentActionProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const handleOpenModal: MouseEventHandler = (e) => {
+    e.stopPropagation()
+    onOpen()
+  }
+
   return (
     <>
       <Button
-        onClick={onOpen}
+        data-value="post-action"
+        onClick={handleOpenModal}
         aria-label="Comment"
         leftIcon={<BiMessageRounded fontSize="1.25rem" />}
       >
