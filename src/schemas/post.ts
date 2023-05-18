@@ -10,6 +10,13 @@ export const editPostSchema = addPostSchema.extend({
   id: z.string(),
 })
 
+export const byUserSchema = z.object({
+  limit: z.number().min(1).max(100).nullish(),
+  cursor: z.string().nullish(),
+  username: z.string(),
+  order: z.enum(['asc', 'desc']).default('asc'),
+})
+
 export const listPostsInputSchema = z.object({
   limit: z.number().min(1).max(100).nullish(),
   cursor: z.string().nullish(),

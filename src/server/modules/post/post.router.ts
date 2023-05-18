@@ -3,15 +3,53 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
   addPostSchema,
+  byUserSchema,
   editPostSchema,
   ListPostsInputSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
-import { protectedProcedure, router } from '~/server/trpc'
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 import { processFeedbackItem } from './post.util'
 
 export const postRouter = router({
+  byUser: publicProcedure.input(byUserSchema).query(async ({ input, ctx }) => {
+    const limit = input.limit ?? 50
+    const { cursor } = input
+
+    const posts = await ctx.prisma.post.findMany({
+      select: defaultPostSelect,
+      // get an extra item at the end which we'll use as next cursor
+      take: limit + 1,
+      cursor: cursor
+        ? {
+            id: cursor,
+          }
+        : undefined,
+      orderBy: {
+        createdAt: input.order,
+      },
+      where: {
+        author: {
+          username: input.username,
+        },
+        deletedAt: null,
+      },
+    })
+    let nextCursor: typeof cursor | undefined = undefined
+    if (posts.length > limit) {
+      // Remove the last item and use it as next cursor
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const nextItem = posts.pop()!
+      nextCursor = nextItem.id
+    }
+
+    return {
+      posts,
+      nextCursor,
+    }
+  }),
   list: protectedProcedure
     .input(listPostsInputSchema)
     .query(async ({ input, ctx }) => {

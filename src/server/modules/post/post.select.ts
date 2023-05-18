@@ -12,6 +12,7 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
     select: {
       image: true,
       name: true,
+      username: true,
     },
   },
   readBy: {
@@ -47,6 +48,7 @@ export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
           id: true,
           name: true,
           image: true,
+          username: true,
         },
       },
     },

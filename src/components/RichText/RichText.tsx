@@ -26,13 +26,14 @@ const ReadonlyContainer = ({
 }: PropsWithChildren<BoxProps>) => {
   return (
     <Box
-      borderRadius="md"
-      bg="interaction.neutral-subtle.default"
-      borderWidth="1px"
-      borderColor="base.divider.medium"
-      px="1rem"
-      py="0.5rem"
       {...boxProps}
+      textStyle="body-2"
+      color="base.content.default"
+      sx={{
+        '.ProseMirror': {
+          minH: 'auto',
+        },
+      }}
     >
       {children}
     </Box>
