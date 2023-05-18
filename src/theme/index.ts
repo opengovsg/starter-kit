@@ -8,5 +8,8 @@ export const theme = extendTheme(ogpDsTheme, {
   components: {
     ...ogpDsTheme.components,
   },
+  sizes: {
+    appNavbar: '3.5rem',
+  },
   layerStyles,
 })

@@ -6,7 +6,7 @@ import { AppGrid } from '../AppGrid'
 
 export const AdminLayout: GetLayout = (page) => {
   return (
-    <Flex minH="$100vh" flexDir="column" bg="base.canvas.backdrop">
+    <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt">
       <AppNavbar />
       <AppGrid flex={1}>
         <DashSidebar />

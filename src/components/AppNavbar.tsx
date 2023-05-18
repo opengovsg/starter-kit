@@ -1,4 +1,4 @@
-import { Box, HStack } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import {
   AvatarMenu,
   AvatarMenuDivider,
@@ -21,27 +21,32 @@ export const AppNavbar = (): JSX.Element => {
 
   return (
     <AppGrid
+      position="sticky"
+      top={0}
+      zIndex="banner"
       alignItems="center"
-      py="0.75rem"
       bg="white"
+      height="appNavbar"
       borderBottomWidth="1px"
       borderColor="base.divider.medium"
     >
       <Link as={NextLink} href="/" px="1.5rem">
-        <Image src={ogpLogo} alt="OGP Logo" priority />
+        <Image height={24} src={ogpLogo} alt="OGP Logo" priority />
       </Link>
       <Box gridColumn={{ md: '4 / 10', lg: '5 / 9' }}>
-        <Searchbar isExpanded />
+        <Searchbar isExpanded size="xs" />
       </Box>
-      <HStack
+      <Box
+        justifySelf="flex-end"
+        px="1.5rem"
         gridColumnStart={{ base: 4, md: 12 }}
         textStyle="subhead-1"
-        spacing={{ base: '0.75rem', md: '1.5rem' }}
       >
         <AvatarMenu
           src={me?.image ?? undefined}
           name={me?.name ?? undefined}
           variant="subtle"
+          size="xs"
           bg="base.canvas.brand-subtle"
           menuListProps={{ maxWidth: '19rem' }}
         >
@@ -51,7 +56,7 @@ export const AppNavbar = (): JSX.Element => {
           <AvatarMenuDivider />
           <Menu.Item onClick={() => logout()}>Sign out</Menu.Item>
         </AvatarMenu>
-      </HStack>
+      </Box>
     </AppGrid>
   )
 }
