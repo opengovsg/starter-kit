@@ -7,11 +7,11 @@ import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
 import {
   FeedbackActionsModal,
   TeamFeedbackList,
+  DashboardFilterBar,
 } from '~/features/feedback/components'
 import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
-import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: counts, isLoading: unreadCountIsLoading } =
@@ -55,7 +55,7 @@ const Dashboard: NextPageWithLayout = () => {
         borderWidth="1px"
         borderColor="base.divider.medium"
       >
-        <TeamFeedbackFilterBar />
+        <DashboardFilterBar />
         <TeamFeedbackList />
       </Box>
     </Box>

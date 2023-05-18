@@ -1,12 +1,10 @@
 import {
-  Box,
-  MenuItemOption,
+  Menu,
   MenuList,
   MenuOptionGroup,
-  Menu,
+  MenuItemOption,
 } from '@chakra-ui/react'
 import { ChevronMenuButton } from '~/components/ChevronMenuButton'
-import { useFilterFeedback } from '../api/useFilterFeedback'
 
 interface FilterSelectProps {
   selection: {
@@ -17,7 +15,7 @@ interface FilterSelectProps {
   onChange: (value: string | string[]) => void
   isDisabled?: boolean
 }
-const FilterSelect = ({
+export const FilterSelect = ({
   selection,
   onChange,
   isDisabled,
@@ -45,30 +43,5 @@ const FilterSelect = ({
         </>
       )}
     </Menu>
-  )
-}
-
-export const TeamFeedbackFilterBar = (): JSX.Element => {
-  const { filter, order, handleFilterChange, handleOrderChange, isLoading } =
-    useFilterFeedback()
-
-  return (
-    <Box
-      px="2rem"
-      py="1.125rem"
-      borderBottomWidth="1px"
-      borderColor="base.divider.medium"
-    >
-      <FilterSelect
-        selection={filter}
-        isDisabled={isLoading}
-        onChange={handleFilterChange}
-      />
-      <FilterSelect
-        selection={order}
-        isDisabled={isLoading}
-        onChange={handleOrderChange}
-      />
-    </Box>
   )
 }
