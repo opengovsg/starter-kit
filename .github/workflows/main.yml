@@ -43,7 +43,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Start test containers
-        run: npm run setup
+        run: npm run setup:test
 
       - name: Build and test
         run: npm run build && npm run test-start && npm run test-dev
