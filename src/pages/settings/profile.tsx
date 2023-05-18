@@ -28,10 +28,7 @@ import { isEmpty } from 'lodash'
 import { BiAt } from 'react-icons/bi'
 import { z } from 'zod'
 import { BackBannerLink } from '~/components/BackBannerLink'
-import {
-  PROFILE_GRID_COLUMN,
-  PROFILE_GRID_TEMPLATE_COLUMN,
-} from '~/constants/layouts'
+import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 import { useMe } from '~/features/me/api'
 import { PROFILE } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
@@ -104,23 +101,23 @@ const Profile: NextPageWithLayout = () => {
   return (
     <Box w="100%">
       <AppGrid
-        templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
         py="1rem"
       >
         <BackBannerLink
-          gridColumn={PROFILE_GRID_COLUMN}
+          gridColumn={APP_GRID_COLUMN}
           href={`${PROFILE}/${me?.username}`}
         >
           Back to your profile
         </BackBannerLink>
       </AppGrid>
       <AppGrid
-        templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="white"
         py="1.5rem"
       >
-        <Stack flex={1} spacing="2rem" gridColumn={PROFILE_GRID_COLUMN}>
+        <Stack flex={1} spacing="2rem" gridColumn={APP_GRID_COLUMN}>
           <AvatarUpload url={me?.image} name={me?.name} />
           <FormControl>
             <FormLabel>Email</FormLabel>

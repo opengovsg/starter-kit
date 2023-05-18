@@ -1,9 +1,6 @@
 import { Box, Divider, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import {
-  PROFILE_GRID_COLUMN,
-  PROFILE_GRID_TEMPLATE_COLUMN,
-} from '~/constants/layouts'
+import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 import { ProfileDescription } from '~/features/profile/components/ProfileDescription'
 import { ProfileTabs } from '~/features/profile/components/ProfileTabs'
 import { NextPageWithLayout } from '~/lib/types'
@@ -18,24 +15,24 @@ const _ProfileLayout: NextPageWithLayout['getLayout'] = (page) => {
   return (
     <Flex w="100%" flexDir="column">
       <AppGrid
-        templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
       >
-        <Box gridColumn={PROFILE_GRID_COLUMN}>
+        <Box gridColumn={APP_GRID_COLUMN}>
           <ProfileDescription username={username} />
         </Box>
       </AppGrid>
       <AppGrid
         flex={1}
-        templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
         templateRows="min-content 1px auto"
         bg="white"
       >
-        <Box gridColumn={PROFILE_GRID_COLUMN}>
+        <Box gridColumn={APP_GRID_COLUMN}>
           <ProfileTabs username={username} />
         </Box>
         <Divider gridColumn="1/13" h="1px" />
-        <Box gridColumn={PROFILE_GRID_COLUMN}>{page}</Box>
+        <Box gridColumn={APP_GRID_COLUMN}>{page}</Box>
       </AppGrid>
     </Flex>
   )
