@@ -87,7 +87,7 @@ export const PostActions = ({
         aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}
       />
-      {isOwnPost && <DeletePostAction />}
+      {isOwnPost && <DeletePostAction postId={post.id} />}
     </ButtonGroup>
   )
 }
