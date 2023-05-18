@@ -21,22 +21,21 @@ import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 
 import {
-  Link,
-  useToast,
   FormLabel as DFormLabel,
+  useToast,
 } from '@opengovsg/design-system-react'
-import NextLink from 'next/link'
-import { BiAt, BiLeftArrowAlt } from 'react-icons/bi'
-import { PROFILE } from '~/lib/routes'
-import { AppGrid } from '~/templates/AppGrid'
-import { registerWithDebounce } from '~/utils/registerWithDebounce'
-import { z } from 'zod'
 import { isEmpty } from 'lodash'
-import { useMe } from '~/features/me/api'
+import { BiAt } from 'react-icons/bi'
+import { z } from 'zod'
+import { BackBannerLink } from '~/components/BackBannerLink'
 import {
   PROFILE_GRID_COLUMN,
   PROFILE_GRID_TEMPLATE_COLUMN,
 } from '~/constants/layouts'
+import { useMe } from '~/features/me/api'
+import { PROFILE } from '~/lib/routes'
+import { AppGrid } from '~/templates/AppGrid'
+import { registerWithDebounce } from '~/utils/registerWithDebounce'
 
 const Profile: NextPageWithLayout = () => {
   const { me } = useMe()
@@ -109,21 +108,12 @@ const Profile: NextPageWithLayout = () => {
         bg="base.canvas.brand-subtle"
         py="1rem"
       >
-        <Link
+        <BackBannerLink
           gridColumn={PROFILE_GRID_COLUMN}
-          size="sm"
-          variant="standalone"
-          as={NextLink}
           href={`${PROFILE}/${me?.username}`}
         >
-          <Icon
-            as={BiLeftArrowAlt}
-            aria-hidden
-            fontSize="1.25rem"
-            mr="0.25rem"
-          />
           Back to your profile
-        </Link>
+        </BackBannerLink>
       </AppGrid>
       <AppGrid
         templateColumns={PROFILE_GRID_TEMPLATE_COLUMN}
