@@ -1,6 +1,6 @@
 import { ButtonGroup } from '@chakra-ui/react'
 import { Button, BxsHeart, IconButton } from '@opengovsg/design-system-react'
-import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { BiHeart, BiLink, BiSync } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
 import { RouterOutput, trpc } from '~/utils/trpc'
@@ -11,58 +11,44 @@ export interface PostActionsProps {
   post: RouterOutput['post']['byUser']['posts'][number]
 }
 
-export const PostActions = ({ post }: PostActionsProps): JSX.Element => {
+export const PostActions = ({
+  post: postProp,
+}: PostActionsProps): JSX.Element => {
   const { me } = useMe()
-  const { query } = useRouter()
-  const isOwnPost = me?.username === post.author.username
 
-  const utils = trpc.useContext()
+  // Use local state to update the UI immediately on like/unlike
+  const [post, setPost] = useState(postProp)
+  const isOwnPost = me?.username === post.author.username
 
   const toggleLikeMutation = trpc.post.toggleLikePost.useMutation({
     onMutate: async () => {
-      // Cancel any outgoing refetches (so they don't overwrite(race condition) our optimistic update)
-      await utils.post.byUser.cancel()
-      const previousQueryData = utils.post.byUser.getData()
-      utils.post.byUser.setData(
-        { username: String(query.username) },
-        (oldQueryData) => {
-          if (oldQueryData) {
-            // Update toggle state on old query data
-            const dataIndex = oldQueryData.posts.findIndex(
-              (item) => item.id === post.id
-            )
-            if (dataIndex >= 0) {
-              const dataAtIndex = oldQueryData.posts[dataIndex]
-              if (!dataAtIndex) {
-                return
-              }
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              oldQueryData.posts[dataIndex]!.likedByMe = !dataAtIndex.likedByMe
-              // Update liked count
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              oldQueryData.posts[dataIndex]!._count.likes =
-                dataAtIndex.likedByMe
-                  ? dataAtIndex._count.likes + 1
-                  : dataAtIndex._count.likes - 1
-            }
-            return oldQueryData
-          }
-        }
-      )
+      const previousPost = post
+      const nextPost = post
+      nextPost.likedByMe = !post.likedByMe
+      nextPost._count.likes = post.likedByMe
+        ? post._count.likes + 1
+        : post._count.likes - 1
+      setPost(nextPost)
       // return will pass the function or the value to the onError third argument:
-      return () =>
-        utils.post.byUser.setData(
-          { username: String(query.username) },
-          previousQueryData
-        )
+      return previousPost
     },
-    onError: (error, variables, rollback) => {
+    onError: (error, variables, previousPost) => {
       //   If there is an errror, then we will rollback
-      if (rollback) {
-        rollback()
+      if (previousPost) {
+        setPost(previousPost)
       }
     },
   })
+
+  const incrementReplyCount = () => {
+    setPost((prevPost) => ({
+      ...prevPost,
+      _count: {
+        ...prevPost._count,
+        replies: prevPost._count.replies + 1,
+      },
+    }))
+  }
 
   const handleLikeClick = () => {
     if (!me) return
@@ -96,7 +82,7 @@ export const PostActions = ({ post }: PostActionsProps): JSX.Element => {
       <Button aria-label="Repost" leftIcon={<BiSync fontSize="1.25rem" />}>
         65
       </Button>
-      <AddCommentAction post={post} />
+      <AddCommentAction post={post} onSuccess={incrementReplyCount} />
       <IconButton
         aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}

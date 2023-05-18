@@ -6,10 +6,12 @@ import { AddCommentModal } from '../AddCommentModal'
 
 interface AddCommentActionProps {
   post: RouterOutput['post']['byUser']['posts'][number]
+  onSuccess?: () => void
 }
 
 export const AddCommentAction = ({
   post,
+  onSuccess,
 }: AddCommentActionProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
@@ -21,7 +23,12 @@ export const AddCommentAction = ({
       >
         {post._count.replies}
       </Button>
-      <AddCommentModal parentPost={post} isOpen={isOpen} onClose={onClose} />
+      <AddCommentModal
+        parentPost={post}
+        isOpen={isOpen}
+        onClose={onClose}
+        onSuccess={onSuccess}
+      />
     </>
   )
 }

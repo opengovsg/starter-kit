@@ -17,12 +17,14 @@ import { ComposeComment } from './ComposeComment'
 
 interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   parentPost: RouterOutput['post']['byUser']['posts'][number]
+  onSuccess?: () => void
 }
 
 export const AddCommentModal = ({
   isOpen,
   onClose,
   parentPost,
+  onSuccess,
 }: AddCommentModalProps) => {
   const toast = useToast({
     status: 'success',
@@ -38,26 +40,9 @@ export const AddCommentModal = ({
   const replyThreadMutation = trpc.thread.reply.useMutation({
     onSuccess: async () => {
       toast({ description: 'Reply posted' })
+      onSuccess?.()
       reset()
       onClose()
-      if (parentPost.author.username) {
-        utils.post.byUser.setData(
-          { username: parentPost.author.username },
-          (oldData) => {
-            if (oldData) {
-              // Update reply count of this specific post
-              const postIndex = oldData.posts.findIndex(
-                (post) => post.id === parentPost.id
-              )
-              if (postIndex >= 0) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                oldData.posts[postIndex]!._count.replies += 1
-              }
-              return oldData
-            }
-          }
-        )
-      }
       await utils.post.byId.invalidate({ id: parentPost.id })
     },
   })
