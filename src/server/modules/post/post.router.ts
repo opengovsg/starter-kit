@@ -13,6 +13,82 @@ import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 import { processFeedbackItem } from './post.util'
 
 export const postRouter = router({
+  likedByUser: publicProcedure
+    .input(byUserSchema)
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 50
+      const { cursor } = input
+
+      const likedPosts = await ctx.prisma.likedPosts.findMany({
+        where: {
+          user: {
+            username: input.username,
+          },
+        },
+      })
+      const posts = await ctx.prisma.post.findMany({
+        select: defaultPostSelect,
+        // get an extra item at the end which we'll use as next cursor
+        take: limit + 1,
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        orderBy: {
+          createdAt: input.order,
+        },
+        where: {
+          id: {
+            in: likedPosts.map((likedPost) => likedPost.postId),
+          },
+          deletedAt: null,
+        },
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (posts.length > limit) {
+        // Remove the last item and use it as next cursor
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const nextItem = posts.pop()!
+        nextCursor = nextItem.id
+      }
+
+      let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+        posts
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        // short circuit if already found before
+        const userLikedPosts =
+          ctx.session.user.username === input.username
+            ? likedPosts
+            : await ctx.prisma.likedPosts.findMany({
+                where: {
+                  userId: ctx.session.user.id,
+                  postId: {
+                    in: posts.map((post) => post.id),
+                  },
+                },
+              })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        augmentedPosts = posts.map((post) => {
+          return {
+            ...post,
+            likedByMe: likedUserPosts[post.id],
+          }
+        })
+      }
+
+      return {
+        posts: augmentedPosts,
+        nextCursor,
+      }
+    }),
   byUser: publicProcedure.input(byUserSchema).query(async ({ input, ctx }) => {
     const limit = input.limit ?? 50
     const { cursor } = input

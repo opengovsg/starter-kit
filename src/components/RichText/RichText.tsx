@@ -1,5 +1,5 @@
-import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { Box, BoxProps, Flex, FlexProps, forwardRef } from '@chakra-ui/react'
+import { memo, useEffect, useMemo, useState } from 'react'
 
 import { dataAttr } from '@chakra-ui/utils'
 import Link from '@tiptap/extension-link'
@@ -8,10 +8,10 @@ import StarterKit from '@tiptap/starter-kit'
 
 import { safeJsonParse } from '~/utils/safeJsonParse'
 
-import { MenuBar } from './RichTextMenu'
-import { TIP_TAP_STYLES } from './constants'
 import Placeholder from '@tiptap/extension-placeholder'
 import { merge } from 'lodash'
+import { TIP_TAP_STYLES } from './constants'
+import { MenuBar } from './RichTextMenu'
 
 interface TextAreaFieldProps extends Omit<FlexProps, 'value' | 'onChange'> {
   value?: string
