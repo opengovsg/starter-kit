@@ -9,5 +9,3 @@ export type NextPageWithLayout<
 > = NextPage<TProps, TInitialProps> & {
   getLayout?: GetLayout
 }
-
-export * from './trpc'

@@ -8,10 +8,6 @@ export const addPostSchema = z.object({
 
 export type AddPostSchema = z.infer<typeof addPostSchema>
 
-export const editPostSchema = addPostSchema.extend({
-  id: z.string(),
-})
-
 export const byUserSchema = z.object({
   limit: z.number().min(1).max(100).nullish(),
   cursor: z.string().nullish(),

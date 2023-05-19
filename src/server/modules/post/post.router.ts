@@ -3,7 +3,6 @@ import { z } from 'zod'
 import {
   addPostSchema,
   byUserSchema,
-  editPostSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
@@ -311,28 +310,6 @@ export const postRouter = router({
         select: defaultPostSelect,
       })
       return post
-    }),
-  edit: protectedProcedure
-    .input(editPostSchema)
-    .mutation(async ({ input: { id, ...data }, ctx }) => {
-      const postToEdit = await ctx.prisma.post.findUnique({
-        where: { id },
-        select: defaultPostSelect,
-      })
-      const isUserOwner = postToEdit?.authorId === ctx.session.user.id
-      if (!isUserOwner) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: `No post with id '${id}'`,
-        })
-      }
-
-      const updatedPost = await ctx.prisma.post.update({
-        where: { id },
-        data,
-        select: defaultPostSelect,
-      })
-      return updatedPost
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))

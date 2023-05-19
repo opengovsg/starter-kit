@@ -1,14 +1,6 @@
-import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next'
-import {
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-  NextApiHandler,
-} from 'next'
+import { withIronSessionSsr } from 'iron-session/next'
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 import { sessionOptions } from './auth'
-
-export function withSessionRoute(handler: NextApiHandler) {
-  return withIronSessionApiRoute(handler, sessionOptions)
-}
 
 // Theses types are compatible with InferGetStaticPropsType https://nextjs.org/docs/basic-features/data-fetching#typescript-use-getstaticprops
 export function withSessionSsr<

@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'url';
-import { configDefaults, defineConfig } from 'vitest/config';
+import { fileURLToPath } from 'url'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
@@ -9,4 +9,4 @@ export default defineConfig({
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
     },
   },
-});
+})
