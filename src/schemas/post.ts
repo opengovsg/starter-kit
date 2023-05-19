@@ -6,6 +6,8 @@ export const addPostSchema = z.object({
   contentHtml: z.string().min(1),
 })
 
+export type AddPostSchema = z.infer<typeof addPostSchema>
+
 export const editPostSchema = addPostSchema.extend({
   id: z.string(),
 })

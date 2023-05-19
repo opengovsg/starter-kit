@@ -1,5 +1,5 @@
 import { Stack, Text } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
+import { NewPostModalButton } from '~/features/posts/components/NewPostModalButton'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NewPostBannerProps {}
@@ -10,7 +10,7 @@ export const NewPostBanner = ({}: NewPostBannerProps): JSX.Element => {
       <Text as="h2" textStyle="h6">
         What’s on your mind?
       </Text>
-      <Button size="xs">New post</Button>
+      <NewPostModalButton />
     </Stack>
   )
 }

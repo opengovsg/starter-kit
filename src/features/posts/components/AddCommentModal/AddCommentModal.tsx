@@ -13,8 +13,8 @@ import { Button, useToast } from '@opengovsg/design-system-react'
 import { useZodForm } from '~/lib/form'
 import { addReplySchema } from '~/schemas/thread'
 import { RouterOutput, trpc } from '~/utils/trpc'
+import { ComposePost } from '../ComposePost'
 import { PostView } from '../Post/PostView'
-import { ComposeComment } from './ComposeComment'
 
 interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   parentPost: RouterOutput['post']['byUser']['posts'][number]
@@ -66,7 +66,7 @@ export const AddCommentModal = ({
               post={parentPost}
               hideActions
             />
-            <ComposeComment {...formMethods} />
+            <ComposePost {...formMethods} />
           </Stack>
         </ModalBody>
         <ModalFooter>

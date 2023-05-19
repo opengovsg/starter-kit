@@ -4,16 +4,17 @@ import { Controller, UseFormReturn } from 'react-hook-form'
 import { Avatar } from '~/components/Avatar'
 import { RichText } from '~/components/RichText'
 import { useMe } from '~/features/me/api'
+import { AddReplySchema } from '~/schemas/thread'
 
-export type ComposeCommentProps = UseFormReturn<
-  {
-    content: string
-    contentHtml: string
-  },
-  any
->
+export interface ComposePostProps
+  extends UseFormReturn<Omit<AddReplySchema, 'postId'>> {
+  placeholder?: string
+}
 
-export const ComposeComment = (props: ComposeCommentProps): JSX.Element => {
+export const ComposePost = ({
+  placeholder,
+  ...props
+}: ComposePostProps): JSX.Element => {
   const {
     control,
     setValue,
@@ -31,7 +32,7 @@ export const ComposeComment = (props: ComposeCommentProps): JSX.Element => {
           name="contentHtml"
           render={({ field: { onChange, ...field } }) => (
             <RichText
-              placeholder="Tip: Replying is caring"
+              placeholder={placeholder}
               {...field}
               onChange={(value, rawValue) => {
                 onChange(value)

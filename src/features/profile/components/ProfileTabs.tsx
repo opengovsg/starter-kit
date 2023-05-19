@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { NavigationTab, NavigationTabList } from '~/components/NavigationalTabs'
 import { useMe } from '~/features/me/api'
-import { NewPostModalButton } from './NewPostModalButton'
+import { NewPostModalButton } from '~/features/posts/components/NewPostModalButton'
 
 export interface ProfileTabsProps {
   username: string
