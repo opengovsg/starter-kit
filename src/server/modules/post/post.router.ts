@@ -85,6 +85,69 @@ export const postRouter = router({
         nextCursor,
       }
     }),
+  repliesByUser: publicProcedure
+    .input(byUserSchema)
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 50
+      const { cursor } = input
+
+      const posts = await ctx.prisma.post.findMany({
+        select: defaultPostSelect,
+        // get an extra item at the end which we'll use as next cursor
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: input.order,
+        },
+        where: {
+          parentPostId: {
+            not: null,
+          },
+          author: {
+            username: input.username,
+          },
+        },
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (posts.length > limit) {
+        // Remove the last item and use it as next cursor
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const nextItem = posts.pop()!
+        nextCursor = nextItem.id
+      }
+
+      let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+        posts
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            postId: {
+              in: posts.map((post) => post.id),
+            },
+          },
+        })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        augmentedPosts = posts.map((post) => {
+          return {
+            ...post,
+            likedByMe: likedUserPosts[post.id],
+          }
+        })
+      }
+
+      return {
+        posts: augmentedPosts,
+        nextCursor,
+      }
+    }),
   byUser: publicProcedure.input(byUserSchema).query(async ({ input, ctx }) => {
     const limit = input.limit ?? 50
     const { cursor } = input
