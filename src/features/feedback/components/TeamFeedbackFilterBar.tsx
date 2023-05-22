@@ -49,7 +49,7 @@ const FilterSelect = ({
 }
 
 export const TeamFeedbackFilterBar = (): JSX.Element => {
-  const { filter, order, handleFilterChange, handleOrderChange, isLoading } =
+  const { filter, order, handleFilterChange, handleOrderChange } =
     useFilterFeedback()
 
   return (
@@ -59,16 +59,8 @@ export const TeamFeedbackFilterBar = (): JSX.Element => {
       borderBottomWidth="1px"
       borderColor="base.divider.medium"
     >
-      <FilterSelect
-        selection={filter}
-        isDisabled={isLoading}
-        onChange={handleFilterChange}
-      />
-      <FilterSelect
-        selection={order}
-        isDisabled={isLoading}
-        onChange={handleOrderChange}
-      />
+      <FilterSelect selection={filter} onChange={handleFilterChange} />
+      <FilterSelect selection={order} onChange={handleOrderChange} />
     </Box>
   )
 }

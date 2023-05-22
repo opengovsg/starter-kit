@@ -1,21 +1,23 @@
-import { useState } from 'react'
+import { useCallback } from 'react'
+import { useSignInContext } from './SignInContext'
 import { EmailInput } from './Emailnput'
 import { VerificationInput } from './VerificationInput'
 
 export const SignInForm = () => {
-  const [email, setEmail] = useState('')
-  const [showVerificationStep, setShowVerificationStep] = useState(false)
+  const { showVerificationStep, setEmail, setShowVerificationStep } =
+    useSignInContext()
+
+  const handleOnSuccessEmail = useCallback(
+    (email: string) => {
+      setEmail(email)
+      setShowVerificationStep(true)
+    },
+    [setEmail, setShowVerificationStep]
+  )
 
   if (showVerificationStep) {
-    return <VerificationInput email={email} />
+    return <VerificationInput />
   }
 
-  return (
-    <EmailInput
-      onSuccess={(email) => {
-        setEmail(email)
-        setShowVerificationStep(true)
-      }}
-    />
-  )
+  return <EmailInput onSuccess={handleOnSuccessEmail} />
 }

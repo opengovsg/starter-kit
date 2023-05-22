@@ -2,12 +2,19 @@ import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { NextPageContext } from 'next'
-import Router from 'next/router'
 import superjson from 'superjson'
+import { TRPCWithErrorCodeSchema } from '~/utils/error'
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
+import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+
+const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
+  'UNAUTHORIZED',
+  'FORBIDDEN',
+  'NOT_FOUND',
+])
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -28,7 +35,11 @@ export interface SSRContext extends NextPageContext {
  * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
  * @link https://trpc.io/docs/react#3-create-trpc-hooks
  */
-export const trpc = createTRPCNext<AppRouter, SSRContext>({
+export const trpc = createTRPCNext<
+  AppRouter,
+  SSRContext,
+  'ExperimentalSuspense'
+>({
   config({ ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
@@ -79,14 +90,13 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
         defaultOptions: {
           queries: {
             staleTime: 1000 * 10, // 10 seconds
+            useErrorBoundary: true,
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
-                if (error.data?.code === 'FORBIDDEN') {
-                  Router.push('/forbidden')
-                }
+                const res = TRPCWithErrorCodeSchema.safeParse(error)
 
-                if (error.data?.code === 'UNAUTHORIZED') {
-                  Router.push('/sign-in')
+                if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
+                  return false
                 }
               }
               return failureCount < 3
