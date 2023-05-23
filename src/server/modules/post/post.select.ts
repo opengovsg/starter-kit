@@ -37,6 +37,9 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
 export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
   ...defaultPostSelect,
   replies: {
+    where: {
+      deletedAt: null,
+    },
     orderBy: {
       createdAt: 'asc',
     },
