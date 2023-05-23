@@ -28,6 +28,7 @@ model Post {
   contentHtml  String       @map("content_html") @db.Text
   authorId     String       @map("author_id")
   author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  images       String[]
   likes        LikedPosts[]
   readBy       ReadPosts[]
   // This features the self-relation Prisma concept, specifically a one-to-many self relation.
