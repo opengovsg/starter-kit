@@ -5,6 +5,7 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   title: true,
   content: true,
   contentHtml: true,
+  images: true,
   createdAt: true,
   updatedAt: true,
   authorId: true,

@@ -5,6 +5,7 @@ import {
   byUserSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
+import { env } from '~/server/env'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 
@@ -360,10 +361,15 @@ export const postRouter = router({
     }),
   add: protectedProcedure
     .input(addPostSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input: { imageKeys, ...input }, ctx }) => {
+      const images = imageKeys?.map(
+        (key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`
+      )
+
       const post = await ctx.prisma.post.create({
         data: {
           ...input,
+          images,
           author: {
             connect: {
               id: ctx.session.user.id,

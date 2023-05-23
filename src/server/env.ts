@@ -4,7 +4,9 @@ import { browserEnvSchema } from '~/browserEnv'
 const withR2Schema = z.object({
   R2_ACCESS_KEY_ID: z.string().optional(),
   R2_ACCOUNT_ID: z.string().optional(),
-  R2_AVATARS_BUCKET_NAME: z.string().optional(),
+  R2_BUCKET_NAME: z.string().optional(),
+  R2_AVATARS_DIRECTORY: z.string().optional(),
+  R2_IMAGES_DIRECTORY: z.string().optional(),
   R2_PUBLIC_HOSTNAME: z.string().optional(),
   R2_SECRET_ACCESS_KEY: z.string().optional(),
 })
@@ -25,7 +27,7 @@ const serverEnvSchema = z
           !!val.R2_ACCESS_KEY_ID &&
           !!val.R2_ACCOUNT_ID &&
           !!val.R2_SECRET_ACCESS_KEY &&
-          !!val.R2_AVATARS_BUCKET_NAME &&
+          !!val.R2_BUCKET_NAME &&
           !!val.R2_PUBLIC_HOSTNAME
         )
       }

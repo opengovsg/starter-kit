@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { addReplySchema } from '~/schemas/thread'
+import { env } from '~/server/env'
 import { protectedProcedure, router } from '~/server/trpc'
 import { defaultReplySelect } from './thread.select'
 
@@ -7,7 +8,7 @@ export const threadRouter = router({
   reply: protectedProcedure
     .input(addReplySchema)
     .mutation(async ({ input, ctx }) => {
-      const { postId, ...replyData } = input
+      const { postId, imageKeys, ...replyData } = input
       return await ctx.prisma.$transaction(async (tx) => {
         const parent = await tx.post.findFirst({
           where: {
@@ -21,9 +22,13 @@ export const threadRouter = router({
             message: `Post '${postId}' does not exist`,
           })
         }
+        const images = imageKeys?.map(
+          (key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`
+        )
         return await ctx.prisma.post.create({
           data: {
             ...replyData,
+            images,
             author: {
               connect: {
                 id: ctx.session.user.id,

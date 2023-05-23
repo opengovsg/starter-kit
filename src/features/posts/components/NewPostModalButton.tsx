@@ -13,6 +13,7 @@ import { Button, useToast } from '@opengovsg/design-system-react'
 import { ComposePost } from '~/features/posts/components/ComposePost'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
+import { useUploadImagesMutation } from '../api'
 import { clientAddPostSchema } from '../schemas/clientAddPostSchema'
 
 const NewPostModal = ({
@@ -23,6 +24,8 @@ const NewPostModal = ({
     status: 'success',
   })
   const utils = trpc.useContext()
+
+  const uploadImagesMutation = useUploadImagesMutation()
 
   const formMethods = useZodForm({
     schema: clientAddPostSchema,
@@ -38,9 +41,16 @@ const NewPostModal = ({
     },
   })
 
-  const handleSubmitPost = handleSubmit((values) =>
-    addPostMutation.mutate(values)
-  )
+  const handleSubmitPost = handleSubmit(async ({ images, ...rest }) => {
+    return uploadImagesMutation.mutate(images, {
+      onSuccess: (uploadedImageKeys) => {
+        return addPostMutation.mutate({ ...rest, imageKeys: uploadedImageKeys })
+      },
+    })
+  })
+
+  const areMutationsLoading =
+    addPostMutation.isLoading || uploadImagesMutation.isLoading
 
   const onClose = () => {
     reset()
@@ -61,14 +71,11 @@ const NewPostModal = ({
               colorScheme="neutral"
               variant="clear"
               onClick={onClose}
-              isDisabled={addPostMutation.isLoading}
+              isDisabled={areMutationsLoading}
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmitPost}
-              isLoading={addPostMutation.isLoading}
-            >
+            <Button onClick={handleSubmitPost} isLoading={areMutationsLoading}>
               Create post
             </Button>
           </ButtonGroup>

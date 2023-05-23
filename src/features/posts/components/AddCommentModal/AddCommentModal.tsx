@@ -11,8 +11,9 @@ import {
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { useZodForm } from '~/lib/form'
-import { addReplySchema } from '~/schemas/thread'
 import { RouterOutput, trpc } from '~/utils/trpc'
+import { useUploadImagesMutation } from '../../api'
+import { clientAddReplySchema } from '../../schemas/clientAddPostSchema'
 import { ComposePost } from '../ComposePost'
 import { PostView } from '../Post/PostView'
 
@@ -33,8 +34,10 @@ export const AddCommentModal = ({
 
   const utils = trpc.useContext()
 
+  const uploadImagesMutation = useUploadImagesMutation()
+
   const formMethods = useZodForm({
-    schema: addReplySchema.omit({ postId: true }),
+    schema: clientAddReplySchema,
   })
   const { handleSubmit, reset } = formMethods
 
@@ -48,9 +51,20 @@ export const AddCommentModal = ({
     },
   })
 
-  const handleSubmitReply = handleSubmit((values) => {
-    return replyThreadMutation.mutate({ ...values, postId: parentPost.id })
+  const handleSubmitReply = handleSubmit(async ({ images, ...rest }) => {
+    return uploadImagesMutation.mutate(images, {
+      onSuccess: (uploadedImageKeys) => {
+        return replyThreadMutation.mutate({
+          ...rest,
+          imageKeys: uploadedImageKeys,
+          postId: parentPost.id,
+        })
+      },
+    })
   })
+
+  const areMutationsLoading =
+    replyThreadMutation.isLoading || uploadImagesMutation.isLoading
 
   const onClose = () => {
     reset()
@@ -80,14 +94,11 @@ export const AddCommentModal = ({
               colorScheme="neutral"
               variant="clear"
               onClick={onClose}
-              isDisabled={replyThreadMutation.isLoading}
+              isDisabled={areMutationsLoading}
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmitReply}
-              isLoading={replyThreadMutation.isLoading}
-            >
+            <Button onClick={handleSubmitReply} isLoading={areMutationsLoading}>
               Reply to post
             </Button>
           </ButtonGroup>
