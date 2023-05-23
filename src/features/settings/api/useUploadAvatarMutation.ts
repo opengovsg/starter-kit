@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMe } from '~/features/me/api'
+import { AcceptedImageFileTypes, ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { trpc } from '~/utils/trpc'
 
 export const useUploadAvatarMutation = () => {
@@ -16,9 +17,14 @@ export const useUploadAvatarMutation = () => {
   return useMutation(
     async (image: File) => {
       if (!me?.id) throw new Error('No user found')
+      if (!ACCEPTED_FILE_TYPES.some((type) => type === image.type)) {
+        throw new Error(
+          `File type ${image.type} is not supported. Please upload an image.`
+        )
+      }
 
       const presign = await presignImageUploadMutation.mutateAsync({
-        fileContentType: image.type,
+        fileContentType: image.type as AcceptedImageFileTypes,
       })
       if (!presign) throw new Error('No presign generated')
 
