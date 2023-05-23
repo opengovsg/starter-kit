@@ -4,6 +4,7 @@ import { ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { browserEnv } from '~/browserEnv'
 import { Avatar } from '~/components/Avatar'
+import { ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
@@ -83,7 +84,7 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
           isDisabled={!CAN_UPLOAD || uploadAvatarMutation.isLoading}
           type="file"
           id="avatar-upload"
-          accept="image/*"
+          accept={ACCEPTED_FILE_TYPES.join(',')}
           onChange={handleUploadAvatar}
           hidden
         />

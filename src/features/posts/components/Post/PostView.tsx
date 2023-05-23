@@ -7,6 +7,7 @@ import { formatRelativeTime } from '~/lib/dates'
 import { PROFILE } from '~/lib/routes'
 import { RouterOutput } from '~/utils/trpc'
 import { PostActions } from '../PostActions'
+import { PostImages } from './PostImages'
 
 export interface PostProps {
   post: RouterOutput['post']['byUser']['posts'][number]
@@ -48,6 +49,7 @@ export const PostView = ({
           </Text>
         </Stack>
         <RichText defaultValue={post?.contentHtml} isReadOnly />
+        <PostImages images={post.images} />
         {!hideActions && <PostActions post={post} />}
       </Stack>
     </Stack>

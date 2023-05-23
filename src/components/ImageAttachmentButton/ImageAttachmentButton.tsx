@@ -8,6 +8,7 @@ import {
 import { Button } from '@opengovsg/design-system-react'
 import { BiImageAdd } from 'react-icons/bi'
 import { FileButton } from '~/components/FileButton'
+import { ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { AttachmentFileInfo } from './AttachmentFileInfo'
 import { ImageAttachmentButtonStylesProvider } from './ImageAttachmentButtonContext'
 
@@ -46,7 +47,7 @@ export const ImageAttachmentButton = forwardRef<
           append
           value={value}
           onChange={onChange}
-          accept="image/*"
+          accept={ACCEPTED_FILE_TYPES.join(',')}
         >
           {(fileButtonProps) => {
             return (
