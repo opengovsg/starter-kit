@@ -133,7 +133,7 @@ The `.env.example` file shows example environment variables based on the chosen 
 
 ### `.eslintrc.json`
 
-The `.eslintrc.json` file is used to configure ESLint. See [ESLint Docs](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) for more information.
+The `.eslintrc.cjs` file is used to configure ESLint. See [ESLint Docs](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) for more information.
 
 ### `next-env.d.ts`
 
