@@ -14,10 +14,15 @@ const Thread: NextPageWithLayout = () => {
   const router = useRouter()
   const postId = String(router.query.postId)
 
-  const { data, isLoading } = trpc.post.byId.useQuery(
+  const { data, isLoading, isError } = trpc.post.byId.useQuery(
     { id: postId },
     { enabled: router.isReady }
   )
+
+  if (isError) {
+    router.replace('/home')
+    return null
+  }
 
   if (isLoading || !data) {
     return <div>Loading...</div>
