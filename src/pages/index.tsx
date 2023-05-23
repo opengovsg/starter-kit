@@ -1,31 +1,24 @@
 import { Box } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useMe } from '~/features/me/api'
 import { HOME } from '~/lib/routes'
-
-import { withSessionSsr } from '~/lib/withSession'
 
 // TODO: Will be landing page in the future, now just a redirect to appropriate page.
 const Index = () => {
-  return <Box />
+  const { me, isLoading } = useMe()
+  const router = useRouter()
+
+  if (isLoading) {
+    return <Box>Loading....</Box>
+  }
+
+  if (!me) {
+    router.push('/sign-in')
+  } else {
+    router.push(HOME)
+  }
+
+  return <Box>Redirecting....</Box>
 }
-
-export const getServerSideProps = withSessionSsr(async ({ req }) => {
-  const user = req.session.user
-
-  if (user) {
-    return {
-      redirect: {
-        destination: HOME,
-      },
-      props: {},
-    }
-  }
-
-  return {
-    redirect: {
-      destination: '/sign-in',
-    },
-    props: {},
-  }
-})
 
 export default Index
