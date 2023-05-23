@@ -88,6 +88,10 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
                 if (error.data?.code === 'UNAUTHORIZED') {
                   Router.push('/sign-in')
                 }
+
+                if (error.data?.code === 'NOT_FOUND') {
+                  return false
+                }
               }
               return failureCount < 3
             },
