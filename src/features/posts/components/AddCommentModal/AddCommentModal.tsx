@@ -23,7 +23,7 @@ interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
 
 export const AddCommentModal = ({
   isOpen,
-  onClose,
+  onClose: onCloseProp,
   parentPost,
   onSuccess,
 }: AddCommentModalProps) => {
@@ -51,6 +51,11 @@ export const AddCommentModal = ({
   const handleSubmitReply = handleSubmit((values) => {
     return replyThreadMutation.mutate({ ...values, postId: parentPost.id })
   })
+
+  const onClose = () => {
+    reset()
+    onCloseProp?.()
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

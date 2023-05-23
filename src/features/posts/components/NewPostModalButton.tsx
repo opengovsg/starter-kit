@@ -12,11 +12,11 @@ import {
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { ComposePost } from '~/features/posts/components/ComposePost'
 import { useZodForm } from '~/lib/form'
-import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
+import { clientAddPostSchema } from '../schemas/clientAddPostSchema'
 
 const NewPostModal = ({
-  onClose,
+  onClose: onCloseProp,
   isOpen,
 }: Pick<ModalProps, 'isOpen' | 'onClose'>) => {
   const toast = useToast({
@@ -25,7 +25,7 @@ const NewPostModal = ({
   const utils = trpc.useContext()
 
   const formMethods = useZodForm({
-    schema: addPostSchema,
+    schema: clientAddPostSchema,
   })
   const { handleSubmit, reset } = formMethods
 
@@ -41,6 +41,11 @@ const NewPostModal = ({
   const handleSubmitPost = handleSubmit((values) =>
     addPostMutation.mutate(values)
   )
+
+  const onClose = () => {
+    reset()
+    onCloseProp?.()
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
