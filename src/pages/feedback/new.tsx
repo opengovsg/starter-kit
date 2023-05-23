@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
 import { FeedbackNavbar } from '~/features/feedback/components'
 import { useZodForm } from '~/lib/form'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 

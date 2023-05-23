@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react'
 import {
-  SystemStyleObject,
+  type SystemStyleObject,
   useControllableState,
   useDisclosure,
 } from '@chakra-ui/react'

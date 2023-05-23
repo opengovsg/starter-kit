@@ -1,8 +1,8 @@
-import { FC, useState } from 'react'
+import { type FC, useState } from 'react'
 
-import Image, { ImageProps } from 'next/image'
+import Image, { type ImageProps } from 'next/image'
 
-import { Skeleton, Box, BoxProps } from '@chakra-ui/react'
+import { Skeleton, Box, type BoxProps } from '@chakra-ui/react'
 
 type Props = Omit<ImageProps, 'width' | 'height'> &
   BoxProps & {

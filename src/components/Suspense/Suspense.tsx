@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import {
-  ComponentProps,
+  type ComponentProps,
   // eslint-disable-next-line no-restricted-imports
   Suspense as ReactSuspense,
   useEffect,

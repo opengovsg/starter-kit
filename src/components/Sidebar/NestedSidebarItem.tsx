@@ -1,11 +1,11 @@
-import { FC, PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import {
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  AccordionProps,
+  type AccordionProps,
   Flex,
   Text,
   VStack,

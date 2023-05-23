@@ -1,10 +1,10 @@
-import { Prisma } from '@prisma/client'
+import { type Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
   addPostSchema,
   editPostSchema,
-  ListPostsInputSchema,
+  type ListPostsInputSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
 import { protectedProcedure, router } from '~/server/trpc'

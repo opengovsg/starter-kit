@@ -1,8 +1,8 @@
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import {
   Button,
   Icon,
-  SystemStyleObject,
+  type SystemStyleObject,
   Text,
   usePrefersReducedMotion,
 } from '@chakra-ui/react'

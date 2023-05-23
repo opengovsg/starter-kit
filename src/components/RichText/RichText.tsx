@@ -1,5 +1,11 @@
-import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react'
-import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/react'
+import {
+  memo,
+  type PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import { Box, type BoxProps, Flex, type FlexProps } from '@chakra-ui/react'
 
 import { dataAttr } from '@chakra-ui/utils'
 import Link from '@tiptap/extension-link'

@@ -1,5 +1,5 @@
-import { User } from '@prisma/client'
-import { defaultUserSelect } from '~/server/modules/user/user.select'
+import { type User } from '@prisma/client'
+import { type defaultUserSelect } from '~/server/modules/user/user.select'
 
 declare module 'iron-session' {
   interface IronSessionData {

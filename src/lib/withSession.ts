@@ -1,8 +1,8 @@
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next'
 import {
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-  NextApiHandler,
+  type GetServerSidePropsContext,
+  type GetServerSidePropsResult,
+  type NextApiHandler,
 } from 'next'
 import { sessionOptions } from './auth'
 

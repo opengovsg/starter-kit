@@ -8,7 +8,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
-import { ChangeEventHandler, useMemo, useState } from 'react'
+import { type ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { browserEnv } from '~/browserEnv'
 import { useUploadAvatarMutation } from '../api'

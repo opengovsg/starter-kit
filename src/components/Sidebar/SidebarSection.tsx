@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react'
-import { StackProps, VStack } from '@chakra-ui/react'
+import { type FC, type PropsWithChildren } from 'react'
+import { type StackProps, VStack } from '@chakra-ui/react'
 import { merge } from 'lodash'
 
 import { useSidebarContext } from './SidebarContext'
