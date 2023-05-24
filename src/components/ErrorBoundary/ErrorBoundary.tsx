@@ -50,8 +50,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         const callbackUrl = params.get('callbackUrl')
 
         window.location.href = !!callbackUrl
-          ? `sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
-          : `sign-in`
+          ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
+          : `/sign-in`
 
         return
       }
