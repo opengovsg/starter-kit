@@ -9,6 +9,8 @@ This is a general overview of the project structure. Further down, you will find
 ├─ prisma
 │  └─ schema.prisma
 ├─ src
+│  ├─ browserEnv.mjs
+│  ├─ env.mjs
 │  ├─ pages
 │  │  ├─ _app.tsx
 │  │  ├─ 404.tsx
@@ -19,7 +21,6 @@ This is a general overview of the project structure. Further down, you will find
 │  ├─ lib
 │  ├─ schemas
 │  ├─ server
-│  │  ├─ env.ts
 │  │  ├─ prisma.ts
 │  │  ├─ context.ts
 │  │  ├─ trpc.ts
@@ -102,11 +103,6 @@ The `trpc.ts` file is the main configuration file for your tRPC back-end. In her
 #### `src/server/context.ts`
 
 The context used in tRPC requests is defined in this file. See [tRPC usage](usage/trpc.md#-srcservercontextts) for more information.
-
-#### `src/server/env.ts`
-
-Used for server-only environment variable validation and type definitions - see [Environment Variables](usage/env-variables.md).
-
 ### `src/theme`
 
 The `theme` folder contains the theme configuration for the application client, using [`@opengovsg/design-system-react`](https://www.npmjs.com/package/@opengovsg/design-system-react). See [Application Theme](usage/application-theme.md) for more information.
@@ -119,9 +115,12 @@ The `utils` folder is used to store commonly re-used utility functions.
 
 The `trpc.ts` file is the front-end entrypoint to tRPC. See [tRPC usage](usage/trpc.md#-srcutilstrpcts) for more information.
 
-### `src/browserEnv.ts`
+### `src/env.mjs`
 
-The `browserEnv.ts` file is used to expose environment variables to the client. See [Environment Variables](usage/env-variables.md) for more information.
+Used for server-only environment variable validation and type definitions - see [Environment Variables](usage/env-variables.md).
+### `src/browserEnv.mjs`
+
+The `browserEnv.mjs` file is used to expose environment variables to the client. See [Environment Variables](usage/env-variables.md) for more information.
 
 ### `.env`
 
