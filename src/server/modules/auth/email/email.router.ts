@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { publicProcedure, router } from '~/server/trpc'
-import { env } from '~/server/env'
 import { sendMail } from '~/lib/mail'
 import { getBaseUrl } from '~/utils/getBaseUrl'
 import { defaultUserSelect } from '~/server/modules/user/user.select'
@@ -9,6 +8,7 @@ import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
+import { env } from '~/env.mjs'
 
 export const emailSessionRouter = router({
   // Generate OTP.

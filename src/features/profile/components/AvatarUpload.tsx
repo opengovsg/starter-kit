@@ -10,7 +10,7 @@ import {
 import { Input, useToast } from '@opengovsg/design-system-react'
 import { type ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
-import { browserEnv } from '~/browserEnv'
+import { browserEnv } from '~/browserEnv.mjs'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {

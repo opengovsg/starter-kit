@@ -2,7 +2,7 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import('./src/env.mjs')
+await import('./src/env/env.mjs')
 
 /**
  * @link https://nextjs.org/docs/api-reference/next.config.js/introduction

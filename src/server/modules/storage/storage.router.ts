@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { generateSignedPutUrl } from '~/lib/r2'
-import { env } from '~/server/env'
+import { env } from '~/env.mjs'
 import { protectedProcedure, router } from '~/server/trpc'
 
 export const storageRouter = router({

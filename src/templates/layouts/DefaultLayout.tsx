@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { type ReactNode } from 'react'
-import { browserEnv } from '~/browserEnv'
+import { browserEnv } from '~/browserEnv.mjs'
 
 type DefaultLayoutProps = { children: ReactNode }
 
