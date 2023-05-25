@@ -38,7 +38,7 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
       throw new Error('You must select an image to upload.')
     }
 
-    return uploadAvatarMutation.mutateAsync(file, {
+    return uploadAvatarMutation.mutate(file, {
       onSuccess: async () => {
         toast({
           description: 'Avatar uploaded successfully.',
