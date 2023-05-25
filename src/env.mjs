@@ -90,11 +90,11 @@ const processEnv = {
 
 // Don't touch the part below
 // --------------------------
-
 /** @typedef {z.input<typeof server>} MergedInput */
 /** @typedef {z.infer<typeof server>} MergedOutput */
 /** @typedef {z.SafeParseReturnType<MergedInput, MergedOutput>} MergedSafeParseReturn */
 
+// @ts-expect-error Types are wonky from refinement
 let env = /** @type {MergedOutput} */ (process.env)
 
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
