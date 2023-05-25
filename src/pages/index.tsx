@@ -7,7 +7,7 @@ const Index = () => {
   return <Box />
 }
 
-export const getServerSideProps = withSessionSsr(async ({ req }) => {
+export const getServerSideProps = withSessionSsr(({ req }) => {
   const user = req.session.user
   if (user) {
     return {

@@ -20,9 +20,8 @@ import { updateMeSchema } from '~/schemas/me'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 
-import Image from 'next/image'
-import profileAuntySvg from '~/features/profile/assets/profile-aunty.svg'
 import { useToast } from '@opengovsg/design-system-react'
+import { ProfileAuntySvgr } from '~/features/profile/components/ProfileAuntySvgr'
 
 const Profile: NextPageWithLayout = () => {
   const { user: me } = useUser()
@@ -54,8 +53,8 @@ const Profile: NextPageWithLayout = () => {
     }, [me]),
   })
 
-  const handleProfileUpdate = handleSubmit(async (values) => {
-    return mutation.mutateAsync(values)
+  const handleProfileUpdate = handleSubmit((values) => {
+    return mutation.mutate(values)
   })
 
   return (
@@ -64,13 +63,7 @@ const Profile: NextPageWithLayout = () => {
         <Text as="h1" textStyle="h4" mr="-0.5rem">
           User profile
         </Text>
-        <Image
-          height={72}
-          priority
-          src={profileAuntySvg}
-          aria-hidden
-          alt="Profile aunty"
-        />
+        <ProfileAuntySvgr aria-hidden />
       </Flex>
       <Stack
         bg="white"
