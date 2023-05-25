@@ -3,7 +3,7 @@ import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { noop } from 'lodash'
 import { useRouter } from 'next/router'
-import { browserEnv } from '~/browserEnv.mjs'
+import { env } from '~/env.mjs'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
 import Suspense from '~/components/Suspense/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
@@ -19,7 +19,7 @@ import {
 import { SignInContextProvider } from '~/features/sign-in/components/SignInContext'
 import { trpc } from '~/utils/trpc'
 
-const title = browserEnv.NEXT_PUBLIC_APP_NAME
+const title = env.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
   useRedirectIfSignedIn()

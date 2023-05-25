@@ -9,7 +9,6 @@ This is a general overview of the project structure. Further down, you will find
 ├─ prisma
 │  └─ schema.prisma
 ├─ src
-│  ├─ browserEnv.mjs
 │  ├─ env.mjs
 │  ├─ pages
 │  │  ├─ _app.tsx
@@ -117,10 +116,7 @@ The `trpc.ts` file is the front-end entrypoint to tRPC. See [tRPC usage](usage/t
 
 ### `src/env.mjs`
 
-Used for server-only environment variable validation and type definitions - see [Environment Variables](usage/env-variables.md).
-### `src/browserEnv.mjs`
-
-The `browserEnv.mjs` file is used to expose environment variables to the client. See [Environment Variables](usage/env-variables.md) for more information.
+Used for environment variable validation and type definitions - see [Environment Variables](usage/env-variables.md).
 
 ### `.env`
 

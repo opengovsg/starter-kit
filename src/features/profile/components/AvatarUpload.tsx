@@ -10,7 +10,7 @@ import {
 import { Input, useToast } from '@opengovsg/design-system-react'
 import { type ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
-import { browserEnv } from '~/browserEnv.mjs'
+import { env } from '~/env.mjs'
 import { useUploadAvatarMutation } from '../api'
 
 interface AvatarUploadProps {
@@ -18,7 +18,7 @@ interface AvatarUploadProps {
   url?: string | null
 }
 
-const CAN_UPLOAD = !!browserEnv.NEXT_PUBLIC_ENABLE_STORAGE
+const CAN_UPLOAD = !!env.NEXT_PUBLIC_ENABLE_STORAGE
 
 export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
   // Will load this over `url` if provided for UX.
