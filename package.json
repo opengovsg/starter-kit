@@ -52,7 +52,7 @@
     "@trpc/next": "^10.19.1",
     "@trpc/react-query": "^10.19.1",
     "@trpc/server": "^10.19.1",
-    "@types/validator": "^13.7.14",
+    "@types/validator": "^13.7.17",
     "date-fns": "^2.29.3",
     "iron-session": "^6.3.1",
     "jotai": "^2.0.4",
