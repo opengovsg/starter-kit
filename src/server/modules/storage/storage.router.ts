@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { generateSignedPutUrl } from '~/lib/r2'
-import { env } from '~/server/env'
+import { env } from '~/env.mjs'
 import { protectedProcedure, router } from '~/server/trpc'
+import { TRPCError } from '@trpc/server'
 
 export const storageRouter = router({
   presignAvatar: protectedProcedure
@@ -19,13 +20,17 @@ export const storageRouter = router({
         .or(z.null())
     )
     .mutation(async ({ ctx, input: { fileContentType } }) => {
-      if (!env.NEXT_PUBLIC_ENABLE_STORAGE) return null
+      if (!env.NEXT_PUBLIC_ENABLE_STORAGE || !env.R2_AVATARS_BUCKET_NAME) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Avatar upload feature is not enabled',
+        })
+      }
       const imageKey = `${ctx.session.user.id}/avatar-${Date.now()}`
 
       return {
         url: await generateSignedPutUrl({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          Bucket: env.R2_AVATARS_BUCKET_NAME!,
+          Bucket: env.R2_AVATARS_BUCKET_NAME,
           Key: imageKey,
           ACL: 'public-read',
           ContentType: fileContentType,

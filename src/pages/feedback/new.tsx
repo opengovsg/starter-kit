@@ -13,18 +13,19 @@ import {
   FormErrorMessage,
   useToast,
 } from '@opengovsg/design-system-react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Controller } from 'react-hook-form'
-import { FeedbackNavbar } from '~/features/feedback/components'
+import {
+  FeedbackNavbar,
+  FeedbackUncleSvgr,
+} from '~/features/feedback/components'
 import { useZodForm } from '~/lib/form'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 import { addPostSchema } from '~/schemas/post'
 import { trpc } from '~/utils/trpc'
 
 import { RichText } from '~/components/RichText'
 import { FEEDBACK } from '~/constants/routes'
-import feedbackUncleSvg from '~/features/feedback/assets/feedback-uncle.svg'
 
 const PostFeedbackPage: NextPageWithLayout = () => {
   const utils = trpc.useContext()
@@ -69,7 +70,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
               Share your concerns and ideas directly with your organization.
             </Text>
           </VStack>
-          <Image src={feedbackUncleSvg} aria-hidden alt="Feedback uncle" />
+          <FeedbackUncleSvgr aria-hidden />
         </HStack>
         <Stack
           spacing="2rem"

@@ -1,4 +1,4 @@
-import { Grid, GridProps } from '@chakra-ui/react'
+import { Grid, type GridProps } from '@chakra-ui/react'
 
 /**
  * Component that controls the various grid areas according to the app's

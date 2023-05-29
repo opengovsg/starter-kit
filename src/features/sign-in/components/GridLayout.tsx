@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react'
-import { Flex, GridItem, GridProps } from '@chakra-ui/react'
+import { type FC, type PropsWithChildren } from 'react'
+import { Flex, GridItem, type GridProps } from '@chakra-ui/react'
 
 import { AppGrid } from '~/templates/AppGrid'
 

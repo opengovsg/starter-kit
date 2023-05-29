@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react'
-import { Flex, FlexProps, useMultiStyleConfig } from '@chakra-ui/react'
+import { type FC, type PropsWithChildren } from 'react'
+import { Flex, type FlexProps, useMultiStyleConfig } from '@chakra-ui/react'
 
 import { SidebarProvider } from './SidebarContext'
 import { SidebarStylesProvider } from './SidebarStylesContext'

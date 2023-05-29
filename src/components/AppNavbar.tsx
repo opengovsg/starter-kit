@@ -9,7 +9,6 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-import ogpLogo from '~/assets/ogp-logo.svg'
 import { useUser } from '~/features/profile/api'
 
 export const AppNavbar = (): JSX.Element => {
@@ -28,7 +27,13 @@ export const AppNavbar = (): JSX.Element => {
         borderColor="base.divider.medium"
       >
         <Link as={NextLink} href="/">
-          <Image src={ogpLogo} alt="OGP Logo" priority />
+          <Image
+            src="/assets/ogp-logo-full.svg"
+            width={233}
+            height={12}
+            alt="OGP Logo"
+            priority
+          />
         </Link>
         <HStack
           textStyle="subhead-1"

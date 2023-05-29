@@ -1,6 +1,6 @@
 import { Breadcrumb, Flex } from '@chakra-ui/react'
 
-import { Crumb, CrumbProps } from '~/components/Breadcrumb'
+import { Crumb, type CrumbProps } from '~/components/Breadcrumb'
 
 const DEFAULT_FEEDBACK_CRUMBS: CrumbProps[] = [
   {

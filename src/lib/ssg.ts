@@ -1,5 +1,5 @@
 import { createServerSideHelpers } from '@trpc/react-query/server'
-import { IronSession } from 'iron-session'
+import { type IronSession } from 'iron-session'
 import SuperJSON from 'superjson'
 import { createContext } from '~/server/context'
 import { appRouter } from '~/server/modules/_app'

@@ -2,9 +2,9 @@ import { MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { IconButton, Menu } from '@opengovsg/design-system-react'
 import { useSetAtom } from 'jotai'
 import { BiDotsHorizontal } from 'react-icons/bi'
-import { RouterOutput } from '~/utils/trpc'
+import { type RouterOutput } from '~/utils/trpc'
 import { actionStateAtom } from '../api/actionState'
-import { FeedbackRole } from '../api/types'
+import { type FeedbackRole } from '../api/types'
 
 interface FeedbackRowMenuProps {
   role: FeedbackRole

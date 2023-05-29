@@ -1,8 +1,11 @@
 import { Box } from '@chakra-ui/react'
 import { TRPCClientError } from '@trpc/client'
-import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import { Component } from 'react'
-import { ErrorBoundaryProps, ErrorBoundaryState } from './ErrorBoundary.types'
+import {
+  type ErrorBoundaryProps,
+  type ErrorBoundaryState,
+} from './ErrorBoundary.types'
 import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 import { CALLBACK_URL_KEY } from '~/constants/params'

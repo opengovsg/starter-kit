@@ -1,7 +1,7 @@
 import { Avatar, Box, Flex, Grid, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import { FEEDBACK } from '~/constants/routes'
-import { RouterOutput } from '~/utils/trpc'
+import { type RouterOutput } from '~/utils/trpc'
 import { FeedbackRowMenu } from './FeedbackRowMenu'
 
 interface TeamFeedbackRowProps {

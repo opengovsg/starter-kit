@@ -1,7 +1,7 @@
-import { MenuButton, MenuButtonProps } from '@chakra-ui/react'
+import { MenuButton, type MenuButtonProps } from '@chakra-ui/react'
 import {
   Button,
-  ButtonProps,
+  type ButtonProps,
   BxChevronDown,
   BxChevronUp,
 } from '@opengovsg/design-system-react'

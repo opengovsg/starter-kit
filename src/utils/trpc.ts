@@ -1,14 +1,14 @@
 import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
-import { NextPageContext } from 'next'
+import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
+import { type NextPageContext } from 'next'
 import superjson from 'superjson'
 import { TRPCWithErrorCodeSchema } from '~/utils/error'
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
-import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',

@@ -4,7 +4,7 @@ import 'inter-ui/inter.css' // Strongly recommended.
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import type { AppProps, AppType } from 'next/app'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
