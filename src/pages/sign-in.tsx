@@ -1,12 +1,12 @@
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 
-import { Button, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { noop } from 'lodash'
 import { useRouter } from 'next/router'
-import { env } from '~/env.mjs'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
 import Suspense from '~/components/Suspense/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
+import { env } from '~/env.mjs'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -14,6 +14,7 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
+  SgidLoginButton,
   SignInForm,
 } from '~/features/sign-in/components'
 import { SignInContextProvider } from '~/features/sign-in/components/SignInContext'
@@ -22,18 +23,7 @@ import { trpc } from '~/utils/trpc'
 const title = env.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
-  const router = useRouter()
   useRedirectIfSignedIn()
-
-  const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
-    onSuccess: ({ redirectUrl }) => {
-      router.push(redirectUrl)
-    },
-  })
-
-  const handleSgidLogin = () => {
-    return sgidLoginMutation.mutate({})
-  }
 
   return (
     <BackgroundBox>
@@ -61,13 +51,6 @@ const SignIn = () => {
               <SignInContextProvider>
                 <Suspense fallback={<Skeleton w="100vw" h="100vh" />}>
                   <SignInForm />
-                  <Button
-                    isLoading={sgidLoginMutation.isLoading}
-                    onClick={handleSgidLogin}
-                    w="100%"
-                  >
-                    Login with Singpass App
-                  </Button>
                 </Suspense>
               </SignInContextProvider>
             </Flex>

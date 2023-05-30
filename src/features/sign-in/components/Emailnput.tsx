@@ -1,9 +1,10 @@
-import { FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input, Stack, Text } from '@chakra-ui/react'
 import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
 import { isOgpEmail } from '~/utils/auth'
 import { trpc } from '~/utils/trpc'
+import { SgidLoginButton } from './SgidLoginButton'
 
 interface EmailInputProps {
   onSuccess: (email: string) => void
@@ -53,9 +54,13 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={loginMutation.isLoading} mt={4}>
-        Get OTP
-      </Button>
+      <Stack direction="row" align="center" mt="1rem">
+        <Button type="submit" isLoading={loginMutation.isLoading}>
+          Get OTP
+        </Button>
+        <Text>or</Text>
+        <SgidLoginButton />
+      </Stack>
     </form>
   )
 }
