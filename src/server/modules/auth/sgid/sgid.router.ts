@@ -8,6 +8,7 @@ import { sgid } from '~/lib/sgid'
 import { publicProcedure, router } from '~/server/trpc'
 import { getUserInfo, type SgidUserInfo } from './sgid.utils'
 import { defaultUserSelect } from '../../user/user.select'
+import { env } from '~/env.mjs'
 
 const sgidCallbackStateSchema = z
   .custom<string>((data) => {
@@ -33,6 +34,12 @@ export const sgidRouter = router({
       })
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
+      if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'SGID is not enabled',
+        })
+      }
       if (!ctx.res || !ctx.req || !ctx.session) {
         // Redirect back to sign in page.
         throw new TRPCError({
@@ -83,6 +90,12 @@ export const sgidRouter = router({
     )
     .output(z.unknown())
     .query(async ({ ctx, input: { state, code } }) => {
+      if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'SGID is not enabled',
+        })
+      }
       if (!ctx.res || !ctx.session?.sgidSessionState) {
         throw new TRPCError({
           code: 'UNPROCESSABLE_CONTENT',

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Stack, Text } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
 import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
@@ -58,7 +58,6 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         <Button type="submit" isLoading={loginMutation.isLoading}>
           Get OTP
         </Button>
-        <Text>or</Text>
         <SgidLoginButton />
       </Stack>
     </form>
