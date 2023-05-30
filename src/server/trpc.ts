@@ -10,35 +10,31 @@
 
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
-import { type OpenApiMeta } from 'trpc-openapi'
 import { ZodError } from 'zod'
 import { type Context } from './context'
 import { prisma } from './prisma'
 
-const t = initTRPC
-  .meta<OpenApiMeta>()
-  .context<Context>()
-  .create({
-    /**
-     * @see https://trpc.io/docs/v10/data-transformers
-     */
-    transformer: superjson,
-    /**
-     * @see https://trpc.io/docs/v10/error-formatting
-     */
-    errorFormatter({ shape, error }) {
-      return {
-        ...shape,
-        data: {
-          ...shape.data,
-          zodError:
-            error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
-              ? error.cause.flatten()
-              : null,
-        },
-      }
-    },
-  })
+const t = initTRPC.context<Context>().create({
+  /**
+   * @see https://trpc.io/docs/v10/data-transformers
+   */
+  transformer: superjson,
+  /**
+   * @see https://trpc.io/docs/v10/error-formatting
+   */
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
+            ? error.cause.flatten()
+            : null,
+      },
+    }
+  },
+})
 
 /**
  * Create a router
