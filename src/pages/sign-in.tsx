@@ -2,7 +2,6 @@ import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 
 import { Button, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { noop } from 'lodash'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { env } from '~/env.mjs'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
@@ -23,7 +22,18 @@ import { trpc } from '~/utils/trpc'
 const title = env.NEXT_PUBLIC_APP_NAME
 
 const SignIn = () => {
+  const router = useRouter()
   useRedirectIfSignedIn()
+
+  const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
+    onSuccess: ({ redirectUrl }) => {
+      router.push(redirectUrl)
+    },
+  })
+
+  const handleSgidLogin = () => {
+    return sgidLoginMutation.mutate({})
+  }
 
   return (
     <BackgroundBox>
@@ -51,9 +61,13 @@ const SignIn = () => {
               <SignInContextProvider>
                 <Suspense fallback={<Skeleton w="100vw" h="100vh" />}>
                   <SignInForm />
-                  <Link href="/api/auth/sgid">
-                    <Button w="100%">Login with Singpass App</Button>
-                  </Link>
+                  <Button
+                    isLoading={sgidLoginMutation.isLoading}
+                    onClick={handleSgidLogin}
+                    w="100%"
+                  >
+                    Login with Singpass App
+                  </Button>
                 </Suspense>
               </SignInContextProvider>
             </Flex>

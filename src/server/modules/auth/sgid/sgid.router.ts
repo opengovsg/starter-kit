@@ -28,19 +28,12 @@ const sgidCallbackStateSchema = z
 
 export const sgidRouter = router({
   login: publicProcedure
-    .meta({
-      openapi: {
-        method: 'GET',
-        path: '/auth/sgid',
-      },
-    })
     .input(
       z.object({
-        landingUrl: z.string().default('/dashboard'),
+        landingUrl: z.string().optional().default('/dashboard'),
       })
     )
-    .output(z.unknown())
-    .query(async ({ ctx, input: { landingUrl } }) => {
+    .mutation(async ({ ctx, input: { landingUrl } }) => {
       if (!ctx.res || !ctx.req || !ctx.session) {
         // Redirect back to sign in page.
         throw new TRPCError({
@@ -50,7 +43,10 @@ export const sgidRouter = router({
       }
       // Already logged in.
       if (ctx.session.user) {
-        return ctx.res.redirect(landingUrl)
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'User is already logged in',
+        })
       }
 
       const { codeChallenge, codeVerifier } = generatePkcePair()
@@ -70,7 +66,9 @@ export const sgidRouter = router({
       }
       await ctx.session.save()
 
-      return ctx.res.redirect(url)
+      return {
+        redirectUrl: url,
+      }
     }),
   callback: publicProcedure
     .meta({
