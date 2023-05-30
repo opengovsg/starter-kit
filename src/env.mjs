@@ -46,6 +46,7 @@ const r2ServerSchema = z.discriminatedUnion('NEXT_PUBLIC_ENABLE_STORAGE', [
 const baseSgidSchema = z.object({
   SGID_CLIENT_ID: z.string().optional(),
   SGID_CLIENT_SECRET: z.string().optional(),
+  // Remember to set SGID redirect URI in SGID dev portal.
   SGID_REDIRECT_URI: z.union([z.string().url(), z.string()]).optional(),
   SGID_PRIVATE_KEY: z.string().optional(),
 })
@@ -56,7 +57,6 @@ const sgidServerSchema = z.discriminatedUnion('NEXT_PUBLIC_ENABLE_SGID', [
     // Add required keys if flag is enabled.
     SGID_CLIENT_ID: z.string().min(1),
     SGID_CLIENT_SECRET: z.string().min(1),
-    SGID_REDIRECT_URI: z.string().url(),
     SGID_PRIVATE_KEY: z.string().min(1),
   }),
   baseSgidSchema.extend({
