@@ -1,7 +1,8 @@
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 
-import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { Button, RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { noop } from 'lodash'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { env } from '~/env.mjs'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
@@ -50,6 +51,9 @@ const SignIn = () => {
               <SignInContextProvider>
                 <Suspense fallback={<Skeleton w="100vw" h="100vh" />}>
                   <SignInForm />
+                  <Link href="/api/auth/sgid">
+                    <Button w="100%">Login with Singpass App</Button>
+                  </Link>
                 </Suspense>
               </SignInContextProvider>
             </Flex>

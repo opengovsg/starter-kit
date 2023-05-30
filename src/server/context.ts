@@ -43,4 +43,4 @@ export const createContext = async (opts?: MyCreateNextContextOptions) => {
   }
 }
 
-export type Context = trpc.inferAsyncReturnType<typeof createContextInner>
+export type Context = trpc.inferAsyncReturnType<typeof createContext>
