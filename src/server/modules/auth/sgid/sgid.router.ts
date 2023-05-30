@@ -4,7 +4,6 @@ import {
 } from '@opengovsg/sgid-client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import { env } from '~/env.mjs'
 import { sgid } from '~/lib/sgid'
 import { publicProcedure, router } from '~/server/trpc'
 import { getUserInfo, type SgidUserInfo } from './sgid.utils'
@@ -53,7 +52,6 @@ export const sgidRouter = router({
       const options: AuthorizationUrlParams = {
         codeChallenge,
         state: JSON.stringify({ landingUrl }),
-        redirectUri: env.SGID_REDIRECT_URI,
       }
       const { url, nonce } = sgid.authorizationUrl(options)
 
