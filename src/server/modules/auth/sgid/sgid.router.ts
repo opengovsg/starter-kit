@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { env } from '~/env.mjs'
 import { sgid } from '~/lib/sgid'
 import { publicProcedure, router } from '~/server/trpc'
-import { set } from 'lodash'
 import { getUserInfo, type SgidUserInfo } from './sgid.utils'
 import { defaultUserSelect } from '../../user/user.select'
 
@@ -37,19 +36,20 @@ export const sgidRouter = router({
     })
     .input(
       z.object({
-        landingUrl: z.string().default('/home'),
+        landingUrl: z.string().default('/dashboard'),
       })
     )
     .output(z.unknown())
     .query(async ({ ctx, input: { landingUrl } }) => {
-      if (!ctx.res || !ctx.req) {
+      if (!ctx.res || !ctx.req || !ctx.session) {
+        // Redirect back to sign in page.
         throw new TRPCError({
           code: 'UNPROCESSABLE_CONTENT',
           message: 'Missing response or request object in context',
         })
       }
       // Already logged in.
-      if (ctx.session?.user) {
+      if (ctx.session.user) {
         return ctx.res.redirect(landingUrl)
       }
 
@@ -61,14 +61,16 @@ export const sgidRouter = router({
       }
       const { url, nonce } = sgid.authorizationUrl(options)
 
+      // Reset session
+      ctx.session.destroy()
       // Store the code verifier and nonce in the session to retrieve in the callback.
-      set(ctx, 'session.sgidSessionState', {
+      ctx.session.sgidSessionState = {
         codeVerifier,
         nonce,
-      })
-      await ctx.session?.save()
+      }
+      await ctx.session.save()
 
-      return ctx.res?.redirect(url)
+      return ctx.res.redirect(url)
     }),
   callback: publicProcedure
     .meta({
@@ -100,33 +102,68 @@ export const sgidRouter = router({
       }
 
       const { codeVerifier, nonce } = ctx.session.sgidSessionState
-      // let sgidSub: string
       let sgidUserInfo: SgidUserInfo
 
       try {
         const userInfo = await getUserInfo({ code, codeVerifier, nonce })
-        // sgidSub = userInfo.sub
         sgidUserInfo = userInfo
       } catch (error) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message:
+        // Redirect back to sign in page with error.
+        ctx.session.destroy()
+        return ctx.res.redirect(
+          `/sign-in?error=${
             (error as Error).message ||
-            'Something went wrong whilst fetching SGID user info',
-        })
+            'Something went wrong whilst fetching SGID user info'
+          }`
+        )
       }
 
-      // Upsert user
-      // TODO: Link user to account instead
-      const user = await ctx.prisma.user.create({
-        data: {
-          name: sgidUserInfo.data['myinfo.name'],
+      const sgidUserEmail = sgidUserInfo.data.email
+      const { user } = await ctx.prisma.accounts.upsert({
+        where: {
+          provider_providerAccountId: {
+            provider: 'sgid',
+            providerAccountId: sgidUserInfo.sub,
+          },
         },
-        select: defaultUserSelect,
+        create: {
+          provider: 'sgid',
+          providerAccountId: sgidUserInfo.sub,
+          user: {
+            ...(sgidUserEmail
+              ? {
+                  connectOrCreate: {
+                    where: {
+                      email: sgidUserEmail,
+                    },
+                    create: {
+                      email: sgidUserEmail,
+                      name: sgidUserInfo.data['myinfo.name'],
+                    },
+                  },
+                }
+              : {
+                  create: {
+                    name: sgidUserInfo.data['myinfo.name'],
+                  },
+                }),
+          },
+        },
+        // If there is a user that is connected to the account, it would have
+        // been connected on creation.
+        update: {},
+        include: {
+          // Return user that is linked to the account.
+          user: {
+            select: defaultUserSelect,
+          },
+        },
       })
 
       ctx.session.destroy()
       ctx.session.user = user
       await ctx.session.save()
+
+      return ctx.res.redirect(parsedState.data.landingUrl)
     }),
 })
