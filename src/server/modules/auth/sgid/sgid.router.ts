@@ -76,38 +76,28 @@ export const sgidRouter = router({
       }
     }),
   callback: publicProcedure
-    .meta({
-      openapi: {
-        method: 'GET',
-        path: '/auth/sgid/callback',
-      },
-    })
     .input(
       z.object({
         state: z.string(),
         code: z.string(),
       })
     )
-    .output(z.unknown())
     .query(async ({ ctx, input: { state, code } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_SGID) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'SGID is not enabled',
-        })
+        return {
+          redirectUrl: `/sign-in?error=${'SGID is not enabled'}`,
+        }
       }
       if (!ctx.res || !ctx.session?.sgidSessionState) {
-        throw new TRPCError({
-          code: 'UNPROCESSABLE_CONTENT',
-          message: 'Invalid context',
-        })
+        return {
+          redirectUrl: `/sign-in?error=${'Invalid login flow'}`,
+        }
       }
       const parsedState = sgidCallbackStateSchema.safeParse(state)
       if (!parsedState.success) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Invalid state',
-        })
+        return {
+          redirectUrl: `/sign-in?error=${'Invalid SGID state'}`,
+        }
       }
 
       const { codeVerifier, nonce } = ctx.session.sgidSessionState
@@ -119,12 +109,12 @@ export const sgidRouter = router({
       } catch (error) {
         // Redirect back to sign in page with error.
         ctx.session.destroy()
-        return ctx.res.redirect(
-          `/sign-in?error=${
+        return {
+          redirectUrl: `/sign-in?error=${
             (error as Error).message ||
             'Something went wrong whilst fetching SGID user info'
-          }`
-        )
+          }`,
+        }
       }
 
       const sgidUserEmail = sgidUserInfo.data.email
@@ -173,6 +163,8 @@ export const sgidRouter = router({
       ctx.session.user = user
       await ctx.session.save()
 
-      return ctx.res.redirect(parsedState.data.landingUrl)
+      return {
+        redirectUrl: parsedState.data.landingUrl,
+      }
     }),
 })
