@@ -25,15 +25,10 @@ export async function createContextInner(opts: CreateContextOptions) {
  */
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getIronSession(opts.req, opts.res, sessionOptions)
-  const contextInner = await createContextInner({
+
+  return await createContextInner({
     session,
   })
-
-  return {
-    ...contextInner,
-    req: opts?.req,
-    res: opts?.res,
-  }
 }
 
-export type Context = trpc.inferAsyncReturnType<typeof createContext>
+export type Context = trpc.inferAsyncReturnType<typeof createContextInner>
