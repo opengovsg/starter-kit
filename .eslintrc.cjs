@@ -39,15 +39,7 @@ const config = {
         ],
       },
     ],
-    'prettier/prettier': [
-      'error',
-      {
-        trailingComma: 'es5',
-        tabWidth: 2,
-        semi: false,
-        singleQuote: true,
-      },
-    ],
+    'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
