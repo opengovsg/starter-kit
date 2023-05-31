@@ -9,7 +9,7 @@ import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
 import { Provider } from 'jotai'
-import Suspense from '~/components/Suspense/Suspense'
+import Suspense from '~/components/Suspense'
 import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary'
 import { Skeleton } from '@chakra-ui/react'
 

@@ -3,10 +3,10 @@ import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { noop } from 'lodash'
 import { useRouter } from 'next/router'
-import { env } from '~/env.mjs'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
-import Suspense from '~/components/Suspense/Suspense'
+import Suspense from '~/components/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
+import { env } from '~/env.mjs'
 import {
   BackgroundBox,
   BaseGridLayout,

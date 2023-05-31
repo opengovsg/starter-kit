@@ -6,7 +6,7 @@ import {
 import type { NextPageWithLayout } from '~/lib/types'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { TeamFeedbackFilterBar } from '~/features/feedback/components/TeamFeedbackFilterBar'
-import Suspense from '~/components/Suspense/Suspense'
+import Suspense from '~/components/Suspense'
 import { TeamFeedbackListSkeleton } from '~/features/feedback/components/TeamFeedbackListSkeleton'
 import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary'
 import { FeedbackHeader } from '~/features/feedback/components/FeedbackHeader'
