@@ -30,9 +30,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "prettier": {
-    "printWidth": 80,
-    "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": true,
+    "semi": false
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.305.0",
