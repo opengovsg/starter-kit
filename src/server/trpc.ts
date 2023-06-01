@@ -8,14 +8,15 @@
  * @see https://trpc.io/docs/v10/procedures
  */
 
-import { initTRPC, TRPCError } from '@trpc/server'
+import { initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
-import { createBaseLogger } from '~/lib/logger'
 import { type Context } from './context'
+import { TRPCError } from '@trpc/server'
 import { prisma } from './prisma'
+import { createBaseLogger } from '~/lib/logger'
 
-const t = initTRPC.context<Context>().create({
+export const t = initTRPC.context<Context>().create({
   /**
    * @see https://trpc.io/docs/v10/data-transformers
    */
@@ -37,13 +38,15 @@ const t = initTRPC.context<Context>().create({
   },
 })
 
-/**
- * Create a router
- * @see https://trpc.io/docs/v10/router
- */
-export const router = t.router
+export const loggerMiddleware = t.middleware(async (opts) => {
+  const logger = createBaseLogger(opts.path)
 
-const authMiddleware = t.middleware(async ({ next, ctx, path }) => {
+  return opts.next({
+    ctx: { logger },
+  })
+})
+
+export const authMiddleware = t.middleware(async ({ next, ctx }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
@@ -61,7 +64,6 @@ const authMiddleware = t.middleware(async ({ next, ctx, path }) => {
 
   return next({
     ctx: {
-      logger: createBaseLogger(path),
       session: {
         user: ctx.session.user,
       },
@@ -70,15 +72,23 @@ const authMiddleware = t.middleware(async ({ next, ctx, path }) => {
 })
 
 /**
+ * Create a router
+ * @see https://trpc.io/docs/v10/router
+ */
+export const router = t.router
+
+/**
  * Create an unprotected procedure
  * @see https://trpc.io/docs/v10/procedures
  **/
-export const publicProcedure = t.procedure
+export const publicProcedure = t.procedure.use(loggerMiddleware)
 
 /**
  * Create a protected procedure
  **/
-export const protectedProcedure = t.procedure.use(authMiddleware)
+export const protectedProcedure = t.procedure
+  .use(loggerMiddleware)
+  .use(authMiddleware)
 
 /**
  * @see https://trpc.io/docs/v10/middlewares
