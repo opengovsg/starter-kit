@@ -16,7 +16,7 @@ import { TRPCError } from '@trpc/server'
 import { prisma } from './prisma'
 import { createBaseLogger } from '~/lib/logger'
 
-export const t = initTRPC.context<Context>().create({
+const t = initTRPC.context<Context>().create({
   /**
    * @see https://trpc.io/docs/v10/data-transformers
    */
@@ -38,7 +38,7 @@ export const t = initTRPC.context<Context>().create({
   },
 })
 
-export const loggerMiddleware = t.middleware(async (opts) => {
+const loggerMiddleware = t.middleware(async (opts) => {
   const logger = createBaseLogger(opts.path)
 
   return opts.next({
@@ -46,7 +46,7 @@ export const loggerMiddleware = t.middleware(async (opts) => {
   })
 })
 
-export const authMiddleware = t.middleware(async ({ next, ctx }) => {
+const authMiddleware = t.middleware(async ({ next, ctx }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
