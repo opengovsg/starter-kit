@@ -1,29 +1,11 @@
 import { Box } from '@chakra-ui/react'
-
-import { withSessionSsr } from '~/lib/withSession'
+import { useUser } from '~/features/profile/api'
 
 // TODO: Will be landing page in the future, now just a redirect to appropriate page.
 const Index = () => {
+  useUser({ redirectIfFound: true, redirectTo: '/dashboard' })
+
   return <Box />
 }
-
-export const getServerSideProps = withSessionSsr(({ req }) => {
-  const user = req.session.user
-  if (user) {
-    return {
-      redirect: {
-        destination: '/dashboard',
-      },
-      props: {},
-    }
-  }
-
-  return {
-    redirect: {
-      destination: '/sign-in',
-    },
-    props: {},
-  }
-})
 
 export default Index
