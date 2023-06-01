@@ -1,8 +1,8 @@
 import { Avatar, Box, Stack, Text } from '@chakra-ui/react'
-import { format } from 'date-fns'
 import { useMemo } from 'react'
 import { RichText } from '~/components/RichText'
 import type { RouterOutput } from '~/utils/trpc'
+import { format } from 'date-fns'
 
 type PostByIdOutput = Pick<
   RouterOutput['post']['byId'],
