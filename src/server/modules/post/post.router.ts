@@ -8,6 +8,7 @@ import {
   listPostsInputSchema,
 } from '~/schemas/post'
 import { protectedProcedure, router } from '~/server/trpc'
+import { getCurrSgtTime } from '~/utils/date'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 import { processFeedbackItem } from './post.util'
 
@@ -205,7 +206,7 @@ export const postRouter = router({
       const post = await ctx.prisma.post.update({
         where: { id },
         data: {
-          deletedAt: new Date(),
+          deletedAt: getCurrSgtTime(),
         },
       })
 

@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { useMemo } from 'react'
 import { RichText } from '~/components/RichText'
 import type { RouterOutput } from '~/utils/trpc'
+import { utcToZonedTime } from 'date-fns-tz'
 
 type PostByIdOutput = Pick<
   RouterOutput['post']['byId'],
@@ -16,7 +17,10 @@ interface FeedbackCommentProps {
 export const FeedbackComment = ({ post }: FeedbackCommentProps) => {
   const prettyDate = useMemo(() => {
     if (!post) return ''
-    return format(new Date(post.createdAt), 'dd MMM yyyy, hh:mmaaa')
+    return format(
+      utcToZonedTime(new Date(post.createdAt), 'Asia/Singapore'),
+      'dd MMM yyyy, hh:mmaaa'
+    )
   }, [post])
 
   return (

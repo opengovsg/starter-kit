@@ -9,6 +9,7 @@ import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
 import { env } from '~/env.mjs'
+import { getCurrSgtTime } from '~/utils/date'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -21,7 +22,9 @@ export const emailSessionRouter = router({
     .mutation(async ({ ctx, input: { email } }) => {
       // TODO: instead of storing expires, store issuedAt to calculate when the next otp can be re-issued
       // TODO: rate limit this endpoint also
-      const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
+      const expires = new Date(
+        getCurrSgtTime().getTime() + env.OTP_EXPIRY * 1000
+      )
       const token = createVfnToken()
       const hashedToken = createTokenHash(token, email)
 
@@ -84,7 +87,7 @@ export const emailSessionRouter = router({
         update: {},
         create: {
           email,
-          emailVerified: new Date(),
+          emailVerified: getCurrSgtTime(),
           name: email.split('@')[0],
         },
         select: defaultUserSelect,
