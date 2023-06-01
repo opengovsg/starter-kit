@@ -8,11 +8,10 @@
  * @see https://trpc.io/docs/v10/procedures
  */
 
-import { initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { type Context } from './context'
-import { TRPCError } from '@trpc/server'
+import { TRPCError, initTRPC } from '@trpc/server'
 import { prisma } from './prisma'
 import { createBaseLogger } from '~/lib/logger'
 
