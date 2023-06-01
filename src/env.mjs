@@ -58,6 +58,7 @@ const sgidServerSchema = z.discriminatedUnion('NEXT_PUBLIC_ENABLE_SGID', [
     SGID_CLIENT_ID: z.string().min(1),
     SGID_CLIENT_SECRET: z.string().min(1),
     SGID_PRIVATE_KEY: z.string().min(1),
+    SGID_REDIRECT_URI: z.string().url(),
   }),
   baseSgidSchema.extend({
     NEXT_PUBLIC_ENABLE_SGID: z.literal(false),

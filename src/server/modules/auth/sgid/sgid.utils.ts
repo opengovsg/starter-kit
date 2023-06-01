@@ -19,6 +19,10 @@ export const getUserInfo = async ({
   codeVerifier: string
   nonce?: string
 }) => {
+  if (!sgid) {
+    throw new Error('SGID is not enabled')
+  }
+
   const { sub, accessToken } = await sgid.callback({
     code,
     nonce,
