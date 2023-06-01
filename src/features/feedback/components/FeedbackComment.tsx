@@ -2,7 +2,7 @@ import { Avatar, Box, Stack, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { RichText } from '~/components/RichText'
 import type { RouterOutput } from '~/utils/trpc'
-import { formatInTimeZone } from 'date-fns-tz'
+import { format } from 'date-fns'
 
 type PostByIdOutput = Pick<
   RouterOutput['post']['byId'],
@@ -16,11 +16,7 @@ interface FeedbackCommentProps {
 export const FeedbackComment = ({ post }: FeedbackCommentProps) => {
   const prettyDate = useMemo(() => {
     if (!post) return ''
-    return formatInTimeZone(
-      new Date(post.createdAt),
-      'Asia/Singapore',
-      'dd MMM yyyy, hh:mmaaa'
-    )
+    return format(new Date(post.createdAt), 'dd MMM yyyy, hh:mmaaa')
   }, [post])
 
   return (
