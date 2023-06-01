@@ -11,6 +11,7 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
+import { createBaseLogger } from '~/lib/logger'
 import { type Context } from './context'
 import { prisma } from './prisma'
 
@@ -42,7 +43,7 @@ const t = initTRPC.context<Context>().create({
  */
 export const router = t.router
 
-const authMiddleware = t.middleware(async ({ next, ctx }) => {
+const authMiddleware = t.middleware(async ({ next, ctx, path }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
@@ -60,6 +61,7 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
 
   return next({
     ctx: {
+      logger: createBaseLogger(path),
       session: {
         user: ctx.session.user,
       },
