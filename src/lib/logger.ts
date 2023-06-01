@@ -1,4 +1,5 @@
 import winston, { format } from 'winston'
+import { env } from '~/env.mjs'
 
 const { combine, timestamp, prettyPrint, colorize } = format
 
@@ -6,8 +7,8 @@ export const createBaseLogger = (path: string) => {
   const formats = [
     winston.format.json(),
     timestamp(),
-    process.env.NODE_ENV === 'development' ? prettyPrint() : undefined,
-    process.env.NODE_ENV === 'development' ? colorize() : undefined,
+    env.NODE_ENV === 'development' ? prettyPrint() : undefined,
+    env.NODE_ENV === 'development' ? colorize() : undefined,
   ].filter((v) => !!v) as winston.Logform.Format[]
 
   return winston.createLogger({
@@ -15,7 +16,7 @@ export const createBaseLogger = (path: string) => {
     exitOnError: false,
     transports: [
       new winston.transports.Console({
-        silent: process.env.NODE_ENV === 'test',
+        silent: env.NODE_ENV === 'test',
       }),
     ],
     defaultMeta: {
