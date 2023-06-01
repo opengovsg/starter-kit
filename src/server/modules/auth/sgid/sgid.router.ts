@@ -34,7 +34,7 @@ export const sgidRouter = router({
       })
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
-      if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+      if (!sgid) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'SGID is not enabled',
