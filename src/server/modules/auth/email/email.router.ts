@@ -9,7 +9,7 @@ import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
 import { env } from '~/env.mjs'
-import { getCurrSgtTime } from '~/utils/date'
+import { formatInTimeZone } from 'date-fns-tz'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -22,9 +22,7 @@ export const emailSessionRouter = router({
     .mutation(async ({ ctx, input: { email } }) => {
       // TODO: instead of storing expires, store issuedAt to calculate when the next otp can be re-issued
       // TODO: rate limit this endpoint also
-      const expires = new Date(
-        getCurrSgtTime().getTime() + env.OTP_EXPIRY * 1000
-      )
+      const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
       const token = createVfnToken()
       const hashedToken = createTokenHash(token, email)
 
@@ -50,7 +48,11 @@ export const emailSessionRouter = router({
         }),
         sendMail({
           subject: `Sign in to ${url.host}`,
-          body: `Your OTP is <b>${token}</b>. It will expire on ${expires}.
+          body: `Your OTP is <b>${token}</b>. It will expire on ${formatInTimeZone(
+            expires,
+            'Asia/Singapore',
+            'dd MMM yyyy, hh:mmaaa'
+          )}.
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
           recipient: email,
@@ -87,7 +89,7 @@ export const emailSessionRouter = router({
         update: {},
         create: {
           email,
-          emailVerified: getCurrSgtTime(),
+          emailVerified: new Date(),
           name: email.split('@')[0],
         },
         select: defaultUserSelect,
