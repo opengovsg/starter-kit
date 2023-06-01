@@ -21,7 +21,7 @@
     "migrate:dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
-    "test:unit": "vitest run",
+    "test:unit": "dotenv -e .env.test vitest run",
     "test:e2e": "dotenv -e .env.test playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-dev:unit": "dotenv -e .env.test vitest",
