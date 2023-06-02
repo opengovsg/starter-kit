@@ -37,12 +37,24 @@ const t = initTRPC.context<Context>().create({
   },
 })
 
-const loggerMiddleware = t.middleware(async (opts) => {
-  const logger = createBaseLogger(opts.path)
+// Setting outer context with TPRC will not get us correct path during request batching, only by setting logger context in
+// the middleware do we get the exact path to log
+const loggerMiddleware = t.middleware(async ({ path, next }) => {
+  const start = Date.now()
+  const logger = createBaseLogger(path)
+  const durationInMs = Date.now() - start
 
-  return opts.next({
+  const result = await next({
     ctx: { logger },
   })
+
+  if (result.ok) {
+    logger.info('success', { durationInMs })
+  } else {
+    logger.error('failure', { durationInMs, error: result.error })
+  }
+
+  return result
 })
 
 const authMiddleware = t.middleware(async ({ next, ctx }) => {
