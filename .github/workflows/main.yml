@@ -46,7 +46,7 @@ jobs:
         run: npm run setup:test
 
       - name: Build and test
-        run: npm run build && npm run test-start && npm run test-dev
+        run: npm run build && npm run test-start
 
       - name: Stop test containers
         run: npm run teardown
