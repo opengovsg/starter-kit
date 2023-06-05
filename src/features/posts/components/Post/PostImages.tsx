@@ -1,6 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/react'
 import Image from 'next/image'
-import { RouterOutput } from '~/utils/trpc'
+import { type RouterOutput } from '~/utils/trpc'
 
 export interface PostImagesProps {
   images: RouterOutput['post']['byUser']['posts'][number]['images']

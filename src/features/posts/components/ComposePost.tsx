@@ -1,6 +1,6 @@
 import { FormControl, Stack } from '@chakra-ui/react'
 import { FormErrorMessage } from '@opengovsg/design-system-react'
-import { Controller, UseFormReturn } from 'react-hook-form'
+import { Controller, type UseFormReturn } from 'react-hook-form'
 import { Avatar } from '~/components/Avatar'
 import { ImageAttachmentButton } from '~/components/ImageAttachmentButton'
 import { RichText } from '~/components/RichText'

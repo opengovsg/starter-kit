@@ -1,12 +1,12 @@
 // https://github.com/react-hook-form/react-hook-form/issues/40#issuecomment-1139970269
 import { debounce } from 'lodash'
 import {
-  FieldPath,
-  FieldValues,
-  RegisterOptions,
-  UseFormRegister,
-  UseFormRegisterReturn,
-  UseFormTrigger,
+  type FieldPath,
+  type FieldValues,
+  type RegisterOptions,
+  type UseFormRegister,
+  type UseFormRegisterReturn,
+  type UseFormTrigger,
 } from 'react-hook-form'
 
 /**

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { trpc } from '~/utils/trpc'
 import wretch from 'wretch'
-import { AcceptedImageFileTypes, ACCEPTED_FILE_TYPES } from '~/utils/image'
+import { type AcceptedImageFileTypes, ACCEPTED_FILE_TYPES } from '~/utils/image'
 
 export const useUploadImagesMutation = () => {
   // Pre-upload: Create a mutation to presign the upload request

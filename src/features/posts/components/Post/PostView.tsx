@@ -1,11 +1,11 @@
-import { Avatar, Stack, StackProps, Text } from '@chakra-ui/react'
+import { Avatar, Stack, type StackProps, Text } from '@chakra-ui/react'
 import { Link } from '@opengovsg/design-system-react'
 import NextLink from 'next/link'
 import { useMemo } from 'react'
 import { RichText } from '~/components/RichText'
 import { formatRelativeTime } from '~/lib/dates'
 import { PROFILE } from '~/lib/routes'
-import { RouterOutput } from '~/utils/trpc'
+import { type RouterOutput } from '~/utils/trpc'
 import { PostActions } from '../PostActions'
 import { PostImages } from './PostImages'
 

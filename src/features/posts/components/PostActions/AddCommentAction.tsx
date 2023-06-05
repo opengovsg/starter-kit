@@ -1,8 +1,8 @@
 import { useDisclosure } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
-import { MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react'
 import { BiMessageRounded } from 'react-icons/bi'
-import { RouterOutput } from '~/utils/trpc'
+import { type RouterOutput } from '~/utils/trpc'
 import { AddCommentModal } from '../AddCommentModal'
 
 interface AddCommentActionProps {

@@ -1,4 +1,10 @@
-import { Box, BoxProps, Flex, FlexProps, forwardRef } from '@chakra-ui/react'
+import {
+  Box,
+  type BoxProps,
+  Flex,
+  type FlexProps,
+  forwardRef,
+} from '@chakra-ui/react'
 import { memo, useEffect, useMemo, useState } from 'react'
 
 import { dataAttr } from '@chakra-ui/utils'

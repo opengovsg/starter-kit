@@ -6,7 +6,7 @@ import {
   type ReactNode,
   type ForwardedRef,
   type ReactElement,
-  ChangeEventHandler,
+  type ChangeEventHandler,
 } from 'react'
 
 export interface FileButtonProps<Multiple extends boolean = false> {

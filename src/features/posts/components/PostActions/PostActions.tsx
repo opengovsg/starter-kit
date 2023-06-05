@@ -1,9 +1,9 @@
 import { ButtonGroup } from '@chakra-ui/react'
 import { Button, BxsHeart, IconButton } from '@opengovsg/design-system-react'
-import { MouseEventHandler, useState } from 'react'
+import { type MouseEventHandler, useState } from 'react'
 import { BiHeart, BiLink, BiSync } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
-import { RouterOutput, trpc } from '~/utils/trpc'
+import { type RouterOutput, trpc } from '~/utils/trpc'
 import { AddCommentAction } from './AddCommentAction'
 import { DeletePostAction } from './DeletePostAction'
 

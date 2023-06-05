@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMe } from '~/features/me/api'
-import { AcceptedImageFileTypes, ACCEPTED_FILE_TYPES } from '~/utils/image'
+import { type AcceptedImageFileTypes, ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { trpc } from '~/utils/trpc'
 
 export const useUploadAvatarMutation = () => {

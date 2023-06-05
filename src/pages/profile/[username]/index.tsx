@@ -1,7 +1,7 @@
 import { Box, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { Post } from '~/features/posts/components'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
 import { trpc } from '~/utils/trpc'

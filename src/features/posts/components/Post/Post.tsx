@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { ReactEventHandler } from 'react'
-import { RouterOutput } from '~/utils/trpc'
+import { type ReactEventHandler } from 'react'
+import { type RouterOutput } from '~/utils/trpc'
 import { PostView } from './PostView'
 
 export interface PostProps {

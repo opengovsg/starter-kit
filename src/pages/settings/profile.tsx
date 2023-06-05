@@ -15,7 +15,7 @@ import {
 import { useMemo } from 'react'
 import { AvatarUpload } from '~/features/settings/components/AvatarUpload'
 import { useZodForm } from '~/lib/form'
-import { NextPageWithLayout } from '~/lib/types'
+import { type NextPageWithLayout } from '~/lib/types'
 import { updateMeSchema } from '~/schemas/me'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'

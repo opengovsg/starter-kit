@@ -1,6 +1,6 @@
 import { Icon } from '@chakra-ui/react'
-import { Link, LinkProps } from '@opengovsg/design-system-react'
-import NextLink, { LinkProps as NextLinkProps } from 'next/link'
+import { Link, type LinkProps } from '@opengovsg/design-system-react'
+import NextLink, { type LinkProps as NextLinkProps } from 'next/link'
 import { BiLeftArrowAlt } from 'react-icons/bi'
 
 export interface BackBannerLinkProps

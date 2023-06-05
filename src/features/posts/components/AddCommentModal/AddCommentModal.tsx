@@ -6,12 +6,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  ModalProps,
+  type ModalProps,
   Stack,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { useZodForm } from '~/lib/form'
-import { RouterOutput, trpc } from '~/utils/trpc'
+import { type RouterOutput, trpc } from '~/utils/trpc'
 import { useUploadImagesMutation } from '../../api'
 import { clientAddReplySchema } from '../../schemas/clientAddPostSchema'
 import { ComposePost } from '../ComposePost'

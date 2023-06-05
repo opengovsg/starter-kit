@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  ModalProps,
+  type ModalProps,
   useDisclosure,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'

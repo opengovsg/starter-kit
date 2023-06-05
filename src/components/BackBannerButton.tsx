@@ -1,5 +1,5 @@
 import { Icon } from '@chakra-ui/react'
-import { Link, LinkProps } from '@opengovsg/design-system-react'
+import { Link, type LinkProps } from '@opengovsg/design-system-react'
 import { BiLeftArrowAlt } from 'react-icons/bi'
 
 export type BackBannerButtonProps = Omit<LinkProps, 'as'>

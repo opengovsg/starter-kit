@@ -2,8 +2,8 @@ import {
   createStylesContext,
   forwardRef,
   Stack,
-  StackProps,
-  TabsProps,
+  type StackProps,
+  type TabsProps,
   useMultiStyleConfig,
 } from '@chakra-ui/react'
 

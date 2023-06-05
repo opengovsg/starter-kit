@@ -1,5 +1,5 @@
 import {
-  ModalProps,
+  type ModalProps,
   Modal,
   ModalContent,
   ModalBody,
@@ -9,7 +9,7 @@ import {
   ButtonGroup,
 } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
-import { RouterOutput, trpc } from '~/utils/trpc'
+import { type RouterOutput, trpc } from '~/utils/trpc'
 
 interface DeletePostModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   postId: RouterOutput['post']['byUser']['posts'][number]['id']
