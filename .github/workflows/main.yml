@@ -2,11 +2,6 @@ name: Tests
 on: [push]
 jobs:
   tests:
-    env:
-      NODE_ENV: test
-      POSTMAN_API_KEY: postmansupersecret
-      SESSION_SECRET: supersecret_that_has_at_least_32_characters
-      DATABASE_URL: postgres://root:root@localhost:26257/app
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
