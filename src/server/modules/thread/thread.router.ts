@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
+import { env } from '~/env.mjs'
 import { addReplySchema } from '~/schemas/thread'
-import { env } from '~/server/env'
 import { protectedProcedure, router } from '~/server/trpc'
 import { defaultReplySelect } from './thread.select'
 
@@ -22,9 +22,9 @@ export const threadRouter = router({
             message: `Post '${postId}' does not exist`,
           })
         }
-        const images = imageKeys?.map(
-          (key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`
-        )
+        const images = env.NEXT_PUBLIC_ENABLE_STORAGE
+          ? imageKeys?.map((key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`)
+          : []
         return await ctx.prisma.post.create({
           data: {
             ...replyData,
