@@ -25,6 +25,13 @@ jobs:
       - name: Install playwright
         run: npx playwright install chromium
 
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: .env.test
+          mode: test
+          load-mode: strict
+
       - name: Next.js cache
         uses: actions/cache@v3
         with:
