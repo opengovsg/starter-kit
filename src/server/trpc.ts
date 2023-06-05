@@ -42,11 +42,12 @@ const t = initTRPC.context<Context>().create({
 const loggerMiddleware = t.middleware(async ({ path, next }) => {
   const start = Date.now()
   const logger = createBaseLogger(path)
-  const durationInMs = Date.now() - start
 
   const result = await next({
     ctx: { logger },
   })
+
+  const durationInMs = Date.now() - start
 
   if (result.ok) {
     logger.info('success', { durationInMs })
