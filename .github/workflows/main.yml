@@ -1,7 +1,7 @@
-name: E2E-testing
+name: Tests
 on: [push]
 jobs:
-  e2e:
+  tests:
     env:
       NODE_ENV: test
       POSTMAN_API_KEY: postmansupersecret
