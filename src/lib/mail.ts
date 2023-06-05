@@ -1,5 +1,5 @@
 import wretch from 'wretch'
-import { env } from '~/server/env'
+import { env } from '~/env.mjs'
 
 type SendMailParams = {
   recipient: string

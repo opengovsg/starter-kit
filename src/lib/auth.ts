@@ -1,5 +1,5 @@
-import { env } from '~/server/env'
-import { IronSessionOptions } from 'iron-session'
+import { type IronSessionOptions } from 'iron-session'
+import { env } from '~/env.mjs'
 
 export const sessionOptions: IronSessionOptions = {
   password: {

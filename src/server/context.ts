@@ -1,6 +1,6 @@
-import * as trpc from '@trpc/server'
+import type * as trpc from '@trpc/server'
 import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
-import { getIronSession, IronSession } from 'iron-session'
+import { getIronSession, type IronSession } from 'iron-session'
 import { sessionOptions } from '~/lib/auth'
 import { prisma } from './prisma'
 
@@ -43,4 +43,4 @@ export const createContext = async (opts?: MyCreateNextContextOptions) => {
   }
 }
 
-export type Context = trpc.inferAsyncReturnType<typeof createContextInner>
+export type Context = trpc.inferAsyncReturnType<typeof createContext>

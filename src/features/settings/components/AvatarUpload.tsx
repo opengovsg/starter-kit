@@ -1,9 +1,9 @@
 import { Box, Flex, Icon, SkeletonCircle, Spinner } from '@chakra-ui/react'
 import { Input, useToast } from '@opengovsg/design-system-react'
-import { ChangeEventHandler, useMemo, useState } from 'react'
+import { type ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
-import { browserEnv } from '~/browserEnv'
 import { Avatar } from '~/components/Avatar'
+import { env } from '~/env.mjs'
 import { ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { useUploadAvatarMutation } from '../api'
 
@@ -12,7 +12,7 @@ interface AvatarUploadProps {
   url?: string | null
 }
 
-const CAN_UPLOAD = !!browserEnv.NEXT_PUBLIC_ENABLE_STORAGE
+const CAN_UPLOAD = !!env.NEXT_PUBLIC_ENABLE_STORAGE
 
 export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
   // Will load this over `url` if provided for UX.
@@ -32,7 +32,7 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
       throw new Error('You must select an image to upload.')
     }
 
-    return uploadAvatarMutation.mutateAsync(file, {
+    return uploadAvatarMutation.mutate(file, {
       onSuccess: async () => {
         toast({
           description: 'Avatar uploaded successfully.',

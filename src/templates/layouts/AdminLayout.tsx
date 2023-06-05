@@ -1,10 +1,12 @@
 import { Flex } from '@chakra-ui/react'
 import { AppNavbar } from '~/components/AppNavbar'
 import { DashSidebar } from '~/components/DashSidebar'
-import { GetLayout } from '~/lib/types'
+import { useMe } from '~/features/me/api'
+import { type GetLayout } from '~/lib/types'
 import { AppGrid } from '../AppGrid'
 
 export const AdminLayout: GetLayout = (page) => {
+  useMe({ redirectTo: '/sign-in' })
   return (
     <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt">
       <AppNavbar />

@@ -1,5 +1,5 @@
-import { useForm, UseFormProps } from 'react-hook-form'
-import { z } from 'zod'
+import { useForm, type UseFormProps } from 'react-hook-form'
+import { type z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 export const useZodForm = <TSchema extends z.ZodType>({

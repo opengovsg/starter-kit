@@ -3,12 +3,18 @@ import Router from 'next/router'
 import { trpc } from '~/utils/trpc'
 
 export const useMe = ({ redirectTo = '', redirectIfFound = false } = {}) => {
-  const { data: me, isFetching, ...rest } = trpc.me.get.useQuery()
+  const [me] = trpc.me.get.useSuspenseQuery(undefined, {
+    onSuccess: () => {
+      if (redirectIfFound) {
+        Router.push(redirectTo)
+      }
+    },
+  })
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on routes.HOME)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-    if (!redirectTo || isFetching) return
+    if (!redirectTo) return
 
     const shouldRedirect =
       // If redirectTo is set,
@@ -21,7 +27,7 @@ export const useMe = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     if (shouldRedirect) {
       Router.push(redirectTo)
     }
-  }, [me, redirectIfFound, redirectTo, isFetching])
+  }, [me, redirectIfFound, redirectTo])
 
   const logoutMutation = trpc.auth.logout.useMutation()
 
@@ -36,5 +42,5 @@ export const useMe = ({ redirectTo = '', redirectIfFound = false } = {}) => {
     [logoutMutation]
   )
 
-  return { me, isFetching, ...rest, logout }
+  return { me, logout }
 }

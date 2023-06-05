@@ -3,7 +3,6 @@ import { Button } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import image404 from '~/assets/scene_lift.svg'
 import { MiniFooter } from '~/components/Footer/MiniFooter'
 
 // https://nextjs.org/docs/advanced-features/custom-error-page
@@ -22,7 +21,9 @@ const Custom404 = () => {
         <Image
           style={{ maxWidth: '100%' }}
           aria-hidden
-          src={image404}
+          width="283"
+          height="240"
+          src="/assets/404.svg"
           alt="404 image"
         />
       </Flex>

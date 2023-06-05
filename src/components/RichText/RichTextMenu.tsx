@@ -1,8 +1,8 @@
 // Hehe ripped from OpenSpace
 
 import { Divider, Icon, IconButton, Tooltip, Wrap } from '@chakra-ui/react'
-import { Editor } from '@tiptap/react'
-import { IconType } from 'react-icons'
+import { type Editor } from '@tiptap/react'
+import { type IconType } from 'react-icons'
 import {
   BiBold,
   BiCode,

@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+import { env } from '~/env.mjs'
 import {
   addPostSchema,
   byUserSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
-import { env } from '~/server/env'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 
@@ -13,6 +13,11 @@ export const postRouter = router({
   likedByUser: publicProcedure
     .input(byUserSchema)
     .query(async ({ input, ctx }) => {
+      /**
+       * For pagination docs you can have a look here
+       * @see https://trpc.io/docs/useInfiniteQuery
+       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
+       */
       const limit = input.limit ?? 50
       const { cursor } = input
 
@@ -363,9 +368,9 @@ export const postRouter = router({
   add: protectedProcedure
     .input(addPostSchema)
     .mutation(async ({ input: { imageKeys, ...input }, ctx }) => {
-      const images = imageKeys?.map(
-        (key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`
-      )
+      const images = env.NEXT_PUBLIC_ENABLE_STORAGE
+        ? imageKeys?.map((key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`)
+        : []
 
       const post = await ctx.prisma.post.create({
         data: {

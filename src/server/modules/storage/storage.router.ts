@@ -4,8 +4,8 @@ import {
   presignImageInputSchema,
   presignImageOutputSchema,
 } from '~/schemas/presign'
-import { env } from '~/server/env'
 import { protectedProcedure, router } from '~/server/trpc'
+import { env } from '~/env.mjs'
 
 export const storageRouter = router({
   presignAvatar: protectedProcedure

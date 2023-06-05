@@ -1,5 +1,5 @@
 import {
-  AvatarProps as ChakraAvatarProps,
+  type AvatarProps as ChakraAvatarProps,
   Avatar as ChakraAvatar,
 } from '@chakra-ui/react'
 

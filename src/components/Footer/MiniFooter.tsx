@@ -1,5 +1,4 @@
 import { Link, Text } from '@chakra-ui/react'
-import ogpLogoFull from '~/assets/ogp-logo-full.svg'
 import NextLink from 'next/link'
 import Image from 'next/image'
 
@@ -17,7 +16,13 @@ export const MiniFooter = (): JSX.Element => {
     >
       Built by{' '}
       <Link as={NextLink} title="To OGP homepage" href="https://open.gov.sg">
-        <Image src={ogpLogoFull} alt="OGP Logo" priority />
+        <Image
+          src="/assets/ogp-logo-full.svg"
+          width={233}
+          height={12}
+          alt="OGP Logo"
+          priority
+        />
       </Link>
     </Text>
   )

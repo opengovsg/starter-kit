@@ -85,4 +85,17 @@ model User {
   posts         Post[]
   likedPosts    LikedPosts[]
   readPosts     ReadPosts[]
+  accounts      Accounts[]
+}
+
+model Accounts {
+  id                String @id @default(cuid())
+  provider          String
+  providerAccountId String
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
