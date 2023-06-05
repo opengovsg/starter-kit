@@ -29,7 +29,6 @@ jobs:
         uses: xom9ikk/dotenv@v2
         with:
           mode: test
-          load-mode: strict
 
       - name: Next.js cache
         uses: actions/cache@v3
