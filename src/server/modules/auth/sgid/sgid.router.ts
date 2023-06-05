@@ -10,6 +10,7 @@ import { getUserInfo, type SgidUserInfo } from './sgid.utils'
 import { env } from '~/env.mjs'
 import { HOME } from '~/lib/routes'
 import { defaultMeSelect } from '../../me/me.select'
+import { generateUsername } from '../../me/me.service'
 
 const sgidCallbackStateSchema = z
   .custom<string>((data) => {
@@ -119,7 +120,7 @@ export const sgidRouter = router({
       }
 
       const sgidUserEmail = sgidUserInfo.data.email
-      const { user } = await ctx.prisma.accounts.upsert({
+      let { user } = await ctx.prisma.accounts.upsert({
         where: {
           provider_providerAccountId: {
             provider: 'sgid',
@@ -138,13 +139,18 @@ export const sgidRouter = router({
                     },
                     create: {
                       email: sgidUserEmail,
+                      emailVerified: new Date(),
                       name: sgidUserInfo.data['myinfo.name'],
+                      username: generateUsername(sgidUserEmail),
                     },
                   },
                 }
               : {
                   create: {
                     name: sgidUserInfo.data['myinfo.name'],
+                    username: generateUsername(
+                      sgidUserInfo.data['myinfo.name']
+                    ),
                   },
                 }),
           },
@@ -159,6 +165,18 @@ export const sgidRouter = router({
           },
         },
       })
+
+      if (!user.username && user.name) {
+        // Add generated username to user if not set.
+        user = await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            username: generateUsername(user.name),
+          },
+        })
+      }
 
       ctx.session.destroy()
       ctx.session.user = user

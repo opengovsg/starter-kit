@@ -4,5 +4,5 @@ import { init } from '@paralleldrive/cuid2'
 const cuidLen6 = init({ length: 6 })
 
 export const generateUsername = (prefix: string) => {
-  return `${prefix}${cuidLen6()}`
+  return `${prefix.replace(/\s/g, '')}${cuidLen6()}`
 }
