@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'url';
-import { configDefaults, defineConfig } from 'vitest/config';
+import { fileURLToPath } from 'url'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
@@ -8,5 +8,7 @@ export default defineConfig({
     alias: {
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
     },
+    environment: 'vprisma',
+    setupFiles: ['vitest-environment-vprisma/setup', 'vitest.setup.ts'],
   },
-});
+})

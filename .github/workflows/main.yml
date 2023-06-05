@@ -1,12 +1,7 @@
-name: E2E-testing
+name: Tests
 on: [push]
 jobs:
-  e2e:
-    env:
-      NODE_ENV: test
-      POSTMAN_API_KEY: postmansupersecret
-      SESSION_SECRET: supersecret_that_has_at_least_32_characters
-      DATABASE_URL: postgres://root:root@localhost:26257/app
+  tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -30,6 +25,11 @@ jobs:
       - name: Install playwright
         run: npx playwright install chromium
 
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
+
       - name: Next.js cache
         uses: actions/cache@v3
         with:
@@ -46,7 +46,7 @@ jobs:
         run: npm run setup:test
 
       - name: Build and test
-        run: npm run build && npm run test-start && npm run test-dev
+        run: npm run build && npm run test-start
 
       - name: Stop test containers
         run: npm run teardown

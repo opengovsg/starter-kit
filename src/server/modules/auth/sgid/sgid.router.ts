@@ -40,11 +40,11 @@ export const sgidRouter = router({
           message: 'SGID is not enabled',
         })
       }
-      if (!ctx.res || !ctx.req || !ctx.session) {
+      if (!ctx.session) {
         // Redirect back to sign in page.
         throw new TRPCError({
           code: 'UNPROCESSABLE_CONTENT',
-          message: 'Missing response or request object in context',
+          message: 'Session object missing in context',
         })
       }
       // Already logged in.
@@ -88,7 +88,7 @@ export const sgidRouter = router({
           redirectUrl: `/sign-in?error=${'SGID is not enabled'}`,
         }
       }
-      if (!ctx.res || !ctx.session?.sgidSessionState) {
+      if (!ctx.session?.sgidSessionState) {
         return {
           redirectUrl: `/sign-in?error=${'Invalid login flow'}`,
         }

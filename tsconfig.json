@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "types": ["vitest/globals", "vitest-environment-vprisma"]
   },
   "include": [
     ".eslintrc.cjs",

@@ -21,8 +21,10 @@
     "migrate:dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
-    "test:e2e": "NODE_ENV=test playwright test",
+    "test:unit": "dotenv -e .env.test vitest run",
+    "test:e2e": "dotenv -e .env.test playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
+    "test-dev:unit": "dotenv -e .env.test vitest",
     "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
     "postinstall": "npm run generate"
   },
@@ -76,6 +78,7 @@
     "@types/react": "^18.0.34",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.56.0",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.41.0",
     "eslint-config-next": "^13.2.1",
     "eslint-config-prettier": "^8.8.0",
@@ -89,7 +92,8 @@
     "tsx": "^3.12.3",
     "typescript": "^4.8.3",
     "vite": "^4.1.2",
-    "vitest": "^0.30.1"
+    "vitest": "^0.30.1",
+    "vitest-environment-vprisma": "^1.2.0"
   },
   "publishConfig": {
     "access": "restricted"
