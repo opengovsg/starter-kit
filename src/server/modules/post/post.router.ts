@@ -14,7 +14,7 @@ import { processFeedbackItem } from './post.util'
 export const postRouter = router({
   list: protectedProcedure
     .input(listPostsInputSchema)
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, ctx: { prisma, logger, session } }) => {
       /**
        * For pagination docs you can have a look here
        * @see https://trpc.io/docs/useInfiniteQuery
@@ -35,7 +35,7 @@ export const postRouter = router({
               NOT: {
                 readBy: {
                   some: {
-                    userId: ctx.session.user.id,
+                    userId: session.user.id,
                   },
                 },
               },
@@ -50,7 +50,7 @@ export const postRouter = router({
             return {
               replies: {
                 some: {
-                  authorId: ctx.session.user.id,
+                  authorId: session.user.id,
                 },
               },
             }
@@ -64,14 +64,14 @@ export const postRouter = router({
             return {
               replies: {
                 none: {
-                  authorId: ctx.session.user.id,
+                  authorId: session.user.id,
                 },
               },
             }
         }
       }
 
-      const items = await ctx.prisma.post.findMany({
+      const items = await prisma.post.findMany({
         select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
@@ -99,8 +99,12 @@ export const postRouter = router({
       }
 
       const processedItems = items
-        .map((item) => processFeedbackItem(item, ctx.session.user.id))
+        .map((item) => processFeedbackItem(item, session.user.id))
         .reverse()
+
+      logger.info('Items successfully retrieved', {
+        ids: processedItems.map((item) => item.id),
+      })
 
       return {
         items: processedItems,
