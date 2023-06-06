@@ -20,7 +20,11 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "vitest-environment-vprisma"]
+    "types": [
+      "vitest/globals",
+      "vitest-environment-vprisma",
+      "@testing-library/jest-dom"
+    ]
   },
   "include": [
     ".storybook/**/*.tsx",

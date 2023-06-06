@@ -41,7 +41,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
   })
 
   return (
-    <form onSubmit={handleSignIn}>
+    <form onSubmit={handleSignIn} noValidate>
       <FormControl
         id="email"
         isRequired
