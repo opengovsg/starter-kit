@@ -23,6 +23,8 @@
     "types": ["vitest/globals", "vitest-environment-vprisma"]
   },
   "include": [
+    ".storybook/**/*.tsx",
+    ".storybook/**/*.ts",
     ".eslintrc.cjs",
     "next-env.d.ts",
     "src/lib/iron-session.d.ts",
