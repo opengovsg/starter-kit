@@ -8,5 +8,7 @@ export default defineConfig({
     alias: {
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
     },
+    environment: 'vprisma',
+    setupFiles: ['vitest-environment-vprisma/setup', 'vitest.setup.ts'],
   },
 })
