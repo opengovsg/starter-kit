@@ -19,28 +19,16 @@ export async function createContextInner(opts: CreateContextOptions) {
   }
 }
 
-interface MyCreateNextContextOptions
-  extends Partial<CreateNextContextOptions>,
-    CreateContextOptions {}
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context
  */
-export const createContext = async (opts?: MyCreateNextContextOptions) => {
-  const session =
-    opts?.session ??
-    (opts?.req && opts.res
-      ? await getIronSession(opts.req, opts.res, sessionOptions)
-      : undefined)
-  const contextInner = await createContextInner({
+export const createContext = async (opts: CreateNextContextOptions) => {
+  const session = await getIronSession(opts.req, opts.res, sessionOptions)
+
+  return await createContextInner({
     session,
   })
-
-  return {
-    ...contextInner,
-    req: opts?.req,
-    res: opts?.res,
-  }
 }
 
-export type Context = trpc.inferAsyncReturnType<typeof createContext>
+export type Context = trpc.inferAsyncReturnType<typeof createContextInner>

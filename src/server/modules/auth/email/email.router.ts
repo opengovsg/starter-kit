@@ -9,6 +9,7 @@ import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
 import { env } from '~/env.mjs'
+import { formatInTimeZone } from 'date-fns-tz'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -47,7 +48,11 @@ export const emailSessionRouter = router({
         }),
         sendMail({
           subject: `Sign in to ${url.host}`,
-          body: `Your OTP is <b>${token}</b>. It will expire on ${expires}.
+          body: `Your OTP is <b>${token}</b>. It will expire on ${formatInTimeZone(
+            expires,
+            'Asia/Singapore',
+            'dd MMM yyyy, hh:mmaaa'
+          )}.
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
           recipient: email,
