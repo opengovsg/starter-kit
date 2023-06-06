@@ -10,7 +10,7 @@ import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
 import { Provider } from 'jotai'
 import Suspense from '~/components/Suspense'
-import ErrorBoundary from '~/components/ErrorBoundary/ErrorBoundary'
+import ErrorBoundary from '~/components/ErrorBoundary'
 import { Skeleton } from '@chakra-ui/react'
 
 type AppPropsWithAuthAndLayout = AppProps & {

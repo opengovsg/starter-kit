@@ -13,7 +13,7 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { AvatarUpload } from '~/features/settings/components/AvatarUpload'
+import { AvatarUpload } from '~/features/settings/components'
 import { useZodForm } from '~/lib/form'
 import { type NextPageWithLayout } from '~/lib/types'
 import { updateMeSchema } from '~/schemas/me'

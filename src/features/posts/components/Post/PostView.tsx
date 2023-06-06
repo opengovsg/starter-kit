@@ -9,7 +9,7 @@ import { type RouterOutput } from '~/utils/trpc'
 import { PostActions } from '../PostActions'
 import { PostImages } from './PostImages'
 
-export interface PostProps {
+export interface PostViewProps {
   post: RouterOutput['post']['byUser']['posts'][number]
   hideActions?: boolean
   containerProps?: StackProps
@@ -19,7 +19,7 @@ export const PostView = ({
   post,
   hideActions,
   containerProps,
-}: PostProps): JSX.Element => {
+}: PostViewProps): JSX.Element => {
   const relativeDate = useMemo(() => formatRelativeTime(post.createdAt), [post])
   return (
     <Stack direction="row" p="1.5rem" spacing="0.75rem" {...containerProps}>

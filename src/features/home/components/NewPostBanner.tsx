@@ -1,10 +1,7 @@
 import { Stack, Text } from '@chakra-ui/react'
-import { NewPostModalButton } from '~/features/posts/components/NewPostModalButton'
+import { NewPostModalButton } from '~/features/posts/components'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface NewPostBannerProps {}
-
-export const NewPostBanner = ({}: NewPostBannerProps): JSX.Element => {
+export const NewPostBanner = (): JSX.Element => {
   return (
     <Stack justify="space-between" direction="row" align="center">
       <Text as="h2" textStyle="h6">

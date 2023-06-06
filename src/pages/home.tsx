@@ -1,7 +1,7 @@
 import { Box, Flex, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
-import { NewPostBanner } from '~/features/home/components/NewPostBanner'
+import { NewPostBanner } from '~/features/home/components'
 import { Post } from '~/features/posts/components'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'

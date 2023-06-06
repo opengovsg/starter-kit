@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
-import { ComposePost } from '~/features/posts/components/ComposePost'
+import { ComposePost } from '~/features/posts/components'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
 import { useUploadImagesMutation } from '../api'
