@@ -3,9 +3,9 @@ import SignInPage from '~/pages/sign-in'
 
 import { within, userEvent } from '@storybook/testing-library'
 import { expect } from '@storybook/jest'
-import { mockTrpcErrorResponse, trpcMsw } from '../__mocks__/trpc'
 import { TRPCError } from '@trpc/server'
 import { getMobileViewParameters } from '../utils/viewports'
+import { mockTrpcErrorResponse, trpcMsw } from '../utils/mockTrpc'
 
 const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
