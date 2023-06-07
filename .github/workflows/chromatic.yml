@@ -28,6 +28,11 @@ jobs:
         name: Install dependencies
         run: npm i
       - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
         name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
