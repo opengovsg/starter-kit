@@ -17,16 +17,18 @@ jobs:
     # Operating System
     runs-on: ubuntu-latest
     env:
-      run_chromatic: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}}
-    if: ${{ env.run_chromatic != '' }}
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}}
     # Job steps
     steps:
-      - uses: actions/checkout@v2
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Required for v2
-      - name: Install dependencies
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Install dependencies
         run: npm i
-      - name: Publish to Chromatic
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
