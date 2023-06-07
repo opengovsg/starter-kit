@@ -5,6 +5,7 @@ import { within, userEvent } from '@storybook/testing-library'
 import { expect } from '@storybook/jest'
 import { mockTrpcErrorResponse, trpcMsw } from '../__mocks__/trpc'
 import { TRPCError } from '@trpc/server'
+import { getMobileViewParameters } from '../utils/viewports'
 
 const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
@@ -31,6 +32,10 @@ export default meta
 type Story = StoryObj<typeof SignInPage>
 
 export const Default: Story = {}
+
+export const Mobile: Story = {
+  parameters: getMobileViewParameters(),
+}
 
 export const InputValidation: Story = {
   play: async ({ canvasElement, step }) => {
