@@ -18,7 +18,7 @@ const breakpointToViewportWidth = (
  * Used for Chromatic viewpoint snapshots which requires the numbers in pixels.
  */
 export const viewports = {
-  xs: breakpointToViewportWidth('xs'),
+  xs: 320, // '20rem'
   sm: breakpointToViewportWidth('sm'),
   md: breakpointToViewportWidth('md'),
   lg: breakpointToViewportWidth('lg'),
