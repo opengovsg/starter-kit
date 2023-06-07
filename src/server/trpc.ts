@@ -8,11 +8,12 @@
  * @see https://trpc.io/docs/v10/procedures
  */
 
-import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { type Context } from './context'
+import { TRPCError, initTRPC } from '@trpc/server'
 import { prisma } from './prisma'
+import { createBaseLogger } from '~/lib/logger'
 
 const t = initTRPC.context<Context>().create({
   /**
@@ -36,11 +37,26 @@ const t = initTRPC.context<Context>().create({
   },
 })
 
-/**
- * Create a router
- * @see https://trpc.io/docs/v10/router
- */
-export const router = t.router
+// Setting outer context with TPRC will not get us correct path during request batching, only by setting logger context in
+// the middleware do we get the exact path to log
+const loggerMiddleware = t.middleware(async ({ path, next }) => {
+  const start = Date.now()
+  const logger = createBaseLogger(path)
+
+  const result = await next({
+    ctx: { logger },
+  })
+
+  const durationInMs = Date.now() - start
+
+  if (result.ok) {
+    logger.info('success', { durationInMs })
+  } else {
+    logger.error('failure', { durationInMs, error: result.error })
+  }
+
+  return result
+})
 
 const authMiddleware = t.middleware(async ({ next, ctx }) => {
   if (!ctx.session?.user) {
@@ -68,15 +84,23 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
 })
 
 /**
+ * Create a router
+ * @see https://trpc.io/docs/v10/router
+ */
+export const router = t.router
+
+/**
  * Create an unprotected procedure
  * @see https://trpc.io/docs/v10/procedures
  **/
-export const publicProcedure = t.procedure
+export const publicProcedure = t.procedure.use(loggerMiddleware)
 
 /**
  * Create a protected procedure
  **/
-export const protectedProcedure = t.procedure.use(authMiddleware)
+export const protectedProcedure = t.procedure
+  .use(loggerMiddleware)
+  .use(authMiddleware)
 
 /**
  * @see https://trpc.io/docs/v10/middlewares
