@@ -1,4 +1,3 @@
-import { Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { env } from '~/env.mjs'
@@ -21,15 +20,12 @@ export const SgidLoginButton = (): JSX.Element | null => {
   }
 
   return (
-    <>
-      <Text>or</Text>
-      <Button
-        variant="outline"
-        isLoading={sgidLoginMutation.isLoading}
-        onClick={handleSgidLogin}
-      >
-        Log in with Singpass app
-      </Button>
-    </>
+    <Button
+      variant="outline"
+      isLoading={sgidLoginMutation.isLoading}
+      onClick={handleSgidLogin}
+    >
+      Log in with Singpass app
+    </Button>
   )
 }
