@@ -7,7 +7,7 @@ name: 'Chromatic'
 on:
   push:
     branches:
-      - 'develop'
+      - 'main'
   pull_request:
     types: [opened, reopened, synchronize]
 
@@ -40,6 +40,6 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
           exitOnceUploaded: true
-          autoAcceptChanges: develop
+          autoAcceptChanges: true
           # Skip running Chromatic on dependabot PRs
           skip: dependabot/**
