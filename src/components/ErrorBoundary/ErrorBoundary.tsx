@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react'
-import { TRPCClientError } from '@trpc/client'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import { Component } from 'react'
 import {
@@ -35,32 +34,26 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       return children
     }
 
-    if (fallback !== undefined) {
-      return fallback
+    const res = TRPCWithErrorCodeSchema.safeParse(error)
+
+    if (!res.success) return !!fallback ? fallback : <UnexpectedErrorCard />
+
+    // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
+    // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
+    // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
+    if (res.data === 'UNAUTHORIZED') {
+      const params = new URLSearchParams(window.location.search)
+
+      const callbackUrl = params.get('callbackUrl')
+
+      window.location.href = !!callbackUrl
+        ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
+        : `/sign-in`
+
+      return
     }
 
-    if (error instanceof TRPCClientError) {
-      const res = TRPCWithErrorCodeSchema.safeParse(error)
-
-      if (!res.success) return <UnexpectedErrorCard />
-
-      // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
-      // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
-      // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
-      if (res.data === 'UNAUTHORIZED') {
-        const params = new URLSearchParams(window.location.search)
-
-        const callbackUrl = params.get('callbackUrl')
-
-        window.location.href = !!callbackUrl
-          ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
-          : `/sign-in`
-
-        return
-      }
-
-      return <ErrorComponent code={res.data} />
-    }
+    return !!fallback ? fallback : <ErrorComponent code={res.data} />
   }
 }
 
