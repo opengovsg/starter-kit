@@ -13,12 +13,25 @@ import superjson from 'superjson'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { theme } from '~/theme'
 
+import { initialize, mswDecorator } from 'msw-storybook-addon'
+
+// Initialize MSW
+initialize({
+  onUnhandledRequest: 'bypass',
+})
+
 const trpc = createTRPCReact<AppRouter>()
 
 const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(
     new QueryClient({
-      defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+      defaultOptions: {
+        queries: {
+          staleTime: Infinity,
+          retry: false,
+          refetchOnWindowFocus: false,
+        },
+      },
     })
   )
   const [trpcClient] = useState(() =>
@@ -35,6 +48,7 @@ const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
 }
 
 const decorators: Decorator[] = [
+  mswDecorator,
   withThemeFromJSXProvider({
     themes: {
       default: theme,
