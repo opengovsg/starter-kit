@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input, Wrap } from '@chakra-ui/react'
 import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
@@ -41,7 +41,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
   })
 
   return (
-    <form onSubmit={handleSignIn}>
+    <form onSubmit={handleSignIn} noValidate>
       <FormControl
         id="email"
         isRequired
@@ -54,12 +54,12 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
-      <Stack direction="row" align="center" mt="1rem">
+      <Wrap shouldWrapChildren direction="row" align="center" mt="1rem">
         <Button type="submit" isLoading={loginMutation.isLoading}>
           Get OTP
         </Button>
         <SgidLoginButton />
-      </Stack>
+      </Wrap>
     </form>
   )
 }

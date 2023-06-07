@@ -1,0 +1,45 @@
+# .github/workflows/chromatic.yml
+
+# Workflow name
+name: 'Chromatic'
+
+# Event for the workflow
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+# List of jobs
+jobs:
+  chromatic-deployment:
+    # Operating System
+    runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}}
+    # Job steps
+    steps:
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Required for v2
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Install dependencies
+        run: npm i
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
+      - if: env.CHROMATIC_PROJECT_TOKEN != ''
+        name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          onlyChanged: true
+          exitOnceUploaded: true
+          autoAcceptChanges: true
+          # Skip running Chromatic on dependabot PRs
+          skip: dependabot/**
