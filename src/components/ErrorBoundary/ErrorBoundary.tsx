@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react'
-import { TRPCClientError } from '@trpc/client'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import { Component } from 'react'
 import {
@@ -10,6 +9,16 @@ import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 
+/**
+ * Does the following:
+ * 1. Checks if this is a recognizable TRPCClientError
+ * 1a. Not a TRPCClientError
+ *     - Render fallback component or UnexpectedErrorCard
+ * 1b. Is a TPRCClientError
+ *     - Checks if its an UNAUTHORIZED error
+ * 2a. Is an UNAUTHORIZED error, redirect to `/sign-in` page
+ * 2b. Not a UNAUTHORIZED error, render fallback component or <ErrorComponent /> according to switch case error code
+ */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
@@ -31,36 +40,28 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const error = this.state.error
 
     // Check if the error is thrown
-    if (!this.state.hasError) {
-      return children
+    if (!this.state.hasError) return children
+
+    const res = TRPCWithErrorCodeSchema.safeParse(error)
+
+    if (!res.success) return fallback ?? <UnexpectedErrorCard />
+
+    // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
+    // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
+    // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
+    if (res.data === 'UNAUTHORIZED') {
+      const params = new URLSearchParams(window.location.search)
+
+      const callbackUrl = params.get('callbackUrl')
+
+      window.location.href = !!callbackUrl
+        ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
+        : `/sign-in`
+
+      return
     }
 
-    if (fallback !== undefined) {
-      return fallback
-    }
-
-    if (error instanceof TRPCClientError) {
-      const res = TRPCWithErrorCodeSchema.safeParse(error)
-
-      if (!res.success) return <UnexpectedErrorCard />
-
-      // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
-      // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
-      // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
-      if (res.data === 'UNAUTHORIZED') {
-        const params = new URLSearchParams(window.location.search)
-
-        const callbackUrl = params.get('callbackUrl')
-
-        window.location.href = !!callbackUrl
-          ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
-          : `/sign-in`
-
-        return
-      }
-
-      return <ErrorComponent code={res.data} />
-    }
+    return fallback ?? <ErrorComponent code={res.data} />
   }
 }
 

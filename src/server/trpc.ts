@@ -69,8 +69,6 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
   })
 
   if (user === null) {
-    ctx.session.destroy()
-
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
