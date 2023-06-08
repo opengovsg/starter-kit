@@ -27,6 +27,7 @@ export const AddCommentAction = ({
         data-value="post-action"
         onClick={handleOpenModal}
         aria-label="Comment"
+        px="0.25rem"
         leftIcon={<BiMessageRounded fontSize="1.25rem" />}
       >
         {post._count.replies}

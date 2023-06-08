@@ -31,12 +31,7 @@ const Home: NextPageWithLayout = () => {
           <NewPostBanner />
         </Box>
       </AppGrid>
-      <AppGrid
-        flex={1}
-        bg="white"
-        templateColumns={APP_GRID_TEMPLATE_COLUMN}
-        py="1rem"
-      >
+      <AppGrid flex={1} bg="white" templateColumns={APP_GRID_TEMPLATE_COLUMN}>
         <Stack
           spacing={0}
           divider={<StackDivider />}

@@ -32,7 +32,7 @@ export const PostActions = ({
       // return will pass the function or the value to the onError third argument:
       return previousPost
     },
-    onError: (error, variables, previousPost) => {
+    onError: (_error, _variables, previousPost) => {
       //   If there is an errror, then we will rollback
       if (previousPost) {
         setPost(previousPost)
@@ -67,6 +67,7 @@ export const PostActions = ({
     >
       <Button
         data-value="post-action"
+        px="0.25rem"
         colorScheme={post.likedByMe ? 'main' : 'neutral'}
         aria-label="Like post"
         leftIcon={
@@ -83,6 +84,7 @@ export const PostActions = ({
       </Button>
       <Button
         data-value="post-action"
+        px="0.25rem"
         aria-label="Repost"
         leftIcon={<BiSync fontSize="1.25rem" />}
       >

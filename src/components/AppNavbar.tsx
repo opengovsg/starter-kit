@@ -22,7 +22,7 @@ export const AppNavbar = (): JSX.Element => {
         align="center"
         px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
         position="sticky"
-        zIndex="sticky"
+        zIndex="docked"
         top={0}
         py="0.75rem"
         bg="white"

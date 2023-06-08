@@ -24,38 +24,46 @@ export const PostView = ({
   return (
     <Stack
       direction="row"
-      p={{ base: '1rem', md: '1.5rem' }}
+      py="1.5rem"
+      px={{ base: '0.75rem', md: '1.5rem' }}
       spacing="0.75rem"
       {...containerProps}
     >
       <Avatar src={post?.author.image ?? undefined} size="md" />
-      <Stack direction="column" spacing="0.5rem" flex={1}>
-        <Stack direction="row" spacing="1rem">
+      <Stack direction="column" spacing="0.75rem" flex={1}>
+        <Stack
+          direction={{ base: 'column', md: 'row' }}
+          spacing={{ base: 0, md: '1rem' }}
+        >
           <Text textStyle="subhead-2" color="base.content.strong">
             {post.author.name}
           </Text>
-          <Link
-            data-value="post-action"
-            variant="standalone"
-            p={0}
-            as={NextLink}
-            href={`${PROFILE}/${post.author.username}`}
-            textStyle="body-2"
-            color="base.content.medium"
-          >
-            @{post.author.username}
-          </Link>
-          <Text
-            title={post.createdAt.toLocaleString()}
-            textStyle="body-2"
-            color="base.content.medium"
-          >
-            {relativeDate}
-          </Text>
+          <Stack direction="row" spacing="1rem">
+            <Link
+              data-value="post-action"
+              variant="standalone"
+              p={0}
+              as={NextLink}
+              href={`${PROFILE}/${post.author.username}`}
+              textStyle="body-2"
+              color="base.content.medium"
+            >
+              @{post.author.username}
+            </Link>
+            <Text
+              title={post.createdAt.toLocaleString()}
+              textStyle="body-2"
+              color="base.content.medium"
+            >
+              {relativeDate}
+            </Text>
+          </Stack>
         </Stack>
-        <RichText defaultValue={post?.contentHtml} isReadOnly />
-        <PostImages images={post.images} />
-        {!hideActions && <PostActions post={post} />}
+        <Stack ml={{ base: '-3.25rem', md: 0 }}>
+          <RichText defaultValue={post?.contentHtml} isReadOnly />
+          <PostImages images={post.images} />
+          {!hideActions && <PostActions post={post} />}
+        </Stack>
       </Stack>
     </Stack>
   )
