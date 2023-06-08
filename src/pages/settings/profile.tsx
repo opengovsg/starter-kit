@@ -116,6 +116,7 @@ const Profile: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="white"
         py="1.5rem"
+        px="1rem"
       >
         <Stack flex={1} spacing="2rem" gridColumn={APP_GRID_COLUMN}>
           <AvatarUpload url={me?.image} name={me?.name} />
