@@ -1,7 +1,12 @@
 import { ButtonGroup } from '@chakra-ui/react'
-import { Button, BxsHeart, IconButton } from '@opengovsg/design-system-react'
+import {
+  Button,
+  BxsHeart,
+  IconButton,
+  useToast,
+} from '@opengovsg/design-system-react'
 import { type MouseEventHandler, useState } from 'react'
-import { BiHeart, BiLink, BiSync } from 'react-icons/bi'
+import { BiHeart, BiLink } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
 import { type RouterOutput, trpc } from '~/utils/trpc'
 import { AddCommentAction } from './AddCommentAction'
@@ -15,6 +20,10 @@ export const PostActions = ({
   post: postProp,
 }: PostActionsProps): JSX.Element => {
   const { me } = useMe()
+
+  const toast = useToast({
+    status: 'info',
+  })
 
   // Use local state to update the UI immediately on like/unlike
   const [post, setPost] = useState(postProp)
@@ -58,6 +67,13 @@ export const PostActions = ({
     })
   }
 
+  const handleCopyLink: MouseEventHandler = (e) => {
+    e.stopPropagation()
+    const url = `${window.location.origin}/thread/${post.id}`
+    navigator.clipboard.writeText(url)
+    toast({ description: 'Link copied', icon: <BiLink /> })
+  }
+
   return (
     <ButtonGroup
       variant="clear"
@@ -87,6 +103,7 @@ export const PostActions = ({
         data-value="post-action"
         aria-label="Link to post"
         icon={<BiLink fontSize="1.25rem" />}
+        onClick={handleCopyLink}
       />
       {isOwnPost && <DeletePostAction postId={post.id} />}
     </ButtonGroup>
