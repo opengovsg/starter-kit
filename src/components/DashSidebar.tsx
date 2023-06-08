@@ -28,7 +28,7 @@ export const DashSidebar = () => {
   return (
     <Box
       gridColumn={{ md: '1/3' }}
-      w={{ base: '2.75rem', md: '13.5rem' }}
+      w={{ base: '2.75rem', md: '10.5rem', lg: '13.5rem' }}
       bg="white"
       position="relative"
       borderRight="1px solid"
@@ -36,7 +36,7 @@ export const DashSidebar = () => {
     >
       <Flex
         pos="fixed"
-        w={{ base: '2.75rem', md: '13.5rem' }}
+        w={{ base: '2.75rem', md: '10.5rem', lg: '13.5rem' }}
         h="calc(var(--chakra-vh) - var(--chakra-sizes-appNavbar))"
         flexDir="column"
         justify="space-between"

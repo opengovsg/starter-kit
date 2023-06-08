@@ -12,6 +12,7 @@ export const AdminLayout: GetLayout = (page) => {
       <AppNavbar />
       <AppGrid
         flex={1}
+        columnGap={{ base: 0, md: '0.5rem', lg: '1rem' }}
         templateColumns={{ base: '2.75rem 1fr', md: 'repeat(12, 1fr)' }}
       >
         <DashSidebar />

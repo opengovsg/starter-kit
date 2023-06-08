@@ -22,7 +22,12 @@ export const PostView = ({
 }: PostViewProps): JSX.Element => {
   const relativeDate = useMemo(() => formatRelativeTime(post.createdAt), [post])
   return (
-    <Stack direction="row" p="1.5rem" spacing="0.75rem" {...containerProps}>
+    <Stack
+      direction="row"
+      p={{ base: '1rem', md: '1.5rem' }}
+      spacing="0.75rem"
+      {...containerProps}
+    >
       <Avatar src={post?.author.image ?? undefined} size="md" />
       <Stack direction="column" spacing="0.5rem" flex={1}>
         <Stack direction="row" spacing="1rem">
