@@ -19,7 +19,7 @@ const Profile: NextPageWithLayout = () => {
   }
 
   return (
-    <Stack mx="-1.5rem" spacing={0} divider={<StackDivider />} py="1rem">
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
       {data?.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}

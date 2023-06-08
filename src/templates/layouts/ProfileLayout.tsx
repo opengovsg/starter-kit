@@ -17,7 +17,7 @@ const _ProfileLayout: NextPageWithLayout['getLayout'] = (page) => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
       >
-        <Box gridColumn={APP_GRID_COLUMN}>
+        <Box px="1rem" gridColumn={APP_GRID_COLUMN}>
           <ProfileDescription username={username} />
         </Box>
       </AppGrid>
@@ -27,10 +27,10 @@ const _ProfileLayout: NextPageWithLayout['getLayout'] = (page) => {
         templateRows="min-content 1px auto"
         bg="white"
       >
-        <Box gridColumn={APP_GRID_COLUMN}>
+        <Box px="1rem" gridColumn={APP_GRID_COLUMN}>
           <ProfileTabs username={username} />
         </Box>
-        <Divider gridColumn="1/13" h="1px" />
+        <Divider gridColumn={{ base: '1/5', md: '1/12' }} h="1px" />
         <Box gridColumn={APP_GRID_COLUMN}>{page}</Box>
       </AppGrid>
     </Flex>
