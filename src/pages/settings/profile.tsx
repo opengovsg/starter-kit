@@ -33,6 +33,7 @@ import { useMe } from '~/features/me/api'
 import { PROFILE } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 import { registerWithDebounce } from '~/utils/registerWithDebounce'
+import isEmail from 'validator/lib/isEmail'
 
 const Profile: NextPageWithLayout = () => {
   const { me } = useMe()
@@ -42,6 +43,7 @@ const Profile: NextPageWithLayout = () => {
   })
 
   const usernameExistsMutation = trpc.profile.checkUsernameExists.useMutation()
+  const emailExistsMutation = trpc.profile.checkEmailExists.useMutation()
 
   const updateMutation = trpc.me.update.useMutation({
     async onSuccess(updatedUser) {
@@ -84,9 +86,27 @@ const Profile: NextPageWithLayout = () => {
           },
           { message: 'That username has been taken. Please choose another.' }
         ),
+      email: z
+        .string()
+        .trim()
+        .min(1, 'Please enter an email address.')
+        .email({ message: 'Please enter a valid email address.' })
+        .refine(
+          async (val) => {
+            if (!val || !isEmail(val)) return false
+            if (val === me?.email) return true
+            const exists = await emailExistsMutation.mutateAsync(val)
+            return !exists
+          },
+          {
+            message:
+              'That email has already been registered with another account.',
+          }
+        ),
     }),
     values: useMemo(() => {
       return {
+        email: me?.email ?? '',
         username: me?.username ?? '',
         name: me?.name ?? '',
         bio: me?.bio ?? '',
@@ -120,9 +140,10 @@ const Profile: NextPageWithLayout = () => {
       >
         <Stack flex={1} spacing="2rem" gridColumn={APP_GRID_COLUMN}>
           <AvatarUpload url={me?.image} name={me?.name} />
-          <FormControl>
+          <FormControl id="email" isInvalid={!!errors.email}>
             <FormLabel>Email</FormLabel>
-            <Input isDisabled value={me?.email ?? ''} />
+            <Input {...registerWithDebounce('email', 500, trigger, register)} />
+            <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
           </FormControl>
           <FormControl id="name" isInvalid={!!errors.username}>
             <FormLabel>Username</FormLabel>

@@ -31,4 +31,12 @@ export const profileRouter = router({
       })
       return !!user
     }),
+  checkEmailExists: protectedProcedure
+    .input(z.string().email())
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { email: input },
+      })
+      return !!user
+    }),
 })
