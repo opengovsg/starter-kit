@@ -21,6 +21,9 @@ export const AppNavbar = (): JSX.Element => {
         justify="space-between"
         align="center"
         px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
+        position="sticky"
+        zIndex="sticky"
+        top={0}
         py="0.75rem"
         bg="white"
         borderBottomWidth="1px"
