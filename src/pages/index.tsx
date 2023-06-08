@@ -18,6 +18,7 @@ import {
   SectionHeadingText,
 } from '~/features/landing/components'
 import { SIGN_IN } from '~/lib/routes'
+import { AppGrid } from '~/templates/AppGrid'
 
 const LandingPage = () => {
   const isMobile = useIsMobile()
@@ -34,11 +35,7 @@ const LandingPage = () => {
           align="center"
           spacing={{ base: '1.5rem', md: '3.125rem', lg: '7.5rem' }}
         >
-          <Flex
-            flexDir="column"
-            flex={1}
-            pr={{ base: '1.5rem', md: '5.5rem', lg: '0' }}
-          >
+          <Flex flexDir="column" flex={1}>
             <Text
               as="h1"
               textStyle={{
@@ -164,7 +161,17 @@ const LandingPage = () => {
           </Button>
         </Box>
       </LandingSection>
-      <RestrictedFooter appName="Starter Kit" appLink="/" />
+      <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
+        <Box gridColumn={{ base: '1 / -1', md: '2 / 12' }}>
+          <RestrictedFooter
+            containerProps={{
+              px: 0,
+            }}
+            appName="Starter Kit"
+            appLink="/"
+          />
+        </Box>
+      </AppGrid>
     </>
   )
 }
