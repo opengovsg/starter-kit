@@ -82,14 +82,6 @@ export const PostActions = ({
       >
         {post._count.likes}
       </Button>
-      <Button
-        data-value="post-action"
-        px="0.25rem"
-        aria-label="Repost"
-        leftIcon={<BiSync fontSize="1.25rem" />}
-      >
-        65
-      </Button>
       <AddCommentAction post={post} onSuccess={incrementReplyCount} />
       <IconButton
         data-value="post-action"
