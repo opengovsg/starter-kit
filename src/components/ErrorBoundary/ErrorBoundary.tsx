@@ -44,7 +44,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     const res = TRPCWithErrorCodeSchema.safeParse(error)
 
-    if (!res.success) return !!fallback ? fallback : <UnexpectedErrorCard />
+    if (!res.success) return fallback ?? <UnexpectedErrorCard />
 
     // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
     // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
@@ -61,7 +61,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       return
     }
 
-    return !!fallback ? fallback : <ErrorComponent code={res.data} />
+    return fallback ?? <ErrorComponent code={res.data} />
   }
 }
 
