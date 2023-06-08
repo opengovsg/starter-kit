@@ -49,13 +49,6 @@ export const sgidRouter = router({
           message: 'Session object missing in context',
         })
       }
-      // Already logged in.
-      if (ctx.session.user) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'User is already logged in',
-        })
-      }
 
       const { codeChallenge, codeVerifier } = generatePkcePair()
       const options: AuthorizationUrlParams = {
