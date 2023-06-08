@@ -10,9 +10,16 @@ export const AdminLayout: GetLayout = (page) => {
   return (
     <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt">
       <AppNavbar />
-      <AppGrid flex={1}>
+      <AppGrid
+        flex={1}
+        templateColumns={{ base: '2.75rem 1fr', md: 'repeat(12, 1fr)' }}
+      >
         <DashSidebar />
-        <Flex gridColumn={{ md: '3 / 13' }} flex={1} bg="base.canvas.alt">
+        <Flex
+          gridColumn={{ base: '2', md: '3 / 13' }}
+          flex={1}
+          bg="base.canvas.alt"
+        >
           {page}
         </Flex>
       </AppGrid>
