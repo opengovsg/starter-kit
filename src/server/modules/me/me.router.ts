@@ -44,6 +44,12 @@ export const meRouter = router({
       } catch (e) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           if (e.code === 'P2002') {
+            ctx.logger.info('Username conflict', {
+              userId: ctx.session.user.id,
+              chosen: input.username,
+              current: ctx.session.user.username,
+            })
+
             throw new TRPCError({
               message: 'That username has been taken. Please choose another.',
               code: 'CONFLICT',

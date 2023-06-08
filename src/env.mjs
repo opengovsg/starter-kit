@@ -3,8 +3,8 @@ import { z } from 'zod'
 // Coerces a string to true if it's "true", false if "false".
 const coerceBoolean = z
   .string()
-  // only allow "true" or "false"
-  .refine((s) => s === 'true' || s === 'false')
+  // only allow "true" or "false" or empty string
+  .refine((s) => s === 'true' || s === 'false' || s === '')
   // transform to boolean
   .transform((s) => s === 'true')
   // make sure tranform worked

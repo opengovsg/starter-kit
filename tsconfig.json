@@ -20,9 +20,15 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "vitest-environment-vprisma"]
+    "types": [
+      "vitest/globals",
+      "vitest-environment-vprisma",
+      "@testing-library/jest-dom"
+    ]
   },
   "include": [
+    ".storybook/**/*.tsx",
+    ".storybook/**/*.ts",
     ".eslintrc.cjs",
     "next-env.d.ts",
     "src/lib/iron-session.d.ts",
