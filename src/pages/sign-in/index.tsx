@@ -14,8 +14,8 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
-  SignInForm,
   SignInContextProvider,
+  SignInForm,
 } from '~/features/sign-in/components'
 import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
