@@ -40,6 +40,6 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
           exitOnceUploaded: true
-          autoAcceptChanges: true
+          autoAcceptChanges: main
           # Skip running Chromatic on dependabot PRs
           skip: dependabot/**
