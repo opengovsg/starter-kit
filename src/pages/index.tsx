@@ -1,10 +1,5 @@
 import { Box, Flex, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react'
-import {
-  Button,
-  Link,
-  RestrictedFooter,
-  useIsMobile,
-} from '@opengovsg/design-system-react'
+import { Button, Link, useIsMobile } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
@@ -164,7 +159,11 @@ const LandingPage = () => {
           </Button>
         </Box>
       </LandingSection>
-      <RestrictedFooter appName="Starter Kit" appLink="/" />
+      {/* <RestrictedFooter
+        // This component can only be used if this is an application created by OGP.
+        appName="Starter Kit"
+        appLink="/"
+      /> */}
     </>
   )
 }

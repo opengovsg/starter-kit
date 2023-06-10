@@ -3,8 +3,6 @@ import { Button } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import { MiniFooter } from '~/components/Footer/MiniFooter'
-
 // https://nextjs.org/docs/advanced-features/custom-error-page
 const Custom404 = () => {
   const router = useRouter()
@@ -43,7 +41,9 @@ const Custom404 = () => {
             Go back
           </Button>
         </Stack>
-        <MiniFooter />
+        {/* <RestrictedMiniFooter
+          // This component can only be used if this is an application created by OGP.
+        /> */}
       </Stack>
     </Flex>
   )
