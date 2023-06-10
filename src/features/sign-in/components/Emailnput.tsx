@@ -48,9 +48,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         isInvalid={!!errors.email}
         isReadOnly={loginMutation.isLoading}
       >
-        <FormLabel requiredIndicator={<></>}>
-          Log in with your open.gov.sg email
-        </FormLabel>
+        <FormLabel requiredIndicator={<></>}>Log in with your email</FormLabel>
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>
