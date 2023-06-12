@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
-import { isOgpEmail } from '~/utils/auth'
 import { trpc } from '~/utils/trpc'
 import { SgidLoginButton } from './SgidLoginButton'
 
@@ -17,10 +16,7 @@ export const emailSignInSchema = z.object({
     .string()
     .trim()
     .min(1, 'Please enter an email address.')
-    .email({ message: 'Please enter a valid email address.' })
-    .refine(isOgpEmail, {
-      message: 'Please sign in with an open.gov.sg email address.',
-    }),
+    .email({ message: 'Please enter a valid email address.' }),
 })
 
 export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
@@ -59,9 +55,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         isInvalid={!!errors.email}
         isReadOnly={loginMutation.isLoading}
       >
-        <FormLabel requiredIndicator={<></>}>
-          Log in with your open.gov.sg email
-        </FormLabel>
+        <FormLabel requiredIndicator={<></>}>Log in with your email</FormLabel>
         <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
       </FormControl>

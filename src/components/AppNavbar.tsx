@@ -5,7 +5,6 @@ import {
   Link,
   Menu,
 } from '@opengovsg/design-system-react'
-import Image from 'next/image'
 import NextLink from 'next/link'
 import { useMe } from '~/features/me/api'
 import { SETTINGS_PROFILE } from '~/lib/routes'
@@ -30,13 +29,15 @@ export const AppNavbar = (): JSX.Element => {
         borderColor="base.divider.medium"
       >
         <Link as={NextLink} href="/">
-          <Image
-            src="/assets/ogp-logo.svg"
-            width={32}
-            height={32}
+          Starter Kit
+          {/* <Image
+            // This component can only be used if this is an application created by OGP.
+            src="/assets/restricted-ogp-logo-full.svg"
+            width={233}
+            height={12}
             alt="OGP Logo"
             priority
-          />
+          /> */}
         </Link>
         <HStack
           textStyle="subhead-1"

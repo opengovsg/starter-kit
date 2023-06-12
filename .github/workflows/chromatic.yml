@@ -17,7 +17,7 @@ jobs:
     # Operating System
     runs-on: ubuntu-latest
     env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}}
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     # Job steps
     steps:
       - if: env.CHROMATIC_PROJECT_TOKEN != ''
@@ -40,6 +40,6 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
           exitOnceUploaded: true
-          autoAcceptChanges: true
+          autoAcceptChanges: main
           # Skip running Chromatic on dependabot PRs
           skip: dependabot/**

@@ -161,9 +161,10 @@ const LandingPage = () => {
           </Button>
         </Box>
       </LandingSection>
-      <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
+      {/* <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
         <Box gridColumn={{ base: '1 / -1', md: '2 / 12' }}>
           <RestrictedFooter
+            // This component can only be used if this is an application created by OGP.
             containerProps={{
               px: 0,
             }}
@@ -171,7 +172,7 @@ const LandingPage = () => {
             appLink="/"
           />
         </Box>
-      </AppGrid>
+      </AppGrid> */}
     </>
   )
 }
