@@ -10,7 +10,6 @@ import { set } from 'lodash'
 import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
 import { defaultMeSelect } from '../../me/me.select'
-import { generateUsername } from '../../me/me.service'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -94,7 +93,6 @@ export const emailSessionRouter = router({
           email,
           emailVerified: new Date(),
           name: emailName,
-          username: generateUsername(emailName),
         },
         select: defaultMeSelect,
       })

@@ -1,4 +1,25 @@
 -- CreateTable
+CREATE TABLE "VerificationToken" (
+    "identifier" STRING NOT NULL,
+    "token" STRING NOT NULL,
+    "attempts" INT4 NOT NULL DEFAULT 0,
+    "expires" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("identifier")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" STRING NOT NULL,
+    "name" STRING,
+    "email" STRING,
+    "email_verified" TIMESTAMP(3),
+    "image" STRING,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Accounts" (
     "id" STRING NOT NULL,
     "provider" STRING NOT NULL,
@@ -7,6 +28,9 @@ CREATE TABLE "Accounts" (
 
     CONSTRAINT "Accounts_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "Accounts_user_id_idx" ON "Accounts"("user_id");

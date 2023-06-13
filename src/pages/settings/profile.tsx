@@ -5,12 +5,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Icon,
   Input,
-  InputGroup,
-  InputLeftElement,
   Stack,
-  Textarea,
 } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { AvatarUpload } from '~/features/settings/components'
@@ -20,20 +16,16 @@ import { updateMeSchema } from '~/schemas/me'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
 import { trpc } from '~/utils/trpc'
 
-import {
-  FormLabel as DFormLabel,
-  useToast,
-} from '@opengovsg/design-system-react'
+import { useToast } from '@opengovsg/design-system-react'
 import { isEmpty } from 'lodash'
-import { BiAt } from 'react-icons/bi'
+import isEmail from 'validator/lib/isEmail'
 import { z } from 'zod'
 import { BackBannerLink } from '~/components/BackBannerLink'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 import { useMe } from '~/features/me/api'
-import { PROFILE } from '~/lib/routes'
+import { HOME } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 import { registerWithDebounce } from '~/utils/registerWithDebounce'
-import isEmail from 'validator/lib/isEmail'
 
 const Profile: NextPageWithLayout = () => {
   const { me } = useMe()
@@ -42,20 +34,14 @@ const Profile: NextPageWithLayout = () => {
     status: 'success',
   })
 
-  const usernameExistsMutation = trpc.profile.checkUsernameExists.useMutation()
   const emailExistsMutation = trpc.profile.checkEmailExists.useMutation()
 
   const updateMutation = trpc.me.update.useMutation({
-    async onSuccess(updatedUser) {
+    async onSuccess() {
       toast({
         description: 'Profile updated successfully.',
       })
       await utils.me.get.invalidate()
-      if (updatedUser.username) {
-        await utils.profile.byUsername.invalidate({
-          username: updatedUser.username,
-        })
-      }
     },
     onError: (err) => {
       toast({
@@ -72,20 +58,6 @@ const Profile: NextPageWithLayout = () => {
     trigger,
   } = useZodForm({
     schema: updateMeSchema.extend({
-      username: z
-        .string()
-        .nonempty({
-          message: 'Username is required',
-        })
-        .refine(
-          async (val) => {
-            if (!val) return false
-            if (val === me?.username) return true
-            const exists = await usernameExistsMutation.mutateAsync(val)
-            return !exists
-          },
-          { message: 'That username has been taken. Please choose another.' }
-        ),
       email: z
         .string()
         .trim()
@@ -107,9 +79,7 @@ const Profile: NextPageWithLayout = () => {
     values: useMemo(() => {
       return {
         email: me?.email ?? '',
-        username: me?.username ?? '',
         name: me?.name ?? '',
-        bio: me?.bio ?? '',
       }
     }, [me]),
   })
@@ -125,11 +95,8 @@ const Profile: NextPageWithLayout = () => {
         bg="base.canvas.brand-subtle"
         py="1rem"
       >
-        <BackBannerLink
-          gridColumn={APP_GRID_COLUMN}
-          href={`${PROFILE}/${me?.username}`}
-        >
-          Back to your profile
+        <BackBannerLink gridColumn={APP_GRID_COLUMN} href={HOME}>
+          Back to home page
         </BackBannerLink>
       </AppGrid>
       <AppGrid
@@ -145,29 +112,10 @@ const Profile: NextPageWithLayout = () => {
             <Input {...registerWithDebounce('email', 500, trigger, register)} />
             <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl id="name" isInvalid={!!errors.username}>
-            <FormLabel>Username</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon color="interaction.neutral.default" as={BiAt} />
-              </InputLeftElement>
-              <Input
-                {...registerWithDebounce('username', 500, trigger, register)}
-              />
-            </InputGroup>
-            <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
-          </FormControl>
           <FormControl id="name" isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input {...register('name')} />
             <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl id="title" isInvalid={!!errors.bio}>
-            <FormLabel optionalIndicator={<DFormLabel.OptionalIndicator />}>
-              Bio
-            </FormLabel>
-            <Textarea {...register('bio')} />
-            <FormErrorMessage>{errors.bio?.message}</FormErrorMessage>
           </FormControl>
           <ButtonGroup justifyContent="end">
             <Button

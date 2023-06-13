@@ -6,8 +6,6 @@ import { Prisma } from '@prisma/client'
  * @see https://github.com/prisma/prisma/issues/9353
  */
 export const defaultProfileSelect = Prisma.validator<Prisma.UserSelect>()({
-  bio: true,
-  username: true,
   image: true,
   name: true,
 })
