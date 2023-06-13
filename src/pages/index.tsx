@@ -1,10 +1,5 @@
 import { Box, Flex, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react'
-import {
-  Button,
-  Link,
-  RestrictedFooter,
-  useIsMobile,
-} from '@opengovsg/design-system-react'
+import { Button, Link, useIsMobile } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
@@ -18,7 +13,6 @@ import {
   SectionHeadingText,
 } from '~/features/landing/components'
 import { SIGN_IN } from '~/lib/routes'
-import { AppGrid } from '~/templates/AppGrid'
 
 const LandingPage = () => {
   const isMobile = useIsMobile()
