@@ -38,7 +38,9 @@ const config = {
               "frame-ancestors 'self';",
               `img-src 'self' blob: data: ${
                 // For displaying images from R2
-                env.R2_PUBLIC_HOSTNAME || ''
+                env.R2_PUBLIC_HOSTNAME
+                  ? `https://${env.R2_PUBLIC_HOSTNAME}`
+                  : ''
               };`,
               "object-src 'none';",
               `script-src 'self' ${
