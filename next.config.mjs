@@ -30,25 +30,25 @@ const config = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: `
-              "default-src 'self';
-              base-uri 'self';
-              font-src 'self' https: data:;
-              form-action 'self';
-              frame-ancestors 'self';
-              img-src 'self' blob: data: ${
+            value: [
+              "default-src 'self';",
+              "base-uri 'self';",
+              "font-src 'self' https: data:;",
+              "form-action 'self';",
+              "frame-ancestors 'self';",
+              `img-src 'self' blob: data: ${
                 process.env.R2_PUBLIC_HOSTNAME || ''
-              };
-              object-src 'none';
-              script-src 'self';
-              script-src-attr 'none';
-              style-src 'self' https: 'unsafe-inline';
-              connect-src 'self' https://*.browser-intake-datadoghq.com  ${
+              };`,
+              "object-src 'none';",
+              "script-src 'self';",
+              "script-src-attr 'none';",
+              "style-src 'self' https: 'unsafe-inline';",
+              `connect-src 'self' https://*.browser-intake-datadoghq.com  ${
                 process.env.R2_PUBLIC_HOSTNAME || ''
-              };
-              worker-src 'self' blob:;
-              upgrade-insecure-requests",
-            `,
+              };`,
+              "worker-src 'self' blob:;",
+              'upgrade-insecure-requests',
+            ].join(''),
           },
           {
             key: 'Cross-Origin-Opener-Policy',
