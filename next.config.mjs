@@ -37,14 +37,16 @@ const config = {
               "form-action 'self';",
               "frame-ancestors 'self';",
               `img-src 'self' blob: data: ${
+                // For displaying images from R2
                 process.env.R2_PUBLIC_HOSTNAME || ''
               };`,
               "object-src 'none';",
               "script-src 'self';",
               "script-src-attr 'none';",
               "style-src 'self' https: 'unsafe-inline';",
-              `connect-src 'self' https://*.browser-intake-datadoghq.com  ${
-                process.env.R2_PUBLIC_HOSTNAME || ''
+              `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
+                // For POSTing presigned URLs to R2 storage.
+                process.env.R2_S3_API_ROOT || ''
               };`,
               "worker-src 'self' blob:;",
               'upgrade-insecure-requests',
