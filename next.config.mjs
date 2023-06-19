@@ -42,7 +42,7 @@ const config = {
                   ? `https://${env.R2_PUBLIC_HOSTNAME}`
                   : ''
               };`,
-              'frame-src https://vercel.live/ https://vercel.com',
+              'frame-src https://vercel.live/ https://vercel.com;',
               "object-src 'none';",
               `script-src 'self' https://vercel.live/ https://vercel.com ${
                 env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''
