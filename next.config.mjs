@@ -2,7 +2,7 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import('./src/env.mjs')
+const { env } = await import('./src/env.mjs')
 /**
  * @link https://nextjs.org/docs/api-reference/next.config.js/introduction
  */
@@ -16,12 +16,12 @@ const config = {
    * @link https://nextjs.org/docs/api-reference/next.config.js/runtime-configuration
    */
   publicRuntimeConfig: {
-    NODE_ENV: process.env.NODE_ENV,
+    NODE_ENV: env.NODE_ENV,
   },
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   images: {
-    domains: [process.env.R2_PUBLIC_HOSTNAME ?? ''].filter((d) => d),
+    domains: [env.R2_PUBLIC_HOSTNAME ?? ''].filter((d) => d),
   },
   async headers() {
     return [
@@ -38,15 +38,17 @@ const config = {
               "frame-ancestors 'self';",
               `img-src 'self' blob: data: ${
                 // For displaying images from R2
-                process.env.R2_PUBLIC_HOSTNAME || ''
+                env.R2_PUBLIC_HOSTNAME || ''
               };`,
               "object-src 'none';",
-              "script-src 'self';",
+              `script-src 'self' ${
+                env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''
+              };`,
               "script-src-attr 'none';",
               "style-src 'self' https: 'unsafe-inline';",
               `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
                 // For POSTing presigned URLs to R2 storage.
-                process.env.R2_S3_CSP_PATTERN || ''
+                env.R2_S3_CSP_PATTERN || ''
               };`,
               "worker-src 'self' blob:;",
               'upgrade-insecure-requests',
