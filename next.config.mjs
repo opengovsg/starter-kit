@@ -46,7 +46,7 @@ const config = {
               "style-src 'self' https: 'unsafe-inline';",
               `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
                 // For POSTing presigned URLs to R2 storage.
-                process.env.R2_S3_API_ROOT || ''
+                process.env.R2_S3_CSP_PATTERN || ''
               };`,
               "worker-src 'self' blob:;",
               'upgrade-insecure-requests',
