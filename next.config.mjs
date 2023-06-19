@@ -36,19 +36,20 @@ const config = {
               "font-src 'self' https: data:;",
               "form-action 'self';",
               "frame-ancestors 'self';",
-              `img-src 'self' blob: data: ${
+              `img-src 'self' https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ data: blob: ${
                 // For displaying images from R2
                 env.R2_PUBLIC_HOSTNAME
                   ? `https://${env.R2_PUBLIC_HOSTNAME}`
                   : ''
               };`,
+              'frame-src https://vercel.live/ https://vercel.com',
               "object-src 'none';",
-              `script-src 'self' ${
+              `script-src 'self' https://vercel.live/ https://vercel.com ${
                 env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''
               };`,
               "script-src-attr 'none';",
               "style-src 'self' https: 'unsafe-inline';",
-              `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
+              `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ wss://ws-mt1.pusher.com/ ${
                 // For POSTing presigned URLs to R2 storage.
                 env.R2_S3_CSP_PATTERN || ''
               };`,
