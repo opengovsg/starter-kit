@@ -11,3 +11,4 @@ updates:
       - dependency-name: '@storybook*'
       - dependency-name: 'prisma*'
       - dependency-name: '@prisma*'
+      - dependency-name: '@trpc*'
