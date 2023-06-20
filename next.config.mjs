@@ -3,10 +3,56 @@
  * for Docker builds.
  */
 const { env } = await import('./src/env.mjs')
+
+// CSP for preview environment specifically, so as to enable Vercel workflow collaboration features.
+const PreviewCsp = (() => {
+  const isPreview =
+    process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production'
+  if (!isPreview)
+    return {
+      scriptSrc: '',
+      connectSrc: '',
+      imgSrc: '',
+      frameSrc: '',
+    }
+  return {
+    // Note unsafe-inline. This should only be used in preview environments.
+    scriptSrc: "https://vercel.live/ https://vercel.com 'unsafe-inline'",
+    connectSrc:
+      'https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ wss://ws-mt1.pusher.com/',
+    imgSrc:
+      'https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ data: blob:',
+    frameSrc: 'https://vercel.live/ https://vercel.com',
+  }
+})()
+
+const ContentSecurityPolicy = `
+  default-src 'self';
+  base-uri 'self';
+  font-src 'self' https: data:;
+  form-action 'self';
+  frame-ancestors 'self';
+  img-src 'self' data: blob: ${
+    // For displaying images from R2
+    env.R2_PUBLIC_HOSTNAME ? `https://${env.R2_PUBLIC_HOSTNAME}` : ''
+  } ${PreviewCsp.imgSrc};
+  frame-src 'self' ${PreviewCsp.frameSrc};
+  object-src 'none';
+  script-src 'self' ${env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''} ${
+  PreviewCsp.scriptSrc
+};
+  style-src 'self' https: 'unsafe-inline';
+  connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
+    // For POSTing presigned URLs to R2 storage.
+    env.R2_S3_CSP_PATTERN || ''
+  } ${PreviewCsp.connectSrc};
+  worker-src 'self' blob:;
+  upgrade-insecure-requests
+`
+
 /**
  * @link https://nextjs.org/docs/api-reference/next.config.js/introduction
  */
-
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -30,32 +76,7 @@ const config = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self';",
-              "base-uri 'self';",
-              "font-src 'self' https: data:;",
-              "form-action 'self';",
-              "frame-ancestors 'self';",
-              `img-src 'self' https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ data: blob: ${
-                // For displaying images from R2
-                env.R2_PUBLIC_HOSTNAME
-                  ? `https://${env.R2_PUBLIC_HOSTNAME}`
-                  : ''
-              };`,
-              'frame-src https://vercel.live/ https://vercel.com;',
-              "object-src 'none';",
-              `script-src 'self' https://vercel.live/ https://vercel.com ${
-                env.NODE_ENV === 'development' ? "'unsafe-eval'" : ''
-              };`,
-              "script-src-attr 'none';",
-              "style-src 'self' https: 'unsafe-inline';",
-              `connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ wss://ws-mt1.pusher.com/ ${
-                // For POSTing presigned URLs to R2 storage.
-                env.R2_S3_CSP_PATTERN || ''
-              };`,
-              "worker-src 'self' blob:;",
-              'upgrade-insecure-requests',
-            ].join(''),
+            value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
           },
           {
             key: 'Cross-Origin-Opener-Policy',
