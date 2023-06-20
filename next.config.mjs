@@ -5,7 +5,7 @@
 const { env } = await import('./src/env.mjs')
 
 const ContentSecurityPolicy = `
-  default-src 'self';
+  default-src 'none';
   base-uri 'self';
   font-src 'self' https: data:;
   form-action 'self';
