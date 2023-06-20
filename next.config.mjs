@@ -19,9 +19,9 @@ const PreviewCsp = (() => {
     // Note unsafe-inline. This should only be used in preview environments.
     scriptSrc: "https://vercel.live/ https://vercel.com 'unsafe-inline'",
     connectSrc:
-      'https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ wss://ws-mt1.pusher.com/',
+      'https://vercel.live/ https://vercel.com https://sockjs-us3.pusher.com/ wss://ws-us3.pusher.com/',
     imgSrc:
-      'https://vercel.live/ https://vercel.com https://sockjs-mt1.pusher.com/ data: blob:',
+      'https://assets.vercel.live/ https://vercel.live/ https://vercel.com https://sockjs-us3.pusher.com/ data: blob:',
     frameSrc: 'https://vercel.live/ https://vercel.com',
   }
 })()
