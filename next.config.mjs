@@ -20,7 +20,9 @@ const ContentSecurityPolicy = `
   style-src 'self' https: 'unsafe-inline';
   connect-src 'self' https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
     // For POSTing presigned URLs to R2 storage.
-    env.R2_S3_CSP_PATTERN || ''
+    env.R2_ACCOUNT_ID
+      ? `https://*.${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
+      : ''
   };
   worker-src 'self' blob:;
   upgrade-insecure-requests
