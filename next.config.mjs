@@ -92,7 +92,7 @@ const config = {
           },
           {
             key: 'Referrer-Policy',
-            value: 'no-referrer',
+            value: 'origin-when-cross-origin',
           },
           {
             key: 'X-Content-Type-Options',
