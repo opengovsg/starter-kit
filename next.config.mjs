@@ -102,10 +102,6 @@ const config = {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
           },
-          {
-            key: 'X-XSS-Protection',
-            value: '0',
-          },
         ],
       },
     ]
