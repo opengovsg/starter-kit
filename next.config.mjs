@@ -21,7 +21,7 @@ const PreviewCsp = (() => {
     connectSrc:
       'https://vercel.live/ https://vercel.com https://sockjs-us3.pusher.com/ wss://ws-us3.pusher.com/',
     imgSrc:
-      'https://assets.vercel.live/ https://vercel.live/ https://vercel.com https://sockjs-us3.pusher.com/ data: blob:',
+      'https://assets.vercel.com/ https://vercel.live/ https://vercel.com https://sockjs-us3.pusher.com/ data: blob:',
     frameSrc: 'https://vercel.live/ https://vercel.com',
   }
 })()
