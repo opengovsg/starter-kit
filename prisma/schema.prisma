@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "filteredRelationCount"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 model VerificationToken {
@@ -27,7 +27,6 @@ model Post {
   author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   images       String[]
   likes        LikedPosts[]
-  readBy       ReadPosts[]
   // This features the self-relation Prisma concept, specifically a one-to-many self relation.
   // https://www.prisma.io/docs/concepts/components/prisma-schema/relations/self-relations
   parentPostId String?      @map("parent_post_id")
@@ -50,17 +49,6 @@ model Post {
   @@index([createdAt])
 }
 
-model ReadPosts {
-  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  postId    String   @map("post_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId    String   @map("user_id")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@id([postId, userId])
-  @@index([postId])
-}
-
 model LikedPosts {
   post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   postId    String   @map("post_id")
@@ -81,7 +69,6 @@ model User {
   bio           String?
   posts         Post[]
   likedPosts    LikedPosts[]
-  readPosts     ReadPosts[]
   accounts      Accounts[]
 }
 

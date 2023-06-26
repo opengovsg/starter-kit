@@ -295,26 +295,6 @@ export const postRouter = router({
         nextCursor,
       }
     }),
-  unreadCount: protectedProcedure.query(async ({ ctx }) => {
-    const { user } = ctx.session
-    const readCount = await ctx.prisma.readPosts.count({
-      where: {
-        userId: user.id,
-        post: {
-          parentPostId: null,
-        },
-      },
-    })
-    const allVisiblePostsCount = await ctx.prisma.post.count({
-      where: {
-        parentPostId: null,
-      },
-    })
-    return {
-      unreadCount: allVisiblePostsCount - readCount,
-      totalCount: allVisiblePostsCount,
-    }
-  }),
   byId: protectedProcedure
     .input(
       z.object({
@@ -410,36 +390,5 @@ export const postRouter = router({
       })
 
       return post
-    }),
-  setRead: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { id } = input
-      const readPost = await ctx.prisma.readPosts.upsert({
-        where: {
-          postId_userId: {
-            userId: ctx.session.user.id,
-            postId: id,
-          },
-        },
-        update: {},
-        create: {
-          user: {
-            connect: {
-              id: ctx.session.user.id,
-            },
-          },
-          post: {
-            connect: {
-              id,
-            },
-          },
-        },
-      })
-      return readPost
     }),
 })

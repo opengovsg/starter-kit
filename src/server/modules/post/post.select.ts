@@ -16,16 +16,6 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
       username: true,
     },
   },
-  readBy: {
-    select: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  },
   _count: {
     select: {
       replies: true,
