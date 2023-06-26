@@ -49,7 +49,6 @@ export const DashSidebar = () => {
             href={HOME}
             isActive={pathname === HOME}
             title="Home"
-            // @ts-expect-error types are wrong
             px={{ base: '0.75rem', md: '1rem' }}
             borderRadius={{ base: 0, md: 'md' }}
           >
@@ -61,7 +60,6 @@ export const DashSidebar = () => {
             href={`${PROFILE}/${me?.username}`}
             isActive={isProfileActive}
             title="Profile"
-            // @ts-expect-error types are wrong
             px={{ base: '0.75rem', md: '1rem' }}
             borderRadius={{ base: 0, md: 'md' }}
           >
@@ -74,7 +72,6 @@ export const DashSidebar = () => {
             as="button"
             onClick={() => logout(true)}
             title="Log out"
-            // @ts-expect-error types are wrong
             px={{ base: '0.75rem', md: '1rem' }}
             borderRadius={{ base: 0, md: 'md' }}
             mb="1rem"
