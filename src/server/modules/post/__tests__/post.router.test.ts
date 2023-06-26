@@ -1,17 +1,16 @@
 import { type User } from '@prisma/client'
 import { it, expect } from 'vitest'
-import { createContextInner } from '~/server/context'
 import { type RouterInput } from '~/utils/trpc'
 import { appRouter } from '../../_app'
 import {
   applyAuthedSession,
   applySession,
+  createMockRequest,
 } from 'tests/integration/helpers/iron-session'
 
 describe('post.add', async () => {
   it('unauthed user should not be able to create a post', async () => {
-    const session = applySession()
-    const ctx = await createContextInner({ session })
+    const ctx = await createMockRequest(applySession(), { headers: {} })
     const caller = appRouter.createCaller(ctx)
 
     const input: RouterInput['post']['add'] = {
@@ -32,10 +31,7 @@ describe('post.add', async () => {
       emailVerified: null,
       image: null,
     }
-    const session = await applyAuthedSession(defaultUser)
-    const ctx = await createContextInner({
-      session,
-    })
+    const ctx = await createMockRequest(await applyAuthedSession(defaultUser))
     const caller = appRouter.createCaller(ctx)
 
     const input: RouterInput['post']['add'] = {

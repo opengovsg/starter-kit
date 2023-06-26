@@ -1,8 +1,10 @@
-import { applySession } from 'tests/integration/helpers/iron-session'
+import {
+  applySession,
+  createMockRequest,
+} from 'tests/integration/helpers/iron-session'
 import { it, expect, describe } from 'vitest'
 import { env } from '~/env.mjs'
 import * as mailLib from '~/lib/mail'
-import { createContextInner } from '~/server/context'
 import { prisma } from '~/server/prisma'
 import { createTokenHash } from '../../auth.util'
 import { emailSessionRouter } from '../email.router'
@@ -12,8 +14,7 @@ describe('auth.email', async () => {
   let session: ReturnType<typeof applySession>
 
   beforeEach(async () => {
-    session = applySession()
-    const ctx = await createContextInner({ session })
+    const ctx = await createMockRequest(applySession(), { headers: {} })
     caller = emailSessionRouter.createCaller(ctx)
   })
 
