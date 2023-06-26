@@ -9,3 +9,6 @@ updates:
       # Storybook packages should be updated together to avoid breaking changes, but dependabot updates them separately.
       - dependency-name: 'storybook*'
       - dependency-name: '@storybook*'
+      - dependency-name: 'prisma*'
+      - dependency-name: '@prisma*'
+      - dependency-name: '@trpc*'
