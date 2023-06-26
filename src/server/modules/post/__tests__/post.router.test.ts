@@ -10,7 +10,7 @@ import {
 
 describe('post.add', async () => {
   it('unauthed user should not be able to create a post', async () => {
-    const ctx = await createMockRequest(applySession(), { headers: {} })
+    const ctx = await createMockRequest(applySession())
     const caller = appRouter.createCaller(ctx)
 
     const input: RouterInput['post']['add'] = {
