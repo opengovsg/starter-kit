@@ -44,6 +44,7 @@
     "@hookform/resolvers": "^3.1.1",
     "@opengovsg/design-system-react": "^1.2.0",
     "@opengovsg/sgid-client": "^2.0.0",
+    "@paralleldrive/cuid2": "^2.2.1",
     "@prisma/client": "4.15.0",
     "@sendgrid/mail": "^7.7.0",
     "@storybook/jest": "^0.1.0",
