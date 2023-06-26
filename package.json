@@ -38,8 +38,8 @@
     "semi": false
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.348.0",
-    "@aws-sdk/s3-request-presigner": "3.348.0",
+    "@aws-sdk/client-s3": "3.359.0",
+    "@aws-sdk/s3-request-presigner": "3.359.0",
     "@chakra-ui/react": "^2.7.1",
     "@hookform/resolvers": "^3.1.1",
     "@opengovsg/design-system-react": "^1.2.0",
