@@ -32,6 +32,7 @@ export const ProfileDescription = ({
       <Grid
         columnGap="1.25rem"
         rowGap="0.5rem"
+        w="100%"
         gridTemplateAreas={{
           base: '"avatar edit" "name name" "desc desc"',
           md: '"avatar name edit" "avatar desc desc"',
