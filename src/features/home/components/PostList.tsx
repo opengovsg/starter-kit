@@ -1,4 +1,4 @@
-import { Box, Container, Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { Post } from '~/features/posts/components'
 import { type RouterOutput } from '~/utils/trpc'
 

@@ -1,28 +1,39 @@
-import { Box, Stack, StackDivider } from '@chakra-ui/react'
+import { Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import Suspense from '~/components/Suspense'
 import { Post } from '~/features/posts/components'
+import { EmptyPostList, SkeletonPostList } from '~/features/profile/components'
 import { type NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
 import { trpc } from '~/utils/trpc'
 
-const Liked: NextPageWithLayout = () => {
-  const { query, isReady } = useRouter()
+export const LikedPostList = (): JSX.Element => {
+  const { query } = useRouter()
 
-  const { data, isLoading } = trpc.post.likedByUser.useQuery(
-    { username: String(query.username) },
-    { enabled: isReady }
-  )
+  const [data] = trpc.post.likedByUser.useSuspenseQuery({
+    username: String(query.username),
+  })
 
-  if (isLoading) {
-    return <Box>Loading....</Box>
+  if (data.posts.length === 0) {
+    return <EmptyPostList />
   }
 
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      {data?.posts.map((p) => (
+    <>
+      {data.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}
+    </>
+  )
+}
+
+const Liked: NextPageWithLayout = () => {
+  return (
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
+      <Suspense fallback={<SkeletonPostList />}>
+        <LikedPostList />
+      </Suspense>
     </Stack>
   )
 }

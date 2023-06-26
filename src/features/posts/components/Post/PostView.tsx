@@ -30,7 +30,7 @@ export const PostView = ({
       spacing="0.75rem"
       {...containerProps}
     >
-      <Avatar src={post?.author.image ?? undefined} size="md" />
+      <Avatar src={post.author.image ?? undefined} size="md" />
       <Stack direction="column" spacing="0.75rem" flex={1}>
         <Stack
           direction={{ base: 'column', md: 'row' }}

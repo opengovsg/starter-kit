@@ -1,28 +1,39 @@
-import { Box, Stack, StackDivider } from '@chakra-ui/react'
+import { Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import Suspense from '~/components/Suspense'
 import { Post } from '~/features/posts/components'
+import { EmptyPostList, SkeletonPostList } from '~/features/profile/components'
 import { type NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
 import { trpc } from '~/utils/trpc'
 
-const Replies: NextPageWithLayout = () => {
-  const { isReady, query } = useRouter()
-  const username = String(query.username)
-  const { data, isLoading } = trpc.post.repliesByUser.useQuery(
-    { username },
-    { enabled: isReady }
-  )
+export const RepliesPostList = (): JSX.Element => {
+  const { query } = useRouter()
 
-  if (isLoading) {
-    return <Box>Loading....</Box>
+  const [data] = trpc.post.repliesByUser.useSuspenseQuery({
+    username: String(query.username),
+  })
+
+  if (data.posts.length === 0) {
+    return <EmptyPostList />
   }
 
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      {data?.posts.map((p) => (
+    <>
+      {data.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}
+    </>
+  )
+}
+
+const Replies: NextPageWithLayout = () => {
+  return (
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
+      <Suspense fallback={<SkeletonPostList />}>
+        <RepliesPostList />
+      </Suspense>
     </Stack>
   )
 }
