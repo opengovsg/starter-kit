@@ -25,7 +25,8 @@ export const PostView = ({
     <Stack
       direction="row"
       py="1.5rem"
-      px={{ base: '0.75rem', md: '1.5rem' }}
+      mx={{ base: '-1rem' }}
+      px={{ base: '1rem' }}
       spacing="0.75rem"
       {...containerProps}
     >

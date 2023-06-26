@@ -24,7 +24,7 @@ export const ReplyToPostAction = ({
 
   return (
     <>
-      <Box m={{ base: '0.5rem', md: '1.5rem' }}>
+      <Box>
         <Button
           size="sm"
           isFullWidth

@@ -32,6 +32,7 @@ const Thread: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
         py="1rem"
+        px={{ base: '1rem', lg: 0 }}
       >
         <BackBannerButton
           gridColumn={APP_GRID_COLUMN}
@@ -40,7 +41,12 @@ const Thread: NextPageWithLayout = () => {
           Back to all posts
         </BackBannerButton>
       </AppGrid>
-      <AppGrid flex={1} bg="white" templateColumns={APP_GRID_TEMPLATE_COLUMN}>
+      <AppGrid
+        flex={1}
+        bg="white"
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
+        px={{ base: '1rem', lg: 0 }}
+      >
         <Stack
           spacing={0}
           divider={<StackDivider />}

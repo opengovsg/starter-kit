@@ -124,6 +124,7 @@ const Profile: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
         py="1rem"
+        px={{ base: '1rem', lg: 0 }}
       >
         <BackBannerLink
           gridColumn={APP_GRID_COLUMN}
@@ -136,7 +137,7 @@ const Profile: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="white"
         py="1.5rem"
-        px="1rem"
+        px={{ base: '1rem', lg: 0 }}
       >
         <Stack flex={1} spacing="2rem" gridColumn={APP_GRID_COLUMN}>
           <AvatarUpload url={me?.image} name={me?.name} />

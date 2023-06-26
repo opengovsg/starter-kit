@@ -1,8 +1,7 @@
 import { Box, Flex, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
-import { NewPostBanner } from '~/features/home/components'
-import { Post } from '~/features/posts/components'
+import { NewPostBanner, PostList } from '~/features/home/components'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
@@ -24,6 +23,7 @@ const Home: NextPageWithLayout = () => {
     <Flex w="100%" flexDir="column">
       <AppGrid
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
+        px={{ base: '1rem', lg: 0 }}
         bg="base.canvas.brand-subtle"
         py="1rem"
       >
@@ -31,16 +31,19 @@ const Home: NextPageWithLayout = () => {
           <NewPostBanner />
         </Box>
       </AppGrid>
-      <AppGrid flex={1} bg="white" templateColumns={APP_GRID_TEMPLATE_COLUMN}>
+      <AppGrid
+        flex={1}
+        bg="white"
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
+        px={{ base: '1rem', lg: 0 }}
+      >
         <Stack
           spacing={0}
           divider={<StackDivider />}
           gridColumn={APP_GRID_COLUMN}
           flexDir="column"
         >
-          {data.items.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
+          <PostList posts={data.items} />
         </Stack>
       </AppGrid>
     </Flex>
