@@ -14,7 +14,8 @@ describe('auth.email', async () => {
   let session: ReturnType<typeof applySession>
 
   beforeEach(async () => {
-    const ctx = await createMockRequest(applySession(), { headers: {} })
+    session = applySession()
+    const ctx = await createMockRequest(session)
     caller = emailSessionRouter.createCaller(ctx)
   })
 
