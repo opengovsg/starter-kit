@@ -20,8 +20,8 @@ export const DeleteFeedbackContent = ({ onClose }: FeedbackContentProps) => {
   const { post } = useAtomValue(actionStateAtom)
   const utils = trpc.useContext()
   const deleteMutation = trpc.post.delete.useMutation({
-    onSuccess: () => {
-      utils.post.list.invalidate()
+    onSuccess: async () => {
+      await utils.post.list.invalidate()
       onClose()
     },
   })

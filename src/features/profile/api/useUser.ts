@@ -4,9 +4,9 @@ import { trpc } from '~/utils/trpc'
 
 export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
   const [user] = trpc.me.get.useSuspenseQuery(undefined, {
-    onSuccess: () => {
+    onSuccess: async () => {
       if (redirectIfFound) {
-        Router.push(redirectTo)
+        await Router.push(redirectTo)
       }
     },
   })
@@ -16,8 +16,8 @@ export const useUser = ({ redirectTo = '', redirectIfFound = false } = {}) => {
   const logout = useCallback(
     (redirectToSignIn = true) => {
       return logoutMutation.mutate(undefined, {
-        onSuccess: () => {
-          if (redirectToSignIn) Router.push('/sign-in')
+        onSuccess: async () => {
+          if (redirectToSignIn) await Router.push('/sign-in')
         },
       })
     },

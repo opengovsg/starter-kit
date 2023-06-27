@@ -59,8 +59,10 @@ export const VerificationInput = (): JSX.Element => {
         otp: token,
       },
       {
-        onSuccess: () => {
-          router.push(String(router.query[CALLBACK_URL_KEY] ?? '/dashboard'))
+        onSuccess: async () => {
+          await router.push(
+            String(router.query[CALLBACK_URL_KEY] ?? '/dashboard')
+          )
         },
       }
     )

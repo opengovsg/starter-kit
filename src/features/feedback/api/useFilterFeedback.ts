@@ -51,17 +51,17 @@ export const useFilterFeedback = () => {
   }, [router.query])
 
   const handleFilterChange = useCallback(
-    (filter: string | string[]) => {
+    async (filter: string | string[]) => {
       router.query.filter = filter
-      router.push(router)
+      await router.push(router)
     },
     [router]
   )
 
   const handleOrderChange = useCallback(
-    (order: string | string[]) => {
+    async (order: string | string[]) => {
       router.query.order = order
-      router.push(router)
+      await router.push(router)
     },
     [router]
   )

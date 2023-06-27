@@ -50,9 +50,9 @@ const PostViewContainer = () => {
       mutate(
         { id },
         {
-          onSuccess: () => {
-            utils.post.list.invalidate()
-            utils.post.unreadCount.invalidate()
+          onSuccess: async () => {
+            await utils.post.list.invalidate()
+            await utils.post.unreadCount.invalidate()
           },
         }
       )

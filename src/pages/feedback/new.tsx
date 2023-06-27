@@ -39,7 +39,7 @@ const PostFeedbackPage: NextPageWithLayout = () => {
     async onSuccess({ id }) {
       // refetches posts after a post is added
       await utils.post.list.invalidate()
-      router.push(`${FEEDBACK}/${id}`)
+      await router.push(`${FEEDBACK}/${id}`)
     },
     onError: (error) => {
       toast({ description: error.message })

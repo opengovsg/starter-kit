@@ -27,8 +27,8 @@ export const EditFeedbackContent = ({ onClose }: FeedbackContentProps) => {
   const utils = trpc.useContext()
 
   const editMutation = trpc.post.edit.useMutation({
-    onSuccess: () => {
-      utils.post.list.invalidate()
+    onSuccess: async () => {
+      await utils.post.list.invalidate()
       onClose()
     },
   })
