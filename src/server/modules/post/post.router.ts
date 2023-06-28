@@ -281,7 +281,7 @@ export const postRouter = router({
           deletedAt: null,
         },
       })
-      let nextCursor: typeof cursor | undefined = undefined
+      let nextCursor: typeof cursor | null = null
       if (items.length > limit) {
         // Remove the last item and use it as next cursor
 
