@@ -1,9 +1,15 @@
+import { nanoid } from 'nanoid'
 import winston, { format } from 'winston'
 import { env } from '~/env.mjs'
 
 const { combine, timestamp, prettyPrint, colorize } = format
 
-export const createBaseLogger = (path: string) => {
+type LoggerOptions = {
+  path: string
+  clientIp?: string
+}
+
+export const createBaseLogger = ({ path, clientIp }: LoggerOptions) => {
   const formats = [
     winston.format.json(),
     timestamp(),
@@ -21,6 +27,8 @@ export const createBaseLogger = (path: string) => {
     ],
     defaultMeta: {
       path,
+      clientIp,
+      id: nanoid(),
     },
   })
 }
