@@ -1,8 +1,9 @@
 import { Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { SkeletonPostList } from '~/components/SkeletonPostList'
 import Suspense from '~/components/Suspense'
 import { Post } from '~/features/posts/components'
-import { EmptyPostList, SkeletonPostList } from '~/features/profile/components'
+import { EmptyPostList } from '~/features/profile/components'
 import { type NextPageWithLayout } from '~/lib/types'
 
 import { ProfileLayout } from '~/templates/layouts/ProfileLayout'
