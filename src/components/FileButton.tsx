@@ -128,4 +128,4 @@ export const FileButton: FileButtonComponent = forwardRef<
   }
 ) as any
 
-FileButton.displayName = '@mantine/core/FileButton'
+FileButton.displayName = 'FileButton'
