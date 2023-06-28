@@ -16,7 +16,12 @@ export const RepliesPostList = (): JSX.Element => {
   })
 
   if (data.posts.length === 0) {
-    return <EmptyPostList />
+    return (
+      <EmptyPostList
+        currentUserText="When you reply to a post, it'll show up here!"
+        readOnlyText="This user has not replied to anything yet"
+      />
+    )
   }
 
   return (

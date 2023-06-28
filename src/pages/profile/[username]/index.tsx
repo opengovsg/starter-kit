@@ -16,7 +16,12 @@ export const ProfilePostList = (): JSX.Element => {
   })
 
   if (data.posts.length === 0) {
-    return <EmptyPostList />
+    return (
+      <EmptyPostList
+        currentUserText="You have not posted anything yet. Start now!"
+        readOnlyText="This user has not posted anything yet"
+      />
+    )
   }
 
   return (

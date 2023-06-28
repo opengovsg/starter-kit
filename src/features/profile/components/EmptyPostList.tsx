@@ -1,8 +1,17 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Stack, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { BusStop } from '~/components/Svg/BusStop'
 import { useMe } from '~/features/me/api'
 
-export const EmptyPostList = (): JSX.Element => {
+interface EmptyPostListProps {
+  currentUserText: string
+  readOnlyText: string
+}
+
+export const EmptyPostList = ({
+  currentUserText,
+  readOnlyText,
+}: EmptyPostListProps): JSX.Element => {
   const { query } = useRouter()
   const username = String(query.username)
 
@@ -11,12 +20,11 @@ export const EmptyPostList = (): JSX.Element => {
   const isLoggedInProfile = me?.username === username
 
   return (
-    <Box>
+    <Stack spacing="2rem" align="center" pt="3rem">
       <Text textStyle="subhead-2">
-        {isLoggedInProfile
-          ? 'You have not posted anything yet. Start now!'
-          : 'This user has not posted anything yet'}
+        {isLoggedInProfile ? currentUserText : readOnlyText}
       </Text>
-    </Box>
+      <BusStop />
+    </Stack>
   )
 }

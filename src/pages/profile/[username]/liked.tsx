@@ -16,7 +16,12 @@ export const LikedPostList = (): JSX.Element => {
   })
 
   if (data.posts.length === 0) {
-    return <EmptyPostList />
+    return (
+      <EmptyPostList
+        currentUserText="When you like a post, it'll show up here!"
+        readOnlyText="This user has not liked anything yet"
+      />
+    )
   }
 
   return (
