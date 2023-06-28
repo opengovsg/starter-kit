@@ -1,4 +1,5 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Stack, Text } from '@chakra-ui/react'
+import { BusStop } from '~/components/Svg/BusStop'
 import { Post } from '~/features/posts/components'
 import { type RouterOutput } from '~/utils/trpc'
 
@@ -9,9 +10,10 @@ export interface PostsProps {
 export const PostList = ({ posts }: PostsProps): JSX.Element => {
   if (posts.length === 0) {
     return (
-      <Box mt="10%">
-        <Text textStyle="h6">No posts yet</Text>
-      </Box>
+      <Stack spacing="2rem" align="center" pt="3rem">
+        <Text textStyle="subhead-2">No posts yet</Text>
+        <BusStop />
+      </Stack>
     )
   }
   return (
