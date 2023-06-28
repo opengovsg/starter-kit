@@ -81,8 +81,8 @@ function useRedirectIfSignedIn() {
   const { isLoading } = trpc.me.get.useQuery(undefined, {
     // Just stay on this page on error
     onError: noop,
-    onSuccess: () => {
-      router.push(callbackUrl)
+    onSuccess: async () => {
+      await router.push(callbackUrl)
     },
     // This is intentionally set to false for sign in page since we do not want the root ErrorBoundary to catch unauthorized errors
     // If we do catch it, there will be an infinite redirect to `/sign-in`
