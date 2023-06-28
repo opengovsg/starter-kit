@@ -1,24 +1,13 @@
 import { Box, Flex, Stack, StackDivider } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { SkeletonPostList } from '~/components/SkeletonPostList'
+import Suspense from '~/components/Suspense'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 import { NewPostBanner, PostList } from '~/features/home/components'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
-import { trpc } from '~/utils/trpc'
 
 const Home: NextPageWithLayout = () => {
-  const router = useRouter()
-
-  const { data, isLoading } = trpc.post.list.useQuery(
-    {},
-    { enabled: router.isReady }
-  )
-
-  if (isLoading || !data) {
-    return <div>Loading...</div>
-  }
-
   return (
     <Flex w="100%" flexDir="column">
       <AppGrid
@@ -43,7 +32,9 @@ const Home: NextPageWithLayout = () => {
           gridColumn={APP_GRID_COLUMN}
           flexDir="column"
         >
-          <PostList posts={data.items} />
+          <Suspense fallback={<SkeletonPostList />}>
+            <PostList />
+          </Suspense>
         </Stack>
       </AppGrid>
     </Flex>

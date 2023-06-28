@@ -1,7 +1,6 @@
 import { Flex, Grid, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { Avatar } from '~/components/Avatar'
 import { useMe } from '~/features/me/api'
@@ -16,11 +15,7 @@ export const ProfileDescription = ({
   username,
 }: ProfileDescriptionProps): JSX.Element => {
   const { me } = useMe()
-  const { isReady } = useRouter()
-  const { data } = trpc.profile.byUsername.useQuery(
-    { username },
-    { enabled: isReady }
-  )
+  const [data] = trpc.profile.byUsername.useSuspenseQuery({ username })
 
   const isOwnProfile = useMemo(
     () => me?.username === username,
