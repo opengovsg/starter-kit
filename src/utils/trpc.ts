@@ -90,7 +90,6 @@ export const trpc = createTRPCNext<
         defaultOptions: {
           queries: {
             staleTime: 1000 * 10, // 10 seconds
-            useErrorBoundary: true,
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
                 const res = TRPCWithErrorCodeSchema.safeParse(error)
