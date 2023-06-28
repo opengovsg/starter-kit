@@ -1,19 +1,22 @@
 import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
-import type { Preview, Decorator } from '@storybook/react'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
+import type { Decorator, Preview } from '@storybook/react'
 
+import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
-import { PropsWithChildren, useState } from 'react'
 import { createTRPCReact } from '@trpc/react-query'
-import { AppRouter } from '~/server/modules/_app'
+import { useState } from 'react'
 import superjson from 'superjson'
-import { ThemeProvider } from '@opengovsg/design-system-react'
+import { AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
 
+import { Skeleton } from '@chakra-ui/react'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
+import ErrorBoundary from '~/components/ErrorBoundary'
+import Suspense from '~/components/Suspense'
 
 // Initialize MSW
 initialize({
@@ -22,7 +25,7 @@ initialize({
 
 const trpc = createTRPCReact<AppRouter>()
 
-const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
+const SetupDecorator: Decorator = (page) => {
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: {
@@ -41,9 +44,15 @@ const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
     })
   )
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    <ErrorBoundary>
+      <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            {page()}
+          </QueryClientProvider>
+        </trpc.Provider>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 
@@ -55,11 +64,7 @@ const decorators: Decorator[] = [
     },
     Provider: ThemeProvider,
   }),
-  (Story) => (
-    <StorybookTrpcProvider>
-      <Story />
-    </StorybookTrpcProvider>
-  ),
+  SetupDecorator,
 ]
 
 const preview: Preview = {
