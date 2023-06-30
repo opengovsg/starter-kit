@@ -76,7 +76,10 @@ const server = z
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
     POSTMAN_API_KEY: z.string().optional(),
     SENDGRID_API_KEY: z.string().optional(),
-    SENDGRID_FROM_ADDRESS: z.string().email().optional(),
+    SENDGRID_FROM_ADDRESS: z.union([
+      z.string().email().optional(),
+      z.string().length(0),
+    ]),
     SESSION_SECRET: z.string().min(32),
   })
   // Add on schemas as needed that requires conditional validation.
