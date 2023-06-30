@@ -36,7 +36,7 @@ export const sendMail = async (params: SendMailParams): Promise<void> => {
   }
 
   console.warn(
-    'POSTMAN_API_KEY or POSTMARK_API_TOKEN missing. Logging the following mail: ',
+    'POSTMAN_API_KEY or SENDGRID_API_KEY missing. Logging the following mail: ',
     params
   )
   return
