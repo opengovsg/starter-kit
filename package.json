@@ -74,7 +74,7 @@
     "superjson": "^1.12.3",
     "validator": "^13.9.0",
     "winston": "^3.9.0",
-    "wretch": "^2.5.2",
+    "wretch": "^2.6.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
