@@ -1,15 +1,11 @@
 import { Box, ButtonGroup } from '@chakra-ui/react'
-import {
-  Button,
-  BxsHeart,
-  IconButton,
-  useToast,
-} from '@opengovsg/design-system-react'
-import { type MouseEventHandler, useState } from 'react'
-import { BiHeart, BiLink } from 'react-icons/bi'
+import { Button, BxsHeart } from '@opengovsg/design-system-react'
+import { useState, type MouseEventHandler } from 'react'
+import { BiHeart } from 'react-icons/bi'
 import { useMe } from '~/features/me/api'
-import { type RouterOutput, trpc } from '~/utils/trpc'
+import { trpc, type RouterOutput } from '~/utils/trpc'
 import { AddCommentAction } from './AddCommentAction'
+import { CopyAction } from './CopyAction'
 import { DeletePostAction } from './DeletePostAction'
 
 export interface PostActionsProps {
@@ -20,10 +16,6 @@ export const PostActions = ({
   post: postProp,
 }: PostActionsProps): JSX.Element => {
   const { me } = useMe()
-
-  const toast = useToast({
-    status: 'info',
-  })
 
   // Use local state to update the UI immediately on like/unlike
   const [post, setPost] = useState(postProp)
@@ -67,13 +59,6 @@ export const PostActions = ({
     })
   }
 
-  const handleCopyLink: MouseEventHandler = async (e) => {
-    e.stopPropagation()
-    const url = `${window.location.origin}/thread/${post.id}`
-    await navigator.clipboard.writeText(url)
-    toast({ description: 'Link copied', icon: <BiLink /> })
-  }
-
   return (
     <ButtonGroup
       variant="clear"
@@ -99,12 +84,7 @@ export const PostActions = ({
         {post._count.likes}
       </Button>
       <AddCommentAction post={post} onSuccess={incrementReplyCount} />
-      <IconButton
-        data-value="post-action"
-        aria-label="Link to post"
-        icon={<BiLink fontSize="1.25rem" />}
-        onClick={handleCopyLink}
-      />
+      <CopyAction postId={post.id} />
       {isOwnPost ? (
         <DeletePostAction postId={post.id} />
       ) : (
