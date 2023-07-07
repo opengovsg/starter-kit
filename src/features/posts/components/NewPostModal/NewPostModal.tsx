@@ -7,19 +7,20 @@ import {
   ModalHeader,
   ModalOverlay,
   type ModalProps,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
 import { ComposePost } from '~/features/posts/components'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
-import { useUploadImagesMutation } from '../api'
-import { clientAddPostSchema } from '../schemas/clientAddPostSchema'
+import { useUploadImagesMutation } from '../../api'
+import { clientAddPostSchema } from '../../schemas/clientAddPostSchema'
 
-const NewPostModal = ({
+export type NewPostModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
+
+export const NewPostModal = ({
   onClose: onCloseProp,
   isOpen,
-}: Pick<ModalProps, 'isOpen' | 'onClose'>) => {
+}: NewPostModalProps) => {
   const toast = useToast({
     status: 'success',
   })
@@ -82,17 +83,5 @@ const NewPostModal = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
-
-export const NewPostModalButton = (): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  return (
-    <>
-      <Button size="xs" onClick={onOpen}>
-        New post
-      </Button>
-      <NewPostModal isOpen={isOpen} onClose={onClose} />
-    </>
   )
 }

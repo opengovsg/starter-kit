@@ -1,4 +1,4 @@
 export * from './Post'
-export * from './NewPostModalButton'
+export * from './NewPostModal'
 export * from './ComposePost'
 export * from './PostActions'
