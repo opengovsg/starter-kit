@@ -8,10 +8,12 @@ import { useMe } from '~/features/me/api'
 import { type ClientAddPostSchema } from '../schemas/clientAddPostSchema'
 export interface ComposePostProps extends UseFormReturn<ClientAddPostSchema> {
   placeholder?: string
+  allowImageUpload?: boolean
 }
 
 export const ComposePost = ({
   placeholder,
+  allowImageUpload,
   ...props
 }: ComposePostProps): JSX.Element => {
   const {
@@ -43,13 +45,15 @@ export const ComposePost = ({
           />
           <FormErrorMessage>{errors.contentHtml?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl>
-          <Controller
-            control={control}
-            name="images"
-            render={({ field }) => <ImageAttachmentButton {...field} />}
-          />
-        </FormControl>
+        {allowImageUpload && (
+          <FormControl>
+            <Controller
+              control={control}
+              name="images"
+              render={({ field }) => <ImageAttachmentButton {...field} />}
+            />
+          </FormControl>
+        )}
       </Stack>
     </Stack>
   )

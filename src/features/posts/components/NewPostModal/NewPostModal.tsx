@@ -15,9 +15,13 @@ import { trpc } from '~/utils/trpc'
 import { useUploadImagesMutation } from '../../api'
 import { clientAddPostSchema } from '../../schemas/clientAddPostSchema'
 
-export type NewPostModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
+export interface NewPostModalProps
+  extends Pick<ModalProps, 'isOpen' | 'onClose'> {
+  allowImageUpload?: boolean
+}
 
 export const NewPostModal = ({
+  allowImageUpload,
   onClose: onCloseProp,
   isOpen,
 }: NewPostModalProps) => {
@@ -64,7 +68,7 @@ export const NewPostModal = ({
       <ModalContent>
         <ModalHeader>Create post</ModalHeader>
         <ModalBody>
-          <ComposePost {...formMethods} />
+          <ComposePost allowImageUpload={allowImageUpload} {...formMethods} />
         </ModalBody>
         <ModalFooter>
           <ButtonGroup>

@@ -20,17 +20,26 @@ const meta: Meta<typeof NewPostModal> = {
 export default meta
 type Story = StoryObj<typeof NewPostModal>
 
-export const Default: Story = {
-  render: (args) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const modalProps = useDisclosure({ defaultIsOpen: true })
+const defaultRenderFn: Story['render'] = (args) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const modalProps = useDisclosure({ defaultIsOpen: true })
 
-    return (
-      <NewPostModal
-        {...args}
-        {...modalProps}
-        onClose={() => console.log('close modal')}
-      />
-    )
+  return (
+    <NewPostModal
+      {...args}
+      {...modalProps}
+      onClose={() => console.log('close modal')}
+    />
+  )
+}
+
+export const NoImageUpload: Story = {
+  render: defaultRenderFn,
+}
+
+export const WithImageUpload: Story = {
+  args: {
+    allowImageUpload: true,
   },
+  render: defaultRenderFn,
 }

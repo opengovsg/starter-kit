@@ -20,12 +20,14 @@ import { PostView } from '../Post/PostView'
 interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   parentPost: RouterOutput['post']['byUser']['posts'][number]
   onSuccess?: () => void
+  allowImageUpload?: boolean
 }
 
 export const AddCommentModal = ({
   isOpen,
   onClose: onCloseProp,
   parentPost,
+  allowImageUpload,
   onSuccess,
 }: AddCommentModalProps) => {
   const toast = useToast({
@@ -85,7 +87,7 @@ export const AddCommentModal = ({
               post={parentPost}
               hideActions
             />
-            <ComposePost {...formMethods} />
+            <ComposePost allowImageUpload={allowImageUpload} {...formMethods} />
           </Stack>
         </ModalBody>
         <ModalFooter>

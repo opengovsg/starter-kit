@@ -4,7 +4,9 @@ import { type MouseEventHandler } from 'react'
 import { BiMessageRounded } from 'react-icons/bi'
 import { type RouterOutput } from '~/utils/trpc'
 import { AddCommentModal } from '../AddCommentModal'
+import { env } from '~/env.mjs'
 
+const CAN_UPLOAD = !!env.NEXT_PUBLIC_ENABLE_STORAGE
 interface AddCommentActionProps {
   post: RouterOutput['post']['byUser']['posts'][number]
   onSuccess?: () => void
@@ -33,6 +35,7 @@ export const AddCommentAction = ({
         {post._count.replies}
       </Button>
       <AddCommentModal
+        allowImageUpload={CAN_UPLOAD}
         parentPost={post}
         isOpen={isOpen}
         onClose={onClose}
