@@ -5,9 +5,8 @@ import { Button } from '@opengovsg/design-system-react'
 import { type MouseEventHandler } from 'react'
 import { type RouterOutput } from '~/utils/trpc'
 import { AddCommentModal } from '../AddCommentModal'
-import { env } from '~/env.mjs'
+import { useFeatures } from '~/components/AppProviders'
 
-const CAN_UPLOAD = !!env.NEXT_PUBLIC_ENABLE_STORAGE
 interface ReplyToPostActionProps {
   post: RouterOutput['post']['byUser']['posts'][number]
   onSuccess?: () => void
@@ -18,6 +17,7 @@ export const ReplyToPostAction = ({
   onSuccess,
 }: ReplyToPostActionProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { storage } = useFeatures()
 
   const handleOpenModal: MouseEventHandler = (e) => {
     e.stopPropagation()
@@ -38,7 +38,7 @@ export const ReplyToPostAction = ({
         </Button>
       </Box>
       <AddCommentModal
-        allowImageUpload={CAN_UPLOAD}
+        allowImageUpload={storage}
         parentPost={post}
         isOpen={isOpen}
         onClose={onClose}

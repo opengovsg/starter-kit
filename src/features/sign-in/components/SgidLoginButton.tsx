@@ -1,10 +1,11 @@
 import { Button } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { env } from '~/env.mjs'
+import { useFeatures } from '~/components/AppProviders'
 import { trpc } from '~/utils/trpc'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
+  const { sgid } = useFeatures()
   const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
     onSuccess: async ({ redirectUrl }) => {
       await router.push(redirectUrl)
@@ -15,7 +16,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
     return sgidLoginMutation.mutate({})
   }
 
-  if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+  if (!sgid) {
     return null
   }
 

@@ -3,18 +3,17 @@ import { Input, useToast } from '@opengovsg/design-system-react'
 import { type ChangeEventHandler, useMemo, useState } from 'react'
 import { BiImageAdd } from 'react-icons/bi'
 import { Avatar } from '~/components/Avatar'
-import { env } from '~/env.mjs'
 import { ACCEPTED_FILE_TYPES } from '~/utils/image'
 import { useUploadAvatarMutation } from '../api'
+import { useFeatures } from '~/components/AppProviders'
 
 interface AvatarUploadProps {
   name?: string | null
   url?: string | null
 }
 
-const CAN_UPLOAD = !!env.NEXT_PUBLIC_ENABLE_STORAGE
-
 export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
+  const { storage } = useFeatures()
   // Will load this over `url` if provided for UX.
   const [isHover, setIsHover] = useState(false)
 
@@ -47,14 +46,14 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
   }
 
   const hoverProps = useMemo(() => {
-    if (!CAN_UPLOAD) {
+    if (!storage) {
       return {}
     }
     return {
       onMouseOver: () => setIsHover(true),
       onMouseLeave: () => setIsHover(false),
     }
-  }, [])
+  }, [storage])
 
   return (
     <Box pos="relative">
@@ -75,13 +74,13 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
         align="center"
         justify="center"
         cursor={
-          !CAN_UPLOAD || uploadAvatarMutation.isLoading ? 'default' : 'pointer'
+          !storage || uploadAvatarMutation.isLoading ? 'default' : 'pointer'
         }
         w="7rem"
         h="7rem"
       >
         <Input
-          isDisabled={!CAN_UPLOAD || uploadAvatarMutation.isLoading}
+          isDisabled={!storage || uploadAvatarMutation.isLoading}
           type="file"
           id="avatar-upload"
           accept={ACCEPTED_FILE_TYPES.join(',')}
