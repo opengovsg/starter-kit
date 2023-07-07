@@ -40,6 +40,7 @@ const config = {
         ],
       },
     ],
+    '@typescript-eslint/no-floating-promises': 'error',
     'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',

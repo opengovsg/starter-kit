@@ -11,13 +11,13 @@ export interface PostProps {
 export const Post = ({ post, hideActions }: PostProps): JSX.Element => {
   const router = useRouter()
 
-  const onClick: ReactEventHandler = (e) => {
+  const onClick: ReactEventHandler = async (e) => {
     // data-values are added to all post actions so that we can distinguish
     // between clicking on the post itself and clicking on an action, and only
     // navigate to the thread if the post itself is clicked
     const isAction = !!(e.target as HTMLElement).getAttribute('data-value')
     if (!isAction) {
-      router.push(`/thread/${post.id}`)
+      await router.push(`/thread/${post.id}`)
     }
   }
 

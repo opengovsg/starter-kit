@@ -31,13 +31,13 @@ export const SgidCallback = () => {
       state: String(state),
     },
     {
-      onSuccess: ({ redirectUrl }) => {
-        router.replace(redirectUrl)
+      onSuccess: async ({ redirectUrl }) => {
+        await router.replace(redirectUrl)
       },
-      onError: (error) => {
+      onError: async (error) => {
         // Server should return redirectUrl even on error, this function is a fallback.
         console.error(error)
-        router.replace('/sign-in')
+        await router.replace('/sign-in')
       },
     }
   )

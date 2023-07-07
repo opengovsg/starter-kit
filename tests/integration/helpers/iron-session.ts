@@ -1,5 +1,7 @@
 import { type User } from '@prisma/client'
 import { type IronSession } from 'iron-session'
+import { type NextApiRequest } from 'next'
+import { type Context, createContextInner } from '~/server/context'
 import { auth } from './auth'
 
 class MockIronStore {
@@ -39,6 +41,18 @@ class MockIronStore {
 
   clear() {
     this.unsaved = {}
+  }
+}
+
+export const createMockRequest = async (
+  session: IronSession,
+  mockedReq: Partial<NextApiRequest> = { headers: {} }
+): Promise<Context> => {
+  const innerContext = await createContextInner({ session })
+
+  return {
+    ...innerContext,
+    req: mockedReq as NextApiRequest,
   }
 }
 
