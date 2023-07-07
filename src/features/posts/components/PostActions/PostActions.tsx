@@ -1,4 +1,4 @@
-import { ButtonGroup } from '@chakra-ui/react'
+import { Box, ButtonGroup } from '@chakra-ui/react'
 import {
   Button,
   BxsHeart,
@@ -105,7 +105,11 @@ export const PostActions = ({
         icon={<BiLink fontSize="1.25rem" />}
         onClick={handleCopyLink}
       />
-      {isOwnPost && <DeletePostAction postId={post.id} />}
+      {isOwnPost ? (
+        <DeletePostAction postId={post.id} />
+      ) : (
+        <Box width="2.25rem" />
+      )}
     </ButtonGroup>
   )
 }
