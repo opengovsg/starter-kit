@@ -67,10 +67,10 @@ export const PostActions = ({
     })
   }
 
-  const handleCopyLink: MouseEventHandler = (e) => {
+  const handleCopyLink: MouseEventHandler = async (e) => {
     e.stopPropagation()
     const url = `${window.location.origin}/thread/${post.id}`
-    navigator.clipboard.writeText(url)
+    await navigator.clipboard.writeText(url)
     toast({ description: 'Link copied', icon: <BiLink /> })
   }
 

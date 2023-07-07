@@ -23,14 +23,15 @@ export const registerWithDebounce = <
 ) => {
   const useFormRegisterReturn: UseFormRegisterReturn = register(name, options)
   const { onChange } = useFormRegisterReturn
-  const debouncedValidate = debounce(() => {
-    trigger(name)
+  const debouncedValidate = debounce(async () => {
+    await trigger(name)
   }, delay)
   return {
     ...useFormRegisterReturn,
-    onChange: (e: any) => {
-      onChange(e)
-      debouncedValidate()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onChange: async (e: any) => {
+      await onChange(e)
+      await debouncedValidate()
     },
   }
 }

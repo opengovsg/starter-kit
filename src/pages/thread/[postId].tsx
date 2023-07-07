@@ -23,7 +23,7 @@ const ThreadView = (): JSX.Element | null => {
   )
 
   if (isError) {
-    router.replace('/home')
+    void router.replace('/home')
     return null
   }
 

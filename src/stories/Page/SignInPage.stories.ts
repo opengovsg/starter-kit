@@ -32,11 +32,11 @@ export const InputValidation: Story = {
     const canvas = within(canvasElement)
 
     await step('Enter invalid email address', async () => {
-      userEvent.type(await canvas.findByLabelText(/email/i), 'test')
+      await userEvent.type(await canvas.findByLabelText(/email/i), 'test')
     })
 
     await step('Attempt log in', async () => {
-      userEvent.click(await canvas.findByText(/get otp/i))
+      await userEvent.click(await canvas.findByText(/get otp/i))
       expect(await canvas.findByText(/email address/i)).toBeInTheDocument()
     })
   },

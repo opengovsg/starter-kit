@@ -22,8 +22,8 @@ export const DeletePostModal = ({
 }: DeletePostModalProps) => {
   const utils = trpc.useContext()
   const deletePostMutation = trpc.post.delete.useMutation({
-    onSuccess: () => {
-      utils.post.invalidate()
+    onSuccess: async () => {
+      await utils.post.invalidate()
       onClose()
     },
   })
