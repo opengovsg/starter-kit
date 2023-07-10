@@ -23,6 +23,14 @@ type Story = StoryObj<typeof SignInPage>
 
 export const Default: Story = {}
 
+export const WithSgidLogin: Story = {
+  parameters: {
+    features: {
+      sgid: true,
+    },
+  },
+}
+
 export const Mobile: Story = {
   parameters: getMobileViewParameters(),
 }
