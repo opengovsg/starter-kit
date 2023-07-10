@@ -9,7 +9,7 @@ import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import superjson from 'superjson'
 import { AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
@@ -19,6 +19,8 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { format } from 'date-fns'
+import { FeatureContext } from '~/components/AppProviders'
+import { z } from 'zod'
 
 // Initialize MSW
 initialize({
@@ -55,6 +57,27 @@ const SetupDecorator: Decorator = (page) => {
         </trpc.Provider>
       </Suspense>
     </ErrorBoundary>
+  )
+}
+
+export const mockFeatureFlagsDecorator: Decorator<Args> = (
+  storyFn,
+  { parameters }
+) => {
+  const featureSchema = z
+    .object({
+      storage: z.boolean().default(false),
+      sgid: z.boolean().default(false),
+    })
+    .default({})
+  const features = useMemo(() => {
+    return featureSchema.parse(parameters.features)
+  }, [])
+
+  return (
+    <FeatureContext.Provider value={features}>
+      {storyFn()}
+    </FeatureContext.Provider>
   )
 }
 
@@ -97,6 +120,7 @@ const decorators: Decorator[] = [
     Provider: ThemeProvider,
   }),
   mockDateDecorator,
+  mockFeatureFlagsDecorator,
   SetupDecorator,
 ]
 
