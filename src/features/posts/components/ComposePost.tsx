@@ -9,11 +9,13 @@ import { type ClientAddPostSchema } from '../schemas/clientAddPostSchema'
 export interface ComposePostProps extends UseFormReturn<ClientAddPostSchema> {
   placeholder?: string
   allowImageUpload?: boolean
+  showAvatar?: boolean
 }
 
 export const ComposePost = ({
   placeholder,
   allowImageUpload,
+  showAvatar,
   ...props
 }: ComposePostProps): JSX.Element => {
   const {
@@ -26,7 +28,7 @@ export const ComposePost = ({
 
   return (
     <Stack direction="row">
-      <Avatar size="md" src={me?.image} name={me?.username} />
+      {showAvatar && <Avatar size="md" src={me?.image} name={me?.username} />}
       <Stack direction="column">
         <FormControl isRequired isInvalid={!!errors.contentHtml}>
           <Controller

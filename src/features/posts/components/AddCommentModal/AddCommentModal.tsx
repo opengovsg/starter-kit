@@ -87,7 +87,11 @@ export const AddCommentModal = ({
               post={parentPost}
               hideActions
             />
-            <ComposePost allowImageUpload={allowImageUpload} {...formMethods} />
+            <ComposePost
+              showAvatar
+              allowImageUpload={allowImageUpload}
+              {...formMethods}
+            />
           </Stack>
         </ModalBody>
         <ModalFooter>
