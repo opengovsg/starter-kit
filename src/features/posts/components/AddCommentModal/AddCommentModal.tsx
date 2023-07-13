@@ -41,7 +41,9 @@ export const AddCommentModal = ({
   const formMethods = useZodForm({
     schema: clientAddReplySchema,
   })
-  const { handleSubmit, reset } = formMethods
+  const { handleSubmit, reset, watch } = formMethods
+
+  const watchedContent = watch('content')
 
   const replyThreadMutation = trpc.thread.reply.useMutation({
     onSuccess: async () => {
@@ -104,7 +106,11 @@ export const AddCommentModal = ({
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmitReply} isLoading={areMutationsLoading}>
+            <Button
+              onClick={handleSubmitReply}
+              isDisabled={!watchedContent}
+              isLoading={areMutationsLoading}
+            >
               Reply to post
             </Button>
           </ButtonGroup>

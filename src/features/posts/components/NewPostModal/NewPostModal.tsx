@@ -35,7 +35,9 @@ export const NewPostModal = ({
   const formMethods = useZodForm({
     schema: clientAddPostSchema,
   })
-  const { handleSubmit, reset } = formMethods
+  const { handleSubmit, reset, watch } = formMethods
+
+  const watchedContent = watch('content')
 
   const addPostMutation = trpc.post.add.useMutation({
     async onSuccess() {
@@ -80,7 +82,11 @@ export const NewPostModal = ({
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmitPost} isLoading={areMutationsLoading}>
+            <Button
+              onClick={handleSubmitPost}
+              isDisabled={!watchedContent}
+              isLoading={areMutationsLoading}
+            >
               Create post
             </Button>
           </ButtonGroup>
