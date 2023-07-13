@@ -169,9 +169,6 @@ export const MenuBar = ({ editor }: { editor: Editor | null }) => {
       borderColor="base.divider.strong"
       borderWidth="1px 1px 0 1px"
       borderTopRadius="sm"
-      _groupFocusWithin={{
-        borderColor: 'utility.focus-default',
-      }}
     >
       {MENU_BUTTONS.map((button, index) => {
         if (button.type === 'divider') {

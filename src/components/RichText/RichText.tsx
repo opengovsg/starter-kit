@@ -56,9 +56,6 @@ const EditorContainer = forwardRef<BoxProps, 'div'>(
         bg="white"
         borderWidth="1px"
         borderColor="base.divider.strong"
-        _focus={{
-          borderColor: 'utility.focus-default',
-        }}
         px="1rem"
         py="0.5rem"
         ref={ref}
@@ -106,6 +103,10 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
       ],
       content: safeJsonParse(value),
       editable: !isReadOnly,
+      onCreate: ({ editor }) => {
+        // Required to focus the editor on creation
+        editor.commands.focus()
+      },
       onUpdate: ({ editor }) => {
         if (editor.isEmpty) {
           return onChange?.(undefined)
@@ -137,16 +138,19 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
         direction="column"
         borderRadius="sm"
         data-group
-        _focusWithin={{
-          shadow: 'focus',
-        }}
         // TODO: Add error or invalid styling
         sx={componentStyles}
         {...flexProps}
       >
-        <Box>
+        <Box
+          tabIndex={isReadOnly ? undefined : 0}
+          ref={ref}
+          onFocus={() => {
+            editor?.commands.focus()
+          }}
+        >
           {!isReadOnly && <MenuBar editor={editor} />}
-          <EditorWrapper ref={ref} data-focus={dataAttr(isFocused)}>
+          <EditorWrapper data-focus={dataAttr(isFocused)}>
             <EditorContent
               editor={editor}
               onFocus={() => setIsFocused(true)}
