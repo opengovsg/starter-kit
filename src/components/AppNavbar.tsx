@@ -18,7 +18,7 @@ export const AppNavbar = (): JSX.Element => {
     <Flex flex="0 0 auto" gridColumn="1/-1" height={ADMIN_NAVBAR_HEIGHT}>
       <Flex
         pos="fixed"
-        zIndex="banner"
+        zIndex="docked"
         w="100%"
         justify="space-between"
         align="center"

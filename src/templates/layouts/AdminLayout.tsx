@@ -11,7 +11,7 @@ export const AdminLayout: GetLayout = (page) => {
 
   return (
     <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt" pos="relative">
-      <Box pos="sticky" top={0} zIndex="banner" w="100%">
+      <Box pos="sticky" top={0} zIndex="docked" w="100%">
         <RestrictedGovtMasthead
         // This component can only be used if this is an application created by OGP.
         />
