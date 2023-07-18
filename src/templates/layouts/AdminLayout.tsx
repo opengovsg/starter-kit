@@ -24,7 +24,7 @@ export const AdminLayout: GetLayout = (page) => {
       >
         <AppNavbar />
         <DashSidebar />
-        <Flex flex={1} bg="base.canvas.alt">
+        <Flex flex={1} bg="base.canvas.alt" pb="2.5rem">
           {page}
         </Flex>
       </Grid>
