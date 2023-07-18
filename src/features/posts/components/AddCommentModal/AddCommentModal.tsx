@@ -85,6 +85,7 @@ export const AddCommentModal = ({
             <PostView
               containerProps={{
                 padding: 0,
+                mx: 0,
               }}
               post={parentPost}
               hideActions
