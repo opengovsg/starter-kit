@@ -1,5 +1,4 @@
-import { SimpleGrid } from '@chakra-ui/react'
-import Image from 'next/image'
+import { Image, SimpleGrid } from '@chakra-ui/react'
 import { type RouterOutput } from '~/utils/trpc'
 
 export interface PostImagesProps {
@@ -22,14 +21,10 @@ export const PostImages = ({ images }: PostImagesProps): JSX.Element | null => {
         <Image
           data-value="post-action"
           key={index}
-          alt={url}
+          alt="Uploaded image"
           src={url}
-          // Trick to get NextJS to load without setting specific width,
-          // but constrain the width when rendered.
-          width={1000 / images.length}
-          height={0}
-          sizes="100vw"
-          style={{ width: '100%', height: 'auto' }}
+          w="100%"
+          h="auto"
         />
       ))}
     </SimpleGrid>
