@@ -28,7 +28,7 @@ export const ImageAttachmentButton = forwardRef<
       <Stack spacing="1.5rem">
         <SimpleGrid
           // Clamp the number of columns between 1 and 2
-          columns={Math.min(Math.max(value.length, 1), 2)}
+          columns={{ base: 1, md: Math.min(Math.max(value.length, 1), 2) }}
           spacing="1.5rem"
         >
           {value.map((file, index) => (
