@@ -28,7 +28,15 @@ export const ComposePost = ({
 
   return (
     <Stack direction="row">
-      {showAvatar && <Avatar size="md" src={me?.image} name={me?.username} />}
+      {showAvatar && (
+        <Avatar
+          variant="subtle"
+          bg="base.canvas.brand-subtle"
+          size="md"
+          src={me?.image}
+          name={me?.username}
+        />
+      )}
       <Stack direction="column">
         <FormControl isRequired isInvalid={!!errors.contentHtml}>
           <Controller
