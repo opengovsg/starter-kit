@@ -10,5 +10,5 @@ export const ResponsiveModal = (props: ModalProps) => {
     md: 'md',
   })
 
-  return <ChakraModal size={modalSize} isCentered {...props} />
+  return <ChakraModal size={modalSize} {...props} />
 }
