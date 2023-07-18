@@ -104,10 +104,12 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
       content: safeJsonParse(value),
       editable: !isReadOnly,
       onCreate: ({ editor }) => {
+        if (isReadOnly) return
         // Required to focus the editor on creation
         editor.commands.focus()
       },
       onUpdate: ({ editor }) => {
+        if (isReadOnly) return
         if (editor.isEmpty) {
           return onChange?.(undefined)
         }
@@ -146,6 +148,7 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
           tabIndex={isReadOnly ? undefined : 0}
           ref={ref}
           onFocus={() => {
+            if (isReadOnly) return
             editor?.commands.focus()
           }}
         >
@@ -153,8 +156,16 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
           <EditorWrapper data-focus={dataAttr(isFocused)}>
             <EditorContent
               editor={editor}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={() => {
+                if (!isReadOnly) {
+                  setIsFocused(true)
+                }
+              }}
+              onBlur={() => {
+                if (!isReadOnly) {
+                  setIsFocused(false)
+                }
+              }}
             />
           </EditorWrapper>
         </Box>
