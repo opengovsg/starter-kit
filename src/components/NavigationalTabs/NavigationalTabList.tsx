@@ -22,6 +22,7 @@ export const NavigationTabList = forwardRef<NavigationTabListProps, 'div'>(
     return (
       <NavigationalTabListStylesProvider value={styles}>
         <Stack
+          gap="2rem"
           direction="row"
           ref={ref}
           onMouseDown={onMouseDown}

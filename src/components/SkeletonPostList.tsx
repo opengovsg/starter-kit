@@ -10,7 +10,7 @@ interface SkeletonPostListProps {
 }
 
 export const SkeletonPostList = ({
-  count = 3,
+  count = 10,
 }: SkeletonPostListProps): JSX.Element => {
   const skeletonPosts = useMemo(() => {
     return Array.from({ length: count }, (_, index) => (

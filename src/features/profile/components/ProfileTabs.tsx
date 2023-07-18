@@ -21,6 +21,7 @@ export const ProfileTabs = ({ username }: ProfileTabsProps): JSX.Element => {
       align="center"
       justify="space-between"
       direction="row"
+      gap="1rem"
     >
       <NavigationTabList
         m="auto"
