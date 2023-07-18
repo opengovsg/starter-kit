@@ -33,7 +33,7 @@ const ThreadView = (): JSX.Element | null => {
 
   return (
     <>
-      <PostView post={data} />
+      <PostView containerProps={{ py: '2.5rem' }} post={data} />
       <ReplyToPostAction post={data} />
       <Stack>
         {data.replies.map((p) => (

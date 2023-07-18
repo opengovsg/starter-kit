@@ -23,25 +23,21 @@ export const PostView = ({
   const relativeDate = useMemo(() => formatRelativeTime(post.createdAt), [post])
   return (
     <Stack
-      direction="row"
-      py="1.5rem"
-      mx={{ base: '-1rem' }}
-      px={{ base: '1rem' }}
-      spacing="0.75rem"
+      flexDir="column"
+      spacing="1rem"
+      px={{ lg: '1.5rem' }}
+      mx={{ lg: '-1.5rem' }}
       {...containerProps}
     >
-      <Avatar
-        variant="subtle"
-        bg="base.canvas.brand-subtle"
-        name={post.author?.name ?? undefined}
-        src={post.author.image ?? undefined}
-        size="md"
-      />
-      <Stack direction="column" spacing="0.75rem" flex={1}>
-        <Stack
-          direction={{ base: 'column', md: 'row' }}
-          spacing={{ base: 0, md: '1rem' }}
-        >
+      <Stack spacing="1rem" direction="row">
+        <Avatar
+          variant="subtle"
+          bg="base.canvas.brand-subtle"
+          name={post.author?.name ?? undefined}
+          src={post.author.image ?? undefined}
+          size="md"
+        />
+        <Stack spacing={0}>
           <Text textStyle="subhead-2" color="base.content.strong">
             {post.author.name}
           </Text>
@@ -66,11 +62,11 @@ export const PostView = ({
             </Text>
           </Stack>
         </Stack>
-        <Stack ml={{ base: '-3.25rem', md: 0 }}>
-          <RichText defaultValue={post?.contentHtml} isReadOnly />
-          <PostImages images={post.images} />
-          {!hideActions && <PostActions post={post} />}
-        </Stack>
+      </Stack>
+      <Stack>
+        <RichText defaultValue={post?.contentHtml} isReadOnly />
+        <PostImages images={post.images} />
+        {!hideActions && <PostActions post={post} />}
       </Stack>
     </Stack>
   )

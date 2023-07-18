@@ -25,6 +25,7 @@ export const Post = ({ post, hideActions }: PostProps): JSX.Element => {
     <PostView
       containerProps={{
         onClick,
+        py: '1.5rem',
         layerStyle: 'post',
         tabIndex: 0,
         cursor: 'pointer',
