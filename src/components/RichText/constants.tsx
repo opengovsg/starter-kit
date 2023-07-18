@@ -4,6 +4,7 @@ export const TIP_TAP_STYLES = {
     outline: 'none',
     fontSize: 'md',
     minH: '10rem',
+    fontFeatureSettings: "'tnum' on, 'cv05' on",
     'ul, ol': {
       padding: '0 1rem',
     },
