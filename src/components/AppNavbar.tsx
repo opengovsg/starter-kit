@@ -7,6 +7,7 @@ import {
 } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { ADMIN_NAVBAR_HEIGHT } from '~/constants/layouts'
 import { useMe } from '~/features/me/api'
 import { SETTINGS_PROFILE } from '~/lib/routes'
 
@@ -14,12 +15,15 @@ export const AppNavbar = (): JSX.Element => {
   const { me, logout } = useMe()
 
   return (
-    <>
+    <Flex flex="0 0 auto" gridColumn="1/-1" height={ADMIN_NAVBAR_HEIGHT}>
       <Flex
+        pos="fixed"
+        zIndex="banner"
+        w="100%"
         justify="space-between"
         align="center"
         px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
-        py="0.75rem"
+        py="0.375rem"
         bg="white"
         borderBottomWidth="1px"
         borderColor="base.divider.medium"
@@ -53,6 +57,6 @@ export const AppNavbar = (): JSX.Element => {
           </AvatarMenu>
         </HStack>
       </Flex>
-    </>
+    </Flex>
   )
 }

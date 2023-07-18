@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { BiFace, BiHomeSmile, BiLogOutCircle } from 'react-icons/bi'
+import { ADMIN_DASHBAR_WIDTHS, ADMIN_NAVBAR_HEIGHT } from '~/constants/layouts'
 import { useMe } from '~/features/me/api'
 import { HOME, PROFILE, SETTINGS_PROFILE } from '~/lib/routes'
 
@@ -26,20 +27,17 @@ export const DashSidebar = () => {
   }, [pathname, query.username, me?.username])
 
   return (
-    <Box
-      gridColumn={{ md: '1/3' }}
-      w={{ base: '2.75rem', md: '10.5rem', lg: '13.5rem' }}
-      bg="white"
-      position="relative"
-      borderRight="1px solid"
-      borderColor="base.divider.medium"
-    >
+    <Box position="relative">
       <Flex
+        bg="white"
+        borderRight="1px solid"
+        borderColor="base.divider.medium"
         pos="fixed"
-        w={{ base: '2.75rem', md: '10.5rem', lg: '13.5rem' }}
-        h="calc(var(--chakra-vh) - var(--chakra-sizes-appNavbar))"
+        width={ADMIN_DASHBAR_WIDTHS}
+        h={`calc(var(--chakra-vh) - ${ADMIN_NAVBAR_HEIGHT})`}
         flexDir="column"
         justify="space-between"
+        zIndex="docked"
         pb="0.5rem"
       >
         <SidebarContainer size="sm">
