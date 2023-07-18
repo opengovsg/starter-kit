@@ -1,5 +1,10 @@
 import { Box, Flex, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react'
-import { Button, Link, useIsMobile } from '@opengovsg/design-system-react'
+import {
+  Button,
+  Link,
+  RestrictedFooter,
+  useIsMobile,
+} from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
 import { BiRightArrowAlt } from 'react-icons/bi'
@@ -13,6 +18,7 @@ import {
   SectionHeadingText,
 } from '~/features/landing/components'
 import { SIGN_IN } from '~/lib/routes'
+import { AppGrid } from '~/templates/AppGrid'
 
 const LandingPage = () => {
   const isMobile = useIsMobile()
@@ -155,7 +161,7 @@ const LandingPage = () => {
           </Button>
         </Box>
       </LandingSection>
-      {/* <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
+      <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
         <Box gridColumn={{ base: '1 / -1', md: '2 / 12' }}>
           <RestrictedFooter
             // This component can only be used if this is an application created by OGP.
@@ -166,7 +172,7 @@ const LandingPage = () => {
             appLink="/"
           />
         </Box>
-      </AppGrid> */}
+      </AppGrid>
     </>
   )
 }

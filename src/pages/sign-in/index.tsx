@@ -1,7 +1,9 @@
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
+import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 
 import { noop } from 'lodash'
 import { useRouter } from 'next/router'
+import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 import Suspense from '~/components/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { env } from '~/env.mjs'
@@ -25,9 +27,9 @@ const SignIn = () => {
 
   return (
     <BackgroundBox>
-      {/* <RestrictedGovtMasthead
+      <RestrictedGovtMasthead
       // This component can only be used if this is an application created by OGP.
-      /> */}
+      />
       <BaseGridLayout flex={1}>
         <NonMobileSidebarGridArea>
           <LoginImageSvgr maxW="100%" aria-hidden />
@@ -61,9 +63,9 @@ const SignIn = () => {
         bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
       >
         <FooterGridArea>
-          {/* <RestrictedMiniFooter
+          <RestrictedMiniFooter
           // This component can only be used if this is an application created by OGP.
-        /> */}
+          />
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>
