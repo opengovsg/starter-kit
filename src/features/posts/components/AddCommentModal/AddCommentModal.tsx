@@ -47,7 +47,7 @@ export const AddCommentModal = ({
 
   const replyThreadMutation = trpc.thread.reply.useMutation({
     onSuccess: async () => {
-      toast({ description: 'Reply posted' })
+      toast({ description: 'Your reply was sent' })
       onSuccess?.()
       reset()
       onClose()
