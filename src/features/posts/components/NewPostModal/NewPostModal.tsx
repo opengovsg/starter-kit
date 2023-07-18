@@ -1,14 +1,20 @@
 import {
-  ButtonGroup,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useBreakpointValue,
   type ModalProps,
 } from '@chakra-ui/react'
-import { Button, useToast } from '@opengovsg/design-system-react'
+import {
+  Button,
+  ModalCloseButton,
+  useToast,
+} from '@opengovsg/design-system-react'
+import { ResponsiveButton } from '~/components/ResponsiveButton'
 import { ResponsiveModal } from '~/components/ResponsiveModal'
+import { ResponsiveModalButtonGroup } from '~/components/ResponsiveModalButtonGroup'
 import { ComposePost } from '~/features/posts/components'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
@@ -64,17 +70,27 @@ export const NewPostModal = ({
     onCloseProp?.()
   }
 
+  const modalSize = useBreakpointValue({
+    base: 'full',
+    md: 'md',
+  })
+
   return (
-    <ResponsiveModal isOpen={isOpen} onClose={onClose}>
+    <ResponsiveModal size={modalSize} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
+        <ModalCloseButton />
         <ModalHeader>Create post</ModalHeader>
         <ModalBody>
           <ComposePost allowImageUpload={allowImageUpload} {...formMethods} />
         </ModalBody>
         <ModalFooter>
-          <ButtonGroup>
+          <ResponsiveModalButtonGroup>
             <Button
+              display={{
+                base: 'none',
+                md: 'block',
+              }}
               colorScheme="neutral"
               variant="clear"
               onClick={onClose}
@@ -82,14 +98,14 @@ export const NewPostModal = ({
             >
               Cancel
             </Button>
-            <Button
+            <ResponsiveButton
               onClick={handleSubmitPost}
               isDisabled={!watchedContent}
               isLoading={areMutationsLoading}
             >
               Create post
-            </Button>
-          </ButtonGroup>
+            </ResponsiveButton>
+          </ResponsiveModalButtonGroup>
         </ModalFooter>
       </ModalContent>
     </ResponsiveModal>

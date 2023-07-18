@@ -37,7 +37,7 @@ export const DashSidebar = () => {
         h={`calc(var(--chakra-vh) - ${ADMIN_NAVBAR_HEIGHT})`}
         flexDir="column"
         justify="space-between"
-        zIndex="docked"
+        zIndex="2"
         pb="0.5rem"
       >
         <SidebarContainer size="sm">

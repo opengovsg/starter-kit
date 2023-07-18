@@ -1,15 +1,16 @@
 import {
-  type ModalProps,
-  Modal,
-  ModalContent,
   ModalBody,
-  ModalOverlay,
-  ModalHeader,
+  ModalContent,
   ModalFooter,
-  ButtonGroup,
+  ModalHeader,
+  ModalOverlay,
+  type ModalProps,
 } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
-import { type RouterOutput, trpc } from '~/utils/trpc'
+import { Button, ModalCloseButton } from '@opengovsg/design-system-react'
+import { ResponsiveButton } from '~/components/ResponsiveButton'
+import { ResponsiveModal } from '~/components/ResponsiveModal'
+import { ResponsiveModalButtonGroup } from '~/components/ResponsiveModalButtonGroup'
+import { trpc, type RouterOutput } from '~/utils/trpc'
 
 interface DeletePostModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   postId: RouterOutput['post']['byUser']['posts'][number]['id']
@@ -33,25 +34,40 @@ export const DeletePostModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ResponsiveModal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
+        <ModalCloseButton />
         <ModalHeader>Delete post</ModalHeader>
         <ModalBody>
           This cannot be undone, and it will be removed from your profile and
           search results.
         </ModalBody>
         <ModalFooter>
-          <ButtonGroup>
-            <Button colorScheme="neutral" variant="clear" onClick={onClose}>
+          <ResponsiveModalButtonGroup>
+            <Button
+              display={{
+                base: 'none',
+                md: 'flex',
+              }}
+              colorScheme="neutral"
+              variant="clear"
+              size={{ base: 'lg', md: 'xs' }}
+              onClick={onClose}
+            >
               Cancel
             </Button>
-            <Button colorScheme="critical" onClick={handleDelete}>
+            <ResponsiveButton
+              colorScheme="critical"
+              variant="solid"
+              size={{ base: 'lg', md: 'xs' }}
+              onClick={handleDelete}
+            >
               Delete post
-            </Button>
-          </ButtonGroup>
+            </ResponsiveButton>
+          </ResponsiveModalButtonGroup>
         </ModalFooter>
       </ModalContent>
-    </Modal>
+    </ResponsiveModal>
   )
 }

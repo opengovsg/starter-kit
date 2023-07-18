@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   ButtonGroup,
   FormControl,
   FormErrorMessage,
@@ -26,14 +25,15 @@ import {
 } from '@opengovsg/design-system-react'
 import { isEmpty } from 'lodash'
 import { BiAt } from 'react-icons/bi'
+import isEmail from 'validator/lib/isEmail'
 import { z } from 'zod'
 import { BackBannerLink } from '~/components/BackBannerLink'
+import { ResponsiveButton } from '~/components/ResponsiveButton'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 import { useMe } from '~/features/me/api'
 import { PROFILE } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 import { registerWithDebounce } from '~/utils/registerWithDebounce'
-import isEmail from 'validator/lib/isEmail'
 
 const Profile: NextPageWithLayout = () => {
   const { me } = useMe()
@@ -171,13 +171,13 @@ const Profile: NextPageWithLayout = () => {
             <FormErrorMessage>{errors.bio?.message}</FormErrorMessage>
           </FormControl>
           <ButtonGroup justifyContent="end">
-            <Button
+            <ResponsiveButton
               isDisabled={!isEmpty(errors)}
               onClick={handleProfileUpdate}
               isLoading={updateMutation.isLoading}
             >
               Save user profile
-            </Button>
+            </ResponsiveButton>
           </ButtonGroup>
         </Stack>
       </AppGrid>
