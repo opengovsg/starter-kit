@@ -1,17 +1,17 @@
 import {
   ButtonGroup,
-  Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  type ModalProps,
   Stack,
+  type ModalProps,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
+import { ResponsiveModal } from '~/components/ResponsiveModal'
 import { useZodForm } from '~/lib/form'
-import { type RouterOutput, trpc } from '~/utils/trpc'
+import { trpc, type RouterOutput } from '~/utils/trpc'
 import { useUploadImagesMutation } from '../../api'
 import { clientAddReplySchema } from '../../schemas/clientAddPostSchema'
 import { ComposePost } from '../ComposePost'
@@ -76,7 +76,7 @@ export const AddCommentModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ResponsiveModal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Reply post</ModalHeader>
@@ -117,6 +117,6 @@ export const AddCommentModal = ({
           </ButtonGroup>
         </ModalFooter>
       </ModalContent>
-    </Modal>
+    </ResponsiveModal>
   )
 }

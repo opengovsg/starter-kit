@@ -1,6 +1,5 @@
 import {
   ButtonGroup,
-  Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -9,6 +8,7 @@ import {
   type ModalProps,
 } from '@chakra-ui/react'
 import { Button, useToast } from '@opengovsg/design-system-react'
+import { ResponsiveModal } from '~/components/ResponsiveModal'
 import { ComposePost } from '~/features/posts/components'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
@@ -65,7 +65,7 @@ export const NewPostModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ResponsiveModal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create post</ModalHeader>
@@ -92,6 +92,6 @@ export const NewPostModal = ({
           </ButtonGroup>
         </ModalFooter>
       </ModalContent>
-    </Modal>
+    </ResponsiveModal>
   )
 }
