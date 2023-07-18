@@ -41,7 +41,7 @@ export const NewPostModal = ({
 
   const addPostMutation = trpc.post.add.useMutation({
     async onSuccess() {
-      toast({ description: 'Post success!' })
+      toast({ description: 'You’ve created a post successfully' })
       reset()
       onClose()
       await utils.post.invalidate()
