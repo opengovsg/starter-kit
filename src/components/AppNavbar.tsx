@@ -28,7 +28,7 @@ export const AppNavbar = (): JSX.Element => {
         borderBottomWidth="1px"
         borderColor="base.divider.medium"
       >
-        <Link as={NextLink} href="/">
+        <Link as={NextLink} href="/home">
           <Image
             // This component can only be used if this is an application created by OGP.
             src="/assets/restricted-ogp-logo-full.svg"
