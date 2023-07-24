@@ -4,7 +4,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useBreakpointValue,
   type ModalProps,
 } from '@chakra-ui/react'
 import {
@@ -70,13 +69,8 @@ export const NewPostModal = ({
     onCloseProp?.()
   }
 
-  const modalSize = useBreakpointValue({
-    base: 'full',
-    md: 'md',
-  })
-
   return (
-    <ResponsiveModal size={modalSize} isOpen={isOpen} onClose={onClose}>
+    <ResponsiveModal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />

@@ -84,7 +84,7 @@ export const AddCommentModal = ({
           <Stack spacing="1.5rem">
             <PostView
               containerProps={{
-                padding: 0,
+                px: 0,
                 mx: 0,
               }}
               post={parentPost}
