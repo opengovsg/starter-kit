@@ -25,8 +25,8 @@ export const PostView = ({
     <Stack
       flexDir="column"
       spacing="1rem"
-      px={{ lg: '1.5rem' }}
-      mx={{ lg: '-1.5rem' }}
+      px={{ base: '1rem', lg: '1.5rem' }}
+      mx={{ base: '-1rem', lg: '-1.5rem' }}
       {...containerProps}
     >
       <Stack spacing="1rem" direction="row">
