@@ -23,6 +23,7 @@ const Home: NextPageWithLayout = () => {
       <AppGrid
         flex={1}
         bg="white"
+        pb="2.5rem"
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         px={{ base: '1rem', lg: 0 }}
       >

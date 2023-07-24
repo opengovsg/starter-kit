@@ -134,6 +134,7 @@ const Profile: NextPageWithLayout = () => {
         </BackBannerLink>
       </AppGrid>
       <AppGrid
+        pb="2.5rem"
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="white"
         py="1.5rem"
