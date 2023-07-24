@@ -1,5 +1,4 @@
 import {
-  ButtonGroup,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -16,6 +15,8 @@ import { useUploadImagesMutation } from '../../api'
 import { clientAddReplySchema } from '../../schemas/clientAddPostSchema'
 import { ComposePost } from '../ComposePost'
 import { PostView } from '../Post/PostView'
+import { ResponsiveModalButtonGroup } from '~/components/ResponsiveModalButtonGroup'
+import { ResponsiveButton } from '~/components/ResponsiveButton'
 
 interface AddCommentModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   parentPost: RouterOutput['post']['byUser']['posts'][number]
@@ -98,7 +99,28 @@ export const AddCommentModal = ({
           </Stack>
         </ModalBody>
         <ModalFooter>
-          <ButtonGroup>
+          <ResponsiveModalButtonGroup>
+            <Button
+              display={{
+                base: 'none',
+                md: 'block',
+              }}
+              colorScheme="neutral"
+              variant="clear"
+              onClick={onClose}
+              isDisabled={areMutationsLoading}
+            >
+              Cancel
+            </Button>
+            <ResponsiveButton
+              onClick={handleSubmitReply}
+              isDisabled={!watchedContent}
+              isLoading={areMutationsLoading}
+            >
+              Reply to post
+            </ResponsiveButton>
+          </ResponsiveModalButtonGroup>
+          {/* <ButtonGroup>
             <Button
               colorScheme="neutral"
               variant="clear"
@@ -114,7 +136,7 @@ export const AddCommentModal = ({
             >
               Reply to post
             </Button>
-          </ButtonGroup>
+          </ButtonGroup> */}
         </ModalFooter>
       </ModalContent>
     </ResponsiveModal>
