@@ -25,7 +25,7 @@ const ContentSecurityPolicy = `
       : ''
   };
   worker-src 'self' blob:;
-  ${env.NODE_ENV === 'production' ? 'upgrade-insecure-requests' : ''}'
+  ${env.NODE_ENV === 'production' ? 'upgrade-insecure-requests' : ''}
 `
 
 /**
