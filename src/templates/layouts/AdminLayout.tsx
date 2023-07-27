@@ -1,5 +1,4 @@
-import { Box, Flex, Grid } from '@chakra-ui/react'
-import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
+import { Flex, Grid } from '@chakra-ui/react'
 import { AppNavbar } from '~/components/AppNavbar'
 import { DashSidebar } from '~/components/DashSidebar'
 import { APP_GRID_TEMPLATE_AREA } from '~/constants/layouts'
@@ -11,11 +10,6 @@ export const AdminLayout: GetLayout = (page) => {
 
   return (
     <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt" pos="relative">
-      <Box pos="sticky" top={0} zIndex="docked" w="100%">
-        <RestrictedGovtMasthead
-        // This component can only be used if this is an application created by OGP.
-        />
-      </Box>
       <Grid
         flex={1}
         width="100vw"
