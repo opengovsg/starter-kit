@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, StackDivider } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { SkeletonPostList } from '~/components/SkeletonPostList'
 import Suspense from '~/components/Suspense'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
@@ -27,16 +27,9 @@ const Home: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         px={{ base: '1rem', lg: 0 }}
       >
-        <Stack
-          spacing={0}
-          divider={<StackDivider />}
-          gridColumn={APP_GRID_COLUMN}
-          flexDir="column"
-        >
-          <Suspense fallback={<SkeletonPostList />}>
-            <PostList />
-          </Suspense>
-        </Stack>
+        <Suspense fallback={<SkeletonPostList />}>
+          <PostList />
+        </Suspense>
       </AppGrid>
     </Flex>
   )

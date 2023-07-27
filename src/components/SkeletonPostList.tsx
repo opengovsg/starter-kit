@@ -1,5 +1,6 @@
 import { Stack, StackDivider } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { APP_GRID_COLUMN } from '~/constants/layouts'
 import { SkeletonPost } from '~/features/posts/components'
 
 interface SkeletonPostListProps {
@@ -20,8 +21,13 @@ export const SkeletonPostList = ({
   }, [count])
 
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      {skeletonPosts}
+    <Stack
+      spacing={0}
+      divider={<StackDivider />}
+      gridColumn={APP_GRID_COLUMN}
+      flexDir="column"
+    >
+      {...skeletonPosts}
     </Stack>
   )
 }

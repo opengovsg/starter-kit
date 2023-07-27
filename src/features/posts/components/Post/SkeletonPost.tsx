@@ -14,13 +14,7 @@ export const SkeletonPost = ({
   hideActions,
 }: SkeletonPostProps): JSX.Element => {
   return (
-    <Stack
-      flexDir="column"
-      spacing="1rem"
-      px={{ base: '1rem', lg: '1.5rem' }}
-      mx={{ base: '-1rem', lg: '-1.5rem' }}
-      {...containerProps}
-    >
+    <Stack flexDir="column" py="1.5rem" spacing="1rem" {...containerProps}>
       <Stack spacing="1rem" direction="row">
         <SkeletonCircle size="10" />
         <Stack spacing="0.25rem">
@@ -41,7 +35,7 @@ export const SkeletonPost = ({
           </Stack>
         </Stack>
       </Stack>
-      <Stack ml={{ base: '-3.25rem', md: 0 }}>
+      <Stack>
         <SkeletonText
           spacing="0.25rem"
           skeletonHeight="1.125rem"
