@@ -7,7 +7,11 @@ import {
   Stack,
   type ModalProps,
 } from '@chakra-ui/react'
-import { Button, useToast } from '@opengovsg/design-system-react'
+import {
+  Button,
+  ModalCloseButton,
+  useToast,
+} from '@opengovsg/design-system-react'
 import { ResponsiveModal } from '~/components/ResponsiveModal'
 import { useZodForm } from '~/lib/form'
 import { trpc, type RouterOutput } from '~/utils/trpc'
@@ -80,6 +84,7 @@ export const AddCommentModal = ({
     <ResponsiveModal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
+        <ModalCloseButton />
         <ModalHeader>Reply post</ModalHeader>
         <ModalBody>
           <Stack spacing="1.5rem">
