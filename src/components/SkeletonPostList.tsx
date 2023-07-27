@@ -6,7 +6,7 @@ import { SkeletonPost } from '~/features/posts/components'
 interface SkeletonPostListProps {
   /**
    * Number of skeleton posts to render
-   * @default 3
+   * @default 10
    */
   count?: number
 }
@@ -27,7 +27,7 @@ export const SkeletonPostList = ({
       gridColumn={APP_GRID_COLUMN}
       flexDir="column"
     >
-      {...skeletonPosts}
+      {skeletonPosts}
     </Stack>
   )
 }

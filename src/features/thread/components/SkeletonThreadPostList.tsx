@@ -12,7 +12,7 @@ interface SkeletonThreadPostListProps {
 }
 
 export const SkeletonThreadPostList = ({
-  count = 10,
+  count = 3,
 }: SkeletonThreadPostListProps): JSX.Element => {
   const skeletonThreadPosts = useMemo(() => {
     return Array.from({ length: count }, (_, index) => (
@@ -27,7 +27,7 @@ export const SkeletonThreadPostList = ({
       gridColumn={APP_GRID_COLUMN}
       flexDir="column"
     >
-      {...skeletonThreadPosts}
+      {skeletonThreadPosts}
     </Stack>
   )
 }
