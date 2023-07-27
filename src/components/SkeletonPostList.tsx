@@ -1,6 +1,6 @@
 import { Stack, StackDivider } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { PostSkeleton } from '~/features/posts/components'
+import { SkeletonPost } from '~/features/posts/components'
 
 interface SkeletonPostListProps {
   /**
@@ -15,7 +15,7 @@ export const SkeletonPostList = ({
 }: SkeletonPostListProps): JSX.Element => {
   const skeletonPosts = useMemo(() => {
     return Array.from({ length: count }, (_, index) => (
-      <PostSkeleton key={index} />
+      <SkeletonPost key={index} />
     ))
   }, [count])
 

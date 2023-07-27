@@ -1,4 +1,4 @@
 export * from './Post'
 export * from './PostView'
 export * from './PostImages'
-export * from './PostSkeleton'
+export * from './SkeletonPost'
