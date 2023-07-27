@@ -1,49 +1,11 @@
-import { Divider, Flex, Stack, StackDivider } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { BackBannerButton } from '~/components/BackBannerButton'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
-import {
-  Post,
-  PostSkeleton,
-  PostView,
-  ReplyToPostAction,
-} from '~/features/posts/components'
+import { ThreadView } from '~/features/thread/components'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'
 import { ThreadLayout } from '~/templates/layouts/ThreadLayout'
-import { trpc } from '~/utils/trpc'
-
-const ThreadView = (): JSX.Element | null => {
-  const router = useRouter()
-  const postId = String(router.query.postId)
-
-  const { data, isLoading, isError } = trpc.post.byId.useQuery(
-    { id: postId },
-    { enabled: router.isReady }
-  )
-
-  if (isError) {
-    void router.replace('/home')
-    return null
-  }
-
-  if (isLoading || !data) {
-    return <PostSkeleton />
-  }
-
-  return (
-    <>
-      <PostView containerProps={{ py: '2.5rem' }} post={data} />
-      <ReplyToPostAction post={data} />
-      <Divider />
-      <Stack spacing={0} divider={<StackDivider />} py="1rem">
-        {data.replies.map((p) => (
-          <Post key={p.id} post={p} />
-        ))}
-      </Stack>
-    </>
-  )
-}
 
 const Thread: NextPageWithLayout = () => {
   const router = useRouter()
@@ -69,9 +31,7 @@ const Thread: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         px={{ base: '1rem', lg: 0 }}
       >
-        <Stack spacing={0} gridColumn={APP_GRID_COLUMN} flexDir="column">
-          <ThreadView />
-        </Stack>
+        <ThreadView />
       </AppGrid>
     </Flex>
   )
