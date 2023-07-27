@@ -1,3 +1,4 @@
+import { Stack, StackDivider } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { PostSkeleton } from '~/features/posts/components'
 
@@ -18,5 +19,9 @@ export const SkeletonPostList = ({
     ))
   }, [count])
 
-  return <>{skeletonPosts}</>
+  return (
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
+      {skeletonPosts}
+    </Stack>
+  )
 }

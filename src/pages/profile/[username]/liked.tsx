@@ -26,21 +26,19 @@ export const LikedPostList = (): JSX.Element => {
   }
 
   return (
-    <>
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
       {data.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}
-    </>
+    </Stack>
   )
 }
 
 const Liked: NextPageWithLayout = () => {
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      <Suspense fallback={<SkeletonPostList />}>
-        <LikedPostList />
-      </Suspense>
-    </Stack>
+    <Suspense fallback={<SkeletonPostList />}>
+      <LikedPostList />
+    </Suspense>
   )
 }
 

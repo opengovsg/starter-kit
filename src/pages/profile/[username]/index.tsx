@@ -26,21 +26,19 @@ export const ProfilePostList = (): JSX.Element => {
   }
 
   return (
-    <>
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
       {data.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}
-    </>
+    </Stack>
   )
 }
 
 const Profile: NextPageWithLayout = () => {
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      <Suspense fallback={<SkeletonPostList />}>
-        <ProfilePostList />
-      </Suspense>
-    </Stack>
+    <Suspense fallback={<SkeletonPostList />}>
+      <ProfilePostList />
+    </Suspense>
   )
 }
 

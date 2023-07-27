@@ -26,21 +26,19 @@ export const RepliesPostList = (): JSX.Element => {
   }
 
   return (
-    <>
+    <Stack spacing={0} divider={<StackDivider />} py="1rem">
       {data.posts.map((p) => (
         <Post key={p.id} post={p} />
       ))}
-    </>
+    </Stack>
   )
 }
 
 const Replies: NextPageWithLayout = () => {
   return (
-    <Stack spacing={0} divider={<StackDivider />} py="1rem">
-      <Suspense fallback={<SkeletonPostList />}>
-        <RepliesPostList />
-      </Suspense>
-    </Stack>
+    <Suspense fallback={<SkeletonPostList />}>
+      <RepliesPostList />
+    </Suspense>
   )
 }
 
