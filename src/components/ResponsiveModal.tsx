@@ -10,10 +10,20 @@ export const ResponsiveModal = (props: ModalProps) => {
     md: 'md',
   })
 
+  const scrollBehavior: ModalProps['scrollBehavior'] = useBreakpointValue({
+    base: 'outside',
+    md: 'inside',
+  })
+
+  const isCentered = useBreakpointValue({
+    base: false,
+    md: true,
+  })
+
   return (
     <ChakraModal
-      scrollBehavior="inside"
-      isCentered
+      scrollBehavior={scrollBehavior}
+      isCentered={isCentered}
       size={modalSize}
       {...props}
     />
