@@ -1,4 +1,4 @@
-import { Flex, Stack, StackDivider } from '@chakra-ui/react'
+import { Divider, Flex, Stack, StackDivider } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { BackBannerButton } from '~/components/BackBannerButton'
 import { APP_GRID_COLUMN, APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
@@ -35,7 +35,8 @@ const ThreadView = (): JSX.Element | null => {
     <>
       <PostView containerProps={{ py: '2.5rem' }} post={data} />
       <ReplyToPostAction post={data} />
-      <Stack>
+      <Divider />
+      <Stack spacing={0} divider={<StackDivider />} py="1rem">
         {data.replies.map((p) => (
           <Post key={p.id} post={p} />
         ))}
@@ -68,12 +69,7 @@ const Thread: NextPageWithLayout = () => {
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         px={{ base: '1rem', lg: 0 }}
       >
-        <Stack
-          spacing={0}
-          divider={<StackDivider />}
-          gridColumn={APP_GRID_COLUMN}
-          flexDir="column"
-        >
+        <Stack spacing={0} gridColumn={APP_GRID_COLUMN} flexDir="column">
           <ThreadView />
         </Stack>
       </AppGrid>
