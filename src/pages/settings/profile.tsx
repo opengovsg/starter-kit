@@ -1,6 +1,7 @@
 import {
   Box,
   ButtonGroup,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -119,7 +120,7 @@ const Profile: NextPageWithLayout = () => {
   )
 
   return (
-    <Box w="100%">
+    <Flex w="100%" flexDir="column">
       <AppGrid
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
@@ -135,8 +136,9 @@ const Profile: NextPageWithLayout = () => {
       </AppGrid>
       <AppGrid
         pb="2.5rem"
-        templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="white"
+        templateColumns={APP_GRID_TEMPLATE_COLUMN}
+        flex={1}
         py="1.5rem"
         px={{ base: '1rem', lg: 0 }}
       >
@@ -182,7 +184,7 @@ const Profile: NextPageWithLayout = () => {
           </ButtonGroup>
         </Stack>
       </AppGrid>
-    </Box>
+    </Flex>
   )
 }
 
