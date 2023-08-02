@@ -22,7 +22,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
 
   return (
     <Button
-      variant="outline"
+      variant="clear"
       isLoading={sgidLoginMutation.isLoading}
       onClick={handleSgidLogin}
     >
