@@ -5,53 +5,51 @@ import {
   Link,
   Menu,
 } from '@opengovsg/design-system-react'
+import Image from 'next/image'
 import NextLink from 'next/link'
-import { useRouter } from 'next/router'
-
-import { useUser } from '~/features/profile/api'
+import { ADMIN_NAVBAR_HEIGHT } from '~/constants/layouts'
+import { useMe } from '~/features/me/api'
+import { SETTINGS_PROFILE } from '~/lib/routes'
 
 export const AppNavbar = (): JSX.Element => {
-  const { user, logout } = useUser()
-  const { pathname } = useRouter()
+  const { me, logout } = useMe()
 
   return (
-    <>
+    <Flex flex="0 0 auto" gridColumn="1/-1" height={ADMIN_NAVBAR_HEIGHT}>
       <Flex
+        pos="fixed"
+        zIndex="docked"
+        w="100%"
         justify="space-between"
         align="center"
         px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
-        py="0.75rem"
+        py="0.375rem"
         bg="white"
         borderBottomWidth="1px"
         borderColor="base.divider.medium"
       >
-        <Link as={NextLink} href="/">
-          Starter Kit
-          {/* <Image
+        <Link as={NextLink} href="/home">
+          <Image
             // This component can only be used if this is an application created by OGP.
             src="/assets/restricted-ogp-logo-full.svg"
             width={233}
             height={12}
             alt="OGP Logo"
             priority
-          /> */}
+          />
         </Link>
         <HStack
           textStyle="subhead-1"
           spacing={{ base: '0.75rem', md: '1.5rem' }}
         >
           <AvatarMenu
-            src={user?.image ?? undefined}
-            name={user?.name ?? undefined}
+            src={me?.image ?? undefined}
+            name={me?.name ?? undefined}
             variant="subtle"
             bg="base.canvas.brand-subtle"
             menuListProps={{ maxWidth: '19rem' }}
           >
-            <Menu.Item
-              disabled={pathname === '/profile'}
-              as={NextLink}
-              href="/profile"
-            >
+            <Menu.Item as={NextLink} href={SETTINGS_PROFILE}>
               Edit profile
             </Menu.Item>
             <AvatarMenuDivider />
@@ -59,6 +57,6 @@ export const AppNavbar = (): JSX.Element => {
           </AvatarMenu>
         </HStack>
       </Flex>
-    </>
+    </Flex>
   )
 }

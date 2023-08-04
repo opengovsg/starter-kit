@@ -7,3 +7,5 @@ export * from './SignInForm'
 
 export * from './SgidLoginButton'
 export * from './SgidCallback'
+
+export * from './SignInContext'

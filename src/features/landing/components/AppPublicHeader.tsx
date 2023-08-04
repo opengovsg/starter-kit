@@ -6,7 +6,7 @@ import {
   useIsMobile,
 } from '@opengovsg/design-system-react'
 import NextLink from 'next/link'
-import { SIGN_IN } from '~/constants/routes'
+import { SIGN_IN } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 
 type PublicHeaderLinkProps = {
@@ -63,7 +63,7 @@ export const AppPublicHeader = ({
   publicHeaderLinks,
 }: AppPublicHeaderProps): JSX.Element => {
   return (
-    <AppGrid bg="base.canvas.brand-subtle">
+    <AppGrid px="1.5rem" bg="base.canvas.brand-subtle">
       <Flex
         gridColumn={{ base: '1 / -1', md: '2 / 12' }}
         justify="space-between"

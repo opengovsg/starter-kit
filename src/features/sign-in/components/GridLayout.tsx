@@ -24,7 +24,11 @@ export const BackgroundBox: FC<PropsWithChildren> = ({ children }) => (
 
 // Component that controls the various grid areas according to responsive breakpoints.
 export const BaseGridLayout = (props: GridProps) => (
-  <AppGrid templateRows={{ md: 'auto 1fr auto', lg: '1fr auto' }} {...props} />
+  <AppGrid
+    px={{ base: '1.5rem', md: '1.75rem', lg: '2rem' }}
+    templateRows={{ md: 'auto 1fr auto', lg: '1fr auto' }}
+    {...props}
+  />
 )
 
 // Grid area styling for the login form.

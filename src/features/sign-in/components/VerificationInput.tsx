@@ -5,6 +5,7 @@ import { useIntervalWhen } from 'rooks'
 import { z } from 'zod'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
+import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
 import { useSignInContext } from './SignInContext'
 import { emailSignInSchema } from './Emailnput'
@@ -60,9 +61,7 @@ export const VerificationInput = (): JSX.Element => {
       },
       {
         onSuccess: async () => {
-          await router.push(
-            String(router.query[CALLBACK_URL_KEY] ?? '/dashboard')
-          )
+          await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
         },
       }
     )

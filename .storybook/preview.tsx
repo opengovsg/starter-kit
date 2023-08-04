@@ -1,19 +1,26 @@
 import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
-import type { Preview, Decorator } from '@storybook/react'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
+import type { Args, Decorator, Preview } from '@storybook/react'
+import mockdate from 'mockdate'
 
+import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
-import { PropsWithChildren, useState } from 'react'
 import { createTRPCReact } from '@trpc/react-query'
-import { AppRouter } from '~/server/modules/_app'
+import { useMemo, useState } from 'react'
 import superjson from 'superjson'
-import { ThemeProvider } from '@opengovsg/design-system-react'
+import { AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
 
+import { Box, Skeleton } from '@chakra-ui/react'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
+import ErrorBoundary from '~/components/ErrorBoundary'
+import Suspense from '~/components/Suspense'
+import { format } from 'date-fns'
+import { FeatureContext } from '~/components/AppProviders'
+import { z } from 'zod'
 
 // Initialize MSW
 initialize({
@@ -22,7 +29,7 @@ initialize({
 
 const trpc = createTRPCReact<AppRouter>()
 
-const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
+const SetupDecorator: Decorator = (page) => {
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: {
@@ -41,9 +48,66 @@ const StorybookTrpcProvider = ({ children }: PropsWithChildren) => {
     })
   )
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    <ErrorBoundary>
+      <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            {page()}
+          </QueryClientProvider>
+        </trpc.Provider>
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
+
+export const mockFeatureFlagsDecorator: Decorator<Args> = (
+  storyFn,
+  { parameters }
+) => {
+  const featureSchema = z
+    .object({
+      storage: z.boolean().default(false),
+      sgid: z.boolean().default(false),
+    })
+    .default({})
+  const features = useMemo(() => {
+    return featureSchema.parse(parameters.features)
+  }, [])
+
+  return (
+    <FeatureContext.Provider value={features}>
+      {storyFn()}
+    </FeatureContext.Provider>
+  )
+}
+
+export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+  mockdate.reset()
+
+  if (!parameters.mockdate) {
+    return storyFn()
+  }
+
+  mockdate.set(parameters.mockdate)
+
+  const mockedDate = format(parameters.mockdate, 'dd-mm-yyyy HH:mma')
+
+  return (
+    <Box>
+      <Box
+        pos="fixed"
+        top={0}
+        right={0}
+        bg="white"
+        p="0.25rem"
+        fontSize="0.75rem"
+        lineHeight={1}
+        zIndex="docked"
+      >
+        Mocking date: {mockedDate}
+      </Box>
+      {storyFn()}
+    </Box>
   )
 }
 
@@ -55,11 +119,9 @@ const decorators: Decorator[] = [
     },
     Provider: ThemeProvider,
   }),
-  (Story) => (
-    <StorybookTrpcProvider>
-      <Story />
-    </StorybookTrpcProvider>
-  ),
+  mockDateDecorator,
+  mockFeatureFlagsDecorator,
+  SetupDecorator,
 ]
 
 const preview: Preview = {

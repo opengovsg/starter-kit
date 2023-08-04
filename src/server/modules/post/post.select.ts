@@ -5,6 +5,7 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   title: true,
   content: true,
   contentHtml: true,
+  images: true,
   createdAt: true,
   updatedAt: true,
   authorId: true,
@@ -12,21 +13,13 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
     select: {
       image: true,
       name: true,
-    },
-  },
-  readBy: {
-    select: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      username: true,
     },
   },
   _count: {
     select: {
       replies: true,
+      likes: true,
     },
   },
 })
@@ -34,21 +27,12 @@ export const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
 export const withCommentsPostSelect = Prisma.validator<Prisma.PostSelect>()({
   ...defaultPostSelect,
   replies: {
+    where: {
+      deletedAt: null,
+    },
     orderBy: {
       createdAt: 'asc',
     },
-    select: {
-      id: true,
-      content: true,
-      contentHtml: true,
-      createdAt: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
-    },
+    select: defaultPostSelect,
   },
 })

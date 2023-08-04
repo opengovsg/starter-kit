@@ -2,6 +2,7 @@ import { Flex, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 
 // https://nextjs.org/docs/advanced-features/custom-error-page
 const Custom404 = () => {
@@ -41,9 +42,9 @@ const Custom404 = () => {
             Go back
           </Button>
         </Stack>
-        {/* <RestrictedMiniFooter
-          // This component can only be used if this is an application created by OGP.
-        /> */}
+        <RestrictedMiniFooter
+        // This component can only be used if this is an application created by OGP.
+        />
       </Stack>
     </Flex>
   )

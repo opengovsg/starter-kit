@@ -3,13 +3,14 @@ import { z } from 'zod'
 import { publicProcedure, router } from '~/server/trpc'
 import { sendMail } from '~/lib/mail'
 import { getBaseUrl } from '~/utils/getBaseUrl'
-import { defaultUserSelect } from '~/server/modules/user/user.select'
 import { createTokenHash, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
 import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
+import { defaultMeSelect } from '../../me/me.select'
+import { generateUsername } from '../../me/me.service'
 
 export const emailSessionRouter = router({
   // Generate OTP.
@@ -84,15 +85,18 @@ export const emailSessionRouter = router({
         throw e
       }
 
+      const emailName = email.split('@')[0] ?? 'unknown'
+
       const user = await ctx.prisma.user.upsert({
         where: { email },
         update: {},
         create: {
           email,
           emailVerified: new Date(),
-          name: email.split('@')[0],
+          name: emailName,
+          username: generateUsername(emailName),
         },
-        select: defaultUserSelect,
+        select: defaultMeSelect,
       })
 
       // TODO: Should only store user id in session.

@@ -26,7 +26,9 @@ const baseR2Schema = z.object({
   R2_ACCOUNT_ID: z.string().optional(),
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_PUBLIC_HOSTNAME: z.string().optional(),
-  R2_AVATARS_BUCKET_NAME: z.string().optional(),
+  R2_BUCKET_NAME: z.string().optional(),
+  R2_AVATARS_DIRECTORY: z.string().optional(),
+  R2_IMAGES_DIRECTORY: z.string().optional(),
 })
 
 const r2ServerSchema = z.discriminatedUnion('NEXT_PUBLIC_ENABLE_STORAGE', [
@@ -137,7 +139,9 @@ const processEnv = {
   SESSION_SECRET: process.env.SESSION_SECRET,
   R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
   R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
-  R2_AVATARS_BUCKET_NAME: process.env.R2_AVATARS_BUCKET_NAME,
+  R2_BUCKET_NAME: process.env.R2_BUCKET_NAME,
+  R2_AVATARS_DIRECTORY: process.env.R2_AVATARS_DIRECTORY,
+  R2_IMAGES_DIRECTORY: process.env.R2_IMAGES_DIRECTORY,
   R2_PUBLIC_HOSTNAME: process.env.R2_PUBLIC_HOSTNAME,
   R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
   SGID_CLIENT_ID: process.env.SGID_CLIENT_ID,

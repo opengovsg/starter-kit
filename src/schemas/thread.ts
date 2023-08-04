@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { addPostSchema } from './post'
 
-export const addReplySchema = z.object({
-  content: z.string().min(1),
-  contentHtml: z.string().min(1),
+export const addReplySchema = addPostSchema.extend({
   postId: z.string(),
 })
+
+export type AddReplySchema = z.infer<typeof addReplySchema>

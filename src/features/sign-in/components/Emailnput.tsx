@@ -1,5 +1,7 @@
 import { FormControl, FormLabel, Input, Wrap } from '@chakra-ui/react'
 import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
@@ -25,12 +27,21 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
     formState: { errors },
   } = useZodForm({
     schema: emailSignInSchema,
+    mode: 'onTouched',
   })
+
+  const router = useRouter()
 
   const loginMutation = trpc.auth.email.login.useMutation({
     onSuccess,
     onError: (error) => setError('email', { message: error.message }),
   })
+
+  useEffect(() => {
+    if (router.query.error) {
+      setError('email', { message: String(router.query.error) })
+    }
+  }, [router.query.error, setError])
 
   const handleSignIn = handleSubmit(({ email }) => {
     return loginMutation.mutate({ email })

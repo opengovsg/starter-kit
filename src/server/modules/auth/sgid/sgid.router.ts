@@ -7,8 +7,10 @@ import { z } from 'zod'
 import { sgid } from '~/lib/sgid'
 import { publicProcedure, router } from '~/server/trpc'
 import { getUserInfo, type SgidUserInfo } from './sgid.utils'
-import { defaultUserSelect } from '../../user/user.select'
 import { env } from '~/env.mjs'
+import { HOME } from '~/lib/routes'
+import { defaultMeSelect } from '../../me/me.select'
+import { generateUsername } from '../../me/me.service'
 
 const sgidCallbackStateSchema = z
   .custom<string>((data) => {
@@ -30,7 +32,7 @@ export const sgidRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        landingUrl: z.string().optional().default('/dashboard'),
+        landingUrl: z.string().optional().default(HOME),
       })
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
@@ -45,13 +47,6 @@ export const sgidRouter = router({
         throw new TRPCError({
           code: 'UNPROCESSABLE_CONTENT',
           message: 'Session object missing in context',
-        })
-      }
-      // Already logged in.
-      if (ctx.session.user) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'User is already logged in',
         })
       }
 
@@ -118,7 +113,7 @@ export const sgidRouter = router({
       }
 
       const sgidUserEmail = sgidUserInfo.data.email
-      const { user } = await ctx.prisma.accounts.upsert({
+      let { user } = await ctx.prisma.accounts.upsert({
         where: {
           provider_providerAccountId: {
             provider: 'sgid',
@@ -137,13 +132,18 @@ export const sgidRouter = router({
                     },
                     create: {
                       email: sgidUserEmail,
+                      emailVerified: new Date(),
                       name: sgidUserInfo.data['myinfo.name'],
+                      username: generateUsername(sgidUserEmail),
                     },
                   },
                 }
               : {
                   create: {
                     name: sgidUserInfo.data['myinfo.name'],
+                    username: generateUsername(
+                      sgidUserInfo.data['myinfo.name']
+                    ),
                   },
                 }),
           },
@@ -154,10 +154,22 @@ export const sgidRouter = router({
         include: {
           // Return user that is linked to the account.
           user: {
-            select: defaultUserSelect,
+            select: defaultMeSelect,
           },
         },
       })
+
+      if (!user.username && user.name) {
+        // Add generated username to user if not set.
+        user = await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            username: generateUsername(user.name),
+          },
+        })
+      }
 
       ctx.session.destroy()
       ctx.session.user = user

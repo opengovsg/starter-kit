@@ -1,8 +1,8 @@
 import { extendTheme } from '@chakra-ui/react'
 import { theme as ogpDsTheme } from '@opengovsg/design-system-react'
 import { shadows } from './foundations/shadows'
-
-import * as components from './components'
+import { layerStyles } from './layerStyles'
+import { components } from './components'
 
 export const theme = extendTheme(ogpDsTheme, {
   shadows,
@@ -10,4 +10,5 @@ export const theme = extendTheme(ogpDsTheme, {
     ...ogpDsTheme.components,
     ...components,
   },
+  layerStyles,
 })

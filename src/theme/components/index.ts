@@ -1,1 +1,5 @@
-export * from './Sidebar'
+import { Modal } from './Modal'
+
+export const components = {
+  Modal,
+}

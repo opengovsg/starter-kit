@@ -1,20 +1,260 @@
-import { type Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+import { env } from '~/env.mjs'
 import {
   addPostSchema,
-  editPostSchema,
-  type ListPostsInputSchema,
+  byUserSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
-import { protectedProcedure, router } from '~/server/trpc'
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
-import { processFeedbackItem } from './post.util'
 
 export const postRouter = router({
+  likedByUser: publicProcedure
+    .input(byUserSchema)
+    .query(async ({ input, ctx }) => {
+      /**
+       * For pagination docs you can have a look here
+       * @see https://trpc.io/docs/useInfiniteQuery
+       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
+       */
+      const limit = input.limit ?? 50
+      const { cursor } = input
+
+      const likedPosts = await ctx.prisma.likedPosts.findMany({
+        where: {
+          user: {
+            username: input.username,
+          },
+        },
+      })
+      const posts = await ctx.prisma.post.findMany({
+        select: defaultPostSelect,
+        // get an extra item at the end which we'll use as next cursor
+        take: limit + 1,
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        orderBy: {
+          createdAt: input.order,
+        },
+        where: {
+          id: {
+            in: likedPosts.map((likedPost) => likedPost.postId),
+          },
+          deletedAt: null,
+        },
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (posts.length > limit) {
+        // Remove the last item and use it as next cursor
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const nextItem = posts.pop()!
+        nextCursor = nextItem.id
+      }
+
+      let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+        posts
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        // short circuit if already found before
+        const userLikedPosts =
+          ctx.session.user.username === input.username
+            ? likedPosts
+            : await ctx.prisma.likedPosts.findMany({
+                where: {
+                  userId: ctx.session.user.id,
+                  postId: {
+                    in: posts.map((post) => post.id),
+                  },
+                },
+              })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        augmentedPosts = posts.map((post) => {
+          return {
+            ...post,
+            likedByMe: likedUserPosts[post.id],
+          }
+        })
+      }
+
+      return {
+        posts: augmentedPosts,
+        nextCursor,
+      }
+    }),
+  repliesByUser: publicProcedure
+    .input(byUserSchema)
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 50
+      const { cursor } = input
+
+      const posts = await ctx.prisma.post.findMany({
+        select: defaultPostSelect,
+        // get an extra item at the end which we'll use as next cursor
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: input.order,
+        },
+        where: {
+          parentPostId: {
+            not: null,
+          },
+          deletedAt: null,
+          author: {
+            username: input.username,
+          },
+        },
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (posts.length > limit) {
+        // Remove the last item and use it as next cursor
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const nextItem = posts.pop()!
+        nextCursor = nextItem.id
+      }
+
+      let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+        posts
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            postId: {
+              in: posts.map((post) => post.id),
+            },
+          },
+        })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        augmentedPosts = posts.map((post) => {
+          return {
+            ...post,
+            likedByMe: likedUserPosts[post.id],
+          }
+        })
+      }
+
+      return {
+        posts: augmentedPosts,
+        nextCursor,
+      }
+    }),
+  byUser: publicProcedure.input(byUserSchema).query(async ({ input, ctx }) => {
+    const limit = input.limit ?? 50
+    const { cursor } = input
+
+    const posts = await ctx.prisma.post.findMany({
+      select: defaultPostSelect,
+      // get an extra item at the end which we'll use as next cursor
+      take: limit + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: {
+        createdAt: input.order,
+      },
+      where: {
+        author: {
+          username: input.username,
+        },
+        parentPostId: null,
+        deletedAt: null,
+      },
+    })
+
+    let nextCursor: typeof cursor | undefined = undefined
+    if (posts.length > limit) {
+      // Remove the last item and use it as next cursor
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const nextItem = posts.pop()!
+      nextCursor = nextItem.id
+    }
+
+    let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+      posts
+
+    if (ctx.session?.user?.id) {
+      // From posts, get whether current user liked each post
+      const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          postId: {
+            in: posts.map((post) => post.id),
+          },
+        },
+      })
+      const likedUserPosts = Object.fromEntries(
+        userLikedPosts.map((likedPost) => [likedPost.postId, true])
+      )
+      // Augment posts with whether current user liked each post
+      augmentedPosts = posts.map((post) => {
+        return {
+          ...post,
+          likedByMe: likedUserPosts[post.id],
+        }
+      })
+    }
+
+    return {
+      posts: augmentedPosts,
+      nextCursor,
+    }
+  }),
+  toggleLikePost: protectedProcedure
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ input: { postId }, ctx }) => {
+      return await ctx.prisma.$transaction(async (tx) => {
+        const currentLike = await tx.likedPosts.findFirst({
+          where: {
+            userId: ctx.session.user.id,
+            postId,
+          },
+        })
+        if (currentLike) {
+          await tx.likedPosts.delete({
+            where: {
+              postId_userId: {
+                userId: ctx.session.user.id,
+                postId,
+              },
+            },
+          })
+        } else {
+          return await tx.likedPosts.create({
+            data: {
+              user: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+              post: {
+                connect: {
+                  id: postId,
+                },
+              },
+            },
+          })
+        }
+      })
+    }),
   list: protectedProcedure
     .input(listPostsInputSchema)
-    .query(async ({ input, ctx: { prisma, logger, session } }) => {
+    .query(async ({ input, ctx }) => {
       /**
        * For pagination docs you can have a look here
        * @see https://trpc.io/docs/useInfiniteQuery
@@ -24,54 +264,7 @@ export const postRouter = router({
       const limit = input.limit ?? 50
       const { cursor } = input
 
-      const getFilterWhereClause = (
-        filter: ListPostsInputSchema['filter']
-      ): Prisma.PostWhereInput => {
-        switch (filter) {
-          case 'all':
-            return {}
-          case 'unread':
-            return {
-              NOT: {
-                readBy: {
-                  some: {
-                    userId: session.user.id,
-                  },
-                },
-              },
-            }
-          case 'replied':
-            return {
-              replies: {
-                some: {},
-              },
-            }
-          case 'repliedByMe':
-            return {
-              replies: {
-                some: {
-                  authorId: session.user.id,
-                },
-              },
-            }
-          case 'unreplied':
-            return {
-              replies: {
-                none: {},
-              },
-            }
-          case 'unrepliedByMe':
-            return {
-              replies: {
-                none: {
-                  authorId: session.user.id,
-                },
-              },
-            }
-        }
-      }
-
-      const items = await prisma.post.findMany({
+      const items = await ctx.prisma.post.findMany({
         select: withCommentsPostSelect,
         // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
@@ -84,12 +277,11 @@ export const postRouter = router({
           createdAt: input.order,
         },
         where: {
-          ...getFilterWhereClause(input.filter),
           parentPostId: null,
           deletedAt: null,
         },
       })
-      let nextCursor: typeof cursor | undefined = undefined
+      let nextCursor: typeof cursor | null = null
       if (items.length > limit) {
         // Remove the last item and use it as next cursor
 
@@ -98,39 +290,11 @@ export const postRouter = router({
         nextCursor = nextItem.id
       }
 
-      const processedItems = items
-        .map((item) => processFeedbackItem(item, session.user.id))
-        .reverse()
-
-      logger.info('Items successfully retrieved', {
-        ids: processedItems.map((item) => item.id),
-      })
-
       return {
-        items: processedItems,
+        items,
         nextCursor,
       }
     }),
-  unreadCount: protectedProcedure.query(async ({ ctx }) => {
-    const { user } = ctx.session
-    const readCount = await ctx.prisma.readPosts.count({
-      where: {
-        userId: user.id,
-        post: {
-          parentPostId: null,
-        },
-      },
-    })
-    const allVisiblePostsCount = await ctx.prisma.post.count({
-      where: {
-        parentPostId: null,
-      },
-    })
-    return {
-      unreadCount: allVisiblePostsCount - readCount,
-      totalCount: allVisiblePostsCount,
-    }
-  }),
   byId: protectedProcedure
     .input(
       z.object({
@@ -150,14 +314,48 @@ export const postRouter = router({
         })
       }
 
-      return processFeedbackItem(post, ctx.session.user.id)
+      let augmentedPost: typeof post & { likedByMe?: boolean } = post
+
+      if (ctx.session?.user?.id) {
+        // From posts, get whether current user liked each post
+        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            postId: {
+              in: [post.id, ...post.replies.map((r) => r.id)],
+            },
+          },
+        })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        const augmentedReplies = post.replies.map((r) => {
+          return {
+            ...r,
+            likedByMe: likedUserPosts[r.id],
+          }
+        })
+        augmentedPost = {
+          ...post,
+          likedByMe: likedUserPosts[post.id],
+          replies: augmentedReplies,
+        }
+      }
+
+      return augmentedPost
     }),
   add: protectedProcedure
     .input(addPostSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input: { imageKeys, ...input }, ctx }) => {
+      const images = env.NEXT_PUBLIC_ENABLE_STORAGE
+        ? imageKeys?.map((key) => `https://${env.R2_PUBLIC_HOSTNAME}/${key}`)
+        : []
+
       const post = await ctx.prisma.post.create({
         data: {
           ...input,
+          images,
           author: {
             connect: {
               id: ctx.session.user.id,
@@ -167,28 +365,6 @@ export const postRouter = router({
         select: defaultPostSelect,
       })
       return post
-    }),
-  edit: protectedProcedure
-    .input(editPostSchema)
-    .mutation(async ({ input: { id, ...data }, ctx }) => {
-      const postToEdit = await ctx.prisma.post.findUnique({
-        where: { id },
-        select: defaultPostSelect,
-      })
-      const isUserOwner = postToEdit?.authorId === ctx.session.user.id
-      if (!isUserOwner) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: `No post with id '${id}'`,
-        })
-      }
-
-      const updatedPost = await ctx.prisma.post.update({
-        where: { id },
-        data,
-        select: defaultPostSelect,
-      })
-      return updatedPost
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
@@ -214,36 +390,5 @@ export const postRouter = router({
       })
 
       return post
-    }),
-  setRead: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { id } = input
-      const readPost = await ctx.prisma.readPosts.upsert({
-        where: {
-          postId_userId: {
-            userId: ctx.session.user.id,
-            postId: id,
-          },
-        },
-        update: {},
-        create: {
-          user: {
-            connect: {
-              id: ctx.session.user.id,
-            },
-          },
-          post: {
-            connect: {
-              id,
-            },
-          },
-        },
-      })
-      return readPost
     }),
 })

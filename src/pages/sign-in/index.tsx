@@ -1,7 +1,9 @@
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
+import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 
 import { noop } from 'lodash'
 import { useRouter } from 'next/router'
+import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 import Suspense from '~/components/Suspense'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { env } from '~/env.mjs'
@@ -12,9 +14,10 @@ import {
   LoginGridArea,
   LoginImageSvgr,
   NonMobileSidebarGridArea,
+  SignInContextProvider,
   SignInForm,
 } from '~/features/sign-in/components'
-import { SignInContextProvider } from '~/features/sign-in/components/SignInContext'
+import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
 
 const title = env.NEXT_PUBLIC_APP_NAME
@@ -24,9 +27,9 @@ const SignIn = () => {
 
   return (
     <BackgroundBox>
-      {/* <RestrictedGovtMasthead
+      <RestrictedGovtMasthead
       // This component can only be used if this is an application created by OGP.
-      /> */}
+      />
       <BaseGridLayout flex={1}>
         <NonMobileSidebarGridArea>
           <LoginImageSvgr maxW="100%" aria-hidden />
@@ -60,9 +63,9 @@ const SignIn = () => {
         bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
       >
         <FooterGridArea>
-          {/* <RestrictedMiniFooter
+          <RestrictedMiniFooter
           // This component can only be used if this is an application created by OGP.
-        /> */}
+          />
         </FooterGridArea>
       </BaseGridLayout>
     </BackgroundBox>
@@ -76,7 +79,7 @@ function useRedirectIfSignedIn() {
   const callbackUrl =
     router.query[CALLBACK_URL_KEY] !== undefined
       ? String(router.query[CALLBACK_URL_KEY])
-      : '/dashboard'
+      : HOME
 
   const { isLoading } = trpc.me.get.useQuery(undefined, {
     // Just stay on this page on error
