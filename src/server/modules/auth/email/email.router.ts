@@ -17,7 +17,7 @@ export const emailSessionRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        email: z.string().email(),
+        email: z.string().trim().toLowerCase().email(),
       })
     )
     .mutation(async ({ ctx, input: { email } }) => {
