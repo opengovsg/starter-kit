@@ -22,7 +22,7 @@ const emailVerificationSchema = emailSignInSchema.extend({
 export const VerificationInput = (): JSX.Element => {
   const router = useRouter()
 
-  const { email, timer, setTimer } = useSignInContext()
+  const { email, timer, setTimer, delayForResendSeconds } = useSignInContext()
 
   useInterval(
     () => setTimer(timer - 1),
@@ -68,7 +68,11 @@ export const VerificationInput = (): JSX.Element => {
 
   const handleResendOtp = () => {
     if (timer > 0) return
-    return resendOtpMutation.mutate({ email })
+    return resendOtpMutation.mutate(
+      { email },
+      // On success, restart the timer before this can be called again.
+      { onSuccess: () => setTimer(delayForResendSeconds) }
+    )
   }
 
   return (

@@ -14,6 +14,7 @@ type SignInStates = {
   setEmail: Dispatch<SetStateAction<string>>
   showVerificationStep: boolean
   setShowVerificationStep: Dispatch<SetStateAction<boolean>>
+  delayForResendSeconds: number
 }
 
 export const SignInContext = createContext<SignInStates | undefined>(undefined)
@@ -30,12 +31,21 @@ export const useSignInContext = () => {
   return context
 }
 
-export const SignInContextProvider: React.FC<PropsWithChildren> = ({
+interface SignInContextProviderProps {
+  /**
+   * The number of seconds to wait before allowing the user to resend the OTP.
+   * @default 60
+   */
+  delayForResendSeconds?: number
+}
+
+export const SignInContextProvider = ({
   children,
-}) => {
+  delayForResendSeconds = 60,
+}: PropsWithChildren<SignInContextProviderProps>) => {
   const [email, setEmail] = useState('')
   const [showVerificationStep, setShowVerificationStep] = useState(false)
-  const [timer, setTimer] = useState(60)
+  const [timer, setTimer] = useState(delayForResendSeconds)
 
   return (
     <SignInContext.Provider
@@ -46,6 +56,7 @@ export const SignInContextProvider: React.FC<PropsWithChildren> = ({
         setShowVerificationStep,
         timer,
         setTimer,
+        delayForResendSeconds,
       }}
     >
       {children}
