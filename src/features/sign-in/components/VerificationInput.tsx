@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { useIntervalWhen } from 'rooks'
+import { useInterval } from 'usehooks-ts'
 import { z } from 'zod'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
@@ -24,11 +24,10 @@ export const VerificationInput = (): JSX.Element => {
 
   const { email, timer, setTimer } = useSignInContext()
 
-  useIntervalWhen(
+  useInterval(
     () => setTimer(timer - 1),
-    /* intervalDurationMs= */ 1000,
-    // Stop interval if timer hits 0.
-    /* when= */ timer > 0
+    // Stop interval if timer hits 0, else rerun every 1000ms.
+    timer > 0 ? 1000 : null
   )
 
   const {
