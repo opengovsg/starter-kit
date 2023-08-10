@@ -1,9 +1,9 @@
-import { Spinner } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { type PropsWithChildren } from 'react'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useAuth } from '~/features/auth'
 import { HOME } from '~/lib/routes'
+import { FullscreenSpinner } from '../FullscreenSpinner'
 
 interface PublicPageWrapperProps {
   /**
@@ -28,7 +28,7 @@ export const PublicPageWrapper = ({
 
   if (isAuthenticated && strict) {
     void router.replace(callbackUrl)
-    return <Spinner />
+    return <FullscreenSpinner />
   }
 
   return <>{children}</>

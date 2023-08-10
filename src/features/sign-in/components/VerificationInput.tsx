@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { useInterval } from 'usehooks-ts'
+import { useInterval, useLocalStorage } from 'usehooks-ts'
 import { z } from 'zod'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
@@ -10,6 +10,7 @@ import { trpc } from '~/utils/trpc'
 import { useSignInContext } from './SignInContext'
 import { emailSignInSchema } from './Emailnput'
 import { ResendOtpButton } from './ResendOtpButton'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
 
 const emailVerificationSchema = emailSignInSchema.extend({
   token: z
@@ -20,6 +21,7 @@ const emailVerificationSchema = emailSignInSchema.extend({
 })
 
 export const VerificationInput = (): JSX.Element => {
+  const [, setIsAuthenticated] = useLocalStorage<boolean>(LOGGED_IN_KEY, false)
   const router = useRouter()
 
   const { email, timer, setTimer, delayForResendSeconds } = useSignInContext()
@@ -60,6 +62,7 @@ export const VerificationInput = (): JSX.Element => {
       },
       {
         onSuccess: async () => {
+          setIsAuthenticated(true)
           await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
         },
       }

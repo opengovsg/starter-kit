@@ -1,9 +1,9 @@
-import { Spinner } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { type PropsWithChildren, useMemo } from 'react'
+import { useMemo, type PropsWithChildren } from 'react'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useAuth } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
+import { FullscreenSpinner } from '../FullscreenSpinner'
 
 interface PrivatePageWrapperProps {
   /**
@@ -23,7 +23,7 @@ const Redirect = ({ redirectTo }: PrivatePageWrapperProps) => {
 
   void router.replace(`${redirectTo}?${CALLBACK_URL_KEY}=${redirectUrl}`)
 
-  return <Spinner />
+  return <FullscreenSpinner />
 }
 
 export const PrivatePageWrapper = ({
