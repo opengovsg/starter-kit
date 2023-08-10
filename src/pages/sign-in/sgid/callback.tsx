@@ -1,12 +1,10 @@
+import { FullscreenSpinner } from '~/components/FullscreenSpinner'
 import Suspense from '~/components/Suspense'
-import {
-  SgidCallback,
-  SgidCallbackLoading,
-} from '~/features/sign-in/components'
+import { SgidCallback } from '~/features/sign-in/components'
 
 const SgidCallbackPage = () => {
   return (
-    <Suspense fallback={<SgidCallbackLoading />}>
+    <Suspense fallback={<FullscreenSpinner />}>
       <SgidCallback />
     </Suspense>
   )

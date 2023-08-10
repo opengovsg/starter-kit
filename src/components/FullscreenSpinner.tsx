@@ -1,10 +1,15 @@
-import { Flex } from '@chakra-ui/react'
+import { Container } from '@chakra-ui/react'
 import { Spinner } from '@opengovsg/design-system-react'
 
 export const FullscreenSpinner = (): JSX.Element => {
   return (
-    <Flex w="100%" h="$100vh" align="center" justify="center">
-      <Spinner />
-    </Flex>
+    <Container
+      display="flex"
+      h="$100vh"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Spinner color="interaction.main.default" fontSize="2rem" />
+    </Container>
   )
 }
