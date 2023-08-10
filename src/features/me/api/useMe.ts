@@ -5,6 +5,7 @@ import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 import { setCookie } from 'cookies-next'
 
 export const useMe = () => {
+  const utils = trpc.useContext()
   const [me] = trpc.me.get.useSuspenseQuery()
 
   const logoutMutation = trpc.auth.logout.useMutation()
@@ -14,13 +15,14 @@ export const useMe = () => {
       return logoutMutation.mutate(undefined, {
         onSuccess: async () => {
           setCookie(LOGGED_IN_KEY, true)
+          await utils.invalidate()
           if (redirectToSignIn) {
             await Router.push('/sign-in')
           }
         },
       })
     },
-    [logoutMutation]
+    [logoutMutation, utils]
   )
 
   return { me, logout }
