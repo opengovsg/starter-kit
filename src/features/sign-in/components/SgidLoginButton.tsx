@@ -1,17 +1,16 @@
 import { Button } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { useLocalStorage } from 'usehooks-ts'
 import { useFeatures } from '~/components/AppProviders'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 import { trpc } from '~/utils/trpc'
+import { setCookie } from 'cookies-next'
 
 export const SgidLoginButton = (): JSX.Element | null => {
-  const [, setIsAuthenticated] = useLocalStorage<boolean>(LOGGED_IN_KEY, false)
   const router = useRouter()
   const { sgid } = useFeatures()
   const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
     onSuccess: async ({ redirectUrl }) => {
-      setIsAuthenticated(true)
+      setCookie(LOGGED_IN_KEY, true)
       await router.push(redirectUrl)
     },
   })

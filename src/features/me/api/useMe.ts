@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import Router from 'next/router'
 import { trpc } from '~/utils/trpc'
-import { useLocalStorage } from 'usehooks-ts'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
+import { setCookie } from 'cookies-next'
 
 export const useMe = () => {
-  const [, setIsAuthenticated] = useLocalStorage<boolean>(LOGGED_IN_KEY, false)
   const [me] = trpc.me.get.useSuspenseQuery()
 
   const logoutMutation = trpc.auth.logout.useMutation()
@@ -14,14 +13,14 @@ export const useMe = () => {
     (redirectToSignIn = true) => {
       return logoutMutation.mutate(undefined, {
         onSuccess: async () => {
-          setIsAuthenticated(false)
+          setCookie(LOGGED_IN_KEY, true)
           if (redirectToSignIn) {
             await Router.push('/sign-in')
           }
         },
       })
     },
-    [logoutMutation, setIsAuthenticated]
+    [logoutMutation]
   )
 
   return { me, logout }

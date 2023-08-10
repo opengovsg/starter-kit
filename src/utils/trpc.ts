@@ -9,10 +9,11 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 import Router from 'next/router'
 import { SIGN_IN } from '~/lib/routes'
 import { CALLBACK_URL_KEY } from '~/constants/params'
+import { deleteCookie } from 'cookies-next'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',
@@ -25,8 +26,8 @@ const handleErrorsOnClient = (error: unknown): boolean => {
   if (!(error instanceof TRPCClientError)) return false
 
   if (error.data?.code === 'UNAUTHORIZED') {
-    // Clear client-side logged in state from local storage
-    window.localStorage.removeItem(LOGGED_IN_KEY)
+    // Clear logged in state
+    deleteCookie(LOGGED_IN_KEY)
 
     const { pathname, search, hash } = window.location
     const redirectUrl = encodeURIComponent(`${pathname}${search}${hash}`)

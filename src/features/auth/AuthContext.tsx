@@ -1,7 +1,7 @@
 import { createContext, useContext, type PropsWithChildren } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import { hasCookie } from 'cookies-next'
 
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 
 type AuthContextProps = {
   isAuthenticated?: boolean
@@ -35,7 +35,7 @@ export const useAuth = (): AuthContextProps => {
 
 // Provider hook that creates auth object and handles state
 const useProvideAuth = () => {
-  const [isAuthenticated] = useLocalStorage<boolean>(LOGGED_IN_KEY, false)
+  const isAuthenticated = hasCookie(LOGGED_IN_KEY)
 
   // Return the user object and auth methods
   return {

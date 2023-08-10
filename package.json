@@ -60,6 +60,7 @@
     "@trpc/react-query": "^10.31.0",
     "@trpc/server": "^10.31.0",
     "@types/validator": "^13.7.17",
+    "cookies-next": "^2.1.2",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
     "iron-session": "^6.3.1",
