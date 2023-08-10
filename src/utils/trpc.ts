@@ -10,6 +10,9 @@ import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import Router from 'next/router'
+import { SIGN_IN } from '~/lib/routes'
+import { CALLBACK_URL_KEY } from '~/constants/params'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',
@@ -24,6 +27,10 @@ const handleErrorsOnClient = (error: unknown): boolean => {
   if (error.data?.code === 'UNAUTHORIZED') {
     // Clear client-side logged in state from local storage
     window.localStorage.removeItem(LOGGED_IN_KEY)
+
+    const { pathname, search, hash } = window.location
+    const redirectUrl = encodeURIComponent(`${pathname}${search}${hash}`)
+    void Router.push(`${SIGN_IN}?${CALLBACK_URL_KEY}=${redirectUrl}`)
   }
   const res = TRPCWithErrorCodeSchema.safeParse(error)
   if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
@@ -112,6 +119,12 @@ export const trpc = createTRPCNext<
                 return false
               }
               return failureCount < 3
+            },
+          },
+          mutations: {
+            retry: (_, error) => {
+              handleErrorsOnClient(error)
+              return false
             },
           },
         },
