@@ -5,10 +5,18 @@ import { expect } from '@storybook/jest'
 import { userEvent, within } from '@storybook/testing-library'
 import { meHandlers } from 'tests/msw/handlers/me'
 import { getMobileViewParameters } from '../utils/viewports'
+import { AuthContext } from '~/features/auth'
 
 const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
   component: SignInPage,
+  decorators: [
+    (Story) => (
+      <AuthContext.Provider value={{ isAuthenticated: false }}>
+        <Story />
+      </AuthContext.Provider>
+    ),
+  ],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen',
