@@ -9,12 +9,29 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',
   'FORBIDDEN',
   'NOT_FOUND',
 ])
+
+const handleErrorsOnClient = (error: unknown): boolean => {
+  if (typeof window === 'undefined') return false
+  if (!(error instanceof TRPCClientError)) return false
+
+  if (error.data?.code === 'UNAUTHORIZED') {
+    // Clear client-side logged in state from local storage
+    window.localStorage.removeItem(LOGGED_IN_KEY)
+  }
+  const res = TRPCWithErrorCodeSchema.safeParse(error)
+  if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
+    return true
+  }
+
+  return false
+}
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -91,16 +108,8 @@ export const trpc = createTRPCNext<
           queries: {
             staleTime: 1000 * 10, // 10 seconds
             retry: (failureCount, error) => {
-              if (error instanceof TRPCClientError) {
-                const res = TRPCWithErrorCodeSchema.safeParse(error)
-
-                if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
-                  return false
-                }
-
-                if (error.data?.code === 'NOT_FOUND') {
-                  return false
-                }
+              if (handleErrorsOnClient(error)) {
+                return false
               }
               return failureCount < 3
             },
