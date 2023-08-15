@@ -26,7 +26,11 @@ const handleErrorsOnClient = (error: unknown): boolean => {
   if (!(error instanceof TRPCClientError)) return false
 
   if (error.data?.code === 'UNAUTHORIZED') {
-    // Clear logged in state
+    // Clear logged in state and redirect to sign in page
+    // NOTE: This error is not handled in the /api/[trpc] API route as API routes are invoked
+    // on the server and cannot perform redirections.
+    // We can think of this handler function as a form of client side auth validity
+    // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
     deleteCookie(LOGGED_IN_KEY)
 
     const { pathname, search, hash } = window.location
@@ -34,11 +38,7 @@ const handleErrorsOnClient = (error: unknown): boolean => {
     void Router.push(`${SIGN_IN}?${CALLBACK_URL_KEY}=${redirectUrl}`)
   }
   const res = TRPCWithErrorCodeSchema.safeParse(error)
-  if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
-    return true
-  }
-
-  return false
+  return res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)
 }
 
 /**
