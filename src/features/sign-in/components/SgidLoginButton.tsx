@@ -7,10 +7,12 @@ import { setCookie } from 'cookies-next'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 
 export const SgidLoginButton = (): JSX.Element | null => {
+  const utils = trpc.useContext()
   const router = useRouter()
   const { sgid } = useFeatures()
   const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
     onSuccess: async ({ redirectUrl }) => {
+      await utils.me.get.invalidate()
       setCookie(LOGGED_IN_KEY, true)
       await router.push(redirectUrl)
     },

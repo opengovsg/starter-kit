@@ -23,6 +23,7 @@ const emailVerificationSchema = emailSignInSchema.extend({
 
 export const VerificationInput = (): JSX.Element => {
   const router = useRouter()
+  const utils = trpc.useContext()
 
   const { email, timer, setTimer, delayForResendSeconds } = useSignInContext()
 
@@ -62,6 +63,7 @@ export const VerificationInput = (): JSX.Element => {
       },
       {
         onSuccess: async () => {
+          await utils.me.get.invalidate()
           setCookie(LOGGED_IN_KEY, true)
           await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
         },
