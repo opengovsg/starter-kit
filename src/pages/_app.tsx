@@ -13,7 +13,7 @@ import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
 import { FeatureProvider } from '~/components/AppProviders'
-import { AuthProvider } from '~/features/auth'
+import { LoginStateProvider } from '~/features/auth'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
@@ -23,7 +23,7 @@ const MyApp = ((props: AppPropsWithAuthAndLayout) => {
   return (
     // Must wrap Jotai's provider in SSR context, see https://jotai.org/docs/guides/nextjs#provider.
     <Provider>
-      <AuthProvider>
+      <LoginStateProvider>
         <ThemeProvider theme={theme}>
           <FeatureProvider>
             <ErrorBoundary>
@@ -36,7 +36,7 @@ const MyApp = ((props: AppPropsWithAuthAndLayout) => {
             </ErrorBoundary>
           </FeatureProvider>
         </ThemeProvider>
-      </AuthProvider>
+      </LoginStateProvider>
     </Provider>
   )
 }) as AppType

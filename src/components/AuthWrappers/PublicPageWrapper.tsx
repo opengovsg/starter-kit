@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { type PropsWithChildren } from 'react'
 import { CALLBACK_URL_KEY } from '~/constants/params'
-import { useAuth } from '~/features/auth'
+import { useLoginState } from '~/features/auth'
 import { HOME } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
@@ -28,7 +28,7 @@ export const PublicPageWrapper = ({
   children,
 }: PropsWithChildren<PublicPageWrapperProps>): JSX.Element => {
   const router = useRouter()
-  const { hasLoginCookieState } = useAuth()
+  const { hasLoginStateCookie: hasLoginCookieState } = useLoginState()
 
   const callbackUrl = String(router.query[CALLBACK_URL_KEY] ?? HOME)
 

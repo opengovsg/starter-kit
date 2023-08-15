@@ -5,16 +5,16 @@ import { expect } from '@storybook/jest'
 import { userEvent, within } from '@storybook/testing-library'
 import { meHandlers } from 'tests/msw/handlers/me'
 import { getMobileViewParameters } from '../utils/viewports'
-import { AuthContext } from '~/features/auth'
+import { LoginStateContext } from '~/features/auth'
 
 const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
   component: SignInPage,
   decorators: [
     (Story) => (
-      <AuthContext.Provider value={{ hasLoginCookieState: false }}>
+      <LoginStateContext.Provider value={{ hasLoginStateCookie: false }}>
         <Story />
-      </AuthContext.Provider>
+      </LoginStateContext.Provider>
     ),
   ],
   parameters: {

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useMemo, type PropsWithChildren } from 'react'
 import { CALLBACK_URL_KEY } from '~/constants/params'
-import { useAuth } from '~/features/auth'
+import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
@@ -27,7 +27,7 @@ const Redirect = ({ redirectTo }: PrivatePageWrapperProps) => {
 }
 
 /**
- * Page wrapper that renders children only if the login cookie is found.
+ * Page wrapper that renders children only if the login state cookie has been set.
  * Otherwise, will redirect to the route passed into the `redirectTo` prop.
  *
  * @note There is no authentication being performed by this component. This component is merely a wrapper that checks for the presence of the login cookie.
@@ -36,7 +36,7 @@ export const PrivatePageWrapper = ({
   redirectTo = SIGN_IN,
   children,
 }: PropsWithChildren<PrivatePageWrapperProps>): React.ReactElement => {
-  const { hasLoginCookieState } = useAuth()
+  const { hasLoginStateCookie: hasLoginCookieState } = useLoginState()
 
   if (hasLoginCookieState) {
     return <>{children}</>
