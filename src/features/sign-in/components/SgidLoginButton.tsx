@@ -4,6 +4,7 @@ import { useFeatures } from '~/components/AppProviders'
 import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 import { trpc } from '~/utils/trpc'
 import { setCookie } from 'cookies-next'
+import { CALLBACK_URL_KEY } from '~/constants/params'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
@@ -16,7 +17,11 @@ export const SgidLoginButton = (): JSX.Element | null => {
   })
 
   const handleSgidLogin = () => {
-    return sgidLoginMutation.mutate({})
+    return sgidLoginMutation.mutate({
+      landingUrl: CALLBACK_URL_KEY
+        ? String(router.query[CALLBACK_URL_KEY])
+        : undefined,
+    })
   }
 
   if (!sgid) {
