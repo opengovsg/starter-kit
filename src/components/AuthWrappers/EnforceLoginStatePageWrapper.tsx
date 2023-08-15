@@ -30,7 +30,7 @@ const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
  * Page wrapper that renders children only if the login state cookie has been set.
  * Otherwise, will redirect to the route passed into the `redirectTo` prop.
  *
- * @note There is no authentication being performed by this component. This component is merely a wrapper that checks for the presence of the login cookie.
+ * @note 🚨 There is no authentication being performed by this component. This component is merely a wrapper that checks for the presence of the login cookie. This means that a user could add a cookie and bypass the check. Any page children that require authentication should also perform authentication checks in that page itself!
  */
 export const EnforceLoginStatePageWrapper = ({
   redirectTo = SIGN_IN,
