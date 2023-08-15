@@ -13,8 +13,8 @@ export const AuthContext = createContext<AuthContextProps | undefined>(
 )
 
 /**
- * Provider component that wraps your app and makes auth object available to any
- * child component that calls `useAuth()`.
+ * Provider component that wraps your app and makes client login state boolean available
+ * to any child component that calls `useAuth()`.
  */
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const auth = useProvideAuth()
