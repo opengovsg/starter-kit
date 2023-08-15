@@ -5,7 +5,7 @@ import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
-interface PrivatePageWrapperProps {
+interface EnforceLoginStatePageWrapperProps {
   /**
    * Route to redirect to when user is not authenticated. Defaults to
    * `SIGN_IN` route if not provided.
@@ -13,7 +13,7 @@ interface PrivatePageWrapperProps {
   redirectTo?: string
 }
 
-const Redirect = ({ redirectTo }: PrivatePageWrapperProps) => {
+const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
   const router = useRouter()
   const redirectUrl = useMemo(() => {
     if (typeof window === 'undefined') return encodeURIComponent('/')
@@ -32,10 +32,10 @@ const Redirect = ({ redirectTo }: PrivatePageWrapperProps) => {
  *
  * @note There is no authentication being performed by this component. This component is merely a wrapper that checks for the presence of the login cookie.
  */
-export const PrivatePageWrapper = ({
+export const EnforceLoginStatePageWrapper = ({
   redirectTo = SIGN_IN,
   children,
-}: PropsWithChildren<PrivatePageWrapperProps>): React.ReactElement => {
+}: PropsWithChildren<EnforceLoginStatePageWrapperProps>): React.ReactElement => {
   const { hasLoginStateCookie: hasLoginCookieState } = useLoginState()
 
   if (hasLoginCookieState) {

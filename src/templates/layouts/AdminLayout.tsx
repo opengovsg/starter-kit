@@ -1,13 +1,13 @@
 import { Flex, Grid } from '@chakra-ui/react'
 import { AppNavbar } from '~/components/AppNavbar'
-import { PrivatePageWrapper } from '~/components/AuthWrappers/PrivatePageWrapper'
+import { EnforceLoginStatePageWrapper } from '~/components/AuthWrappers'
 import { DashSidebar } from '~/components/DashSidebar'
 import { APP_GRID_TEMPLATE_AREA } from '~/constants/layouts'
 import { type GetLayout } from '~/lib/types'
 
 export const AdminLayout: GetLayout = (page) => {
   return (
-    <PrivatePageWrapper>
+    <EnforceLoginStatePageWrapper>
       <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt" pos="relative">
         <Grid
           flex={1}
@@ -22,6 +22,6 @@ export const AdminLayout: GetLayout = (page) => {
           </Flex>
         </Grid>
       </Flex>
-    </PrivatePageWrapper>
+    </EnforceLoginStatePageWrapper>
   )
 }
