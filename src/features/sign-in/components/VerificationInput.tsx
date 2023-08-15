@@ -65,6 +65,8 @@ export const VerificationInput = (): JSX.Element => {
         onSuccess: async () => {
           await utils.me.get.invalidate()
           setCookie(LOGGED_IN_KEY, true)
+          // accessing router.query values returns decoded URI params automatically,
+          // so there's no need to call decodeURIComponent manually when accessing the callback url.
           await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
         },
       }
