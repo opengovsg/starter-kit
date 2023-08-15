@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import Router from 'next/router'
 import { trpc } from '~/utils/trpc'
 import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
-import { setCookie } from 'cookies-next'
+import { deleteCookie } from 'cookies-next'
 
 export const useMe = () => {
   const utils = trpc.useContext()
@@ -14,7 +14,7 @@ export const useMe = () => {
     (redirectToSignIn = true) => {
       return logoutMutation.mutate(undefined, {
         onSuccess: async () => {
-          setCookie(LOGGED_IN_KEY, true)
+          deleteCookie(LOGGED_IN_KEY)
           await utils.invalidate()
           if (redirectToSignIn) {
             await Router.push('/sign-in')
