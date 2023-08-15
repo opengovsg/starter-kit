@@ -1,4 +1,9 @@
-import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
+import {
+  httpBatchLink,
+  loggerLink,
+  TRPCClientError,
+  type TRPCLink,
+} from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
 import { type NextPageContext } from 'next'
@@ -14,12 +19,44 @@ import Router from 'next/router'
 import { SIGN_IN } from '~/lib/routes'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { deleteCookie } from 'cookies-next'
+import { observable } from '@trpc/server/observable'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',
   'FORBIDDEN',
   'NOT_FOUND',
 ])
+
+export const custom401Link: TRPCLink<AppRouter> = () => {
+  // here we just got initialized in the app - this happens once per app
+  // useful for storing cache for instance
+  return ({ next, op }) => {
+    // this is when passing the result to the next link
+    // each link needs to return an observable which propagates results
+    return observable((observer) => {
+      const unsubscribe = next(op).subscribe({
+        next(value) {
+          observer.next(value)
+        },
+        // Handle 401 errors
+        error(err) {
+          observer.error(err)
+          if (window !== undefined && err?.data?.code === 'UNAUTHORIZED') {
+            const { pathname, search, hash } = window.location
+            const redirectUrl = encodeURIComponent(
+              `${pathname}${search}${hash}`
+            )
+            window.location.href = `${SIGN_IN}?${CALLBACK_URL_KEY}=${redirectUrl}`
+          }
+        },
+        complete() {
+          observer.complete()
+        },
+      })
+      return unsubscribe
+    })
+  }
+}
 
 const handleErrorsOnClient = (error: unknown): boolean => {
   if (typeof window === 'undefined') return false
@@ -32,10 +69,6 @@ const handleErrorsOnClient = (error: unknown): boolean => {
     // We can think of this handler function as a form of client side auth validity
     // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
     deleteCookie(LOGGED_IN_KEY)
-
-    const { pathname, search, hash } = window.location
-    const redirectUrl = encodeURIComponent(`${pathname}${search}${hash}`)
-    void Router.push(`${SIGN_IN}?${CALLBACK_URL_KEY}=${redirectUrl}`)
   }
   const res = TRPCWithErrorCodeSchema.safeParse(error)
   return res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)
@@ -79,6 +112,7 @@ export const trpc = createTRPCNext<
        * @link https://trpc.io/docs/links
        */
       links: [
+        custom401Link,
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
           enabled: (opts) =>
