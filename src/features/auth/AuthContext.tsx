@@ -4,7 +4,7 @@ import { hasCookie } from 'cookies-next'
 import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 
 type AuthContextProps = {
-  isAuthenticated?: boolean
+  hasLoginCookieState?: boolean
 }
 
 // Exported for testing.
@@ -33,12 +33,10 @@ export const useAuth = (): AuthContextProps => {
   return context
 }
 
-// Provider hook that creates auth object and handles state
 const useProvideAuth = () => {
-  const isAuthenticated = hasCookie(LOGGED_IN_KEY)
+  const hasLoginCookieState = hasCookie(LOGGED_IN_KEY)
 
-  // Return the user object and auth methods
   return {
-    isAuthenticated,
+    hasLoginCookieState,
   }
 }

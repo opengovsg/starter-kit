@@ -28,11 +28,11 @@ export const PublicPageWrapper = ({
   children,
 }: PropsWithChildren<PublicPageWrapperProps>): JSX.Element => {
   const router = useRouter()
-  const { isAuthenticated } = useAuth()
+  const { hasLoginCookieState } = useAuth()
 
   const callbackUrl = String(router.query[CALLBACK_URL_KEY] ?? HOME)
 
-  if (isAuthenticated && strict) {
+  if (hasLoginCookieState && strict) {
     void router.replace(callbackUrl)
     return <FullscreenSpinner />
   }

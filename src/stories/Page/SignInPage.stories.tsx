@@ -12,7 +12,7 @@ const meta: Meta<typeof SignInPage> = {
   component: SignInPage,
   decorators: [
     (Story) => (
-      <AuthContext.Provider value={{ isAuthenticated: false }}>
+      <AuthContext.Provider value={{ hasLoginCookieState: false }}>
         <Story />
       </AuthContext.Provider>
     ),

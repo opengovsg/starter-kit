@@ -36,9 +36,9 @@ export const PrivatePageWrapper = ({
   redirectTo = SIGN_IN,
   children,
 }: PropsWithChildren<PrivatePageWrapperProps>): React.ReactElement => {
-  const { isAuthenticated } = useAuth()
+  const { hasLoginCookieState } = useAuth()
 
-  if (isAuthenticated) {
+  if (hasLoginCookieState) {
     return <>{children}</>
   }
 
