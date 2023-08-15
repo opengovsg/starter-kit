@@ -5,7 +5,6 @@ import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
 import { deleteCookie } from 'cookies-next'
 
 export const useMe = () => {
-  const utils = trpc.useContext()
   const [me] = trpc.me.get.useSuspenseQuery()
 
   const logoutMutation = trpc.auth.logout.useMutation()
@@ -18,11 +17,10 @@ export const useMe = () => {
           if (redirectToSignIn) {
             await Router.push('/sign-in')
           }
-          await utils.invalidate()
         },
       })
     },
-    [logoutMutation, utils]
+    [logoutMutation]
   )
 
   return { me, logout }
