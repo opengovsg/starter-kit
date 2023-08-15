@@ -1,12 +1,14 @@
 import { Box } from '@chakra-ui/react'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { Component } from 'react'
+import { Component, useEffect } from 'react'
 import {
   type ErrorBoundaryProps,
   type ErrorBoundaryState,
 } from './ErrorBoundary.types'
 import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
+import { trpc } from '~/utils/trpc'
+import { FullscreenSpinner } from '../FullscreenSpinner'
 
 /**
  * Does the following:
@@ -49,6 +51,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
+const UnauthorizedErrorComponent = () => {
+  const utils = trpc.useContext()
+  useEffect(() => {
+    void utils.invalidate()
+  }, [utils])
+
+  return <FullscreenSpinner />
+}
+
 // TODO: Make custom components for these
 function ErrorComponent({ code }: { code: TRPC_ERROR_CODE_KEY }) {
   switch (code) {
@@ -58,6 +69,9 @@ function ErrorComponent({ code }: { code: TRPC_ERROR_CODE_KEY }) {
           Not found!
         </Box>
       )
+
+    case 'UNAUTHORIZED':
+      return <UnauthorizedErrorComponent />
 
     default:
       return <UnexpectedErrorCard />
