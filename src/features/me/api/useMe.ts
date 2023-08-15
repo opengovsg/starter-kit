@@ -15,10 +15,10 @@ export const useMe = () => {
       return logoutMutation.mutate(undefined, {
         onSuccess: async () => {
           deleteCookie(LOGGED_IN_KEY)
-          await utils.invalidate()
           if (redirectToSignIn) {
             await Router.push('/sign-in')
           }
+          await utils.invalidate()
         },
       })
     },
