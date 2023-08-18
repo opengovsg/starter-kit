@@ -1,27 +1,41 @@
-import { assignRef, useMergeRefs } from '@chakra-ui/react'
 import {
-  useRef,
   forwardRef,
-  type ComponentPropsWithoutRef,
-  type ReactNode,
-  type ForwardedRef,
-  type ReactElement,
+  useRef,
   type ChangeEventHandler,
+  type ComponentPropsWithoutRef,
+  type ForwardedRef,
+  type ReactNode,
 } from 'react'
+import { assignRef, useMergeRefs } from '@chakra-ui/react'
 
-export interface FileButtonProps<Multiple extends boolean = false> {
-  value: Multiple extends true ? File[] : File | null
-  /** Called when files are picked */
-  onChange(payload: Multiple extends true ? File[] : File | null): void
-
-  /** Function that receives button props and returns react node that should be rendered */
-  children(props: { onClick(): void }): ReactNode
+interface SingleFileButtonProps {
+  value: File | null
 
   /** Determines whether user can pick more than one file */
-  multiple?: Multiple
+  multiple?: false
+
+  /** Called when files are picked */
+  onChange(payload: File | null): void
+
+  append?: never
+}
+
+interface MultipleFileButtonProps {
+  value: File[]
+
+  /** Determines whether user can pick more than one file */
+  multiple: true
+
+  /** Called when files are picked */
+  onChange(payload: File[]): void
 
   /** Determines whether picked files should be appended to existing value instead of replacing */
-  append?: Multiple extends boolean ? boolean : never
+  append?: boolean
+}
+
+interface CommonFileButtonProps {
+  /** Function that receives button props and returns react node that should be rendered */
+  children: (props: { onClick(): void }) => ReactNode
 
   /** File input accept attribute, for example, "image/png,image/jpeg" */
   accept?: string
@@ -48,9 +62,13 @@ export interface FileButtonProps<Multiple extends boolean = false> {
   inputProps?: ComponentPropsWithoutRef<'input'>
 }
 
-type FileButtonComponent = (<Multiple extends boolean = false>(
-  props: FileButtonProps<Multiple>
-) => ReactElement) & { displayName?: string }
+export type FileButtonProps = (
+  | SingleFileButtonProps
+  | MultipleFileButtonProps
+) &
+  CommonFileButtonProps
+
+type FileButtonComponent = React.FC<FileButtonProps>
 
 export const FileButton: FileButtonComponent = forwardRef<
   HTMLInputElement,
@@ -60,7 +78,7 @@ export const FileButton: FileButtonComponent = forwardRef<
     {
       onChange,
       children,
-      multiple = false,
+      multiple,
       accept,
       name,
       form,
@@ -69,7 +87,6 @@ export const FileButton: FileButtonComponent = forwardRef<
       capture,
       inputProps,
       value,
-      append,
       ...others
     },
     ref
@@ -82,16 +99,14 @@ export const FileButton: FileButtonComponent = forwardRef<
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       if (multiple) {
-        const nextFiles = Array.from(event.currentTarget.files || [])
-        if (append) {
-          // @ts-expect-error type inference is not working here
-          onChange([...(value || []), ...nextFiles])
+        const nextFiles = Array.from(event.currentTarget.files ?? [])
+        if (others.append) {
+          onChange([...(value ?? []), ...nextFiles])
         } else {
-          // @ts-expect-error type inference is not working here
-          onChange(Array.from(event.currentTarget.files || []))
+          onChange(Array.from(event.currentTarget.files ?? []))
         }
       } else {
-        onChange(event.currentTarget.files?.[0] || null)
+        onChange(event.currentTarget.files?.[0] ?? null)
       }
     }
 
@@ -126,6 +141,6 @@ export const FileButton: FileButtonComponent = forwardRef<
       </>
     )
   }
-) as any
+)
 
 FileButton.displayName = 'FileButton'
