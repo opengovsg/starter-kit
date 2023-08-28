@@ -36,9 +36,9 @@ export const EnforceLoginStatePageWrapper = ({
   redirectTo = SIGN_IN,
   children,
 }: PropsWithChildren<EnforceLoginStatePageWrapperProps>): React.ReactElement => {
-  const { hasLoginStateCookie: hasLoginCookieState } = useLoginState()
+  const { hasLoginStateFlag } = useLoginState()
 
-  if (hasLoginCookieState) {
+  if (hasLoginStateFlag) {
     return <>{children}</>
   }
 

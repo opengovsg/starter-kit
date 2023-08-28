@@ -14,10 +14,7 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
-import { SIGN_IN } from '~/lib/routes'
-import { CALLBACK_URL_KEY } from '~/constants/params'
-import { deleteCookie } from 'cookies-next'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
 import { observable } from '@trpc/server/observable'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
@@ -41,11 +38,13 @@ export const custom401Link: TRPCLink<AppRouter> = () => {
         error(err) {
           observer.error(err)
           if (window !== undefined && err?.data?.code === 'UNAUTHORIZED') {
-            const { pathname, search, hash } = window.location
-            const redirectUrl = encodeURIComponent(
-              `${pathname}${search}${hash}`
-            )
-            window.location.href = `${SIGN_IN}?${CALLBACK_URL_KEY}=${redirectUrl}`
+            // Clear logged in state on localStorage
+            // NOTE: This error is not handled in the /api/[trpc] API route as API routes are invoked
+            // on the server and cannot perform redirections.
+            // We can think of this handler function as a form of client side auth validity
+            // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
+            window.localStorage.removeItem(LOGGED_IN_KEY)
+            window.dispatchEvent(new Event('local-storage'))
           }
         },
         complete() {
@@ -60,15 +59,6 @@ export const custom401Link: TRPCLink<AppRouter> = () => {
 const handleErrorsOnClient = (error: unknown): boolean => {
   if (typeof window === 'undefined') return false
   if (!(error instanceof TRPCClientError)) return false
-
-  if (error.data?.code === 'UNAUTHORIZED') {
-    // Clear logged in state and redirect to sign in page
-    // NOTE: This error is not handled in the /api/[trpc] API route as API routes are invoked
-    // on the server and cannot perform redirections.
-    // We can think of this handler function as a form of client side auth validity
-    // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
-    deleteCookie(LOGGED_IN_KEY)
-  }
   const res = TRPCWithErrorCodeSchema.safeParse(error)
   return res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)
 }

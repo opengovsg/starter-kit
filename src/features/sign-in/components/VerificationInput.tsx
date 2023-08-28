@@ -10,8 +10,7 @@ import { trpc } from '~/utils/trpc'
 import { useSignInContext } from './SignInContext'
 import { emailSignInSchema } from './Emailnput'
 import { ResendOtpButton } from './ResendOtpButton'
-import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
-import { setCookie } from 'cookies-next'
+import { useLoginState } from '~/features/auth'
 
 const emailVerificationSchema = emailSignInSchema.extend({
   token: z
@@ -22,6 +21,7 @@ const emailVerificationSchema = emailSignInSchema.extend({
 })
 
 export const VerificationInput = (): JSX.Element => {
+  const { setHasLoginStateFlag } = useLoginState()
   const router = useRouter()
   const utils = trpc.useContext()
 
@@ -64,7 +64,7 @@ export const VerificationInput = (): JSX.Element => {
       {
         onSuccess: async () => {
           await utils.me.get.invalidate()
-          setCookie(LOGGED_IN_KEY, true)
+          setHasLoginStateFlag()
           // accessing router.query values returns decoded URI params automatically,
           // so there's no need to call decodeURIComponent manually when accessing the callback url.
           await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))

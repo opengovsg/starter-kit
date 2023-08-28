@@ -1,10 +1,17 @@
-import { createContext, useContext, type PropsWithChildren } from 'react'
-import { hasCookie } from 'cookies-next'
+import {
+  createContext,
+  useContext,
+  type PropsWithChildren,
+  useCallback,
+} from 'react'
 
-import { LOGGED_IN_KEY } from '~/constants/insecureCookies'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { useLocalStorage } from '~/hooks/useLocalStorage'
 
 type LoginStateContextReturn = {
-  hasLoginStateCookie?: boolean
+  hasLoginStateFlag?: boolean
+  setHasLoginStateFlag: () => void
+  removeLoginStateFlag: () => void
 }
 
 // Exported for testing.
@@ -40,9 +47,22 @@ export const useLoginState = (): LoginStateContextReturn => {
 }
 
 const useProvideLoginState = () => {
-  const hasLoginStateCookie = hasCookie(LOGGED_IN_KEY)
+  const [hasLoginStateFlag, setLoginStateFlag] = useLocalStorage<boolean>(
+    LOGGED_IN_KEY,
+    undefined
+  )
+
+  const setHasLoginStateFlag = useCallback(() => {
+    setLoginStateFlag(true)
+  }, [setLoginStateFlag])
+
+  const removeLoginStateFlag = useCallback(() => {
+    setLoginStateFlag(undefined)
+  }, [setLoginStateFlag])
 
   return {
-    hasLoginStateCookie,
+    hasLoginStateFlag: !!hasLoginStateFlag,
+    setHasLoginStateFlag,
+    removeLoginStateFlag,
   }
 }
