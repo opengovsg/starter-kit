@@ -85,7 +85,9 @@ export const mockFeatureFlagsDecorator: Decorator<Args> = (
 }
 
 const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
-  const [hasLoginStateFlag, setLoginStateFlag] = useState<boolean>(false)
+  const [hasLoginStateFlag, setLoginStateFlag] = useState<boolean>(
+    Boolean(parameters.loginState)
+  )
 
   const setHasLoginStateFlag = useCallback(() => {
     setLoginStateFlag(true)
