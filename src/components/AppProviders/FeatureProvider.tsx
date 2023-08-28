@@ -43,9 +43,8 @@ export const useFeatures = (): FeatureContextProps => {
   return context
 }
 
-// Provider hook that creates auth object and handles state
+// Provider hook that return the current features object
 const useProvideFeatures = () => {
-  // Return the user object and auth methods
   return {
     storage: !!env.NEXT_PUBLIC_ENABLE_STORAGE,
     sgid: !!env.NEXT_PUBLIC_ENABLE_SGID,
