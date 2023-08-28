@@ -24,17 +24,17 @@ export const LoginStateContext = createContext<
  * to any child component that calls `useLoginState()`.
  */
 export const LoginStateProvider = ({ children }: PropsWithChildren) => {
-  const auth = useProvideLoginState()
+  const loginState = useProvideLoginState()
 
   return (
-    <LoginStateContext.Provider value={auth}>
+    <LoginStateContext.Provider value={loginState}>
       {children}
     </LoginStateContext.Provider>
   )
 }
 
 /**
- * Hook for components nested in ProvideAuth component to get the current auth object.
+ * Hook for components nested in LoginStateProvider component to get the current login state.
  */
 export const useLoginState = (): LoginStateContextReturn => {
   const context = useContext(LoginStateContext)

@@ -9,7 +9,7 @@ import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import superjson from 'superjson'
 import { AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
@@ -21,6 +21,9 @@ import Suspense from '~/components/Suspense'
 import { format } from 'date-fns'
 import { FeatureContext } from '~/components/AppProviders'
 import { z } from 'zod'
+import { LoginStateContext } from '~/features/auth'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { useLocalStorage } from '~/hooks/useLocalStorage'
 
 // Initialize MSW
 initialize({
@@ -81,6 +84,30 @@ export const mockFeatureFlagsDecorator: Decorator<Args> = (
   )
 }
 
+const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+  const [hasLoginStateFlag, setLoginStateFlag] = useState<boolean>(false)
+
+  const setHasLoginStateFlag = useCallback(() => {
+    setLoginStateFlag(true)
+  }, [setLoginStateFlag])
+
+  const removeLoginStateFlag = useCallback(() => {
+    setLoginStateFlag(false)
+  }, [setLoginStateFlag])
+
+  return (
+    <LoginStateContext.Provider
+      value={{
+        hasLoginStateFlag,
+        removeLoginStateFlag,
+        setHasLoginStateFlag,
+      }}
+    >
+      {storyFn()}
+    </LoginStateContext.Provider>
+  )
+}
+
 export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
   mockdate.reset()
 
@@ -121,6 +148,7 @@ const decorators: Decorator[] = [
   }),
   mockDateDecorator,
   mockFeatureFlagsDecorator,
+  LoginStateDecorator,
   SetupDecorator,
 ]
 
