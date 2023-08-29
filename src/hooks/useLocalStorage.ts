@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { LOCAL_STORAGE_EVENT } from '~/constants/localStorage'
 
 export const useLocalStorage = <T>(
-  key: string | null,
+  key: string,
   initialValue?: T
 ): readonly [T | undefined, (value?: T) => void] => {
   // Get from local storage then
@@ -14,12 +14,9 @@ export const useLocalStorage = <T>(
     if (typeof window === 'undefined') {
       return initialValue
     }
-    if (!key) {
-      return
-    }
     try {
       const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
+      return item ? (JSON.parse(item) as T) : initialValue
     } catch (error) {
       return initialValue
     }
@@ -30,9 +27,6 @@ export const useLocalStorage = <T>(
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
   const setValue = (value?: T) => {
-    if (!key) {
-      return
-    }
     try {
       // Allow value to be a function so we have the same API as useState
       const newValue = value instanceof Function ? value(storedValue) : value
