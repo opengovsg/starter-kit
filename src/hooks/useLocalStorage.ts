@@ -1,12 +1,12 @@
 // Retrieved and modified from https://usehooks-ts.com/react-hook/use-local-storage
 
-import { useCallback, useEffect, useState } from 'react'
+import { type SetStateAction, useCallback, useEffect, useState } from 'react'
 import { LOCAL_STORAGE_EVENT } from '~/constants/localStorage'
 
 export const useLocalStorage = <T>(
   key: string,
   initialValue?: T
-): readonly [T | undefined, (value?: T) => void] => {
+): readonly [T | undefined, (value: SetStateAction<T | undefined>) => void] => {
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback(() => {
@@ -26,7 +26,7 @@ export const useLocalStorage = <T>(
   const [storedValue, setStoredValue] = useState(readValue)
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = (value?: T) => {
+  const setValue = (value: SetStateAction<T | undefined>) => {
     try {
       // Allow value to be a function so we have the same API as useState
       const newValue = value instanceof Function ? value(storedValue) : value
