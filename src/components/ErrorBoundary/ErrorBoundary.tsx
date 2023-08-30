@@ -1,13 +1,14 @@
 import { Box } from '@chakra-ui/react'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { Component } from 'react'
+import { Component, useEffect } from 'react'
 import {
   type ErrorBoundaryProps,
   type ErrorBoundaryState,
 } from './ErrorBoundary.types'
 import { TRPCWithErrorCodeSchema } from '../../utils/error'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
-import { CALLBACK_URL_KEY } from '~/constants/params'
+import { trpc } from '~/utils/trpc'
+import { FullscreenSpinner } from '../FullscreenSpinner'
 
 /**
  * Does the following:
@@ -46,31 +47,21 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     if (!res.success) return fallback ?? <UnexpectedErrorCard />
 
-    // The choice to not redirect via next's router was intentional to handle ErrorBoundary for the app root
-    // Using next's router.push('/sign-in') will not render the SignIn component as it won't be mounted in the app root as the ErrorBoundary fallback component will be rendered instead
-    // Using vanilla location redirecting will prompt a full page reload of /sign-in page, which will never trigger the root ErrorBoundary, thus rendering the full component correctly
-    if (res.data === 'UNAUTHORIZED') {
-      const params = new URLSearchParams(window.location.search)
-
-      const callbackUrl = params.get('callbackUrl')
-
-      window.location.href = !!callbackUrl
-        ? `/sign-in/?${CALLBACK_URL_KEY}=${callbackUrl}`
-        : `/sign-in`
-
-      return
-    }
-
     return fallback ?? <ErrorComponent code={res.data} />
   }
 }
 
+const UnauthorizedErrorComponent = () => {
+  const utils = trpc.useContext()
+  useEffect(() => {
+    void utils.invalidate()
+  }, [utils])
+
+  return <FullscreenSpinner />
+}
+
 // TODO: Make custom components for these
-function ErrorComponent({
-  code,
-}: {
-  code: Exclude<TRPC_ERROR_CODE_KEY, 'UNAUTHORIZED'>
-}) {
+function ErrorComponent({ code }: { code: TRPC_ERROR_CODE_KEY }) {
   switch (code) {
     case 'NOT_FOUND':
       return (
@@ -78,6 +69,9 @@ function ErrorComponent({
           Not found!
         </Box>
       )
+
+    case 'UNAUTHORIZED':
+      return <UnauthorizedErrorComponent />
 
     default:
       return <UnexpectedErrorCard />

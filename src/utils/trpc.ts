@@ -1,4 +1,9 @@
-import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
+import {
+  httpBatchLink,
+  loggerLink,
+  TRPCClientError,
+  type TRPCLink,
+} from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
 import { type NextPageContext } from 'next'
@@ -9,12 +14,54 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { observable } from '@trpc/server/observable'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'UNAUTHORIZED',
   'FORBIDDEN',
   'NOT_FOUND',
 ])
+
+export const custom401Link: TRPCLink<AppRouter> = () => {
+  // here we just got initialized in the app - this happens once per app
+  // useful for storing cache for instance
+  return ({ next, op }) => {
+    // this is when passing the result to the next link
+    // each link needs to return an observable which propagates results
+    return observable((observer) => {
+      const unsubscribe = next(op).subscribe({
+        next(value) {
+          observer.next(value)
+        },
+        // Handle 401 errors
+        error(err) {
+          observer.error(err)
+          if (window !== undefined && err?.data?.code === 'UNAUTHORIZED') {
+            // Clear logged in state on localStorage
+            // NOTE: This error is not handled in the /api/[trpc] API route as API routes are invoked
+            // on the server and cannot perform redirections.
+            // We can think of this handler function as a form of client side auth validity
+            // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
+            window.localStorage.removeItem(LOGGED_IN_KEY)
+            window.dispatchEvent(new Event('local-storage'))
+          }
+        },
+        complete() {
+          observer.complete()
+        },
+      })
+      return unsubscribe
+    })
+  }
+}
+
+const handleErrorsOnClient = (error: unknown): boolean => {
+  if (typeof window === 'undefined') return false
+  if (!(error instanceof TRPCClientError)) return false
+  const res = TRPCWithErrorCodeSchema.safeParse(error)
+  return res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)
+}
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -54,6 +101,7 @@ export const trpc = createTRPCNext<
        * @link https://trpc.io/docs/links
        */
       links: [
+        custom401Link,
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
           enabled: (opts) =>
@@ -91,18 +139,16 @@ export const trpc = createTRPCNext<
           queries: {
             staleTime: 1000 * 10, // 10 seconds
             retry: (failureCount, error) => {
-              if (error instanceof TRPCClientError) {
-                const res = TRPCWithErrorCodeSchema.safeParse(error)
-
-                if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) {
-                  return false
-                }
-
-                if (error.data?.code === 'NOT_FOUND') {
-                  return false
-                }
+              if (handleErrorsOnClient(error)) {
+                return false
               }
               return failureCount < 3
+            },
+          },
+          mutations: {
+            retry: (_, error) => {
+              handleErrorsOnClient(error)
+              return false
             },
           },
         },

@@ -1,20 +1,6 @@
-import { Container } from '@chakra-ui/react'
-import { Spinner } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
+import { FullscreenSpinner } from '~/components/FullscreenSpinner'
 import { trpc } from '~/utils/trpc'
-
-export const SgidCallbackLoading = () => {
-  return (
-    <Container
-      display="flex"
-      h="$100vh"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Spinner color="interaction.main.default" fontSize="2rem" />
-    </Container>
-  )
-}
 
 /**
  * This component is responsible for handling the callback from the SGID login.
@@ -42,5 +28,5 @@ export const SgidCallback = () => {
     }
   )
 
-  return <SgidCallbackLoading />
+  return <FullscreenSpinner />
 }
