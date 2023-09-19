@@ -1,7 +1,7 @@
 import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
-import { withThemeFromJSXProvider } from '@storybook/addon-styling'
+import { withThemeFromJSXProvider } from '@storybook/addon-themes'
 import type { Args, Decorator, Preview } from '@storybook/react'
 import mockdate from 'mockdate'
 

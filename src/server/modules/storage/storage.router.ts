@@ -4,8 +4,9 @@ import {
   presignImageInputSchema,
   presignImageOutputSchema,
 } from '~/schemas/presign'
-import { protectedProcedure, router } from '~/server/trpc'
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
 import { env } from '~/env.mjs'
+import { z } from 'zod'
 
 export const storageRouter = router({
   presignAvatar: protectedProcedure
@@ -47,5 +48,17 @@ export const storageRouter = router({
         }),
         key: imageKey,
       }
+    }),
+  openApi: publicProcedure
+    .input(z.undefined())
+    .output(z.string())
+    .meta({
+      openapi: {
+        method: 'GET',
+        path: '/test/openApi',
+      },
+    })
+    .query(() => {
+      return 'openApi success'
     }),
 })
