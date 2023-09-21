@@ -56,11 +56,12 @@ export const custom401Link: TRPCLink<AppRouter> = () => {
   }
 }
 
-const handleErrorsOnClient = (error: unknown): boolean => {
-  if (typeof window === 'undefined') return false
-  if (!(error instanceof TRPCClientError)) return false
+const isErrorRetryableOnClient = (error: unknown): boolean => {
+  if (typeof window === 'undefined') return true
+  if (!(error instanceof TRPCClientError)) return true
   const res = TRPCWithErrorCodeSchema.safeParse(error)
-  return res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)
+  if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) return false
+  return true
 }
 
 /**
@@ -139,16 +140,13 @@ export const trpc = createTRPCNext<
           queries: {
             staleTime: 1000 * 10, // 10 seconds
             retry: (failureCount, error) => {
-              if (handleErrorsOnClient(error)) {
-                return false
-              }
+              if (!isErrorRetryableOnClient(error)) return false
               return failureCount < 3
             },
           },
           mutations: {
             retry: (_, error) => {
-              handleErrorsOnClient(error)
-              return false
+              return isErrorRetryableOnClient(error)
             },
           },
         },

@@ -15,9 +15,9 @@ type LoginStateContextReturn = {
 }
 
 // Exported for testing.
-export const LoginStateContext = createContext<
-  LoginStateContextReturn | undefined
->(undefined)
+export const LoginStateContext = createContext<LoginStateContextReturn | null>(
+  null
+)
 
 /**
  * Provider component that wraps your app and makes client login state boolean available
