@@ -60,8 +60,7 @@ const isErrorRetryableOnClient = (error: unknown): boolean => {
   if (typeof window === 'undefined') return true
   if (!(error instanceof TRPCClientError)) return true
   const res = TRPCWithErrorCodeSchema.safeParse(error)
-  if (res.success && NON_RETRYABLE_ERROR_CODES.has(res.data)) return false
-  return true
+  return !res.success || !NON_RETRYABLE_ERROR_CODES.has(res.data)
 }
 
 /**
