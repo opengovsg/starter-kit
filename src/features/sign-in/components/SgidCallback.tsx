@@ -25,9 +25,9 @@ export const SgidCallback = () => {
         await utils.me.get.invalidate()
         await router.replace(redirectUrl)
       },
-      onError: (error) => {
+      onError: async (error) => {
         console.error(error)
-        void router.replace(`/sign-in?error=${error.message}`)
+        await router.replace(`/sign-in?error=${error.message}`)
       },
     }
   )
