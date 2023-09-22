@@ -79,20 +79,23 @@ export const sgidRouter = router({
     )
     .query(async ({ ctx, input: { state, code } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_SGID) {
-        return {
-          redirectUrl: `/sign-in?error=${'SGID is not enabled'}`,
-        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'SGID is not enabled',
+        })
       }
       if (!ctx.session?.sgidSessionState) {
-        return {
-          redirectUrl: `/sign-in?error=${'Invalid login flow'}`,
-        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid login flow',
+        })
       }
       const parsedState = sgidCallbackStateSchema.safeParse(state)
       if (!parsedState.success) {
-        return {
-          redirectUrl: `/sign-in?error=${'Invalid SGID state'}`,
-        }
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid SGID callback state',
+        })
       }
 
       const { codeVerifier, nonce } = ctx.session.sgidSessionState
