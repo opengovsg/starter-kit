@@ -22,8 +22,6 @@ import { format } from 'date-fns'
 import { FeatureContext } from '~/components/AppProviders'
 import { z } from 'zod'
 import { LoginStateContext } from '~/features/auth'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
-import { useLocalStorage } from '~/hooks/useLocalStorage'
 
 // Initialize MSW
 initialize({
@@ -85,7 +83,7 @@ export const mockFeatureFlagsDecorator: Decorator<Args> = (
 }
 
 const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
-  const [hasLoginStateFlag, setLoginStateFlag] = useState<boolean>(
+  const [hasLoginStateFlag, setLoginStateFlag] = useState(
     Boolean(parameters.loginState)
   )
 
