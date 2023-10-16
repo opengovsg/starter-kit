@@ -77,7 +77,7 @@
     "validator": "^13.11.0",
     "winston": "^3.9.0",
     "wretch": "^2.6.0",
-    "zod": "^3.21.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
