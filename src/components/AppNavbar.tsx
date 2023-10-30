@@ -23,12 +23,19 @@ export const AppNavbar = (): JSX.Element => {
         justify="space-between"
         align="center"
         px={{ base: '1.5rem', md: '1.8rem', xl: '2rem' }}
+        pl={{ base: `calc(1rem + ${ADMIN_NAVBAR_HEIGHT})`, sm: '1.5rem' }}
         py="0.375rem"
         bg="white"
         borderBottomWidth="1px"
         borderColor="base.divider.medium"
+        transition="padding 0.1s"
       >
-        <Link as={NextLink} href="/home">
+        <Link
+          as={NextLink}
+          href="/home"
+          mx={{ base: 'auto', sm: 0 }}
+          transition="margin 0.1s"
+        >
           <Image
             // This component can only be used if this is an application created by OGP.
             src="/assets/restricted-ogp-logo-full.svg"
