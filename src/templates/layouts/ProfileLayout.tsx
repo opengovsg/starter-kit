@@ -12,7 +12,12 @@ const _ProfileLayout: NextPageWithLayout['getLayout'] = (page) => {
   const username = String(query.username)
 
   return (
-    <Flex w="100%" flexDir="column">
+    <Flex
+      w="100%"
+      flexDir="column"
+      position={{ base: 'absolute', sm: 'inherit' }}
+      left={{ base: 0, sm: undefined }}
+    >
       <AppGrid
         templateColumns={APP_GRID_TEMPLATE_COLUMN}
         bg="base.canvas.brand-subtle"
@@ -33,7 +38,9 @@ const _ProfileLayout: NextPageWithLayout['getLayout'] = (page) => {
           <ProfileTabs username={username} />
         </Box>
         <Divider gridColumn={{ base: '1/5', md: '1/12' }} h="1px" />
-        <Box gridColumn={APP_GRID_COLUMN}>{page}</Box>
+        <Box gridColumn={APP_GRID_COLUMN} minH="100%">
+          {page}
+        </Box>
       </AppGrid>
     </Flex>
   )
