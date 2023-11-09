@@ -103,6 +103,10 @@ export const DashSidebar = () => {
             px={{ base: '1.125rem', sm: '0.75rem', md: '1rem' }}
             borderRadius={{ base: 0, md: 'md' }}
             onClick={() => setShowWhenSmallMobile(false)}
+            display={{
+              base: showWhenSmallMobile ? 'flex' : 'none',
+              sm: 'flex',
+            }}
           >
             {showText ? '' : 'Home'}
           </SidebarItem>
@@ -115,6 +119,10 @@ export const DashSidebar = () => {
             px={{ base: '1.125rem', sm: '0.75rem', md: '1rem' }}
             borderRadius={{ base: 0, md: 'md' }}
             onClick={() => setShowWhenSmallMobile(false)}
+            display={{
+              base: showWhenSmallMobile ? 'flex' : 'none',
+              sm: 'flex',
+            }}
           >
             {showText ? '' : 'Profile'}
           </SidebarItem>
