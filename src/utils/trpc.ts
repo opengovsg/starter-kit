@@ -111,6 +111,14 @@ export const trpc = createTRPCNext<
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           /**
+           * Provide a function that will invoke the current global
+           * window.fetch. We do this to pick up any changes to fetch
+           * at runtime, eg, by Datadog RUM
+           */
+          fetch(url, options) {
+            return fetch(url, options)
+          },
+          /**
            * Set custom request headers on every request from tRPC
            * @link https://trpc.io/docs/ssr
            */
