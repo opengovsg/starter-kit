@@ -10,10 +10,8 @@ import {
 type SignInStates = {
   timer: number
   setTimer: Dispatch<SetStateAction<number>>
-  email: string
-  setEmail: Dispatch<SetStateAction<string>>
-  showVerificationStep: boolean
-  setShowVerificationStep: Dispatch<SetStateAction<boolean>>
+  vfnStepData: VfnStepData | undefined
+  setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
   delayForResendSeconds: number
 }
 
@@ -39,21 +37,23 @@ interface SignInContextProviderProps {
   delayForResendSeconds?: number
 }
 
+export type VfnStepData = {
+  email: string
+  otpPrefix: string
+}
+
 export const SignInContextProvider = ({
   children,
   delayForResendSeconds = 60,
 }: PropsWithChildren<SignInContextProviderProps>) => {
-  const [email, setEmail] = useState('')
-  const [showVerificationStep, setShowVerificationStep] = useState(false)
+  const [vfnStepData, setVfnStepData] = useState<VfnStepData>()
   const [timer, setTimer] = useState(delayForResendSeconds)
 
   return (
     <SignInContext.Provider
       value={{
-        email,
-        setEmail,
-        showVerificationStep,
-        setShowVerificationStep,
+        vfnStepData,
+        setVfnStepData,
         timer,
         setTimer,
         delayForResendSeconds,

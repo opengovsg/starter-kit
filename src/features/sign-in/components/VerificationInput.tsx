@@ -16,7 +16,13 @@ export const VerificationInput = (): JSX.Element => {
   const router = useRouter()
   const utils = trpc.useContext()
 
-  const { email, timer, setTimer, delayForResendSeconds } = useSignInContext()
+  const {
+    vfnStepData,
+    timer,
+    setTimer,
+    setVfnStepData,
+    delayForResendSeconds,
+  } = useSignInContext()
 
   useInterval(
     () => setTimer(timer - 1),
@@ -32,11 +38,18 @@ export const VerificationInput = (): JSX.Element => {
   } = useZodForm({
     schema: emailVerifyOtpSchema,
     defaultValues: {
-      email,
+      email: vfnStepData?.email,
     },
   })
 
   const verifyOtpMutation = trpc.auth.email.verifyOtp.useMutation({
+    onSuccess: async () => {
+      setHasLoginStateFlag()
+      await utils.me.get.invalidate()
+      // accessing router.query values returns decoded URI params automatically,
+      // so there's no need to call decodeURIComponent manually when accessing the callback url.
+      await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
+    },
     onError: (error) => {
       setError('token', { message: error.message })
     },
@@ -47,29 +60,20 @@ export const VerificationInput = (): JSX.Element => {
   })
 
   const handleVerifyOtp = handleSubmit(({ email, token }) => {
-    return verifyOtpMutation.mutate(
-      {
-        email,
-        token,
-      },
-      {
-        onSuccess: async () => {
-          await utils.me.get.invalidate()
-          setHasLoginStateFlag()
-          // accessing router.query values returns decoded URI params automatically,
-          // so there's no need to call decodeURIComponent manually when accessing the callback url.
-          await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
-        },
-      }
-    )
+    return verifyOtpMutation.mutate({ email, token })
   })
 
   const handleResendOtp = () => {
-    if (timer > 0) return
+    if (timer > 0 || !vfnStepData?.email) return
     return resendOtpMutation.mutate(
-      { email },
-      // On success, restart the timer before this can be called again.
-      { onSuccess: () => setTimer(delayForResendSeconds) }
+      { email: vfnStepData.email },
+      {
+        onSuccess: ({ email, otpPrefix }) => {
+          setVfnStepData({ email, otpPrefix })
+          // On success, restart the timer before this can be called again.
+          setTimer(delayForResendSeconds)
+        },
+      }
     )
   }
 
@@ -80,7 +84,9 @@ export const VerificationInput = (): JSX.Element => {
         isInvalid={!!errors.token}
         isReadOnly={verifyOtpMutation.isLoading}
       >
-        <FormLabel htmlFor="email">Enter OTP sent to {email}</FormLabel>
+        <FormLabel htmlFor="email">
+          Enter OTP sent to {vfnStepData?.email}
+        </FormLabel>
         <Input autoFocus maxLength={6} {...register('token')} />
         <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
       </FormControl>

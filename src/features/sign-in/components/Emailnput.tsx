@@ -6,9 +6,10 @@ import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
 import { SgidLoginButton } from './SgidLoginButton'
 import { emailSignInSchema } from '~/schemas/auth/email/sign-in'
+import { type VfnStepData } from './SignInContext'
 
 interface EmailInputProps {
-  onSuccess: (email: string) => void
+  onSuccess: (props: VfnStepData) => void
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
