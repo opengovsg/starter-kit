@@ -42,11 +42,14 @@ export const VerificationInput = (): JSX.Element | null => {
     control,
     handleSubmit,
     formState: { errors },
+    resetField,
+    setFocus,
     setError,
   } = useZodForm({
     schema: emailVerifyOtpSchema,
     defaultValues: {
       email: vfnStepData?.email,
+      token: '',
     },
   })
 
@@ -78,6 +81,8 @@ export const VerificationInput = (): JSX.Element | null => {
       {
         onSuccess: ({ email, otpPrefix }) => {
           setVfnStepData({ email, otpPrefix })
+          resetField('token')
+          setFocus('token')
           // On success, restart the timer before this can be called again.
           setTimer(delayForResendSeconds)
         },
