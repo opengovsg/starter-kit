@@ -36,13 +36,16 @@ describe('auth.email', async () => {
       await expect(result).rejects.toThrowError()
     })
 
-    it('should return email if OTP is sent successfully', async () => {
+    it('should return email and a prefix if OTP is sent successfully', async () => {
       // Arrange
       const spy = vi.spyOn(mailLib, 'sendMail')
 
       // Act
-      const expectedReturn = 'test@example.com'
-      const result = await caller.login({ email: expectedReturn })
+      const expectedReturn = {
+        email: 'test@example.com',
+        otpPrefix: expect.any(String),
+      }
+      const result = await caller.login({ email: expectedReturn.email })
 
       // Assert
       expect(spy).toHaveBeenCalledWith({
