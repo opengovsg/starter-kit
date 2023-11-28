@@ -58,6 +58,7 @@ describe('auth.email', async () => {
     const TEST_EMAIL = 'test@example.com'
     const VALID_OTP = '123456'
     const VALID_TOKEN_HASH = createTokenHash(VALID_OTP, TEST_EMAIL)
+    const INVALID_OTP = '987643'
 
     it('should successfully set session on valid OTP', async () => {
       // Arrange
@@ -72,7 +73,7 @@ describe('auth.email', async () => {
       // Act
       const result = caller.verifyOtp({
         email: TEST_EMAIL,
-        otp: VALID_OTP,
+        token: VALID_OTP,
       })
 
       // Assert
@@ -91,7 +92,7 @@ describe('auth.email', async () => {
       const result = caller.verifyOtp({
         email: TEST_EMAIL,
         // Not created yet.
-        otp: '987643',
+        token: INVALID_OTP,
       })
 
       // Assert
@@ -104,7 +105,7 @@ describe('auth.email', async () => {
         data: {
           expires: new Date(Date.now() + env.OTP_EXPIRY * 1000),
           identifier: TEST_EMAIL,
-          token: createTokenHash('invalid-otp', TEST_EMAIL),
+          token: VALID_TOKEN_HASH,
         },
       })
 
@@ -112,7 +113,7 @@ describe('auth.email', async () => {
       const result = caller.verifyOtp({
         email: TEST_EMAIL,
         // OTP does not match email record.
-        otp: '987643',
+        token: INVALID_OTP,
       })
 
       // Assert
@@ -134,7 +135,7 @@ describe('auth.email', async () => {
       // Act
       const result = caller.verifyOtp({
         email: TEST_EMAIL,
-        otp: VALID_OTP,
+        token: VALID_OTP,
       })
 
       // Assert
@@ -157,7 +158,7 @@ describe('auth.email', async () => {
       // Act
       const result = caller.verifyOtp({
         email: TEST_EMAIL,
-        otp: VALID_OTP,
+        token: VALID_OTP,
       })
 
       // Assert
