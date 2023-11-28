@@ -11,15 +11,15 @@ import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
 import { defaultMeSelect } from '../../me/me.select'
 import { generateUsername } from '../../me/me.service'
+import {
+  emailSignInSchema,
+  emailVerifyOtpSchema,
+} from '~/schemas/auth/email/sign-in'
 
 export const emailSessionRouter = router({
   // Generate OTP.
   login: publicProcedure
-    .input(
-      z.object({
-        email: z.string().trim().toLowerCase().email(),
-      })
-    )
+    .input(emailSignInSchema)
     .mutation(async ({ ctx, input: { email } }) => {
       // TODO: instead of storing expires, store issuedAt to calculate when the next otp can be re-issued
       // TODO: rate limit this endpoint also
@@ -62,16 +62,11 @@ export const emailSessionRouter = router({
       return email
     }),
   verifyOtp: publicProcedure
-    .input(
-      z.object({
-        email: z.string().email(),
-        otp: z.string().length(6),
-      })
-    )
-    .mutation(async ({ ctx, input: { email, otp } }) => {
+    .input(emailVerifyOtpSchema)
+    .mutation(async ({ ctx, input: { email, token } }) => {
       try {
         await verifyToken(ctx.prisma, {
-          token: otp,
+          token,
           email,
         })
       } catch (e) {
