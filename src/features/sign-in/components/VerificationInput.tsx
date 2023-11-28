@@ -2,23 +2,14 @@ import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { useInterval } from 'usehooks-ts'
-import { z } from 'zod'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
 import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
 import { useSignInContext } from './SignInContext'
-import { emailSignInSchema } from './Emailnput'
 import { ResendOtpButton } from './ResendOtpButton'
 import { useLoginState } from '~/features/auth'
-
-const emailVerificationSchema = emailSignInSchema.extend({
-  token: z
-    .string()
-    .trim()
-    .min(1, 'OTP is required.')
-    .length(6, 'Please enter a 6 character OTP.'),
-})
+import { emailVerifyOtpSchema } from '~/schemas/auth/email/sign-in'
 
 export const VerificationInput = (): JSX.Element => {
   const { setHasLoginStateFlag } = useLoginState()
@@ -39,7 +30,7 @@ export const VerificationInput = (): JSX.Element => {
     formState: { errors },
     setError,
   } = useZodForm({
-    schema: emailVerificationSchema,
+    schema: emailVerifyOtpSchema,
     defaultValues: {
       email,
     },
@@ -59,7 +50,7 @@ export const VerificationInput = (): JSX.Element => {
     return verifyOtpMutation.mutate(
       {
         email,
-        otp: token,
+        token,
       },
       {
         onSuccess: async () => {
