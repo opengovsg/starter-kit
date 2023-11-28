@@ -1,7 +1,7 @@
 import { generateOpenApiDocument } from 'trpc-openapi'
 import { appRouter } from './modules/_app'
 import { getBaseUrl } from '~/utils/getBaseUrl'
-import { sessionOptions } from '~/lib/auth'
+import { sessionOptions } from './modules/auth/session'
 
 export const openApiDocument = generateOpenApiDocument(appRouter, {
   title: 'Starter Kit OpenAPI',
