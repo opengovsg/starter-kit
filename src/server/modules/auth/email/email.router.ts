@@ -1,9 +1,8 @@
 import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
 import { publicProcedure, router } from '~/server/trpc'
 import { sendMail } from '~/lib/mail'
 import { getBaseUrl } from '~/utils/getBaseUrl'
-import { createTokenHash, createVfnToken } from '../auth.util'
+import { createTokenHash, createVfnPrefix, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
 import { set } from 'lodash'
@@ -25,6 +24,7 @@ export const emailSessionRouter = router({
       // TODO: rate limit this endpoint also
       const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
       const token = createVfnToken()
+      const otpPrefix = createVfnPrefix()
       const hashedToken = createTokenHash(token, email)
 
       const url = new URL(getBaseUrl())
@@ -49,7 +49,7 @@ export const emailSessionRouter = router({
         }),
         sendMail({
           subject: `Sign in to ${url.host}`,
-          body: `Your OTP is <b>${token}</b>. It will expire on ${formatInTimeZone(
+          body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${formatInTimeZone(
             expires,
             'Asia/Singapore',
             'dd MMM yyyy, hh:mmaaa'
@@ -59,7 +59,7 @@ export const emailSessionRouter = router({
           recipient: email,
         }),
       ])
-      return email
+      return { email, otpPrefix }
     }),
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
