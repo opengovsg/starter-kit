@@ -18,6 +18,7 @@ import { LOGGED_IN_KEY } from '~/constants/localStorage'
 import { observable } from '@trpc/server/observable'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
+  'BAD_REQUEST',
   'UNAUTHORIZED',
   'FORBIDDEN',
   'NOT_FOUND',
