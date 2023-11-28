@@ -1,4 +1,10 @@
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftAddon,
+  Stack,
+} from '@chakra-ui/react'
 import { Button, FormErrorMessage, Input } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { useInterval } from 'usehooks-ts'
@@ -10,8 +16,10 @@ import { useSignInContext } from './SignInContext'
 import { ResendOtpButton } from './ResendOtpButton'
 import { useLoginState } from '~/features/auth'
 import { emailVerifyOtpSchema } from '~/schemas/auth/email/sign-in'
+import { Controller } from 'react-hook-form'
+import { OTP_LENGTH } from '~/lib/auth'
 
-export const VerificationInput = (): JSX.Element => {
+export const VerificationInput = (): JSX.Element | null => {
   const { setHasLoginStateFlag } = useLoginState()
   const router = useRouter()
   const utils = trpc.useContext()
@@ -31,7 +39,7 @@ export const VerificationInput = (): JSX.Element => {
   )
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
     setError,
@@ -77,6 +85,8 @@ export const VerificationInput = (): JSX.Element => {
     )
   }
 
+  if (!vfnStepData) return null
+
   return (
     <form onSubmit={handleVerifyOtp}>
       <FormControl
@@ -85,9 +95,28 @@ export const VerificationInput = (): JSX.Element => {
         isReadOnly={verifyOtpMutation.isLoading}
       >
         <FormLabel htmlFor="email">
-          Enter OTP sent to {vfnStepData?.email}
+          Enter OTP sent to {vfnStepData.email}
         </FormLabel>
-        <Input autoFocus maxLength={6} {...register('token')} />
+        <Controller
+          control={control}
+          name="token"
+          render={({ field: { onChange, value, ...field } }) => (
+            <InputGroup>
+              <InputLeftAddon>{vfnStepData?.otpPrefix}-</InputLeftAddon>
+              <Input
+                autoFocus
+                autoCapitalize="true"
+                autoCorrect="false"
+                autoComplete="one-time-code"
+                placeholder="ABC123"
+                maxLength={OTP_LENGTH}
+                {...field}
+                value={value}
+                onChange={(e) => onChange(e.target.value.toUpperCase())}
+              />
+            </InputGroup>
+          )}
+        />
         <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
       </FormControl>
       <Stack direction="row" mt={4}>
