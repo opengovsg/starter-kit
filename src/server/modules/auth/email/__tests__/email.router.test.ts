@@ -50,7 +50,7 @@ describe('auth.email', async () => {
       // Assert
       expect(spy).toHaveBeenCalledWith({
         body: expect.stringContaining('Your OTP is'),
-        recipient: expectedReturn,
+        recipient: expectedReturn.email,
         subject: expect.stringContaining('Sign in to'),
       })
       expect(result).toEqual(expectedReturn)
