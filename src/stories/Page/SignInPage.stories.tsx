@@ -5,6 +5,9 @@ import { expect } from '@storybook/jest'
 import { userEvent, within } from '@storybook/testing-library'
 import { meHandlers } from 'tests/msw/handlers/me'
 import { getMobileViewParameters } from '../utils/viewports'
+import { authEmailHandlers } from 'tests/msw/handlers/auth/email'
+
+const VALID_AUTH_EMAIL = 'test@example.gov.sg'
 
 const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
@@ -13,7 +16,13 @@ const meta: Meta<typeof SignInPage> = {
     // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen',
     msw: {
-      handlers: [meHandlers.unauthorized()],
+      handlers: [
+        meHandlers.unauthorized(),
+        authEmailHandlers.login({
+          email: VALID_AUTH_EMAIL,
+          otpPrefix: 'TST',
+        }),
+      ],
     },
   },
 }
@@ -49,6 +58,25 @@ export const InputValidation: Story = {
         /please enter a valid email address/i
       )
       await expect(error).toBeInTheDocument()
+    })
+  },
+}
+
+export const VerifyOTP: Story = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('Enter valid email address', async () => {
+      await userEvent.type(
+        await canvas.findByLabelText(/email/i),
+        VALID_AUTH_EMAIL
+      )
+    })
+
+    await step('Attempt log in', async () => {
+      await userEvent.click(await canvas.findByText(/get otp/i))
+      const expectedLabel = await canvas.findByText(/enter otp sent to/i)
+      await expect(expectedLabel).toBeInTheDocument()
     })
   },
 }

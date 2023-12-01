@@ -1,8 +1,8 @@
 import type * as trpc from '@trpc/server'
 import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
 import { getIronSession, type IronSession } from 'iron-session'
-import { sessionOptions } from '~/lib/auth'
 import { prisma } from './prisma'
+import { sessionOptions } from './modules/auth/session'
 
 interface CreateContextOptions {
   session?: IronSession
