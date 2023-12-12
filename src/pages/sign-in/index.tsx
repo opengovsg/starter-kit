@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { PublicPageWrapper } from '~/components/AuthWrappers'
 
@@ -30,25 +30,9 @@ const SignIn: NextPageWithLayout = () => {
             <LoginImageSvgr maxW="100%" aria-hidden />
           </NonMobileSidebarGridArea>
           <LoginGridArea>
-            <Box minH={{ base: 'auto', lg: '17.25rem' }} w="100%">
-              <Flex mb={{ base: '2.5rem', lg: 0 }} flexDir="column">
-                <Text
-                  display={{ base: 'none', lg: 'initial' }}
-                  textStyle="responsive-heading.heavy-1280"
-                  mb="2.5rem"
-                >
-                  {title}
-                </Text>
-                <Box display={{ base: 'initial', lg: 'none' }}>
-                  <Box mb={{ base: '0.75rem', lg: '1.5rem' }}>
-                    <Text textStyle="h3">{title}</Text>
-                  </Box>
-                </Box>
-                <SignInContextProvider>
-                  <CurrentSignInState />
-                </SignInContextProvider>
-              </Flex>
-            </Box>
+            <SignInContextProvider>
+              <CurrentSignInState />
+            </SignInContextProvider>
           </LoginGridArea>
           <NonMobileFooterLeftGridArea />
           <FooterGridArea>
