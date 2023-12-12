@@ -24,13 +24,7 @@ const SignIn: NextPageWithLayout = () => {
 
   return (
     <PublicPageWrapper strict>
-      <Flex
-        flex={1}
-        overflow={{ lg: 'auto' }}
-        flexDir="column"
-        h="inherit"
-        minH="$100vh"
-      >
+      <Flex flexDir="column" h="inherit" minH="$100vh">
         <RestrictedGovtMasthead />
         <BaseGridLayout flex={1}>
           <NonMobileSidebarGridArea>
@@ -60,8 +54,6 @@ const SignIn: NextPageWithLayout = () => {
               </Flex>
             </Box>
           </LoginGridArea>
-        </BaseGridLayout>
-        <BaseGridLayout>
           <NonMobileFooterLeftGridArea />
           <FooterGridArea>
             <RestrictedMiniFooter />
