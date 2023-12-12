@@ -87,7 +87,7 @@ describe('auth.email', async () => {
       // Should return logged in user.
       await expect(result).resolves.toMatchObject(expectedUser)
       // Session should have been set with logged in user.
-      expect(session.userId).toMatch(expectedUser.id)
+      expect(session.userId).toEqual(expectedUser.id)
     })
 
     it('should throw if OTP is not found', async () => {
