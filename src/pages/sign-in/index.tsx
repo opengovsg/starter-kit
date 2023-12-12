@@ -5,11 +5,11 @@ import { PublicPageWrapper } from '~/components/AuthWrappers'
 import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 import Suspense from '~/components/Suspense'
 import {
-  BackgroundBox,
   BaseGridLayout,
   FooterGridArea,
   LoginGridArea,
   LoginImageSvgr,
+  NonMobileFooterLeftGridArea,
   NonMobileSidebarGridArea,
   SignInContextProvider,
   SignInForm,
@@ -24,10 +24,14 @@ const SignIn: NextPageWithLayout = () => {
 
   return (
     <PublicPageWrapper strict>
-      <BackgroundBox>
-        <RestrictedGovtMasthead
-        // This component can only be used if this is an application created by OGP.
-        />
+      <Flex
+        flex={1}
+        overflow={{ lg: 'auto' }}
+        flexDir="column"
+        h="inherit"
+        minH="$100vh"
+      >
+        <RestrictedGovtMasthead />
         <BaseGridLayout flex={1}>
           <NonMobileSidebarGridArea>
             <LoginImageSvgr maxW="100%" aria-hidden />
@@ -57,16 +61,13 @@ const SignIn: NextPageWithLayout = () => {
             </Box>
           </LoginGridArea>
         </BaseGridLayout>
-        <BaseGridLayout
-          bg={{ base: 'base.canvas.brandLight', lg: 'transparent' }}
-        >
+        <BaseGridLayout>
+          <NonMobileFooterLeftGridArea />
           <FooterGridArea>
-            <RestrictedMiniFooter
-            // This component can only be used if this is an application created by OGP.
-            />
+            <RestrictedMiniFooter />
           </FooterGridArea>
         </BaseGridLayout>
-      </BackgroundBox>
+      </Flex>
     </PublicPageWrapper>
   )
 }

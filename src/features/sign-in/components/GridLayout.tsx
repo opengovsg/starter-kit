@@ -1,26 +1,7 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { Flex, GridItem, type GridProps } from '@chakra-ui/react'
+import { GridItem, type GridProps } from '@chakra-ui/react'
 
 import { AppGrid } from '~/templates/AppGrid'
-
-// Component for the split blue/white background.
-export const BackgroundBox: FC<PropsWithChildren> = ({ children }) => (
-  <Flex
-    flex={1}
-    overflow={{ lg: 'auto' }}
-    flexDir="column"
-    h="inherit"
-    minH="$100vh"
-    bgGradient={{
-      md: 'linear(to-b, base.canvas.brand-subtle 20.5rem, white 0)',
-      // We use 41.6667% because at the lg size, the grid column of the login area
-      // is 7/12, so the remaining space is 5/12 = 0.416666...
-      lg: 'linear(to-r, base.canvas.brand-subtle calc(41.6667% - 4px), white 0)',
-    }}
-  >
-    {children}
-  </Flex>
-)
 
 // Component that controls the various grid areas according to responsive breakpoints.
 export const BaseGridLayout = (props: GridProps) => (
@@ -55,6 +36,17 @@ export const FooterGridArea: FC<PropsWithChildren> = ({ children }) => (
   </GridItem>
 )
 
+// Grid area styling for the left side of footer area that only displays on tablet and desktop breakpoints.
+export const NonMobileFooterLeftGridArea = () => (
+  <GridItem
+    ml={{ md: '-1.75rem', lg: '-2rem' }}
+    mr={{ md: '-1.75rem', lg: 0 }}
+    display={{ base: 'none', md: 'flex' }}
+    gridColumn={{ md: '1 / 13', lg: '1 / 6' }}
+    background="base.canvas.brand-subtle"
+  />
+)
+
 // Grid area styling for the left sidebar that only displays on tablet and desktop breakpoints.
 export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
   children,
@@ -68,6 +60,9 @@ export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
     flexDir="column"
     alignItems="center"
     justifyContent="center"
+    bg="base.canvas.brand-subtle"
+    ml={{ md: '-1.75rem', lg: '-2rem' }}
+    mr={{ md: '-1.75rem', lg: 0 }}
   >
     {children}
   </GridItem>
