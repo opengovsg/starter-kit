@@ -16,10 +16,10 @@ export const BaseGridLayout = (props: GridProps) => (
 export const LoginGridArea: FC<PropsWithChildren> = ({ children }) => (
   <GridItem
     gridColumn={{ base: '1 / 5', md: '2 / 12', lg: '8 / 12' }}
-    py="4rem"
+    py="2rem"
     display="flex"
-    alignItems={{ base: 'initial', lg: 'center' }}
     justifyContent="center"
+    alignItems={{ lg: 'center' }}
   >
     {children}
   </GridItem>
@@ -55,9 +55,8 @@ export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
   <GridItem
     display={{ base: 'none', md: 'flex' }}
     gridColumn={{ md: '1 / 13', lg: '1 / 7' }}
-    h={{ md: '20.5rem', lg: 'auto' }}
-    pt={{ base: '1.5rem', md: '2.5rem', lg: '3rem' }}
-    pb={{ lg: '3rem' }}
+    h={{ md: '20rem', lg: 'auto' }}
+    py="2rem"
     flexDir="column"
     alignItems="center"
     justifyContent="center"
