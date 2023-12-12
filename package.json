@@ -62,7 +62,7 @@
     "@types/validator": "^13.11.1",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
-    "iron-session": "^6.3.1",
+    "iron-session": "^8.0.1",
     "jotai": "^2.2.0",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.2",
