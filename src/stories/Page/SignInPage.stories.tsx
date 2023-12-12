@@ -75,7 +75,7 @@ export const VerifyOTP: Story = {
 
     await step('Attempt log in', async () => {
       await userEvent.click(await canvas.findByText(/get otp/i))
-      const expectedLabel = await canvas.findByText(/enter otp sent to/i)
+      const expectedLabel = await canvas.findByText(/enter the otp sent to/i)
       await expect(expectedLabel).toBeInTheDocument()
     })
   },
