@@ -55,8 +55,8 @@ export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
   <GridItem
     display={{ base: 'none', md: 'flex' }}
     gridColumn={{ md: '1 / 13', lg: '1 / 7' }}
-    h={{ md: '20rem', lg: 'auto' }}
-    py="2rem"
+    h={{ md: '9.5rem', lg: 'auto' }}
+    py="1rem"
     flexDir="column"
     alignItems="center"
     justifyContent="center"

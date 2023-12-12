@@ -27,7 +27,7 @@ const SignIn: NextPageWithLayout = () => {
         <RestrictedGovtMasthead />
         <BaseGridLayout flex={1}>
           <NonMobileSidebarGridArea>
-            <LoginImageSvgr maxW="100%" aria-hidden />
+            <LoginImageSvgr aria-hidden />
           </NonMobileSidebarGridArea>
           <LoginGridArea>
             <SignInContextProvider>

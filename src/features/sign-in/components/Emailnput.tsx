@@ -1,5 +1,9 @@
-import { FormControl, FormLabel, Input, Stack } from '@chakra-ui/react'
-import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
+import { FormControl, Input, Stack } from '@chakra-ui/react'
+import {
+  Button,
+  FormErrorMessage,
+  FormLabel,
+} from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useZodForm } from '~/lib/form'
@@ -48,7 +52,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
           isInvalid={!!errors.email}
           isReadOnly={loginMutation.isLoading}
         >
-          <FormLabel requiredIndicator={<></>}>
+          <FormLabel>
             Log in with a .gov.sg or whitelisted email address
           </FormLabel>
           <Input
