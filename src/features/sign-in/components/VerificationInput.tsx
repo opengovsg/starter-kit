@@ -102,7 +102,7 @@ export const VerificationInput = (): JSX.Element | null => {
           isReadOnly={verifyOtpMutation.isLoading}
         >
           <FormLabel htmlFor="email">
-            Enter OTP sent to {vfnStepData.email}
+            Enter the OTP sent to {vfnStepData.email}
           </FormLabel>
           <Controller
             control={control}
@@ -128,7 +128,8 @@ export const VerificationInput = (): JSX.Element | null => {
         </FormControl>
         <Stack direction="column" gap="0.75rem">
           <Button
-            isFullWidth
+            size="xs"
+            height="2.75rem"
             type="submit"
             // Want to keep loading state until redirection is complete.
             isLoading={

@@ -15,7 +15,7 @@ export const BaseGridLayout = (props: GridProps) => (
 // Grid area styling for the login form.
 export const LoginGridArea: FC<PropsWithChildren> = ({ children }) => (
   <GridItem
-    gridColumn={{ base: '1 / 5', md: '2 / 12', lg: '9 / 12' }}
+    gridColumn={{ base: '1 / 5', md: '2 / 12', lg: '8 / 12' }}
     py="4rem"
     display="flex"
     alignItems={{ base: 'initial', lg: 'center' }}
@@ -28,9 +28,10 @@ export const LoginGridArea: FC<PropsWithChildren> = ({ children }) => (
 // Grid area styling for the footer.
 export const FooterGridArea: FC<PropsWithChildren> = ({ children }) => (
   <GridItem
-    gridColumn={{ base: '1 / 5', md: '2 / 12', lg: '9 / 12' }}
+    gridColumn={{ base: '1 / 5', md: '2 / 12', lg: '8 / 12' }}
     py="4rem"
     display="flex"
+    justifyContent={{ base: 'center', lg: 'initial' }}
   >
     {children}
   </GridItem>
@@ -42,7 +43,7 @@ export const NonMobileFooterLeftGridArea = () => (
     ml={{ md: '-1.75rem', lg: '-2rem' }}
     mr={{ md: '-1.75rem', lg: 0 }}
     display={{ base: 'none', md: 'flex' }}
-    gridColumn={{ md: '1 / 13', lg: '1 / 8' }}
+    gridColumn={{ md: '1 / 13', lg: '1 / 7' }}
     background="base.canvas.brand-subtle"
   />
 )
@@ -53,7 +54,7 @@ export const NonMobileSidebarGridArea: FC<PropsWithChildren> = ({
 }) => (
   <GridItem
     display={{ base: 'none', md: 'flex' }}
-    gridColumn={{ md: '1 / 13', lg: '1 / 8' }}
+    gridColumn={{ md: '1 / 13', lg: '1 / 7' }}
     h={{ md: '20.5rem', lg: 'auto' }}
     pt={{ base: '1.5rem', md: '2.5rem', lg: '3rem' }}
     pb={{ lg: '3rem' }}
