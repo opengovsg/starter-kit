@@ -6,7 +6,7 @@ export const authRouter = router({
   email: emailSessionRouter,
   sgid: sgidRouter,
   logout: publicProcedure.mutation(async ({ ctx }) => {
-    ctx.session?.destroy()
+    ctx.session.destroy()
     return { isLoggedIn: false }
   }),
 })

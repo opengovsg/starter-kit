@@ -77,7 +77,7 @@ export const applySession = () => {
 export const applyAuthedSession = async (user: Partial<User>) => {
   const authedUser = await auth(user)
   const session = applySession()
-  session.user = authedUser
+  session.userId = authedUser.id
   await session.save()
   return session
 }

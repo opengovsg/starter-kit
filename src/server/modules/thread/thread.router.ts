@@ -31,7 +31,7 @@ export const threadRouter = router({
             images,
             author: {
               connect: {
-                id: ctx.session.user.id,
+                id: ctx.user.id,
               },
             },
             parent: {

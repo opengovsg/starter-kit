@@ -4,9 +4,12 @@ import { getIronSession } from 'iron-session'
 import { prisma } from './prisma'
 import { sessionOptions } from './modules/auth/session'
 import { type SessionData, type Session } from '~/lib/types/session'
+import { type User } from '@prisma/client'
+import { type defaultMeSelect } from './modules/me/me.select'
 
 interface CreateContextOptions {
   session?: Session
+  user?: Pick<User, keyof typeof defaultMeSelect>
 }
 
 /**

@@ -84,7 +84,7 @@ export const sgidRouter = router({
           message: 'SGID is not enabled',
         })
       }
-      if (!ctx.session?.sgidSessionState) {
+      if (!ctx.session.sgidSessionState) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid login flow',
@@ -175,7 +175,7 @@ export const sgidRouter = router({
       }
 
       ctx.session.destroy()
-      ctx.session.user = user
+      ctx.session.userId = user.id
       await ctx.session.save()
 
       return {

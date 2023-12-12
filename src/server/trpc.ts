@@ -16,6 +16,7 @@ import { prisma } from './prisma'
 import { createBaseLogger } from '~/lib/logger'
 import getIP from '~/utils/getClientIp'
 import { type OpenApiMeta } from 'trpc-openapi'
+import { defaultMeSelect } from './modules/me/me.select'
 
 const t = initTRPC
   .meta<OpenApiMeta>()
@@ -69,14 +70,26 @@ const loggerMiddleware = t.middleware(async ({ path, next, ctx, type }) => {
   return result
 })
 
+const baseMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (ctx.session === undefined) {
+    throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+  }
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  })
+})
+
 const authMiddleware = t.middleware(async ({ next, ctx }) => {
-  if (!ctx.session?.user) {
+  if (!ctx.session?.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   // this code path is needed if a user does not exist in the database as they were deleted, but the session was active before
   const user = await prisma.user.findUnique({
-    where: { id: ctx.session.user.id },
+    where: { id: ctx.session.userId },
+    select: defaultMeSelect,
   })
 
   if (user === null) {
@@ -85,9 +98,23 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
 
   return next({
     ctx: {
-      session: {
-        user: ctx.session.user,
-      },
+      user,
+    },
+  })
+})
+
+const nonStrictAuthMiddleware = t.middleware(async ({ next, ctx }) => {
+  // this code path is needed if a user does not exist in the database as they were deleted, but the session was active before
+  const user = ctx.session?.userId
+    ? await prisma.user.findUnique({
+        where: { id: ctx.session.userId },
+        select: defaultMeSelect,
+      })
+    : null
+
+  return next({
+    ctx: {
+      user,
     },
   })
 })
@@ -102,7 +129,9 @@ export const router = t.router
  * Create an unprotected procedure
  * @see https://trpc.io/docs/v10/procedures
  **/
-export const publicProcedure = t.procedure.use(loggerMiddleware)
+export const publicProcedure = t.procedure
+  .use(loggerMiddleware)
+  .use(baseMiddleware)
 
 /**
  * Create a protected procedure
@@ -110,6 +139,10 @@ export const publicProcedure = t.procedure.use(loggerMiddleware)
 export const protectedProcedure = t.procedure
   .use(loggerMiddleware)
   .use(authMiddleware)
+
+export const agnosticProcedure = t.procedure
+  .use(loggerMiddleware)
+  .use(nonStrictAuthMiddleware)
 
 /**
  * @see https://trpc.io/docs/v10/middlewares

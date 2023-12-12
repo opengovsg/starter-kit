@@ -5,7 +5,6 @@ import { getBaseUrl } from '~/utils/getBaseUrl'
 import { createTokenHash, createVfnPrefix, createVfnToken } from '../auth.util'
 import { verifyToken } from '../auth.service'
 import { VerificationError } from '../auth.error'
-import { set } from 'lodash'
 import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
 import { defaultMeSelect } from '../../me/me.select'
@@ -94,12 +93,8 @@ export const emailSessionRouter = router({
         select: defaultMeSelect,
       })
 
-      // TODO: Should only store user id in session.
-      // The rest of user details should be fetched from db in protectedProcedure.
-      // Sign user in.
-      set(ctx, 'session.user', user)
-
-      await ctx.session?.save()
+      ctx.session.userId = user.id
+      await ctx.session.save()
       return user
     }),
 })
