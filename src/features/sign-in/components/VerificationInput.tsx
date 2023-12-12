@@ -63,7 +63,22 @@ export const VerificationInput = (): JSX.Element | null => {
       await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
     },
     onError: (error) => {
-      setError('token', { message: error.message })
+      switch (error.message) {
+        case 'Token is invalid or has expired':
+          setError('token', {
+            message:
+              'This OTP is invalid or has expired, click resend OTP to get a new one',
+          })
+          break
+        case 'Too many attempts':
+          setError('token', {
+            message:
+              'You have attempted the wrong OTP too many times, click resend OTP to get a new one',
+          })
+          break
+        default:
+          setError('token', { message: error.message })
+      }
     },
   })
 
