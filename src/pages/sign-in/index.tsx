@@ -1,9 +1,8 @@
-import { Box, Flex, Skeleton, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
 import { PublicPageWrapper } from '~/components/AuthWrappers'
 
 import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
-import Suspense from '~/components/Suspense'
 import {
   BaseGridLayout,
   FooterGridArea,
@@ -12,9 +11,9 @@ import {
   NonMobileFooterLeftGridArea,
   NonMobileSidebarGridArea,
   SignInContextProvider,
-  SignInForm,
 } from '~/features/sign-in/components'
 import { useEnv } from '~/hooks/useEnv'
+import { CurrentSignInState } from '~/features/sign-in/components/SignInState'
 import { type NextPageWithLayout } from '~/lib/types'
 
 const SignIn: NextPageWithLayout = () => {
@@ -45,11 +44,8 @@ const SignIn: NextPageWithLayout = () => {
                     <Text textStyle="h3">{title}</Text>
                   </Box>
                 </Box>
-
                 <SignInContextProvider>
-                  <Suspense fallback={<Skeleton w="100vw" h="100vh" />}>
-                    <SignInForm />
-                  </Suspense>
+                  <CurrentSignInState />
                 </SignInContextProvider>
               </Flex>
             </Box>

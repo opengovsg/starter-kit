@@ -5,17 +5,21 @@ import {
   type PropsWithChildren,
   useContext,
   useState,
+  useCallback,
 } from 'react'
+import { useInterval } from 'usehooks-ts'
 
-type SignInStates = {
+interface SignInState {
   timer: number
-  setTimer: Dispatch<SetStateAction<number>>
+  resetTimer: () => void
+  state: 'initial' | 'email'
   vfnStepData: VfnStepData | undefined
   setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
-  delayForResendSeconds: number
+  proceedToEmail: () => void
+  backToInitial: () => void
 }
 
-export const SignInContext = createContext<SignInStates | undefined>(undefined)
+export const SignInContext = createContext<SignInState | undefined>(undefined)
 
 export const useSignInContext = () => {
   const context = useContext(SignInContext)
@@ -46,8 +50,30 @@ export const SignInContextProvider = ({
   children,
   delayForResendSeconds = 60,
 }: PropsWithChildren<SignInContextProviderProps>) => {
+  const [state, setState] = useState<'initial' | 'email'>('initial')
   const [vfnStepData, setVfnStepData] = useState<VfnStepData>()
   const [timer, setTimer] = useState(delayForResendSeconds)
+
+  const resetTimer = useCallback(
+    () => setTimer(delayForResendSeconds),
+    [delayForResendSeconds]
+  )
+
+  const proceedToEmail = useCallback(() => {
+    setState('email')
+  }, [])
+
+  const backToInitial = useCallback(() => {
+    setState('initial')
+    setVfnStepData(undefined)
+  }, [])
+
+  // Start the resend timer once in the vfn step.
+  useInterval(
+    () => setTimer(timer - 1),
+    // Stop interval if timer hits 0, else rerun every 1000ms.
+    !!vfnStepData && timer > 0 ? 1000 : null
+  )
 
   return (
     <SignInContext.Provider
@@ -55,8 +81,10 @@ export const SignInContextProvider = ({
         vfnStepData,
         setVfnStepData,
         timer,
-        setTimer,
-        delayForResendSeconds,
+        resetTimer,
+        proceedToEmail,
+        backToInitial,
+        state,
       }}
     >
       {children}

@@ -26,7 +26,7 @@
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-dev:unit": "dotenv -e .env.test vitest",
     "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
-    "postinstall": "npm run generate",
+    "postinstall": "npm run generate && npm run build:theme",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -42,7 +42,7 @@
     "@aws-sdk/s3-request-presigner": "3.370.0",
     "@chakra-ui/react": "^2.7.1",
     "@hookform/resolvers": "^3.1.1",
-    "@opengovsg/design-system-react": "^1.4.0",
+    "@opengovsg/design-system-react": "^1.14.0",
     "@opengovsg/sgid-client": "^2.0.0",
     "@paralleldrive/cuid2": "^2.2.1",
     "@prisma/client": "4.15.0",
