@@ -1,6 +1,7 @@
-import { FormControl, Input, Stack } from '@chakra-ui/react'
+import { FormControl, Stack } from '@chakra-ui/react'
 import {
   Button,
+  Input,
   FormErrorMessage,
   FormLabel,
 } from '@opengovsg/design-system-react'
