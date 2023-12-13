@@ -1,11 +1,15 @@
 import type * as trpc from '@trpc/server'
 import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
-import { getIronSession, type IronSession } from 'iron-session'
+import { getIronSession } from 'iron-session'
 import { prisma } from './prisma'
 import { sessionOptions } from './modules/auth/session'
+import { type SessionData, type Session } from '~/lib/types/session'
+import { type User } from '@prisma/client'
+import { type defaultMeSelect } from './modules/me/me.select'
 
 interface CreateContextOptions {
-  session?: IronSession
+  session?: Session
+  user?: Pick<User, keyof typeof defaultMeSelect>
 }
 
 /**
@@ -24,7 +28,11 @@ export async function createContextInner(opts: CreateContextOptions) {
  * @link https://trpc.io/docs/context
  */
 export const createContext = async (opts: CreateNextContextOptions) => {
-  const session = await getIronSession(opts.req, opts.res, sessionOptions)
+  const session = await getIronSession<SessionData>(
+    opts.req,
+    opts.res,
+    sessionOptions
+  )
 
   const innerContext = await createContextInner({
     session,

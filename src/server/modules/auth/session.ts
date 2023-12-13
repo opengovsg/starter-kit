@@ -1,7 +1,7 @@
-import { type IronSessionOptions } from 'iron-session'
+import { type SessionOptions } from 'iron-session'
 import { env } from '~/env.mjs'
 
-export const sessionOptions: IronSessionOptions = {
+export const sessionOptions: SessionOptions = {
   password: {
     '1': env.SESSION_SECRET,
   },

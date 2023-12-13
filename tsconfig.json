@@ -31,7 +31,6 @@
     ".storybook/**/*.ts",
     ".eslintrc.cjs",
     "next-env.d.ts",
-    "src/lib/iron-session.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",

@@ -25,6 +25,7 @@ describe('post.add', async () => {
   it('post should be retrievable after creation', async () => {
     const defaultUser: User = {
       email: 'test@example.com',
+      username: 'test-user',
       name: 'Test User',
       id: 'test-user-id',
       bio: null,

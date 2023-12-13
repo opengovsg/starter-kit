@@ -1,7 +1,7 @@
 import { type User } from '@prisma/client'
-import { type IronSession } from 'iron-session'
 import { type NextApiRequest } from 'next'
-import { type Context, createContextInner } from '~/server/context'
+import { type Session } from '~/lib/types/session'
+import { createContextInner, type Context } from '~/server/context'
 import { auth } from './auth'
 
 class MockIronStore {
@@ -45,7 +45,7 @@ class MockIronStore {
 }
 
 export const createMockRequest = async (
-  session: IronSession,
+  session: Session,
   mockedReq: Partial<NextApiRequest> = { headers: {} }
 ): Promise<Context> => {
   const innerContext = await createContextInner({ session })
@@ -69,7 +69,7 @@ export const applySession = () => {
     destroy() {
       store.clear()
     },
-  } as IronSession
+  } as unknown as Session
 
   return session
 }
@@ -77,7 +77,7 @@ export const applySession = () => {
 export const applyAuthedSession = async (user: Partial<User>) => {
   const authedUser = await auth(user)
   const session = applySession()
-  session.user = authedUser
-  session.save()
+  session.userId = authedUser.id
+  await session.save()
   return session
 }

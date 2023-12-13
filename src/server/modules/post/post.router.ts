@@ -6,11 +6,11 @@ import {
   byUserSchema,
   listPostsInputSchema,
 } from '~/schemas/post'
-import { protectedProcedure, publicProcedure, router } from '~/server/trpc'
+import { agnosticProcedure, protectedProcedure, router } from '~/server/trpc'
 import { defaultPostSelect, withCommentsPostSelect } from './post.select'
 
 export const postRouter = router({
-  likedByUser: publicProcedure
+  likedByUser: agnosticProcedure
     .input(byUserSchema)
     .query(async ({ input, ctx }) => {
       /**
@@ -59,15 +59,15 @@ export const postRouter = router({
       let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
         posts
 
-      if (ctx.session?.user?.id) {
+      if (ctx.user?.id) {
         // From posts, get whether current user liked each post
         // short circuit if already found before
         const userLikedPosts =
-          ctx.session.user.username === input.username
+          ctx.user.username === input.username
             ? likedPosts
             : await ctx.prisma.likedPosts.findMany({
                 where: {
-                  userId: ctx.session.user.id,
+                  userId: ctx.user.id,
                   postId: {
                     in: posts.map((post) => post.id),
                   },
@@ -90,7 +90,7 @@ export const postRouter = router({
         nextCursor,
       }
     }),
-  repliesByUser: publicProcedure
+  repliesByUser: agnosticProcedure
     .input(byUserSchema)
     .query(async ({ input, ctx }) => {
       const limit = input.limit ?? 50
@@ -126,11 +126,11 @@ export const postRouter = router({
       let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
         posts
 
-      if (ctx.session?.user?.id) {
+      if (ctx.user?.id) {
         // From posts, get whether current user liked each post
         const userLikedPosts = await ctx.prisma.likedPosts.findMany({
           where: {
-            userId: ctx.session.user.id,
+            userId: ctx.user.id,
             postId: {
               in: posts.map((post) => post.id),
             },
@@ -153,71 +153,73 @@ export const postRouter = router({
         nextCursor,
       }
     }),
-  byUser: publicProcedure.input(byUserSchema).query(async ({ input, ctx }) => {
-    const limit = input.limit ?? 50
-    const { cursor } = input
+  byUser: agnosticProcedure
+    .input(byUserSchema)
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 50
+      const { cursor } = input
 
-    const posts = await ctx.prisma.post.findMany({
-      select: defaultPostSelect,
-      // get an extra item at the end which we'll use as next cursor
-      take: limit + 1,
-      cursor: cursor ? { id: cursor } : undefined,
-      orderBy: {
-        createdAt: input.order,
-      },
-      where: {
-        author: {
-          username: input.username,
+      const posts = await ctx.prisma.post.findMany({
+        select: defaultPostSelect,
+        // get an extra item at the end which we'll use as next cursor
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: input.order,
         },
-        parentPostId: null,
-        deletedAt: null,
-      },
-    })
-
-    let nextCursor: typeof cursor | undefined = undefined
-    if (posts.length > limit) {
-      // Remove the last item and use it as next cursor
-      const nextItem = posts.pop()!
-      nextCursor = nextItem.id
-    }
-
-    let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
-      posts
-
-    if (ctx.session?.user?.id) {
-      // From posts, get whether current user liked each post
-      const userLikedPosts = await ctx.prisma.likedPosts.findMany({
         where: {
-          userId: ctx.session.user.id,
-          postId: {
-            in: posts.map((post) => post.id),
+          author: {
+            username: input.username,
           },
+          parentPostId: null,
+          deletedAt: null,
         },
       })
-      const likedUserPosts = Object.fromEntries(
-        userLikedPosts.map((likedPost) => [likedPost.postId, true])
-      )
-      // Augment posts with whether current user liked each post
-      augmentedPosts = posts.map((post) => {
-        return {
-          ...post,
-          likedByMe: likedUserPosts[post.id],
-        }
-      })
-    }
 
-    return {
-      posts: augmentedPosts,
-      nextCursor,
-    }
-  }),
+      let nextCursor: typeof cursor | undefined = undefined
+      if (posts.length > limit) {
+        // Remove the last item and use it as next cursor
+        const nextItem = posts.pop()!
+        nextCursor = nextItem.id
+      }
+
+      let augmentedPosts: ((typeof posts)[number] & { likedByMe?: boolean })[] =
+        posts
+
+      if (ctx.user?.id) {
+        // From posts, get whether current user liked each post
+        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: ctx.user.id,
+            postId: {
+              in: posts.map((post) => post.id),
+            },
+          },
+        })
+        const likedUserPosts = Object.fromEntries(
+          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        )
+        // Augment posts with whether current user liked each post
+        augmentedPosts = posts.map((post) => {
+          return {
+            ...post,
+            likedByMe: likedUserPosts[post.id],
+          }
+        })
+      }
+
+      return {
+        posts: augmentedPosts,
+        nextCursor,
+      }
+    }),
   toggleLikePost: protectedProcedure
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ input: { postId }, ctx }) => {
       return await ctx.prisma.$transaction(async (tx) => {
         const currentLike = await tx.likedPosts.findFirst({
           where: {
-            userId: ctx.session.user.id,
+            userId: ctx.user.id,
             postId,
           },
         })
@@ -225,7 +227,7 @@ export const postRouter = router({
           await tx.likedPosts.delete({
             where: {
               postId_userId: {
-                userId: ctx.session.user.id,
+                userId: ctx.user.id,
                 postId,
               },
             },
@@ -235,7 +237,7 @@ export const postRouter = router({
             data: {
               user: {
                 connect: {
-                  id: ctx.session.user.id,
+                  id: ctx.user.id,
                 },
               },
               post: {
@@ -310,31 +312,29 @@ export const postRouter = router({
 
       let augmentedPost: typeof post & { likedByMe?: boolean } = post
 
-      if (ctx.session?.user?.id) {
-        // From posts, get whether current user liked each post
-        const userLikedPosts = await ctx.prisma.likedPosts.findMany({
-          where: {
-            userId: ctx.session.user.id,
-            postId: {
-              in: [post.id, ...post.replies.map((r) => r.id)],
-            },
+      // From posts, get whether current user liked each post
+      const userLikedPosts = await ctx.prisma.likedPosts.findMany({
+        where: {
+          userId: ctx.user.id,
+          postId: {
+            in: [post.id, ...post.replies.map((r) => r.id)],
           },
-        })
-        const likedUserPosts = Object.fromEntries(
-          userLikedPosts.map((likedPost) => [likedPost.postId, true])
-        )
-        // Augment posts with whether current user liked each post
-        const augmentedReplies = post.replies.map((r) => {
-          return {
-            ...r,
-            likedByMe: likedUserPosts[r.id],
-          }
-        })
-        augmentedPost = {
-          ...post,
-          likedByMe: likedUserPosts[post.id],
-          replies: augmentedReplies,
+        },
+      })
+      const likedUserPosts = Object.fromEntries(
+        userLikedPosts.map((likedPost) => [likedPost.postId, true])
+      )
+      // Augment posts with whether current user liked each post
+      const augmentedReplies = post.replies.map((r) => {
+        return {
+          ...r,
+          likedByMe: likedUserPosts[r.id],
         }
+      })
+      augmentedPost = {
+        ...post,
+        likedByMe: likedUserPosts[post.id],
+        replies: augmentedReplies,
       }
 
       return augmentedPost
@@ -352,7 +352,7 @@ export const postRouter = router({
           images,
           author: {
             connect: {
-              id: ctx.session.user.id,
+              id: ctx.user.id,
             },
           },
         },
@@ -373,7 +373,7 @@ export const postRouter = router({
           message: `No post with id '${id}'`,
         })
       }
-      if (postToDelete?.authorId !== ctx.session.user.id) {
+      if (postToDelete?.authorId !== ctx.user.id) {
         throw new TRPCError({ code: 'FORBIDDEN' })
       }
       const post = await ctx.prisma.post.update({

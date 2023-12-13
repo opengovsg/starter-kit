@@ -13,7 +13,7 @@ import { defaultMeSelect } from './me.select'
 export const meRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.user.findUniqueOrThrow({
-      where: { id: ctx.session.user.id },
+      where: { id: ctx.user.id },
       select: defaultMeSelect,
     })
   }),
@@ -25,7 +25,7 @@ export const meRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.user.update({
-        where: { id: ctx.session.user.id },
+        where: { id: ctx.user.id },
         data: {
           image: `https://${env.R2_PUBLIC_HOSTNAME}/${input.imageKey}`,
         },
@@ -37,7 +37,7 @@ export const meRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return await ctx.prisma.user.update({
-          where: { id: ctx.session.user.id },
+          where: { id: ctx.user.id },
           data: input,
           select: defaultMeSelect,
         })
@@ -45,9 +45,9 @@ export const meRouter = router({
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           if (e.code === 'P2002') {
             ctx.logger.info('Username conflict', {
-              userId: ctx.session.user.id,
+              userId: ctx.user.id,
               chosen: input.username,
-              current: ctx.session.user.username,
+              current: ctx.user.username,
             })
 
             throw new TRPCError({

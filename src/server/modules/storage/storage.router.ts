@@ -17,7 +17,7 @@ export const storageRouter = router({
         return null
       }
       const imageKey = `${env.R2_AVATARS_DIRECTORY}/${
-        ctx.session.user.id
+        ctx.user.id
       }/avatar-${Date.now()}`
 
       return {
