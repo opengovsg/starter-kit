@@ -194,6 +194,8 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       return target[/** @type {keyof typeof target} */ (prop)]
     },
   })
+} else if (process.env.STORYBOOK) {
+  env = JSON.parse(process.env.STORYBOOK_ENVIRONMENT ?? '{}')
 }
 
 export { env }
