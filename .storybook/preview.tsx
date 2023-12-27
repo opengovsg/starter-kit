@@ -36,7 +36,7 @@ initialize({
 
 const trpc = createTRPCReact<AppRouter>()
 
-const StorybookEnvDecorator: Decorator = (story) => {
+const StorybookEnvDecorator: Decorator = (Story) => {
   const mockEnv: EnvContextReturn['env'] = merge(
     {
       NEXT_PUBLIC_APP_NAME: 'Starter Kit',
@@ -45,7 +45,11 @@ const StorybookEnvDecorator: Decorator = (story) => {
     },
     env
   )
-  return <EnvProvider env={mockEnv}>{story()}</EnvProvider>
+  return (
+    <EnvProvider env={mockEnv}>
+      <Story />
+    </EnvProvider>
+  )
 }
 
 const SetupDecorator: Decorator = (page) => {
@@ -80,7 +84,7 @@ const SetupDecorator: Decorator = (page) => {
 }
 
 export const MockFeatureFlagsDecorator: Decorator<Args> = (
-  storyFn,
+  Story,
   { parameters }
 ) => {
   const featureSchema = z
@@ -95,12 +99,12 @@ export const MockFeatureFlagsDecorator: Decorator<Args> = (
 
   return (
     <FeatureContext.Provider value={features}>
-      {storyFn()}
+      <Story />
     </FeatureContext.Provider>
   )
 }
 
-const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+const LoginStateDecorator: Decorator<Args> = (Story, { parameters }) => {
   const [hasLoginStateFlag, setLoginStateFlag] = useState(
     Boolean(parameters.loginState)
   )
@@ -121,16 +125,16 @@ const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
         setHasLoginStateFlag,
       }}
     >
-      {storyFn()}
+      <Story />
     </LoginStateContext.Provider>
   )
 }
 
-export const MockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+export const MockDateDecorator: Decorator<Args> = (Story, { parameters }) => {
   mockdate.reset()
 
   if (!parameters.mockdate) {
-    return storyFn()
+    return <Story />
   }
 
   mockdate.set(parameters.mockdate)
@@ -151,7 +155,7 @@ export const MockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
       >
         Mocking date: {mockedDate}
       </Box>
-      {storyFn()}
+      <Story />
     </Box>
   )
 }
