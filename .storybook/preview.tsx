@@ -36,7 +36,7 @@ initialize({
 
 const trpc = createTRPCReact<AppRouter>()
 
-const StorybookEnvDecorator: Decorator = (Story) => {
+const StorybookEnvDecorator: Decorator = (story) => {
   const mockEnv: EnvContextReturn['env'] = merge(
     {
       NEXT_PUBLIC_APP_NAME: 'Starter Kit',
@@ -45,14 +45,10 @@ const StorybookEnvDecorator: Decorator = (Story) => {
     },
     env
   )
-  return (
-    <EnvProvider env={mockEnv}>
-      <Story />
-    </EnvProvider>
-  )
+  return <EnvProvider env={mockEnv}>{story()}</EnvProvider>
 }
 
-const SetupDecorator: Decorator = (page) => {
+const SetupDecorator: Decorator = (story) => {
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: {
@@ -75,7 +71,7 @@ const SetupDecorator: Decorator = (page) => {
       <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            {page()}
+            {story()}
           </QueryClientProvider>
         </trpc.Provider>
       </Suspense>
@@ -84,7 +80,7 @@ const SetupDecorator: Decorator = (page) => {
 }
 
 export const MockFeatureFlagsDecorator: Decorator<Args> = (
-  Story,
+  story,
   { parameters }
 ) => {
   const featureSchema = z
@@ -99,12 +95,12 @@ export const MockFeatureFlagsDecorator: Decorator<Args> = (
 
   return (
     <FeatureContext.Provider value={features}>
-      <Story />
+      {story()}
     </FeatureContext.Provider>
   )
 }
 
-const LoginStateDecorator: Decorator<Args> = (Story, { parameters }) => {
+const LoginStateDecorator: Decorator<Args> = (story, { parameters }) => {
   const [hasLoginStateFlag, setLoginStateFlag] = useState(
     Boolean(parameters.loginState)
   )
@@ -125,16 +121,16 @@ const LoginStateDecorator: Decorator<Args> = (Story, { parameters }) => {
         setHasLoginStateFlag,
       }}
     >
-      <Story />
+      {story()}
     </LoginStateContext.Provider>
   )
 }
 
-export const MockDateDecorator: Decorator<Args> = (Story, { parameters }) => {
+export const MockDateDecorator: Decorator<Args> = (story, { parameters }) => {
   mockdate.reset()
 
   if (!parameters.mockdate) {
-    return <Story />
+    return story()
   }
 
   mockdate.set(parameters.mockdate)
@@ -155,7 +151,7 @@ export const MockDateDecorator: Decorator<Args> = (Story, { parameters }) => {
       >
         Mocking date: {mockedDate}
       </Box>
-      <Story />
+      {story()}
     </Box>
   )
 }
