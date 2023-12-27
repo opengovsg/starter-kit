@@ -26,6 +26,8 @@ import {
 } from '~/components/AppProviders'
 import { z } from 'zod'
 import { LoginStateContext } from '~/features/auth'
+import { merge } from 'lodash'
+import { env } from '~/env.mjs'
 
 // Initialize MSW
 initialize({
@@ -35,12 +37,15 @@ initialize({
 const trpc = createTRPCReact<AppRouter>()
 
 const StorybookEnvDecorator: Decorator = (story) => {
-  const env: EnvContextReturn['env'] = {
-    NEXT_PUBLIC_APP_NAME: 'Starter Kit',
-    NEXT_PUBLIC_ENABLE_SGID: false,
-    NEXT_PUBLIC_ENABLE_STORAGE: false,
-  }
-  return <EnvProvider env={env}>{story()}</EnvProvider>
+  const mockEnv: EnvContextReturn['env'] = merge(
+    {
+      NEXT_PUBLIC_APP_NAME: 'Starter Kit',
+      NEXT_PUBLIC_ENABLE_SGID: false,
+      NEXT_PUBLIC_ENABLE_STORAGE: false,
+    },
+    env
+  )
+  return <EnvProvider env={mockEnv}>{story()}</EnvProvider>
 }
 
 const SetupDecorator: Decorator = (page) => {
