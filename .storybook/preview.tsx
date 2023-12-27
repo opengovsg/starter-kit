@@ -74,7 +74,7 @@ const SetupDecorator: Decorator = (page) => {
   )
 }
 
-export const mockFeatureFlagsDecorator: Decorator<Args> = (
+export const MockFeatureFlagsDecorator: Decorator<Args> = (
   storyFn,
   { parameters }
 ) => {
@@ -121,7 +121,7 @@ const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
   )
 }
 
-export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+export const MockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
   mockdate.reset()
 
   if (!parameters.mockdate) {
@@ -160,8 +160,8 @@ const decorators: Decorator[] = [
     },
     Provider: ThemeProvider,
   }),
-  mockDateDecorator,
-  mockFeatureFlagsDecorator,
+  MockDateDecorator,
+  MockFeatureFlagsDecorator,
   LoginStateDecorator,
   SetupDecorator,
 ]
