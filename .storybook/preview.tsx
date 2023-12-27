@@ -11,7 +11,7 @@ import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import superjson from 'superjson'
-import { AppRouter } from '~/server/modules/_app'
+import { type AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
 
 import { Box, Skeleton } from '@chakra-ui/react'
@@ -19,7 +19,11 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { format } from 'date-fns'
-import { FeatureContext } from '~/components/AppProviders'
+import {
+  type EnvContextReturn,
+  EnvProvider,
+  FeatureContext,
+} from '~/components/AppProviders'
 import { z } from 'zod'
 import { LoginStateContext } from '~/features/auth'
 
@@ -29,6 +33,15 @@ initialize({
 })
 
 const trpc = createTRPCReact<AppRouter>()
+
+const StorybookEnvDecorator: Decorator = (story) => {
+  const env: EnvContextReturn['env'] = {
+    NEXT_PUBLIC_APP_NAME: 'Starter Kit',
+    NEXT_PUBLIC_ENABLE_SGID: false,
+    NEXT_PUBLIC_ENABLE_STORAGE: false,
+  }
+  return <EnvProvider env={env}>{story()}</EnvProvider>
+}
 
 const SetupDecorator: Decorator = (page) => {
   const [queryClient] = useState(
@@ -139,6 +152,7 @@ export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
 }
 
 const decorators: Decorator[] = [
+  StorybookEnvDecorator,
   mswDecorator,
   withThemeFromJSXProvider({
     themes: {
