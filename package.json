@@ -22,6 +22,7 @@
     "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
     "test:unit": "dotenv -e .env.test vitest run",
+    "test:load:build": "webpack --config tests/load/webpack.config.js",
     "test:e2e": "dotenv -e .env.test playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-dev:unit": "dotenv -e .env.test vitest",
@@ -55,10 +56,10 @@
     "@tiptap/pm": "2.0.3",
     "@tiptap/react": "2.1.12",
     "@tiptap/starter-kit": "2.1.11",
-    "@trpc/client": "^10.31.0",
-    "@trpc/next": "^10.31.0",
-    "@trpc/react-query": "^10.31.0",
-    "@trpc/server": "^10.31.0",
+    "@trpc/client": "^10.44.1",
+    "@trpc/next": "^10.44.1",
+    "@trpc/react-query": "^10.44.1",
+    "@trpc/server": "^10.44.1",
     "@types/validator": "^13.11.1",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
@@ -81,6 +82,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
+    "@babel/preset-env": "^7.23.6",
+    "@babel/preset-typescript": "^7.23.3",
     "@chakra-ui/cli": "^2.4.1",
     "@playwright/test": "^1.33.0",
     "@storybook/addon-essentials": "7.5.2",
@@ -97,6 +102,7 @@
     "@types/testing-library__jest-dom": "^5.14.6",
     "@typescript-eslint/eslint-plugin": "6.7.2",
     "@typescript-eslint/parser": "6.7.2",
+    "clean-webpack-plugin": "^4.0.0",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.41.0",
     "eslint-config-next": "^13.2.1",
@@ -105,6 +111,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "0.6.15",
+    "k6-trpc": "^1.0.0",
     "mockdate": "^3.0.5",
     "msw": "^1.3.1",
     "msw-storybook-addon": "1.10.0",
@@ -118,7 +125,9 @@
     "typescript": "^5.2.2",
     "vite": "^4.1.5",
     "vitest": "^0.30.1",
-    "vitest-environment-vprisma": "^1.2.0"
+    "vitest-environment-vprisma": "^1.2.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-glob-entries": "^1.0.1"
   },
   "publishConfig": {
     "access": "restricted"
