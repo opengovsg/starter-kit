@@ -1,21 +1,23 @@
 import {
-  type AuthorizationUrlParams,
   generatePkcePair,
+  type AuthorizationUrlParams,
 } from '@opengovsg/sgid-client'
 import { TRPCError } from '@trpc/server'
+import { set } from 'lodash'
 import { z } from 'zod'
-import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
-import { publicProcedure, router } from '~/server/trpc'
-import { getUserInfo, type SgidUserInfo } from './sgid.utils'
 import { env } from '~/env.mjs'
 import { HOME, SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
-import { generateUsername } from '../../me/me.service'
-import { set } from 'lodash'
-import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
-import { appendWithRedirect } from '~/utils/url'
-import { createPocdexAccountProviderId } from '../auth.util'
-import { AccountProvider } from '../auth.constants'
+import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
+import { publicProcedure, router } from '~/server/trpc'
 import { trpcAssert } from '~/utils/trpcAssert'
+import { appendWithRedirect } from '~/utils/url'
+import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
+import { upsertSgidAccountAndUser } from './sgid.service'
+import {
+  getUserInfo,
+  sgidSessionProfileSchema,
+  type SgidUserInfo,
+} from './sgid.utils'
 
 const sgidCallbackStateSchema = z.object({
   landingUrl: z.string(),
@@ -129,12 +131,27 @@ export const sgidRouter = router({
       // More than 1 domain means that the user has multiple profiles
       // Redirect user to choose a profile before logging in.
       if (pocdexDetails.length > 1) {
-        set(ctx.session, 'sgid.profiles', {
+        const sgidProfileToStore = sgidSessionProfileSchema.safeParse({
           list: pocdexDetails,
+          sub: sgidUserInfo.sub,
+          name: sgidUserInfo.data['myinfo.name'],
           // expire profiles after 5 minutes to avoid situations where login-jacking when
           // the previous user navigated away without selecting a profile
           expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
         })
+
+        if (!sgidProfileToStore.success) {
+          ctx.logger.warn(
+            { error: sgidProfileToStore.error },
+            'Unable to store sgid profile in session'
+          )
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Unable to store sgid profile in session',
+          })
+        }
+
+        set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
         await ctx.session.save()
         return {
           selectProfileStep: true,
@@ -159,51 +176,11 @@ export const sgidRouter = router({
           message: 'Work email was unable to be processed. Please try again.',
         })
       }
-      const sgidPocdexEmail = sgidPocdexEmailResult.data
-      const user = await ctx.prisma.$transaction(async (tx) => {
-        // Create user from email
-        const user = await tx.user.upsert({
-          where: {
-            email: sgidPocdexEmail,
-          },
-          update: {},
-          create: {
-            email: sgidPocdexEmail,
-            emailVerified: new Date(),
-            name: sgidUserInfo.data['myinfo.name'],
-            username: generateUsername(sgidPocdexEmail),
-          },
-        })
-
-        // Backwards compatibility -- update username if it is not set
-        if (!user.username) {
-          await tx.user.update({
-            where: { id: user.id },
-            data: { username: generateUsername(sgidPocdexEmail) },
-          })
-        }
-
-        // Link user to account
-        const pocdexProviderAccountId = createPocdexAccountProviderId(
-          sgidUserInfo.sub,
-          sgidPocdexEmail
-        )
-        await ctx.prisma.accounts.upsert({
-          where: {
-            provider_providerAccountId: {
-              provider: AccountProvider.SgidPocdex,
-              providerAccountId: pocdexProviderAccountId,
-            },
-          },
-          update: {},
-          create: {
-            provider: AccountProvider.SgidPocdex,
-            providerAccountId: pocdexProviderAccountId,
-            userId: user.id,
-          },
-        })
-
-        return user
+      const user = await upsertSgidAccountAndUser({
+        prisma: ctx.prisma,
+        name: sgidUserInfo.data['myinfo.name'],
+        pocdexEmail: sgidPocdexEmailResult.data,
+        sub: sgidUserInfo.sub,
       })
 
       ctx.session.destroy()
