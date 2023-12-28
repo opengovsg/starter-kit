@@ -213,4 +213,48 @@ export const sgidRouter = router({
 
     return profiles.list
   }),
+  selectProfile: publicProcedure
+    .input(
+      z.object({
+        email: normaliseEmail,
+      })
+    )
+    .mutation(async ({ ctx, input: { email } }) => {
+      trpcAssert(ctx.session, {
+        message: 'Session object missing in context',
+        code: 'UNPROCESSABLE_CONTENT',
+        logger: ctx.logger,
+      })
+
+      const profiles = ctx.session.sgid?.profiles
+      trpcAssert(profiles, {
+        message: 'Error logging in via sgID: profile is invalid',
+        code: 'BAD_REQUEST',
+        logger: ctx.logger,
+      })
+
+      // Clear session once profile is retrieved, everything else is not needed.
+      ctx.session.destroy()
+
+      const hasProfile = profiles.list.some(
+        (profile) => profile.work_email === email
+      )
+      trpcAssert(hasProfile, {
+        message: 'Error logging in via sgID: selected profile is invalid',
+        code: 'BAD_REQUEST',
+        logger: ctx.logger,
+      })
+
+      // Profile is valid, set on session
+      const user = await upsertSgidAccountAndUser({
+        prisma: ctx.prisma,
+        name: profiles.name,
+        pocdexEmail: email,
+        sub: profiles.sub,
+      })
+
+      ctx.session.userId = user.id
+      await ctx.session.save()
+      return
+    }),
 })
