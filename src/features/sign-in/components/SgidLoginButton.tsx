@@ -25,7 +25,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
     <>
       <HStack spacing="2.5rem">
         <Divider />
-        <Text>or</Text>
+        <Text textStyle="caption-2">or</Text>
         <Divider />
       </HStack>
       <Stack gap="0.75rem">
