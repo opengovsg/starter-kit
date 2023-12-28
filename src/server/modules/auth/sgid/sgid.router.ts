@@ -15,6 +15,7 @@ import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
 import { appendWithRedirect } from '~/utils/url'
 import { createPocdexAccountProviderId } from '../auth.util'
 import { AccountProvider } from '../auth.constants'
+import { trpcAssert } from '~/utils/trpcAssert'
 
 const sgidCallbackStateSchema = z.object({
   landingUrl: z.string(),
@@ -213,4 +214,26 @@ export const sgidRouter = router({
         redirectUrl: parsedState.data.landingUrl,
       }
     }),
+  listStoredProfiles: publicProcedure.query(({ ctx }) => {
+    const profiles = ctx.session?.sgid?.profiles
+
+    trpcAssert(profiles, {
+      message: 'Error logging in via sgID: profile is invalid',
+      code: 'BAD_REQUEST',
+      logger: ctx.logger,
+    })
+
+    const hasExpired = profiles.expiry < Date.now()
+    if (hasExpired) {
+      ctx.session?.destroy()
+    }
+
+    trpcAssert(!hasExpired, {
+      message: 'Error logging in via sgID: session has expired',
+      code: 'BAD_REQUEST',
+      logger: ctx.logger,
+    })
+
+    return profiles.list
+  }),
 })
