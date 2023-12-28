@@ -32,7 +32,7 @@ const expectedUserInfo = z.object({
 export type SgidUserInfo = z.infer<typeof expectedUserInfo>
 
 export const sgidSessionProfileSchema = z.object({
-  list: expectedUserInfo.shape.data.shape['pocdex.public_officer_details'],
+  list: pocdexSgidSchema,
   name: expectedUserInfo.shape.data.shape['myinfo.name'],
   sub: expectedUserInfo.shape.sub,
   expiry: z.number(),
