@@ -83,6 +83,7 @@
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
     "@playwright/test": "^1.33.0",
+    "@storybook/addon-a11y": "^7.5.2",
     "@storybook/addon-essentials": "7.5.2",
     "@storybook/addon-interactions": "7.5.2",
     "@storybook/addon-links": "7.5.2",
