@@ -1,13 +1,7 @@
 import { FullscreenSpinner } from '~/components/FullscreenSpinner'
-import Suspense from '~/components/Suspense'
 import { SgidCallback } from '~/features/sign-in/components'
+import { withSuspense } from '~/hocs/withSuspense'
 
-const SgidCallbackPage = () => {
-  return (
-    <Suspense fallback={<FullscreenSpinner />}>
-      <SgidCallback />
-    </Suspense>
-  )
-}
+const SgidCallbackPage = withSuspense(SgidCallback, <FullscreenSpinner />)
 
 export default SgidCallbackPage

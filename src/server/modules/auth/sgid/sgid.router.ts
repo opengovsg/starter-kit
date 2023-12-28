@@ -18,6 +18,7 @@ import {
   sgidSessionProfileSchema,
   type SgidUserInfo,
 } from './sgid.utils'
+import { SGID } from '~/lib/errors/auth.sgid'
 
 const sgidCallbackStateSchema = z.object({
   landingUrl: z.string(),
@@ -27,7 +28,7 @@ export const sgidRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        landingUrl: z.string().optional().default(HOME),
+        landingUrl: z.string().default(HOME),
       })
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
@@ -44,6 +45,8 @@ export const sgidRouter = router({
           message: 'Session object missing in context',
         })
       }
+
+      ctx.logger.info({ landingUrl }, `Starting SGID login flow: ${landingUrl}`)
 
       const { codeChallenge, codeVerifier } = generatePkcePair()
       const options: AuthorizationUrlParams = {
@@ -122,11 +125,10 @@ export const sgidRouter = router({
       // Start processing sgid login
       const pocdexDetails = sgidUserInfo.data['pocdex.public_officer_details']
       // Handle case where no pocdex details
-      if (pocdexDetails.length === 0) {
-        return {
-          redirectUrl: `/sign-in?error=${'You do not have a valid government email address. Please log in with the email method instead.'}`,
-        }
-      }
+      trpcAssert(pocdexDetails.length > 0, {
+        message: SGID.noPocdex,
+        code: 'FORBIDDEN',
+      })
 
       // More than 1 domain means that the user has multiple profiles
       // Redirect user to choose a profile before logging in.

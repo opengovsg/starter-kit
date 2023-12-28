@@ -1,9 +1,9 @@
 import { Button } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { trpc } from '~/utils/trpc'
-import { CALLBACK_URL_KEY } from '~/constants/params'
 import { Box, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
+import { getRedirectUrl } from '~/utils/url'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
@@ -13,11 +13,11 @@ export const SgidLoginButton = (): JSX.Element | null => {
     },
   })
 
+  const landingUrl = getRedirectUrl(router.query)
+
   const handleSgidLogin = () => {
     return sgidLoginMutation.mutate({
-      landingUrl: CALLBACK_URL_KEY
-        ? String(router.query[CALLBACK_URL_KEY])
-        : undefined,
+      landingUrl,
     })
   }
 
