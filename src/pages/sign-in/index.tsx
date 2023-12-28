@@ -4,7 +4,6 @@ import { PublicPageWrapper } from '~/components/AuthWrappers'
 
 import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 import Suspense from '~/components/Suspense'
-import { env } from '~/env.mjs'
 import {
   BackgroundBox,
   BaseGridLayout,
@@ -15,11 +14,14 @@ import {
   SignInContextProvider,
   SignInForm,
 } from '~/features/sign-in/components'
+import { useEnv } from '~/hooks/useEnv'
 import { type NextPageWithLayout } from '~/lib/types'
 
-const title = env.NEXT_PUBLIC_APP_NAME
-
 const SignIn: NextPageWithLayout = () => {
+  const {
+    env: { NEXT_PUBLIC_APP_NAME: title },
+  } = useEnv()
+
   return (
     <PublicPageWrapper strict>
       <BackgroundBox>

@@ -11,7 +11,7 @@ import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import superjson from 'superjson'
-import { AppRouter } from '~/server/modules/_app'
+import { type AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
 
 import { Box, Skeleton } from '@chakra-ui/react'
@@ -19,9 +19,15 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import ErrorBoundary from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { format } from 'date-fns'
-import { FeatureContext } from '~/components/AppProviders'
+import {
+  type EnvContextReturn,
+  EnvProvider,
+  FeatureContext,
+} from '~/components/AppProviders'
 import { z } from 'zod'
 import { LoginStateContext } from '~/features/auth'
+import { merge } from 'lodash'
+import { env } from '~/env.mjs'
 
 // Initialize MSW
 initialize({
@@ -30,7 +36,19 @@ initialize({
 
 const trpc = createTRPCReact<AppRouter>()
 
-const SetupDecorator: Decorator = (page) => {
+const StorybookEnvDecorator: Decorator = (story) => {
+  const mockEnv: EnvContextReturn['env'] = merge(
+    {
+      NEXT_PUBLIC_APP_NAME: 'Starter Kit',
+      NEXT_PUBLIC_ENABLE_SGID: false,
+      NEXT_PUBLIC_ENABLE_STORAGE: false,
+    },
+    env
+  )
+  return <EnvProvider env={mockEnv}>{story()}</EnvProvider>
+}
+
+const SetupDecorator: Decorator = (story) => {
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: {
@@ -53,7 +71,7 @@ const SetupDecorator: Decorator = (page) => {
       <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            {page()}
+            {story()}
           </QueryClientProvider>
         </trpc.Provider>
       </Suspense>
@@ -61,8 +79,8 @@ const SetupDecorator: Decorator = (page) => {
   )
 }
 
-export const mockFeatureFlagsDecorator: Decorator<Args> = (
-  storyFn,
+export const MockFeatureFlagsDecorator: Decorator<Args> = (
+  story,
   { parameters }
 ) => {
   const featureSchema = z
@@ -77,12 +95,12 @@ export const mockFeatureFlagsDecorator: Decorator<Args> = (
 
   return (
     <FeatureContext.Provider value={features}>
-      {storyFn()}
+      {story()}
     </FeatureContext.Provider>
   )
 }
 
-const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+const LoginStateDecorator: Decorator<Args> = (story, { parameters }) => {
   const [hasLoginStateFlag, setLoginStateFlag] = useState(
     Boolean(parameters.loginState)
   )
@@ -103,16 +121,16 @@ const LoginStateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
         setHasLoginStateFlag,
       }}
     >
-      {storyFn()}
+      {story()}
     </LoginStateContext.Provider>
   )
 }
 
-export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
+export const MockDateDecorator: Decorator<Args> = (story, { parameters }) => {
   mockdate.reset()
 
   if (!parameters.mockdate) {
-    return storyFn()
+    return story()
   }
 
   mockdate.set(parameters.mockdate)
@@ -133,12 +151,13 @@ export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
       >
         Mocking date: {mockedDate}
       </Box>
-      {storyFn()}
+      {story()}
     </Box>
   )
 }
 
 const decorators: Decorator[] = [
+  StorybookEnvDecorator,
   mswDecorator,
   withThemeFromJSXProvider({
     themes: {
@@ -146,8 +165,8 @@ const decorators: Decorator[] = [
     },
     Provider: ThemeProvider,
   }),
-  mockDateDecorator,
-  mockFeatureFlagsDecorator,
+  MockDateDecorator,
+  MockFeatureFlagsDecorator,
   LoginStateDecorator,
   SetupDecorator,
 ]

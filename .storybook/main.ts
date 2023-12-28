@@ -18,5 +18,10 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true,
   },
+  env: (config) => ({
+    ...config,
+    SKIP_ENV_VALIDATION: 'true',
+    STORYBOOK_ENVIRONMENT: JSON.stringify(process.env),
+  })
 }
 export default config

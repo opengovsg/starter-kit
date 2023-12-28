@@ -194,6 +194,19 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       return target[/** @type {keyof typeof target} */ (prop)]
     },
   })
+} else if (process.env.STORYBOOK) {
+  const parsed = client
+    .partial()
+    .safeParse(JSON.parse(process.env.STORYBOOK_ENVIRONMENT ?? '{}'))
+  if (parsed.success === false) {
+    console.error(
+      '❌ Invalid environment variables:',
+      parsed.error.flatten().fieldErrors
+    )
+    throw new Error('Invalid environment variables')
+  }
+  // @ts-expect-error Injection of environment variables is optional
+  env = parsed.data
 }
 
 export { env }

@@ -4,7 +4,7 @@ import {
   type PropsWithChildren,
   useContext,
 } from 'react'
-import { env } from '~/env.mjs'
+import { useEnv } from '~/hooks/useEnv'
 
 type FeatureContextProps = {
   storage: boolean
@@ -45,6 +45,7 @@ export const useFeatures = (): FeatureContextProps => {
 
 // Provider hook that return the current features object
 const useProvideFeatures = () => {
+  const { env } = useEnv()
   return {
     storage: !!env.NEXT_PUBLIC_ENABLE_STORAGE,
     sgid: !!env.NEXT_PUBLIC_ENABLE_SGID,
