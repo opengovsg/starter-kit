@@ -12,15 +12,10 @@ import {
   NonMobileSidebarGridArea,
   SignInContextProvider,
 } from '~/features/sign-in/components'
-import { useEnv } from '~/hooks/useEnv'
 import { CurrentSignInState } from '~/features/sign-in/components/SignInState'
 import { type NextPageWithLayout } from '~/lib/types'
 
 const SignIn: NextPageWithLayout = () => {
-  const {
-    env: { NEXT_PUBLIC_APP_NAME: title },
-  } = useEnv()
-
   return (
     <PublicPageWrapper strict>
       <Flex flexDir="column" h="inherit" minH="$100vh">
