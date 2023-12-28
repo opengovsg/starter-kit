@@ -1,7 +1,7 @@
 export const UnexpectedErrorCard = () => {
   return (
     <div>
-      <h2>Oops, an unexpected error occurred!</h2>
+      <h2>Something&apos;s gone wrong</h2>
     </div>
   )
 }
