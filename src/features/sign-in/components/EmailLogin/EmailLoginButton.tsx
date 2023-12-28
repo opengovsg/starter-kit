@@ -1,7 +1,7 @@
 import { Button } from '@opengovsg/design-system-react'
 import { useSignInContext } from '../SignInContext'
 
-export const EmailSignInButton = (): JSX.Element | null => {
+export const EmailLoginButton = (): JSX.Element | null => {
   const { proceedToEmail } = useSignInContext()
 
   return (
