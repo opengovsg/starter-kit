@@ -7,14 +7,14 @@ import { type AppRouter } from '~/server/modules/_app'
 
 const PARAMETERS = {
   SESSION_COOKIE: __ENV.SESSION_COOKIE,
-  BASE_URL: __ENV.BASE_URL,
-}
+  BASE_URL: __ENV.BASE_URL ?? 'http://localhost:3000',
+} as const
 
 const apiOptions = {
   headers: {
     'Content-Type': 'application/json',
   },
-}
+} as const
 
 const client = createClient<AppRouter>(
   `${PARAMETERS.BASE_URL}/api/trpc/`,
@@ -22,14 +22,22 @@ const client = createClient<AppRouter>(
 )
 
 export const options: Options = {
-  vus: 1000,
+  vus: 100,
   duration: '60s',
+} as const
+
+export const setup = () => {
+  if (!PARAMETERS.SESSION_COOKIE) {
+    throw new Error('No session cookie provided.')
+  }
+
+  // For some reason, k6 will capitalize the first letter of object keys
+  return { session: PARAMETERS.SESSION_COOKIE }
 }
 
-export default function test() {
+export default function test({ session }: ReturnType<typeof setup>) {
   const response = client.post.add.mutate(
     {
-      title: 'Hello World!',
       content: `Hello World!
 
 This is a new post!`,
@@ -38,7 +46,7 @@ This is a new post!`,
     },
     createOptions({
       ...apiOptions,
-      cookies: { 'auth.session-token': PARAMETERS.SESSION_COOKIE ?? '' },
+      cookies: { 'auth.session-token': session },
     })
   )
 
