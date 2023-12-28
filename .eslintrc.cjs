@@ -50,5 +50,6 @@ const config = {
       },
     ],
   },
+  ignorePatterns: ['webpack.config.js'],
 }
 module.exports = config
