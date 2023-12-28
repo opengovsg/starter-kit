@@ -18,7 +18,7 @@ export const CurrentSignInState = (): JSX.Element => {
 
   return (
     // Fixed height so the page can be (relatively) centered without any layout shift.
-    <Flex w="100%" h={{ lg: '20rem' }}>
+    <Flex w="100%" h={{ lg: '16rem' }}>
       {stateToRender}
     </Flex>
   )
