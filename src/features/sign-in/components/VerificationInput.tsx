@@ -110,7 +110,7 @@ export const VerificationInput = (): JSX.Element | null => {
 
   return (
     <form onSubmit={handleVerifyOtp}>
-      <Stack direction="column">
+      <Stack direction="column" spacing="1rem">
         <FormControl
           id="email"
           isInvalid={!!errors.token}
@@ -141,7 +141,7 @@ export const VerificationInput = (): JSX.Element | null => {
           />
           <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
         </FormControl>
-        <Stack direction="column" gap="0.75rem">
+        <Stack direction="column" spacing="0.75rem">
           <Button
             size="xs"
             height="2.75rem"
