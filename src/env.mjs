@@ -18,6 +18,7 @@ const client = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
   NEXT_PUBLIC_ENABLE_SGID: coerceBoolean.default('false'),
   NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
+  NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),
 })
 
 /** Feature flags */
@@ -150,6 +151,7 @@ const processEnv = {
   SGID_REDIRECT_URI: process.env.SGID_REDIRECT_URI,
   // Client-side env vars
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+  NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION,
   NEXT_PUBLIC_ENABLE_STORAGE: process.env.NEXT_PUBLIC_ENABLE_STORAGE,
   NEXT_PUBLIC_ENABLE_SGID: process.env.NEXT_PUBLIC_ENABLE_SGID,
 }
