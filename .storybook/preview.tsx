@@ -17,7 +17,7 @@ import { theme } from '~/theme'
 
 import { Box, Skeleton } from '@chakra-ui/react'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
-import {DefaultFallback } from '~/components/ErrorBoundary'
+import { DefaultFallback } from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { format } from 'date-fns'
 import {
@@ -68,7 +68,6 @@ const SetupDecorator: Decorator = (story) => {
     })
   )
   return (
-
     <ErrorBoundary FallbackComponent={DefaultFallback}>
       <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
@@ -93,7 +92,7 @@ export const MockFeatureFlagsDecorator: Decorator<Args> = (
     .default({})
   const features = useMemo(() => {
     return featureSchema.parse(parameters.features)
-  }, [])
+  }, [featureSchema, parameters.features])
 
   return (
     <FeatureContext.Provider value={features}>

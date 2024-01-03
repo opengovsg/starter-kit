@@ -19,7 +19,6 @@ export function trpcAssert<T>(
     | { context?: never; logger?: never }
   )
 ): asserts condition {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!condition) {
     if (opts.logger) {
       opts.logger.error({ code: opts.code, ...opts.context }, opts.message)

@@ -23,6 +23,6 @@ const config: StorybookConfig = {
     ...config,
     SKIP_ENV_VALIDATION: 'true',
     STORYBOOK_ENVIRONMENT: JSON.stringify(process.env),
-  })
+  }),
 }
 export default config
