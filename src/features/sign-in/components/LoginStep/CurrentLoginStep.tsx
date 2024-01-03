@@ -1,25 +1,25 @@
 import { useMemo } from 'react'
 import { useSignInContext } from '../SignInContext'
-import { EmailSignInState } from './EmailSignInState'
-import { InitialSignInState } from './InitialSignInState'
+import { InitialLoginStep } from './InitialLoginStep'
 import { Flex } from '@chakra-ui/react'
+import { EmailLoginStep } from './EmailLoginStep'
 
-export const CurrentSignInState = (): JSX.Element => {
+export const CurrentLoginStep = (): JSX.Element => {
   const { state } = useSignInContext()
 
-  const stateToRender = useMemo(() => {
+  const stepToRender = useMemo(() => {
     switch (state) {
       case 'initial':
-        return <InitialSignInState />
+        return <InitialLoginStep />
       case 'email':
-        return <EmailSignInState />
+        return <EmailLoginStep />
     }
   }, [state])
 
   return (
     // Fixed height so the page can be (relatively) centered without any layout shift.
     <Flex w="100%" h={{ lg: '16rem' }}>
-      {stateToRender}
+      {stepToRender}
     </Flex>
   )
 }

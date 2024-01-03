@@ -12,7 +12,7 @@ import {
   NonMobileSidebarGridArea,
   SignInContextProvider,
 } from '~/features/sign-in/components'
-import { CurrentSignInState } from '~/features/sign-in/components/SignInState'
+import { CurrentLoginStep } from '~/features/sign-in/components'
 import { type NextPageWithLayout } from '~/lib/types'
 
 const SignIn: NextPageWithLayout = () => {
@@ -26,7 +26,7 @@ const SignIn: NextPageWithLayout = () => {
           </NonMobileSidebarGridArea>
           <LoginGridArea>
             <SignInContextProvider>
-              <CurrentSignInState />
+              <CurrentLoginStep />
             </SignInContextProvider>
           </LoginGridArea>
           <NonMobileFooterLeftGridArea />

@@ -1,10 +1,10 @@
 import { Icon, Stack } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import { BiLeftArrowAlt } from 'react-icons/bi'
-import { SignInForm } from '../SignInForm'
+import { EmailLoginForm } from '../EmailLogin'
 import { useSignInContext } from '../SignInContext'
 
-export const EmailSignInState = (): JSX.Element => {
+export const EmailLoginStep = (): JSX.Element => {
   const { backToInitial } = useSignInContext()
 
   return (
@@ -17,7 +17,7 @@ export const EmailSignInState = (): JSX.Element => {
       >
         Back
       </Button>
-      <SignInForm />
+      <EmailLoginForm />
     </Stack>
   )
 }

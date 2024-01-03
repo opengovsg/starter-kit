@@ -1,12 +1,11 @@
 import { Stack, Text } from '@chakra-ui/react'
 
-import { EmailSignInButton } from '../Email'
-import { SgidLoginButton } from '../SgidLoginButton'
+import { SgidLoginButton } from '../SgidLogin'
+import { EmailLoginButton, EmailLoginForm } from '../EmailLogin'
 import { useEnv } from '~/hooks/useEnv'
 import { useFeatures } from '~/components/AppProviders'
-import { SignInForm } from '../SignInForm'
 
-export const InitialSignInState = (): JSX.Element => {
+export const InitialLoginStep = (): JSX.Element => {
   const {
     env: { NEXT_PUBLIC_APP_NAME: title },
   } = useEnv()
@@ -18,10 +17,10 @@ export const InitialSignInState = (): JSX.Element => {
         {title}
       </Text>
       {!sgid ? (
-        <SignInForm />
+        <EmailLoginForm />
       ) : (
         <Stack gap="1.5rem">
-          <EmailSignInButton />
+          <EmailLoginButton />
           <SgidLoginButton />
         </Stack>
       )}

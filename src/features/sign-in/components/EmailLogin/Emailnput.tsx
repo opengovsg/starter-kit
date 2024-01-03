@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
 import { emailSignInSchema } from '~/schemas/auth/email/sign-in'
-import { type VfnStepData } from './SignInContext'
+import { type VfnStepData } from '../SignInContext'
 
 interface EmailInputProps {
   onSuccess: (props: VfnStepData) => void
