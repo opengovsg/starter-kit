@@ -1,10 +1,14 @@
-import { FormControl, FormLabel, Input, Wrap } from '@chakra-ui/react'
-import { Button, FormErrorMessage } from '@opengovsg/design-system-react'
+import { FormControl, Stack } from '@chakra-ui/react'
+import {
+  Button,
+  Input,
+  FormErrorMessage,
+  FormLabel,
+} from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useZodForm } from '~/lib/form'
 import { trpc } from '~/utils/trpc'
-import { SgidLoginButton } from './SgidLoginButton'
 import { emailSignInSchema } from '~/schemas/auth/email/sign-in'
 import { type VfnStepData } from './SignInContext'
 
@@ -42,22 +46,32 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
 
   return (
     <form onSubmit={handleSignIn} noValidate>
-      <FormControl
-        id="email"
-        isRequired
-        isInvalid={!!errors.email}
-        isReadOnly={loginMutation.isLoading}
-      >
-        <FormLabel requiredIndicator={<></>}>Log in with your email</FormLabel>
-        <Input placeholder="e.g. jane.doe@open.gov.sg" {...register('email')} />
-        <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-      </FormControl>
-      <Wrap shouldWrapChildren direction="row" align="center" mt="1rem">
-        <Button type="submit" isLoading={loginMutation.isLoading}>
+      <Stack spacing="1rem">
+        <FormControl
+          id="email"
+          isRequired
+          isInvalid={!!errors.email}
+          isReadOnly={loginMutation.isLoading}
+        >
+          <FormLabel>
+            Log in with a .gov.sg or whitelisted email address
+          </FormLabel>
+          <Input
+            placeholder="e.g. jane@open.gov.sg"
+            autoFocus
+            {...register('email')}
+          />
+          <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+        </FormControl>
+        <Button
+          size="xs"
+          height="2.75rem"
+          type="submit"
+          isLoading={loginMutation.isLoading}
+        >
           Get OTP
         </Button>
-        <SgidLoginButton />
-      </Wrap>
+      </Stack>
     </form>
   )
 }

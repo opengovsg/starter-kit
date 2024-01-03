@@ -10,7 +10,7 @@ export const ResendOtpButton = ({
   ...buttonProps
 }: ResendOtpButtonProps): JSX.Element => {
   return (
-    <Button type="button" variant="clear" {...buttonProps}>
+    <Button type="button" variant="link" size="xs" {...buttonProps}>
       Resend OTP
       <Text as="span" data-chromatic="ignore">
         {timer > 0 && ` in ${timer}s`}

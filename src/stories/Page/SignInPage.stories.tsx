@@ -44,6 +44,13 @@ export const Mobile: Story = {
   parameters: getMobileViewParameters(),
 }
 
+export const MobileWithSgid: Story = {
+  parameters: {
+    ...WithSgidLogin.parameters,
+    ...Mobile.parameters,
+  },
+}
+
 export const InputValidation: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -75,7 +82,7 @@ export const VerifyOTP: Story = {
 
     await step('Attempt log in', async () => {
       await userEvent.click(await canvas.findByText(/get otp/i))
-      const expectedLabel = await canvas.findByText(/enter otp sent to/i)
+      const expectedLabel = await canvas.findByText(/enter the otp sent to/i)
       await expect(expectedLabel).toBeInTheDocument()
     })
   },
