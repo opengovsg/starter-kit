@@ -1,17 +1,16 @@
 version: '3'
 
 services:
-  cockroachdb:
-    image: cockroachdb/cockroach:latest
+  postgres:
+    image: postgres:latest
     ports:
-      - 26257:26257
-      - 8080:8080
+      - 5432:5432
     environment:
-      - COCKROACH_DATABASE=app
-      - COCKROACH_USER=root
+      - POSTGRES_DB=app
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
     volumes:
-      - cockroach-volume:/cockroach/cockroach-data
-    command: start-single-node --insecure
+      - postgres-volume:/var/lib/postgresql/data
 
 volumes:
-  cockroach-volume:
+  postgres-volume:

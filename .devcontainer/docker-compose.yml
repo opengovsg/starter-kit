@@ -13,15 +13,15 @@ services:
     command: sleep infinity
 
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:cockroachdb
+    network_mode: service:postgres
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
-  cockroachdb:
+  postgres:
     extends:
       file: ../docker-compose.yml
-      service: cockroachdb
+      service: postgres
 
 volumes:
-  cockroach-volume:
+  postgres-volume:
