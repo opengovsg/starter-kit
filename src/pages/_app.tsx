@@ -6,7 +6,6 @@ import { ThemeProvider } from '@opengovsg/design-system-react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Provider } from 'jotai'
 import type { AppProps, AppType } from 'next/app'
-import ErrorBoundary from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { type NextPageWithLayout } from '~/lib/types'
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
@@ -15,6 +14,8 @@ import { trpc } from '~/utils/trpc'
 import { EnvProvider, FeatureProvider } from '~/components/AppProviders'
 import { LoginStateProvider } from '~/features/auth'
 import { env } from '~/env.mjs'
+import { ErrorBoundary } from 'react-error-boundary'
+import { DefaultFallback } from '~/components/ErrorBoundary/DefaultFallback'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
@@ -28,7 +29,7 @@ const MyApp = ((props: AppPropsWithAuthAndLayout) => {
         <LoginStateProvider>
           <ThemeProvider theme={theme}>
             <FeatureProvider>
-              <ErrorBoundary>
+              <ErrorBoundary FallbackComponent={DefaultFallback}>
                 <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
                   <ChildWithLayout {...props} />
                   {process.env.NODE_ENV !== 'production' && (

@@ -1,38 +1,34 @@
 import {
-  type AuthorizationUrlParams,
   generatePkcePair,
+  type AuthorizationUrlParams,
 } from '@opengovsg/sgid-client'
 import { TRPCError } from '@trpc/server'
+import { set } from 'lodash'
 import { z } from 'zod'
-import { sgid } from '~/lib/sgid'
-import { publicProcedure, router } from '~/server/trpc'
-import { getUserInfo, type SgidUserInfo } from './sgid.utils'
 import { env } from '~/env.mjs'
-import { HOME } from '~/lib/routes'
-import { defaultMeSelect } from '../../me/me.select'
-import { generateUsername } from '../../me/me.service'
+import { HOME, SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
+import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
+import { publicProcedure, router } from '~/server/trpc'
+import { trpcAssert } from '~/utils/trpcAssert'
+import { appendWithRedirect } from '~/utils/url'
+import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
+import { upsertSgidAccountAndUser } from './sgid.service'
+import {
+  getUserInfo,
+  sgidSessionProfileSchema,
+  type SgidUserInfo,
+} from './sgid.utils'
+import { SGID } from '~/lib/errors/auth.sgid'
 
-const sgidCallbackStateSchema = z
-  .custom<string>((data) => {
-    try {
-      JSON.parse(String(data))
-    } catch (error) {
-      return false
-    }
-    return true
-  }, 'invalid json') // write whatever error you want here
-  .transform((content) => JSON.parse(content))
-  .pipe(
-    z.object({
-      landingUrl: z.string(),
-    })
-  )
+const sgidCallbackStateSchema = z.object({
+  landingUrl: z.string(),
+})
 
 export const sgidRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        landingUrl: z.string().optional().default(HOME),
+        landingUrl: z.string().default(HOME),
       })
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
@@ -50,20 +46,24 @@ export const sgidRouter = router({
         })
       }
 
+      ctx.logger.info({ landingUrl }, `Starting SGID login flow: ${landingUrl}`)
+
       const { codeChallenge, codeVerifier } = generatePkcePair()
       const options: AuthorizationUrlParams = {
         codeChallenge,
         state: JSON.stringify({ landingUrl }),
+        scope: APP_SGID_SCOPE,
       }
       const { url, nonce } = sgid.authorizationUrl(options)
 
       // Reset session
       ctx.session.destroy()
+
       // Store the code verifier and nonce in the session to retrieve in the callback.
-      ctx.session.sgidSessionState = {
+      set(ctx.session, 'sgid.sessionState', {
         codeVerifier,
         nonce,
-      }
+      })
       await ctx.session.save()
 
       return {
@@ -79,34 +79,41 @@ export const sgidRouter = router({
     )
     .query(async ({ ctx, input: { state, code } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+        ctx.logger.error('SGID is not enabled')
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'SGID is not enabled',
         })
       }
-      if (!ctx.session.sgidSessionState) {
+      if (!ctx.session.sgid?.sessionState) {
+        ctx.logger.warn('No sgid session state found')
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid login flow',
         })
       }
-      const parsedState = sgidCallbackStateSchema.safeParse(state)
+      const parsedState = safeSchemaJsonParse(sgidCallbackStateSchema, state)
       if (!parsedState.success) {
+        ctx.logger.error(
+          { state, error: parsedState.error },
+          'Invalid SGID callback state'
+        )
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid SGID callback state',
         })
       }
 
-      const { codeVerifier, nonce } = ctx.session.sgidSessionState
+      const { codeVerifier, nonce } = ctx.session.sgid.sessionState
+      ctx.session.destroy()
       let sgidUserInfo: SgidUserInfo
 
       try {
-        const userInfo = await getUserInfo({ code, codeVerifier, nonce })
-        sgidUserInfo = userInfo
+        sgidUserInfo = await getUserInfo({ code, codeVerifier, nonce })
       } catch (error) {
+        ctx.logger.warn({ state }, 'Unable to fetch user info from sgID')
         // Redirect back to sign in page with error.
-        ctx.session.destroy()
+        // TODO: Change this to throw an error instead, and then handle it in the client.
         return {
           redirectUrl: `/sign-in?error=${
             (error as Error).message ||
@@ -115,64 +122,68 @@ export const sgidRouter = router({
         }
       }
 
-      const sgidUserEmail = sgidUserInfo.data.email
-      let { user } = await ctx.prisma.accounts.upsert({
-        where: {
-          provider_providerAccountId: {
-            provider: 'sgid',
-            providerAccountId: sgidUserInfo.sub,
-          },
-        },
-        create: {
-          provider: 'sgid',
-          providerAccountId: sgidUserInfo.sub,
-          user: {
-            ...(sgidUserEmail
-              ? {
-                  connectOrCreate: {
-                    where: {
-                      email: sgidUserEmail,
-                    },
-                    create: {
-                      email: sgidUserEmail,
-                      emailVerified: new Date(),
-                      name: sgidUserInfo.data['myinfo.name'],
-                      username: generateUsername(sgidUserEmail),
-                    },
-                  },
-                }
-              : {
-                  create: {
-                    name: sgidUserInfo.data['myinfo.name'],
-                    username: generateUsername(
-                      sgidUserInfo.data['myinfo.name']
-                    ),
-                  },
-                }),
-          },
-        },
-        // If there is a user that is connected to the account, it would have
-        // been connected on creation.
-        update: {},
-        include: {
-          // Return user that is linked to the account.
-          user: {
-            select: defaultMeSelect,
-          },
-        },
+      // Start processing sgid login
+      const pocdexDetails = sgidUserInfo.data['pocdex.public_officer_details']
+      // Handle case where no pocdex details
+      trpcAssert(pocdexDetails.length > 0, {
+        message: SGID.noPocdex,
+        code: 'FORBIDDEN',
       })
 
-      if (!user.username && user.name) {
-        // Add generated username to user if not set.
-        user = await ctx.prisma.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            username: generateUsername(user.name),
-          },
+      // More than 1 domain means that the user has multiple profiles
+      // Redirect user to choose a profile before logging in.
+      if (pocdexDetails.length > 1) {
+        const sgidProfileToStore = sgidSessionProfileSchema.safeParse({
+          list: pocdexDetails,
+          sub: sgidUserInfo.sub,
+          name: sgidUserInfo.data['myinfo.name'],
+          // expire profiles after 5 minutes to avoid situations where login-jacking when
+          // the previous user navigated away without selecting a profile
+          expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
+        })
+
+        if (!sgidProfileToStore.success) {
+          ctx.logger.warn(
+            { error: sgidProfileToStore.error },
+            'Unable to store sgid profile in session'
+          )
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Unable to store sgid profile in session',
+          })
+        }
+
+        set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
+        await ctx.session.save()
+        return {
+          selectProfileStep: true,
+          redirectUrl: appendWithRedirect(
+            `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
+            parsedState.data.landingUrl
+          ),
+        }
+      }
+
+      // Exactly 1 email, create user and tie to account
+      const sgidPocdexEmailResult = normaliseEmail.safeParse(
+        pocdexDetails[0]?.work_email
+      )
+      if (!sgidPocdexEmailResult.success) {
+        ctx.logger.warn(
+          { error: sgidPocdexEmailResult.error },
+          'Unable to process work email from sgID'
+        )
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Work email was unable to be processed. Please try again.',
         })
       }
+      const user = await upsertSgidAccountAndUser({
+        prisma: ctx.prisma,
+        name: sgidUserInfo.data['myinfo.name'],
+        pocdexEmail: sgidPocdexEmailResult.data,
+        sub: sgidUserInfo.sub,
+      })
 
       ctx.session.destroy()
       ctx.session.userId = user.id
@@ -181,5 +192,71 @@ export const sgidRouter = router({
       return {
         redirectUrl: parsedState.data.landingUrl,
       }
+    }),
+  listStoredProfiles: publicProcedure.query(({ ctx }) => {
+    const profiles = ctx.session?.sgid?.profiles
+
+    trpcAssert(profiles, {
+      message: 'Error logging in via sgID: profile is invalid',
+      code: 'BAD_REQUEST',
+      logger: ctx.logger,
+    })
+
+    const hasExpired = profiles.expiry < Date.now()
+    if (hasExpired) {
+      ctx.session?.destroy()
+    }
+
+    trpcAssert(!hasExpired, {
+      message: 'Error logging in via sgID: session has expired',
+      code: 'BAD_REQUEST',
+      logger: ctx.logger,
+    })
+
+    return profiles.list
+  }),
+  selectProfile: publicProcedure
+    .input(
+      z.object({
+        email: normaliseEmail,
+      })
+    )
+    .mutation(async ({ ctx, input: { email } }) => {
+      trpcAssert(ctx.session, {
+        message: 'Session object missing in context',
+        code: 'UNPROCESSABLE_CONTENT',
+        logger: ctx.logger,
+      })
+
+      const profiles = ctx.session.sgid?.profiles
+      trpcAssert(profiles, {
+        message: 'Error logging in via sgID: profile is invalid',
+        code: 'BAD_REQUEST',
+        logger: ctx.logger,
+      })
+
+      // Clear session once profile is retrieved, everything else is not needed.
+      ctx.session.destroy()
+
+      const hasProfile = profiles.list.some(
+        (profile) => profile.work_email === email
+      )
+      trpcAssert(hasProfile, {
+        message: 'Error logging in via sgID: selected profile is invalid',
+        code: 'BAD_REQUEST',
+        logger: ctx.logger,
+      })
+
+      // Profile is valid, set on session
+      const user = await upsertSgidAccountAndUser({
+        prisma: ctx.prisma,
+        name: profiles.name,
+        pocdexEmail: email,
+        sub: profiles.sub,
+      })
+
+      ctx.session.userId = user.id
+      await ctx.session.save()
+      return
     }),
 })
