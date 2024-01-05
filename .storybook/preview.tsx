@@ -3,7 +3,7 @@ import 'inter-ui/inter.css'
 
 import { ErrorBoundary } from 'react-error-boundary'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
-import type { Args, Decorator, Preview } from '@storybook/react'
+import { type ReactRenderer, type Args, type Decorator, type Preview } from '@storybook/react'
 import mockdate from 'mockdate'
 
 import { ThemeProvider } from '@opengovsg/design-system-react'
@@ -79,6 +79,28 @@ const SetupDecorator: Decorator = (story) => {
     </ErrorBoundary>
   )
 }
+
+/**
+ * To use this decorator, you need to pass in a `getLayout` function in the story parameters.
+ * @example 
+ * ```
+  const meta: Meta<typeof ActivityAddPage> = {
+    title: 'Pages/ActivityAddPage',
+    component: ActivityAddPage,
+    parameters: {
+      getLayout: ActivityAddPage.getLayout,
+    // ...
+    },
+  }
+  ```
+ */
+  const WithLayoutDecorator: Decorator = (Story, { parameters }) => {
+    if (!parameters.getLayout) {
+      return Story()
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return <>{parameters.getLayout(<Story />)}</>
+  }
 
 export const MockFeatureFlagsDecorator: Decorator<Args> = (
   story,
@@ -158,18 +180,19 @@ export const MockDateDecorator: Decorator<Args> = (story, { parameters }) => {
 }
 
 const decorators: Decorator[] = [
+  WithLayoutDecorator,
   StorybookEnvDecorator,
-  mswDecorator,
-  withThemeFromJSXProvider({
+  MockFeatureFlagsDecorator,
+  LoginStateDecorator,
+  SetupDecorator,
+  withThemeFromJSXProvider<ReactRenderer>({
     themes: {
       default: theme,
     },
     Provider: ThemeProvider,
   }),
   MockDateDecorator,
-  MockFeatureFlagsDecorator,
-  LoginStateDecorator,
-  SetupDecorator,
+  mswDecorator,
 ]
 
 const preview: Preview = {

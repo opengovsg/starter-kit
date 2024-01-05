@@ -1,4 +1,3 @@
-import { type SetStateAction } from 'jotai'
 import {
   createContext,
   type Dispatch,
@@ -6,6 +5,7 @@ import {
   useContext,
   useState,
   useCallback,
+  type SetStateAction,
 } from 'react'
 import { useInterval } from 'usehooks-ts'
 
