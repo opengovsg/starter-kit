@@ -24,7 +24,6 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
     formState: { errors },
   } = useZodForm({
     schema: emailSignInSchema,
-    mode: 'onTouched',
   })
 
   const router = useRouter()
