@@ -20,6 +20,7 @@ describe('auth.email', async () => {
   })
 
   describe('login', async () => {
+    const TEST_VALID_EMAIL = 'test@open.gov.sg'
     it('should throw if email is not provided', async () => {
       // Act
       const result = caller.login({ email: '' })
@@ -36,21 +37,29 @@ describe('auth.email', async () => {
       await expect(result).rejects.toThrowError()
     })
 
+    it('should throw if email is not a government email address', async () => {
+      // Act
+      const result = caller.login({ email: 'validbutnotgovt@example.com' })
+
+      // Assert
+      await expect(result).rejects.toThrowError()
+    })
+
     it('should return email and a prefix if OTP is sent successfully', async () => {
       // Arrange
       const spy = vi.spyOn(mailLib, 'sendMail')
 
       // Act
-      const expectedReturn = {
-        email: 'test@example.com',
-        otpPrefix: expect.any(String),
-      }
-      const result = await caller.login({ email: expectedReturn.email })
+      const result = await caller.login({ email: TEST_VALID_EMAIL })
 
       // Assert
+      const expectedReturn = {
+        email: TEST_VALID_EMAIL,
+        otpPrefix: expect.any(String),
+      }
       expect(spy).toHaveBeenCalledWith({
         body: expect.stringContaining('Your OTP is'),
-        recipient: expectedReturn.email,
+        recipient: TEST_VALID_EMAIL,
         subject: expect.stringContaining('Sign in to'),
       })
       expect(result).toEqual(expectedReturn)
@@ -58,9 +67,9 @@ describe('auth.email', async () => {
   })
 
   describe('verifyOtp', () => {
-    const TEST_EMAIL = 'test@example.com'
+    const TEST_VALID_EMAIL = 'test@open.gov.sg'
     const VALID_OTP = '123456'
-    const VALID_TOKEN_HASH = createTokenHash(VALID_OTP, TEST_EMAIL)
+    const VALID_TOKEN_HASH = createTokenHash(VALID_OTP, TEST_VALID_EMAIL)
     const INVALID_OTP = '987643'
 
     it('should successfully set session on valid OTP', async () => {
@@ -68,21 +77,21 @@ describe('auth.email', async () => {
       await prisma.verificationToken.create({
         data: {
           expires: new Date(Date.now() + env.OTP_EXPIRY * 1000),
-          identifier: TEST_EMAIL,
+          identifier: TEST_VALID_EMAIL,
           token: VALID_TOKEN_HASH,
         },
       })
 
       // Act
       const result = caller.verifyOtp({
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
         token: VALID_OTP,
       })
 
       // Assert
       const expectedUser = {
         id: expect.any(String),
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
       }
       // Should return logged in user.
       await expect(result).resolves.toMatchObject(expectedUser)
@@ -93,7 +102,7 @@ describe('auth.email', async () => {
     it('should throw if OTP is not found', async () => {
       // Act
       const result = caller.verifyOtp({
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
         // Not created yet.
         token: INVALID_OTP,
       })
@@ -107,14 +116,14 @@ describe('auth.email', async () => {
       await prisma.verificationToken.create({
         data: {
           expires: new Date(Date.now() + env.OTP_EXPIRY * 1000),
-          identifier: TEST_EMAIL,
+          identifier: TEST_VALID_EMAIL,
           token: VALID_TOKEN_HASH,
         },
       })
 
       // Act
       const result = caller.verifyOtp({
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
         // OTP does not match email record.
         token: INVALID_OTP,
       })
@@ -130,14 +139,14 @@ describe('auth.email', async () => {
       await prisma.verificationToken.create({
         data: {
           expires: new Date(Date.now() - 1000),
-          identifier: TEST_EMAIL,
+          identifier: TEST_VALID_EMAIL,
           token: VALID_TOKEN_HASH,
         },
       })
 
       // Act
       const result = caller.verifyOtp({
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
         token: VALID_OTP,
       })
 
@@ -152,7 +161,7 @@ describe('auth.email', async () => {
       await prisma.verificationToken.create({
         data: {
           expires: new Date(Date.now() + env.OTP_EXPIRY * 1000),
-          identifier: TEST_EMAIL,
+          identifier: TEST_VALID_EMAIL,
           token: VALID_TOKEN_HASH,
           attempts: 6, // Currently hardcoded to 5 attempts.
         },
@@ -160,7 +169,7 @@ describe('auth.email', async () => {
 
       // Act
       const result = caller.verifyOtp({
-        email: TEST_EMAIL,
+        email: TEST_VALID_EMAIL,
         token: VALID_OTP,
       })
 
