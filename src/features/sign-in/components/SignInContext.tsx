@@ -1,10 +1,10 @@
-import { type SetStateAction } from 'jotai'
 import {
   createContext,
   type Dispatch,
   type PropsWithChildren,
   useContext,
   useState,
+  type SetStateAction,
 } from 'react'
 
 type SignInStates = {
