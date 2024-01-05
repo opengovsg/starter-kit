@@ -4,7 +4,6 @@ import 'inter-ui/inter.css' // Strongly recommended.
 import { Skeleton } from '@chakra-ui/react'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Provider } from 'jotai'
 import type { AppProps, AppType } from 'next/app'
 import Suspense from '~/components/Suspense'
 import { type NextPageWithLayout } from '~/lib/types'
@@ -24,23 +23,20 @@ type AppPropsWithAuthAndLayout = AppProps & {
 const MyApp = ((props: AppPropsWithAuthAndLayout) => {
   return (
     <EnvProvider env={env}>
-      {/* Must wrap Jotai's provider in SSR context, see https://jotai.org/docs/guides/nextjs#provider. */}
-      <Provider>
-        <LoginStateProvider>
-          <ThemeProvider theme={theme}>
-            <FeatureProvider>
-              <ErrorBoundary FallbackComponent={DefaultFallback}>
-                <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
-                  <ChildWithLayout {...props} />
-                  {process.env.NODE_ENV !== 'production' && (
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  )}
-                </Suspense>
-              </ErrorBoundary>
-            </FeatureProvider>
-          </ThemeProvider>
-        </LoginStateProvider>
-      </Provider>
+      <LoginStateProvider>
+        <ThemeProvider theme={theme}>
+          <FeatureProvider>
+            <ErrorBoundary FallbackComponent={DefaultFallback}>
+              <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
+                <ChildWithLayout {...props} />
+                {process.env.NODE_ENV !== 'production' && (
+                  <ReactQueryDevtools initialIsOpen={false} />
+                )}
+              </Suspense>
+            </ErrorBoundary>
+          </FeatureProvider>
+        </ThemeProvider>
+      </LoginStateProvider>
     </EnvProvider>
   )
 }) as AppType
