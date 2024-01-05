@@ -2,7 +2,7 @@ import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
-import type { Args, Decorator, Preview } from '@storybook/react'
+import { type ReactRenderer, type Args, type Decorator, type Preview } from '@storybook/react'
 import mockdate from 'mockdate'
 
 import { ThemeProvider } from '@opengovsg/design-system-react'
@@ -60,6 +60,29 @@ const SetupDecorator: Decorator = (page) => {
     </ErrorBoundary>
   )
 }
+
+/**
+ * To use this decorator, you need to pass in a `getLayout` function in the story parameters.
+ * @example 
+ * ```
+  const meta: Meta<typeof ActivityAddPage> = {
+    title: 'Pages/ActivityAddPage',
+    component: ActivityAddPage,
+    parameters: {
+      getLayout: ActivityAddPage.getLayout,
+    // ...
+    },
+  }
+  ```
+ */
+const WithLayoutDecorator: Decorator = (Story, { parameters }) => {
+  if (!parameters.getLayout) {
+    return Story()
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  return <>{parameters.getLayout(<Story />)}</>
+}
+
 
 export const mockFeatureFlagsDecorator: Decorator<Args> = (
   storyFn,
@@ -139,8 +162,10 @@ export const mockDateDecorator: Decorator<Args> = (storyFn, { parameters }) => {
 }
 
 const decorators: Decorator[] = [
-  mswDecorator,
-  withThemeFromJSXProvider({
+  WithLayoutDecorator,
+  LoginStateDecorator,
+  SetupDecorator,
+  withThemeFromJSXProvider<ReactRenderer>({
     themes: {
       default: theme,
     },
@@ -148,8 +173,7 @@ const decorators: Decorator[] = [
   }),
   mockDateDecorator,
   mockFeatureFlagsDecorator,
-  LoginStateDecorator,
-  SetupDecorator,
+  mswDecorator,
 ]
 
 const preview: Preview = {
