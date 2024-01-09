@@ -60,7 +60,7 @@
     "@trpc/next": "^10.44.1",
     "@trpc/react-query": "^10.44.1",
     "@trpc/server": "^10.44.1",
-    "@types/validator": "^13.11.1",
+    "@types/validator": "^13.11.7",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "iron-session": "^8.0.1",
