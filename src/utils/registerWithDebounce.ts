@@ -13,13 +13,13 @@ import {
  * Replacement of register from react-hook-form with debounce
  */
 export const registerWithDebounce = <
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 >(
   name: FieldPath<TFieldValues>,
   delay: number,
   trigger: UseFormTrigger<TFieldValues>,
   register: UseFormRegister<TFieldValues>,
-  options?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>
+  options?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>,
 ) => {
   const useFormRegisterReturn: UseFormRegisterReturn = register(name, options)
   const { onChange } = useFormRegisterReturn

@@ -16,7 +16,7 @@ type LoginStateContextReturn = {
 
 // Exported for testing.
 export const LoginStateContext = createContext<LoginStateContextReturn | null>(
-  null
+  null,
 )
 
 /**
@@ -40,7 +40,7 @@ export const useLoginState = (): LoginStateContextReturn => {
   const context = useContext(LoginStateContext)
   if (!context) {
     throw new Error(
-      `useLoginState must be used within a LoginStateProvider component`
+      `useLoginState must be used within a LoginStateProvider component`,
     )
   }
   return context
@@ -49,7 +49,7 @@ export const useLoginState = (): LoginStateContextReturn => {
 const useProvideLoginState = () => {
   const [hasLoginStateFlag, setLoginStateFlag] = useLocalStorage<boolean>(
     LOGGED_IN_KEY,
-    undefined
+    undefined,
   )
 
   const setHasLoginStateFlag = useCallback(() => {

@@ -74,7 +74,7 @@ export const postRouter = router({
                 },
               })
         const likedUserPosts = Object.fromEntries(
-          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+          userLikedPosts.map((likedPost) => [likedPost.postId, true]),
         )
         // Augment posts with whether current user liked each post
         augmentedPosts = posts.map((post) => {
@@ -137,7 +137,7 @@ export const postRouter = router({
           },
         })
         const likedUserPosts = Object.fromEntries(
-          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+          userLikedPosts.map((likedPost) => [likedPost.postId, true]),
         )
         // Augment posts with whether current user liked each post
         augmentedPosts = posts.map((post) => {
@@ -197,7 +197,7 @@ export const postRouter = router({
           },
         })
         const likedUserPosts = Object.fromEntries(
-          userLikedPosts.map((likedPost) => [likedPost.postId, true])
+          userLikedPosts.map((likedPost) => [likedPost.postId, true]),
         )
         // Augment posts with whether current user liked each post
         augmentedPosts = posts.map((post) => {
@@ -295,7 +295,7 @@ export const postRouter = router({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { id } = input
@@ -322,7 +322,7 @@ export const postRouter = router({
         },
       })
       const likedUserPosts = Object.fromEntries(
-        userLikedPosts.map((likedPost) => [likedPost.postId, true])
+        userLikedPosts.map((likedPost) => [likedPost.postId, true]),
       )
       // Augment posts with whether current user liked each post
       const augmentedReplies = post.replies.map((r) => {

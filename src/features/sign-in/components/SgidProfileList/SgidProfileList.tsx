@@ -31,7 +31,7 @@ const _SgidProfileList = (): JSX.Element => {
       if (!email) return
       return selectMutation.mutate({ email })
     },
-    [selectMutation]
+    [selectMutation],
   )
 
   return (
@@ -49,5 +49,5 @@ const _SgidProfileList = (): JSX.Element => {
 
 export const SgidProfileList = withSuspense(
   _SgidProfileList,
-  <SgidProfileListSkeleton />
+  <SgidProfileListSkeleton />,
 )

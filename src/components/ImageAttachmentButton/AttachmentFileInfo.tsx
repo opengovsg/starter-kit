@@ -26,7 +26,7 @@ export const AttachmentFileInfo = forwardRef<AttachmentFileInfoProps, 'div'>(
     const styles = useImageAttachmentButtonStyles()
     const readableFileSize = useMemo(
       () => getReadableFileSize(file.size),
-      [file.size]
+      [file.size],
     )
 
     useEffect(() => {
@@ -82,7 +82,7 @@ export const AttachmentFileInfo = forwardRef<AttachmentFileInfoProps, 'div'>(
         </Flex>
       </Flex>
     )
-  }
+  },
 )
 
 AttachmentFileInfo.displayName = 'AttachmentFileInfo'

@@ -17,7 +17,7 @@ export const safeSchemaJsonParse = <T extends z.ZodTypeAny>(
   schema: T,
   jsonString: string,
 
-  parse: (jsonString: string) => unknown = JSON.parse
+  parse: (jsonString: string) => unknown = JSON.parse,
 ): { success: true; data: z.infer<T> } | { success: false; error: Error } => {
   try {
     const parsed = parse(jsonString)

@@ -84,7 +84,7 @@ const Profile: NextPageWithLayout = () => {
             const exists = await usernameExistsMutation.mutateAsync(val)
             return !exists
           },
-          { message: 'That username has been taken. Please choose another.' }
+          { message: 'That username has been taken. Please choose another.' },
         ),
       email: z
         .string()
@@ -101,7 +101,7 @@ const Profile: NextPageWithLayout = () => {
           {
             message:
               'That email has already been registered with another account.',
-          }
+          },
         ),
     }),
     values: useMemo(() => {
@@ -115,7 +115,7 @@ const Profile: NextPageWithLayout = () => {
   })
 
   const handleProfileUpdate = handleSubmit((values) =>
-    updateMutation.mutate(values)
+    updateMutation.mutate(values),
   )
 
   return (

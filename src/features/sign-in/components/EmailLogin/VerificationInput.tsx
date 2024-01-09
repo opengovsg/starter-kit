@@ -36,7 +36,7 @@ export const VerificationInput = (): JSX.Element | null => {
   useInterval(
     () => setShowOtpDelayMessage(true),
     // Show otp delay info message after 15 seconds.
-    showOtpDelayMessage ? null : 15000
+    showOtpDelayMessage ? null : 15000,
   )
 
   const {
@@ -102,7 +102,7 @@ export const VerificationInput = (): JSX.Element | null => {
           // On success, restart the timer before this can be called again.
           resetTimer()
         },
-      }
+      },
     )
   }
 

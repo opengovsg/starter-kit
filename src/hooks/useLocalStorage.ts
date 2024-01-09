@@ -5,7 +5,7 @@ import { LOCAL_STORAGE_EVENT } from '~/constants/localStorage'
 
 export const useLocalStorage = <T>(
   key: string,
-  initialValue?: T
+  initialValue?: T,
 ): readonly [T | undefined, (value: SetStateAction<T | undefined>) => void] => {
   // Get from local storage then
   // parse stored json or return initialValue

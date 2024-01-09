@@ -20,7 +20,7 @@ import Suspense from '~/components/Suspense'
  */
 export function withSuspense<P>(
   WrappedComponent: ComponentType<P>,
-  FallbackComponent: ReactNode | null = null
+  FallbackComponent: ReactNode | null = null,
 ) {
   const WithSuspense = (props: P) => {
     return (

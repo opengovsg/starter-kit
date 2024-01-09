@@ -17,7 +17,7 @@ export function trpcAssert<T>(
         logger: Logger
       }
     | { context?: never; logger?: never }
-  )
+  ),
 ): asserts condition {
   if (!condition) {
     if (opts.logger) {

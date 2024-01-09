@@ -8,7 +8,7 @@ export const profileRouter = router({
     .input(
       z.object({
         username: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const profile = await ctx.prisma.user.findUnique({

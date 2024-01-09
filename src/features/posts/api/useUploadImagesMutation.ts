@@ -13,13 +13,13 @@ export const useUploadImagesMutation = () => {
       images.map((image) => {
         if (!ACCEPTED_FILE_TYPES.some((type) => type === image.type)) {
           throw new Error(
-            `File type ${image.type} is not supported. Please upload an image.`
+            `File type ${image.type} is not supported. Please upload an image.`,
           )
         }
         return presignImageUploadMutation.mutateAsync({
           fileContentType: image.type as AcceptedImageFileTypes,
         })
-      })
+      }),
     )
 
     // Upload all images in parallel
@@ -31,7 +31,7 @@ export const useUploadImagesMutation = () => {
 
         await wretch(url).content(image.type).put(image).res()
         return key
-      })
+      }),
     )
     return keys
   })

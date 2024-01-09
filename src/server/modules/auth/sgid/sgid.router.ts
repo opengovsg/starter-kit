@@ -29,7 +29,7 @@ export const sgidRouter = router({
     .input(
       z.object({
         landingUrl: z.string().default(HOME),
-      })
+      }),
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {
       if (!sgid) {
@@ -75,7 +75,7 @@ export const sgidRouter = router({
       z.object({
         state: z.string(),
         code: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input: { state, code } }) => {
       if (!env.NEXT_PUBLIC_ENABLE_SGID) {
@@ -96,7 +96,7 @@ export const sgidRouter = router({
       if (!parsedState.success) {
         ctx.logger.error(
           { state, error: parsedState.error },
-          'Invalid SGID callback state'
+          'Invalid SGID callback state',
         )
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -145,7 +145,7 @@ export const sgidRouter = router({
         if (!sgidProfileToStore.success) {
           ctx.logger.warn(
             { error: sgidProfileToStore.error },
-            'Unable to store sgid profile in session'
+            'Unable to store sgid profile in session',
           )
           throw new TRPCError({
             code: 'INTERNAL_SERVER_ERROR',
@@ -159,19 +159,19 @@ export const sgidRouter = router({
           selectProfileStep: true,
           redirectUrl: appendWithRedirect(
             `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
-            parsedState.data.landingUrl
+            parsedState.data.landingUrl,
           ),
         }
       }
 
       // Exactly 1 email, create user and tie to account
       const sgidPocdexEmailResult = normaliseEmail.safeParse(
-        pocdexDetails[0]?.work_email
+        pocdexDetails[0]?.work_email,
       )
       if (!sgidPocdexEmailResult.success) {
         ctx.logger.warn(
           { error: sgidPocdexEmailResult.error },
-          'Unable to process work email from sgID'
+          'Unable to process work email from sgID',
         )
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -219,7 +219,7 @@ export const sgidRouter = router({
     .input(
       z.object({
         email: normaliseEmail,
-      })
+      }),
     )
     .mutation(async ({ ctx, input: { email } }) => {
       trpcAssert(ctx.session, {
@@ -239,7 +239,7 @@ export const sgidRouter = router({
       ctx.session.destroy()
 
       const hasProfile = profiles.list.some(
-        (profile) => profile.work_email === email
+        (profile) => profile.work_email === email,
       )
       trpcAssert(hasProfile, {
         message: 'Error logging in via sgID: selected profile is invalid',

@@ -44,7 +44,7 @@ const ReadonlyContainer = forwardRef<BoxProps, 'div'>(
         {children}
       </Box>
     )
-  }
+  },
 )
 
 const EditorContainer = forwardRef<BoxProps, 'div'>(
@@ -65,7 +65,7 @@ const EditorContainer = forwardRef<BoxProps, 'div'>(
         {children}
       </Box>
     )
-  }
+  },
 )
 
 const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
@@ -79,7 +79,7 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
       sx,
       ...flexProps
     },
-    ref
+    ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false)
 
@@ -122,7 +122,7 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
 
     const EditorWrapper = useMemo(
       () => (isReadOnly ? ReadonlyContainer : EditorContainer),
-      [isReadOnly]
+      [isReadOnly],
     )
 
     // this is required as value will not be set after the first render
@@ -172,7 +172,7 @@ const UnmemoedRichText = forwardRef<TextAreaFieldProps, 'div'>(
         </Box>
       </Flex>
     )
-  }
+  },
 )
 
 export const RichText = memo(UnmemoedRichText)

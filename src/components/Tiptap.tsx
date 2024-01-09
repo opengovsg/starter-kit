@@ -95,7 +95,7 @@ export const Tiptap = forwardRef<HTMLInputElement, TiptapProps>(
         <EditorContent editor={editor} />
       </Box>
     )
-  }
+  },
 )
 
 Tiptap.displayName = 'Tiptap'

@@ -12,7 +12,7 @@ export const createVfnToken = customAlphabet(OTP_ALPHABET, OTP_LENGTH)
 
 export const createVfnPrefix = customAlphabet(
   OTP_PREFIX_ALPHABET,
-  OTP_PREFIX_LENGTH
+  OTP_PREFIX_LENGTH,
 )
 
 export const createTokenHash = (token: string, email: string) => {
@@ -22,7 +22,7 @@ export const createTokenHash = (token: string, email: string) => {
 export const compareHash = (token: string, email: string, hash: string) => {
   return timingSafeEqual(
     Buffer.from(hash),
-    Buffer.from(createTokenHash(token, email))
+    Buffer.from(createTokenHash(token, email)),
   )
 }
 
@@ -34,7 +34,7 @@ export const compareHash = (token: string, email: string, hash: string) => {
  */
 export const createPocdexAccountProviderId = (
   sgidSub: string,
-  pocdexEmail: string
+  pocdexEmail: string,
 ) => {
   return `${sgidSub}-${normaliseEmail.parse(pocdexEmail)}`
 }

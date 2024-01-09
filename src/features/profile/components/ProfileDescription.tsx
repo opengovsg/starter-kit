@@ -19,7 +19,7 @@ export const ProfileDescription = ({
 
   const isOwnProfile = useMemo(
     () => me?.username === username,
-    [me?.username, username]
+    [me?.username, username],
   )
 
   return (

@@ -21,7 +21,7 @@ const MemoSingpassFullLogo = memo(
         />
       </g>
     </svg>
-  ))
+  )),
 )
 
 export const SingpassFullLogo = chakra(MemoSingpassFullLogo)

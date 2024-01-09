@@ -62,7 +62,7 @@ export const InputValidation: Story = {
     await step('Attempt log in', async () => {
       await userEvent.click(await canvas.findByText(/get otp/i))
       const error = await canvas.findByText(
-        /please enter a valid email address/i
+        /please enter a valid email address/i,
       )
       await expect(error).toBeInTheDocument()
     })
@@ -76,7 +76,7 @@ export const VerifyOTP: Story = {
     await step('Enter valid email address', async () => {
       await userEvent.type(
         await canvas.findByLabelText(/email/i),
-        VALID_AUTH_EMAIL
+        VALID_AUTH_EMAIL,
       )
     })
 

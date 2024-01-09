@@ -13,7 +13,7 @@ export const SgidErrorFallback: ComponentType<FallbackProps> = ({ error }) => {
       z.object({
         landingUrl: z.string(),
       }),
-      String(router.query.state)
+      String(router.query.state),
     )
     if (parsed.success) {
       return parsed.data.landingUrl

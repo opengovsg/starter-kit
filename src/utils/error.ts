@@ -5,7 +5,7 @@ import {
 import { z } from 'zod'
 
 const TRPC_ERROR_CODE_KEY_ENUM = Object.keys(
-  TRPC_ERROR_CODES_BY_KEY
+  TRPC_ERROR_CODES_BY_KEY,
 ) as unknown as [TRPC_ERROR_CODE_KEY, ...TRPC_ERROR_CODE_KEY[]]
 
 export const TRPCWithErrorCodeSchema = z
