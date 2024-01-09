@@ -16,6 +16,11 @@ import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import { LOGGED_IN_KEY } from '~/constants/localStorage'
 import { observable } from '@trpc/server/observable'
+import { env } from '~/env.mjs'
+import {
+  APP_VERSION_HEADER_KEY,
+  REQUIRE_UPDATE_EVENT,
+} from '~/constants/version'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'BAD_REQUEST',
@@ -23,6 +28,46 @@ const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'FORBIDDEN',
   'NOT_FOUND',
 ])
+
+export const versionLink: TRPCLink<AppRouter> = () => {
+  return ({ next, op }) => {
+    return observable((observer) => {
+      const unsubscribe = next(op).subscribe({
+        next(value) {
+          if (!value.context) {
+            return observer.next(value)
+          }
+          const response = value.context.response as
+            | Partial<Response> // Looser type for caution
+            | undefined
+          if (!response) {
+            return observer.next(value)
+          }
+          const headers = response.headers
+          if (!headers) {
+            return observer.next(value)
+          }
+          const serverVersion = headers.get(APP_VERSION_HEADER_KEY)
+          if (!serverVersion) {
+            return observer.next(value)
+          }
+          const clientVersion = env.NEXT_PUBLIC_APP_VERSION
+          if (clientVersion !== serverVersion) {
+            window.dispatchEvent(new Event(REQUIRE_UPDATE_EVENT))
+          }
+          return observer.next(value)
+        },
+        error(err) {
+          observer.error(err)
+        },
+        complete() {
+          observer.complete()
+        },
+      })
+      return unsubscribe
+    })
+  }
+}
 
 export const custom401Link: TRPCLink<AppRouter> = () => {
   // here we just got initialized in the app - this happens once per app
@@ -102,6 +147,7 @@ export const trpc = createTRPCNext<
        * @link https://trpc.io/docs/links
        */
       links: [
+        versionLink,
         custom401Link,
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
@@ -132,11 +178,14 @@ export const trpc = createTRPCNext<
               const { connection: _connection, ...headers } = ctx.req.headers
               return {
                 ...headers,
+                [APP_VERSION_HEADER_KEY]: env.NEXT_PUBLIC_APP_VERSION,
                 // Optional: inform server that it's an SSR request
                 'x-ssr': '1',
               }
             }
-            return {}
+            return {
+              [APP_VERSION_HEADER_KEY]: env.NEXT_PUBLIC_APP_VERSION,
+            }
           },
         }),
       ],

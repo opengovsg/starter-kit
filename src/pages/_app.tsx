@@ -1,7 +1,7 @@
 import '@fontsource/ibm-plex-mono' // Import if using code textStyles.
 import 'inter-ui/inter.css' // Strongly recommended.
 
-import { Skeleton } from '@chakra-ui/react'
+import { Skeleton, Stack } from '@chakra-ui/react'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { AppProps, AppType } from 'next/app'
@@ -13,6 +13,7 @@ import { trpc } from '~/utils/trpc'
 import { EnvProvider, FeatureProvider } from '~/components/AppProviders'
 import { LoginStateProvider } from '~/features/auth'
 import { env } from '~/env.mjs'
+import { VersionWrapper } from '~/components/VersionWrapper'
 import { ErrorBoundary } from 'react-error-boundary'
 import { DefaultFallback } from '~/components/ErrorBoundary/DefaultFallback'
 
@@ -28,10 +29,13 @@ const MyApp = ((props: AppPropsWithAuthAndLayout) => {
           <FeatureProvider>
             <ErrorBoundary FallbackComponent={DefaultFallback}>
               <Suspense fallback={<Skeleton width="100vw" height="100vh" />}>
-                <ChildWithLayout {...props} />
-                {process.env.NODE_ENV !== 'production' && (
-                  <ReactQueryDevtools initialIsOpen={false} />
-                )}
+                <Stack spacing={0} minH="$100vh">
+                  <VersionWrapper />
+                  <ChildWithLayout {...props} />
+                  {process.env.NODE_ENV !== 'production' && (
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  )}
+                </Stack>
               </Suspense>
             </ErrorBoundary>
           </FeatureProvider>

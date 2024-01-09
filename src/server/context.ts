@@ -41,6 +41,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   return {
     ...innerContext,
     req: opts.req,
+    res: opts.res,
   }
 }
 

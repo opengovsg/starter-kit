@@ -1,5 +1,10 @@
 import { type User } from '@prisma/client'
-import { type NextApiRequest } from 'next'
+import { type NextApiResponse, type NextApiRequest } from 'next'
+import {
+  createMocks,
+  type RequestOptions,
+  type ResponseOptions,
+} from 'node-mocks-http'
 import { type Session } from '~/lib/types/session'
 import { createContextInner, type Context } from '~/server/context'
 import { auth } from './auth'
@@ -46,13 +51,17 @@ class MockIronStore {
 
 export const createMockRequest = async (
   session: Session,
-  mockedReq: Partial<NextApiRequest> = { headers: {} }
+  reqOptions: RequestOptions = { method: 'GET' },
+  resOptions?: ResponseOptions
 ): Promise<Context> => {
   const innerContext = await createContextInner({ session })
 
+  const { req, res } = createMocks(reqOptions, resOptions)
+
   return {
     ...innerContext,
-    req: mockedReq as NextApiRequest,
+    req: req as unknown as NextApiRequest,
+    res: res as unknown as NextApiResponse,
   }
 }
 

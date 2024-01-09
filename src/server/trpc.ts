@@ -17,6 +17,8 @@ import { createBaseLogger } from '~/lib/logger'
 import getIP from '~/utils/getClientIp'
 import { type OpenApiMeta } from 'trpc-openapi'
 import { defaultMeSelect } from './modules/me/me.select'
+import { env } from '~/env.mjs'
+import { APP_VERSION_HEADER_KEY } from '~/constants/version'
 
 const t = initTRPC
   .meta<OpenApiMeta>()
@@ -69,6 +71,30 @@ const loggerMiddleware = t.middleware(async ({ path, next, ctx, type }) => {
 
   return result
 })
+
+const loggerWithVersionMiddleware = loggerMiddleware.unstable_pipe(
+  async ({ next, ctx }) => {
+    const { req, res, logger } = ctx
+
+    const serverVersion = env.NEXT_PUBLIC_APP_VERSION
+    const clientVersion = req.headers[APP_VERSION_HEADER_KEY.toLowerCase()]
+
+    if (clientVersion && serverVersion !== clientVersion) {
+      logger.warn('Application version mismatch', {
+        clientVersion,
+        serverVersion,
+      })
+    } else if (!clientVersion) {
+      logger.warn('Client version not available', {
+        serverVersion,
+      })
+    }
+
+    res.setHeader(APP_VERSION_HEADER_KEY, serverVersion)
+
+    return next()
+  }
+)
 
 const baseMiddleware = t.middleware(async ({ ctx, next }) => {
   if (ctx.session === undefined) {
@@ -130,18 +156,18 @@ export const router = t.router
  * @see https://trpc.io/docs/v10/procedures
  **/
 export const publicProcedure = t.procedure
-  .use(loggerMiddleware)
+  .use(loggerWithVersionMiddleware)
   .use(baseMiddleware)
 
 /**
  * Create a protected procedure
  **/
 export const protectedProcedure = t.procedure
-  .use(loggerMiddleware)
+  .use(loggerWithVersionMiddleware)
   .use(authMiddleware)
 
 export const agnosticProcedure = t.procedure
-  .use(loggerMiddleware)
+  .use(loggerWithVersionMiddleware)
   .use(nonStrictAuthMiddleware)
 
 /**
