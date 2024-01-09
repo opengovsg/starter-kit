@@ -24,6 +24,7 @@ interface TextAreaFieldProps extends Omit<FlexProps, 'value' | 'onChange'> {
   defaultValue?: string
   isReadOnly?: boolean
   onChange?: (value: string | undefined, rawValue?: string) => void
+  placeholder?: string
 }
 
 const ReadonlyContainer = forwardRef<BoxProps, 'div'>(
