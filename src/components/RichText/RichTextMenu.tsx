@@ -15,7 +15,7 @@ import {
   BiText,
   BiUndo,
 } from 'react-icons/bi'
-import { GoHorizontalRule } from 'react-icons/go'
+import { VscHorizontalRule } from 'react-icons/vsc'
 import { MdFormatClear } from 'react-icons/md'
 import { TbBlockquote, TbH1, TbH2 } from 'react-icons/tb'
 
@@ -126,7 +126,7 @@ const MENU_BUTTONS: MenuButton[] = [
   {
     type: 'button',
     label: 'Horizontal Rule',
-    icon: GoHorizontalRule,
+    icon: VscHorizontalRule,
     onClick: (editor: Editor) =>
       editor.chain().focus().setHorizontalRule().run(),
   },

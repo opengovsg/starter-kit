@@ -130,7 +130,7 @@ describe('auth.email', async () => {
 
       // Assert
       await expect(result).rejects.toThrowError(
-        'Token is invalid or has expired'
+        'Token is invalid or has expired',
       )
     })
 
@@ -152,7 +152,7 @@ describe('auth.email', async () => {
 
       // Assert
       await expect(result).rejects.toThrowError(
-        'Token is invalid or has expired'
+        'Token is invalid or has expired',
       )
     })
 

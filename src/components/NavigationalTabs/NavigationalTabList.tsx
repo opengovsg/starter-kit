@@ -33,5 +33,5 @@ export const NavigationTabList = forwardRef<NavigationTabListProps, 'div'>(
         </Stack>
       </NavigationalTabListStylesProvider>
     )
-  }
+  },
 )

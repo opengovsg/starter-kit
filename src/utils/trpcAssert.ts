@@ -14,10 +14,10 @@ export function trpcAssert<T>(
   } & (
     | {
         context?: Record<string, unknown>
-        logger: Logger
+        logger: Logger<string>
       }
     | { context?: never; logger?: never }
-  )
+  ),
 ): asserts condition {
   if (!condition) {
     if (opts.logger) {

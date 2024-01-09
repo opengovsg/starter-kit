@@ -26,7 +26,7 @@ export const useSignInContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      `Must use sign in context within ${SignInContextProvider}.name`
+      `Must use sign in context within ${SignInContextProvider}.name`,
     )
   }
 
@@ -56,7 +56,7 @@ export const SignInContextProvider = ({
 
   const resetTimer = useCallback(
     () => setTimer(delayForResendSeconds),
-    [delayForResendSeconds]
+    [delayForResendSeconds],
   )
 
   const proceedToEmail = useCallback(() => {
@@ -72,7 +72,7 @@ export const SignInContextProvider = ({
   useInterval(
     () => setTimer(timer - 1),
     // Stop interval if timer hits 0, else rerun every 1000ms.
-    !!vfnStepData && timer > 0 ? 1000 : null
+    !!vfnStepData && timer > 0 ? 1000 : null,
   )
 
   return (

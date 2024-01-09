@@ -21,7 +21,7 @@ export const SgidCallback = (): JSX.Element => {
   const [{ redirectUrl, selectProfileStep }] =
     trpc.auth.sgid.callback.useSuspenseQuery(
       { code: String(code), state: String(state) },
-      { staleTime: Infinity }
+      { staleTime: Infinity },
     )
 
   useEffect(() => {

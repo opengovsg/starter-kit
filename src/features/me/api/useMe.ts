@@ -20,7 +20,7 @@ export const useMe = () => {
         },
       })
     },
-    [logoutMutation, removeLoginStateFlag]
+    [logoutMutation, removeLoginStateFlag],
   )
 
   return { me, logout }

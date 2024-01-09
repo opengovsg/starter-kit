@@ -5,7 +5,7 @@ export type GetLayout = (page: ReactNode) => ReactNode
 
 export type NextPageWithLayout<
   TProps = Record<string, unknown>,
-  TInitialProps = TProps
+  TInitialProps = TProps,
 > = NextPage<TProps, TInitialProps> & {
   getLayout?: GetLayout
 }

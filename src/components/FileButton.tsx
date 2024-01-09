@@ -89,7 +89,7 @@ export const FileButton: FileButtonComponent = forwardRef<
       value,
       ...others
     },
-    ref
+    ref,
   ) => {
     const inputRef = useRef<HTMLInputElement>()
 
@@ -140,7 +140,7 @@ export const FileButton: FileButtonComponent = forwardRef<
         />
       </>
     )
-  }
+  },
 )
 
 FileButton.displayName = 'FileButton'

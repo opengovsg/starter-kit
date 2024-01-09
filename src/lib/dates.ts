@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 export const formatRelativeTime = (
   date?: Date | null,
   baseDate?: Date | null,
-  formatStr = 'MMM dd'
+  formatStr = 'MMM dd',
 ) => {
   if (date === null || date === undefined) return
 

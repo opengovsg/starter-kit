@@ -21,7 +21,7 @@ export const meRouter = router({
     .input(
       z.object({
         imageKey: z.string().nullish(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.user.update({

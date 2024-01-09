@@ -6,7 +6,7 @@ import { SgidErrorFallback } from '~/features/sign-in/components/SgidErrorFallba
 
 const SgidCallbackPage = withErrorBoundary(
   withSuspense(SgidCallback, <FullscreenSpinner />),
-  { FallbackComponent: SgidErrorFallback }
+  { FallbackComponent: SgidErrorFallback },
 )
 
 export default SgidCallbackPage

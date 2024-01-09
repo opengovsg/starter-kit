@@ -4,7 +4,7 @@ import { compareHash } from './auth.util'
 
 export const verifyToken = async (
   prisma: PrismaClient,
-  { token, email }: { token: string; email: string }
+  { token, email }: { token: string; email: string },
 ) => {
   try {
     const verificationToken = await prisma.verificationToken.update({

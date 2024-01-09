@@ -24,7 +24,7 @@ export const AvatarUpload = ({ url, name }: AvatarUploadProps): JSX.Element => {
   const uploadAvatarMutation = useUploadAvatarMutation()
 
   const handleUploadAvatar: ChangeEventHandler<HTMLInputElement> = async (
-    event
+    event,
   ) => {
     const file = event.target.files?.[0]
     if (!file) {

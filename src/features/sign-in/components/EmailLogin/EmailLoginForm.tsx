@@ -10,7 +10,7 @@ export const EmailLoginForm = () => {
     ({ email, otpPrefix }: VfnStepData) => {
       setVfnStepData({ email, otpPrefix })
     },
-    [setVfnStepData]
+    [setVfnStepData],
   )
 
   if (!!vfnStepData?.email) {

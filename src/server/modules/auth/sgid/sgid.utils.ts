@@ -9,7 +9,7 @@ const pocdexSgidSchema = z.array(
     department_name: z.string().optional(),
     employment_type: z.string().optional(),
     employment_title: z.string().optional(),
-  })
+  }),
 )
 
 const expectedUserInfo = z.object({

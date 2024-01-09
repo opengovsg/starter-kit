@@ -13,7 +13,7 @@ type FeatureContextProps = {
 
 // Exported for testing.
 export const FeatureContext = createContext<FeatureContextProps | undefined>(
-  undefined
+  undefined,
 )
 
 /**
@@ -37,7 +37,7 @@ export const useFeatures = (): FeatureContextProps => {
   const context = useContext(FeatureContext)
   if (!context) {
     throw new Error(
-      `useFeatures must be used within a FeatureProvider component`
+      `useFeatures must be used within a FeatureProvider component`,
     )
   }
   return context

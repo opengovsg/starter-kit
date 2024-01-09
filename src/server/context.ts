@@ -31,7 +31,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   const session = await getIronSession<SessionData>(
     opts.req,
     opts.res,
-    sessionOptions
+    sessionOptions,
   )
 
   const innerContext = await createContextInner({

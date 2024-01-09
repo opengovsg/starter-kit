@@ -34,7 +34,7 @@ export const ThreadPost = ({
 
   const relativeDate = useMemo(
     () => formatRelativeTime(reply.createdAt),
-    [reply]
+    [reply],
   )
   return (
     <Stack

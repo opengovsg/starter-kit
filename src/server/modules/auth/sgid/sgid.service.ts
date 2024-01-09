@@ -41,7 +41,7 @@ export const upsertSgidAccountAndUser = async ({
     // Link user to account
     const pocdexProviderAccountId = createPocdexAccountProviderId(
       sub,
-      pocdexEmail
+      pocdexEmail,
     )
     await prisma.accounts.upsert({
       where: {

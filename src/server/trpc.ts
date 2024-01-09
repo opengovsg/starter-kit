@@ -65,7 +65,7 @@ const loggerMiddleware = t.middleware(async ({ path, next, ctx, type }) => {
         durationInMs,
         err: result.error,
       },
-      `[${type}]: ${path} - ${durationInMs}ms - ${result.error.code} ${result.error.message}`
+      `[${type}]: ${path} - ${durationInMs}ms - ${result.error.code} ${result.error.message}`,
     )
   }
 
@@ -93,7 +93,7 @@ const loggerWithVersionMiddleware = loggerMiddleware.unstable_pipe(
     res.setHeader(APP_VERSION_HEADER_KEY, serverVersion)
 
     return next()
-  }
+  },
 )
 
 const baseMiddleware = t.middleware(async ({ ctx, next }) => {

@@ -14,7 +14,7 @@ export const ThreadView = (): JSX.Element | null => {
     { id: postId },
     {
       enabled: router.isReady,
-    }
+    },
   )
 
   if (isLoading) {

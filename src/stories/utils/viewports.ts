@@ -7,7 +7,7 @@ import { theme } from '~/theme'
  * @returns the number pixel width of the given breakpoint.
  */
 const breakpointToViewportWidth = (
-  breakpoint: keyof typeof theme.breakpoints
+  breakpoint: keyof typeof theme.breakpoints,
 ) => {
   const rem = 16
   return parseInt(theme.breakpoints[breakpoint]) * rem

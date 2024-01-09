@@ -19,7 +19,7 @@ export const useUploadAvatarMutation = () => {
       if (!me?.id) throw new Error('No user found')
       if (!ACCEPTED_FILE_TYPES.some((type) => type === image.type)) {
         throw new Error(
-          `File type ${image.type} is not supported. Please upload an image.`
+          `File type ${image.type} is not supported. Please upload an image.`,
         )
       }
 
@@ -49,6 +49,6 @@ export const useUploadAvatarMutation = () => {
       onSuccess: (key) => {
         return updateAvatarLinkMutation.mutate({ imageKey: key })
       },
-    }
+    },
   )
 }
