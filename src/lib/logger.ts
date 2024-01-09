@@ -21,13 +21,13 @@ type LoggerOptions = {
 }
 
 export class PinoLogger {
-  private static instance: pino.Logger
+  private static instance: pino.Logger<string>
   private static getInstance() {
     if (!PinoLogger.instance)
       PinoLogger.instance = PinoLogger.createBaseLogger()
     return PinoLogger.instance
   }
-  private static createBaseLogger = (): pino.Logger => {
+  private static createBaseLogger = (): pino.Logger<string> => {
     let transport
     if (env.NODE_ENV === 'development' || env.NODE_ENV === 'test') {
       transport = pino.transport({
