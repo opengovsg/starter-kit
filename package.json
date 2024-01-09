@@ -43,7 +43,7 @@
     "@aws-sdk/s3-request-presigner": "3.370.0",
     "@chakra-ui/react": "^2.7.1",
     "@hookform/resolvers": "^3.1.1",
-    "@opengovsg/design-system-react": "^1.14.0",
+    "@opengovsg/design-system-react": "^1.15.0",
     "@opengovsg/sgid-client": "^2.0.0",
     "@paralleldrive/cuid2": "^2.2.1",
     "@prisma/client": "^5.7.1",
