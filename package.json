@@ -65,7 +65,7 @@
     "date-fns-tz": "^2.0.0",
     "iron-session": "^8.0.1",
     "lodash": "^4.17.21",
-    "nanoid": "^4.0.2",
+    "nanoid": "^5.0.5",
     "next": "^14.0.4",
     "pino": "^8.17.2",
     "pino-pretty": "^10.3.1",
