@@ -4,6 +4,7 @@ import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
+import { appendWithRedirect } from '~/utils/url'
 
 interface EnforceLoginStatePageWrapperProps {
   /**
@@ -21,7 +22,7 @@ const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
     return encodeURIComponent(`${pathname}${search}${hash}`)
   }, [])
 
-  void router.replace(`${redirectTo}?${CALLBACK_URL_KEY}=${redirectUrl}`)
+  void router.replace(appendWithRedirect(redirectTo ?? SIGN_IN, redirectUrl))
 
   return <FullscreenSpinner />
 }
