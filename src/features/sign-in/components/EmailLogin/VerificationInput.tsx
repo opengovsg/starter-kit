@@ -14,7 +14,6 @@ import {
 import { useRouter } from 'next/router'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useZodForm } from '~/lib/form'
-import { HOME } from '~/lib/routes'
 import { trpc } from '~/utils/trpc'
 import { useSignInContext } from '../SignInContext'
 import { ResendOtpButton } from './ResendOtpButton'
@@ -24,6 +23,7 @@ import { Controller } from 'react-hook-form'
 import { OTP_LENGTH } from '~/lib/auth'
 import { useInterval } from 'usehooks-ts'
 import { useState } from 'react'
+import { callbackUrlSchema } from '~/schemas/url'
 
 export const VerificationInput = (): JSX.Element | null => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
@@ -60,7 +60,7 @@ export const VerificationInput = (): JSX.Element | null => {
       await utils.me.get.invalidate()
       // accessing router.query values returns decoded URI params automatically,
       // so there's no need to call decodeURIComponent manually when accessing the callback url.
-      await router.push(String(router.query[CALLBACK_URL_KEY] ?? HOME))
+      await router.push(callbackUrlSchema.parse(router.query[CALLBACK_URL_KEY]))
     },
     onError: (error) => {
       switch (error.message) {

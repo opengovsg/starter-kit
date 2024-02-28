@@ -3,12 +3,12 @@ import { useRouter } from 'next/router'
 import { Divider, Stack } from '@chakra-ui/react'
 
 import { trpc } from '~/utils/trpc'
-import { HOME } from '~/lib/routes'
 import { SgidProfileItem } from './SgidProfileItem'
 import { SgidProfileListSkeleton } from './SgidProfileListSkeleton'
 import { useLoginState } from '~/features/auth'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { withSuspense } from '~/hocs/withSuspense'
+import { callbackUrlSchema } from '~/schemas/url'
 
 const _SgidProfileList = (): JSX.Element => {
   const router = useRouter()
@@ -22,7 +22,9 @@ const _SgidProfileList = (): JSX.Element => {
     onSuccess: async () => {
       setHasLoginStateFlag()
       await utils.me.get.invalidate()
-      await router.replace(String(router.query[CALLBACK_URL_KEY] ?? HOME))
+      await router.replace(
+        callbackUrlSchema.parse(router.query[CALLBACK_URL_KEY]),
+      )
     },
   })
 

@@ -10,7 +10,7 @@ import { HOME, SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
 import { publicProcedure, router } from '~/server/trpc'
 import { trpcAssert } from '~/utils/trpcAssert'
-import { appendWithRedirect } from '~/utils/url'
+import { appendWithRedirect, isRelativeUrl } from '~/utils/url'
 import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
 import { upsertSgidAccountAndUser } from './sgid.service'
 import {
@@ -28,7 +28,12 @@ export const sgidRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        landingUrl: z.string().default(HOME),
+        landingUrl: z
+          .string()
+          .default(HOME)
+          .refine((url) => isRelativeUrl(url), {
+            message: 'Invalid landing URL',
+          }),
       }),
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {

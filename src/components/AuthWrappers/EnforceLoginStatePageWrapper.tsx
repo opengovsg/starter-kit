@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { useMemo, type PropsWithChildren } from 'react'
-import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'

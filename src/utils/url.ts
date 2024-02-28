@@ -19,7 +19,6 @@ export const getRedirectUrl = (query: ParsedUrlQuery) => {
 // Absolute URL: https://tools.ietf.org/html/rfc3986#section-4.3
 // Adapted from https://github.com/sindresorhus/is-absolute-url/blob/main/index.js
 export const isRelativeUrl = (url: string) => {
-
   const ABSOLUTE_URL_REGEX = /^[a-zA-Z][a-zA-Z\d+\-.]*?:/
   const PROTOCOL_RELATIVE_URL_REGEX = /^\/\//
 
