@@ -4,6 +4,7 @@ import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 import { appendWithRedirect } from '~/utils/url'
+import { callbackUrlSchema } from '~/schemas/url'
 
 interface EnforceLoginStatePageWrapperProps {
   /**
@@ -21,7 +22,11 @@ const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
     return encodeURIComponent(`${pathname}${search}${hash}`)
   }, [])
 
-  void router.replace(appendWithRedirect(redirectTo ?? SIGN_IN, redirectUrl))
+  void router.replace(
+    callbackUrlSchema.parse(
+      appendWithRedirect(redirectTo ?? SIGN_IN, redirectUrl),
+    ),
+  )
 
   return <FullscreenSpinner />
 }
