@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 
 import { FullscreenSpinner } from '~/components/FullscreenSpinner'
 import { useLoginState } from '~/features/auth'
+import { callbackUrlSchema } from '~/schemas/url'
 import { trpc } from '~/utils/trpc'
 
 /**
@@ -31,7 +32,7 @@ export const SgidCallback = (): JSX.Element => {
       utils.me.get.invalidate()
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.replace(redirectUrl)
+    router.replace(callbackUrlSchema.parse(redirectUrl))
   }, [
     redirectUrl,
     router,

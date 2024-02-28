@@ -6,8 +6,10 @@ import { TRPCError } from '@trpc/server'
 import { set } from 'lodash'
 import { z } from 'zod'
 import { env } from '~/env.mjs'
-import { HOME, SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
+import { SGID } from '~/lib/errors/auth.sgid'
+import { SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
+import { callbackUrlSchema } from '~/schemas/url'
 import { publicProcedure, router } from '~/server/trpc'
 import { trpcAssert } from '~/utils/trpcAssert'
 import { appendWithRedirect } from '~/utils/url'
@@ -18,7 +20,6 @@ import {
   sgidSessionProfileSchema,
   type SgidUserInfo,
 } from './sgid.utils'
-import { SGID } from '~/lib/errors/auth.sgid'
 
 const sgidCallbackStateSchema = z.object({
   landingUrl: z.string(),
@@ -28,7 +29,7 @@ export const sgidRouter = router({
   login: publicProcedure
     .input(
       z.object({
-        landingUrl: z.string().default(HOME),
+        landingUrl: callbackUrlSchema,
       }),
     )
     .mutation(async ({ ctx, input: { landingUrl } }) => {

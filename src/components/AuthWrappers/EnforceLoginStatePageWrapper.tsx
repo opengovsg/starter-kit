@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router'
 import { useMemo, type PropsWithChildren } from 'react'
-import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
+import { appendWithRedirect } from '~/utils/url'
+import { callbackUrlSchema } from '~/schemas/url'
 
 interface EnforceLoginStatePageWrapperProps {
   /**
@@ -21,7 +22,11 @@ const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
     return encodeURIComponent(`${pathname}${search}${hash}`)
   }, [])
 
-  void router.replace(`${redirectTo}?${CALLBACK_URL_KEY}=${redirectUrl}`)
+  void router.replace(
+    callbackUrlSchema.parse(
+      appendWithRedirect(redirectTo ?? SIGN_IN, redirectUrl),
+    ),
+  )
 
   return <FullscreenSpinner />
 }
