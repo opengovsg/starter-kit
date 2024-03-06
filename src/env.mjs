@@ -17,6 +17,7 @@ const coerceBoolean = z
 const client = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
   NEXT_PUBLIC_ENABLE_SGID: coerceBoolean.default('false'),
+  NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
   NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),
 })
@@ -179,7 +180,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   if (parsed.success === false) {
     console.error(
       '❌ Invalid environment variables:',
-      parsed.error.flatten().fieldErrors
+      parsed.error.flatten().fieldErrors,
     )
     throw new Error('Invalid environment variables')
   }
@@ -193,7 +194,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
         throw new Error(
           process.env.NODE_ENV === 'production'
             ? '❌ Attempted to access a server-side environment variable on the client'
-            : `❌ Attempted to access server-side environment variable '${prop}' on the client`
+            : `❌ Attempted to access server-side environment variable '${prop}' on the client`,
         )
       return target[/** @type {keyof typeof target} */ (prop)]
     },
@@ -205,7 +206,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   if (parsed.success === false) {
     console.error(
       '❌ Invalid environment variables:',
-      parsed.error.flatten().fieldErrors
+      parsed.error.flatten().fieldErrors,
     )
     throw new Error('Invalid environment variables')
   }
