@@ -19,7 +19,7 @@ import { Box, Skeleton } from '@chakra-ui/react'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
 import { DefaultFallback } from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
-import { format } from 'date-fns'
+import { format } from 'date-fns/format'
 import {
   type EnvContextReturn,
   EnvProvider,
