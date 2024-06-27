@@ -1,17 +1,20 @@
 import { type User } from '@prisma/client'
 import { it, expect } from 'vitest'
 import { type RouterInput } from '~/utils/trpc'
-import { appRouter } from '../../_app'
 import {
   applyAuthedSession,
   applySession,
   createMockRequest,
 } from 'tests/integration/helpers/iron-session'
+import { createCallerFactory } from '~/server/trpc'
+import { postRouter } from '../post.router'
+
+const createCaller = createCallerFactory(postRouter)
 
 describe('post.add', async () => {
   it('unauthed user should not be able to create a post', async () => {
     const ctx = await createMockRequest(applySession())
-    const caller = appRouter.createCaller(ctx)
+    const caller = createCaller(ctx)
 
     const input: RouterInput['post']['add'] = {
       title: 'hello test',
@@ -19,7 +22,7 @@ describe('post.add', async () => {
       contentHtml: '<p>hello test with a long input</p>',
     }
 
-    await expect(caller.post.add(input)).rejects.toThrowError()
+    await expect(caller.add(input)).rejects.toThrowError()
   })
 
   it('post should be retrievable after creation', async () => {
@@ -33,7 +36,7 @@ describe('post.add', async () => {
       image: null,
     }
     const ctx = await createMockRequest(await applyAuthedSession(defaultUser))
-    const caller = appRouter.createCaller(ctx)
+    const caller = createCaller(ctx)
 
     const input: RouterInput['post']['add'] = {
       title: 'hello test',
@@ -41,8 +44,8 @@ describe('post.add', async () => {
       contentHtml: '<p>hello test with a long input</p>',
     }
 
-    const post = await caller.post.add(input)
-    const byId = await caller.post.byId({ id: post.id })
+    const post = await caller.add(input)
+    const byId = await caller.byId({ id: post.id })
 
     expect(byId).toMatchObject(input)
   })

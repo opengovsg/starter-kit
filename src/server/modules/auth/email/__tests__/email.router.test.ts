@@ -8,15 +8,18 @@ import * as mailLib from '~/lib/mail'
 import { prisma } from '~/server/prisma'
 import { createTokenHash } from '../../auth.util'
 import { emailSessionRouter } from '../email.router'
+import { createCallerFactory } from '~/server/trpc'
+
+const createCaller = createCallerFactory(emailSessionRouter)
 
 describe('auth.email', async () => {
-  let caller: Awaited<ReturnType<typeof emailSessionRouter.createCaller>>
+  let caller: Awaited<ReturnType<typeof createCaller>>
   let session: ReturnType<typeof applySession>
 
   beforeEach(async () => {
     session = applySession()
     const ctx = await createMockRequest(session)
-    caller = emailSessionRouter.createCaller(ctx)
+    caller = createCaller(ctx)
   })
 
   describe('login', async () => {
