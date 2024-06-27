@@ -97,7 +97,6 @@ const loggerWithVersionMiddleware = loggerMiddleware.unstable_pipe(
 )
 
 const contentTypeHeaderMiddleware = t.middleware(async ({ ctx, next }) => {
-  console.log('TEMP', ctx.req.headers)
   if (
     ctx.req.body &&
     !ctx.req.headers['content-type']?.startsWith('application/json')
