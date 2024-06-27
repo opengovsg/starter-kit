@@ -52,11 +52,20 @@ class MockIronStore {
 export const createMockRequest = async (
   session: Session,
   reqOptions: RequestOptions = { method: 'GET' },
-  resOptions?: ResponseOptions
+  resOptions?: ResponseOptions,
 ): Promise<Context> => {
   const innerContext = await createContextInner({ session })
 
-  const { req, res } = createMocks(reqOptions, resOptions)
+  const { req, res } = createMocks(
+    {
+      ...reqOptions,
+      headers: {
+        'content-type': 'application/json', // will always be application/json
+        ...reqOptions.headers,
+      },
+    },
+    resOptions,
+  )
 
   return {
     ...innerContext,
