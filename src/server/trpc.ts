@@ -195,3 +195,10 @@ export const middleware = t.middleware
  * @see https://trpc.io/docs/v10/merging-routers
  */
 export const mergeRouters = t.mergeRouters
+
+/**
+ * Create a server-side caller
+ * @link https://trpc.io/docs/v11/server/server-side-calls
+ * Mostly used for test invocation
+ */
+export const createCallerFactory = t.createCallerFactory
