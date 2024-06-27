@@ -96,8 +96,8 @@ const loggerWithVersionMiddleware = loggerMiddleware.unstable_pipe(
   },
 )
 
-const baseMiddleware = t.middleware(async ({ ctx, next }) => {
-  // Only allow application/json content type
+const contentTypeHeaderMiddleware = t.middleware(async ({ ctx, next }) => {
+  console.log('TEMP', ctx.req.headers)
   if (
     ctx.req.body &&
     !ctx.req.headers['content-type']?.startsWith('application/json')
@@ -107,7 +107,10 @@ const baseMiddleware = t.middleware(async ({ ctx, next }) => {
       message: 'Invalid Content-Type',
     })
   }
+  return next()
+})
 
+const baseMiddleware = t.middleware(async ({ ctx, next }) => {
   if (ctx.session === undefined) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
   }
@@ -168,6 +171,7 @@ export const router = t.router
  **/
 export const publicProcedure = t.procedure
   .use(loggerWithVersionMiddleware)
+  .use(contentTypeHeaderMiddleware)
   .use(baseMiddleware)
 
 /**
@@ -175,10 +179,12 @@ export const publicProcedure = t.procedure
  **/
 export const protectedProcedure = t.procedure
   .use(loggerWithVersionMiddleware)
+  .use(contentTypeHeaderMiddleware)
   .use(authMiddleware)
 
 export const agnosticProcedure = t.procedure
   .use(loggerWithVersionMiddleware)
+  .use(contentTypeHeaderMiddleware)
   .use(nonStrictAuthMiddleware)
 
 /**
