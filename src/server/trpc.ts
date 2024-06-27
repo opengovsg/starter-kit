@@ -97,6 +97,17 @@ const loggerWithVersionMiddleware = loggerMiddleware.unstable_pipe(
 )
 
 const baseMiddleware = t.middleware(async ({ ctx, next }) => {
+  // Only allow application/json content type
+  if (
+    ctx.req.body &&
+    !ctx.req.headers['content-type']?.startsWith('application/json')
+  ) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Invalid Content-Type',
+    })
+  }
+
   if (ctx.session === undefined) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
   }
