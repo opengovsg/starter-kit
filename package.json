@@ -49,6 +49,7 @@
     "@hookform/resolvers": "^3.3.4",
     "@opengovsg/design-system-react": "^1.15.0",
     "@opengovsg/sgid-client": "^2.2.0",
+    "@opengovsg/starter-kitty-validators": "^1.0.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.7.1",
     "@sendgrid/mail": "^8.1.3",
