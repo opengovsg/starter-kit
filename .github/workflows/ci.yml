@@ -50,7 +50,7 @@ jobs:
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
         uses: datadog/test-visibility-github-action@v1.0.5
         with:
-          languages: javascript
+          languages: js
           service-name: ${{ secrets.DD_SERVICE_NAME }}
           api-key: ${{ secrets.DD_API_KEY }}
 
