@@ -66,7 +66,8 @@ jobs:
         env:
           # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
           # but might not be available if repository does not have the required env vars set.
-          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
+          # --import dd-trace/register.js is required for vitest
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('--import dd-trace/register.js -r {0}', env.DD_TRACE_PACKAGE) || '--import dd-trace/register.js' }}
 
       - name: Stop test containers
         run: npm run teardown
