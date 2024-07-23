@@ -46,8 +46,23 @@ jobs:
       - name: Start test containers
         run: npm run setup:test
 
-      - name: Build and test
-        run: npm run build && npm run test-start
+      - name: Build
+        run: npm run build
+
+      - if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        name: Configure Datadog Test Visibility
+        uses: datadog/test-visibility-github-action@v1.0.5
+        with:
+          languages: javascript
+          service-name: ${{ secrets.DD_SERVICE_NAME }}
+          api-key: ${{ secrets.DD_API_KEY }}
+
+      - name: Run tests
+        shell: bash
+        run: npm run test-start
+        env:
+          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action
+          NODE_OPTIONS: -r ${{ env.DD_TRACE_PACKAGE }}
 
       - name: Stop test containers
         run: npm run teardown
