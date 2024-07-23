@@ -26,7 +26,7 @@
     "test:e2e": "dotenv -e .env.test playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-dev:unit": "dotenv -e .env.test vitest",
-    "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
+    "test-e2e-start": "start-server-and-test start http://127.0.0.1:3000 test:e2e",
     "postinstall": "npm run generate && npm run build:theme",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

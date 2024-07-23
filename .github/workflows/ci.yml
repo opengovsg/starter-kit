@@ -60,14 +60,22 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run tests
+      - name: Run unit tests
         shell: bash
-        run: npm run test-start
+        run: npm run test:unit
         env:
           # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
           # but might not be available if repository does not have the required env vars set.
           # --import dd-trace/register.js is required for vitest
-          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('--import dd-trace/register.js -r {0}', env.DD_TRACE_PACKAGE) || '--import dd-trace/register.js' }}
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('--import {0}/.datadog/lib/node_modules/dd-trace/register.js -r {1}', github.workspace, env.DD_TRACE_PACKAGE) || '' }}
+
+      - name: Run e2e tests
+        shell: bash
+        run: npm run test-e2e-start
+        env:
+          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
+          # but might not be available if repository does not have the required env vars set.
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
 
       - name: Stop test containers
         run: npm run teardown
