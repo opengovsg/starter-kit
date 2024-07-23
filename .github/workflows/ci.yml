@@ -43,13 +43,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Start test containers
-        run: npm run setup:test
-
-      - name: Build
-        run: npm run build
-
-      - if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+      - if: secrets.DD_SERVICE_NAME != '' && secrets.DD_API_KEY != ''
         name: Configure Datadog Test Visibility
         uses: datadog/test-visibility-github-action@v1.0.5
         with:
@@ -57,12 +51,19 @@ jobs:
           service-name: ${{ secrets.DD_SERVICE_NAME }}
           api-key: ${{ secrets.DD_API_KEY }}
 
+      - name: Start test containers
+        run: npm run setup:test
+
+      - name: Build
+        run: npm run build
+
       - name: Run tests
         shell: bash
         run: npm run test-start
         env:
-          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action
-          NODE_OPTIONS: -r ${{ env.DD_TRACE_PACKAGE }}
+          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
+          # but might not be available if repository does not have the required env vars set.
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
 
       - name: Stop test containers
         run: npm run teardown
