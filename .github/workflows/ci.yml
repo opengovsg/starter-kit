@@ -43,8 +43,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - if: secrets.DD_SERVICE_NAME != '' && secrets.DD_API_KEY != ''
-        name: Configure Datadog Test Visibility
+      - name: Configure Datadog Test Visibility
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
         uses: datadog/test-visibility-github-action@v1.0.5
         with:
           languages: javascript
