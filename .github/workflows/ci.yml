@@ -43,11 +43,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
+      - name: Configure Datadog Test Visibility
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        uses: datadog/test-visibility-github-action@v1.0.5
+        with:
+          languages: js
+          service-name: ${{ secrets.DD_SERVICE_NAME }}
+          api-key: ${{ secrets.DD_API_KEY }}
+
       - name: Start test containers
         run: npm run setup:test
 
-      - name: Build and test
-        run: npm run build && npm run test-start
+      - name: Build
+        run: npm run build
+
+      - name: Run unit tests
+        shell: bash
+        run: npm run test:unit
+        env:
+          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
+          # but might not be available if repository does not have the required env vars set.
+          # --import dd-trace/register.js is required for vitest
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('--import {0}/.datadog/lib/node_modules/dd-trace/register.js -r {1}', github.workspace, env.DD_TRACE_PACKAGE) || '' }}
+
+      - name: Run e2e tests
+        shell: bash
+        run: npm run test-e2e-start
+        env:
+          # env.DD_TRACE_PACKAGE is provided by the Datadog GitHub Action,
+          # but might not be available if repository does not have the required env vars set.
+          NODE_OPTIONS: ${{ env.DD_TRACE_PACKAGE && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
 
       - name: Stop test containers
         run: npm run teardown
