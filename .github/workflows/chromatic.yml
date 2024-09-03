@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: env.CHROMATIC_PROJECT_TOKEN != ''
+        with:
+          fetch-depth: 0 # Required so Chromatic can compare commits
       - uses: ./.github/actions/setup
         if: env.CHROMATIC_PROJECT_TOKEN != ''
       - name: Load .env file
