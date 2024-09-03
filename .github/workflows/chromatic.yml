@@ -16,18 +16,20 @@ jobs:
   chromatic-deployment:
     # Operating System
     runs-on: ubuntu-latest
-    env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-    if: ${{ env.CHROMATIC_PROJECT_TOKEN != '' && !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]')}}
+    if: ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]')}}
     # Job steps
     steps:
       - uses: actions/checkout@v4
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
       - uses: ./.github/actions/setup
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
       - name: Load .env file
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
         uses: xom9ikk/dotenv@v2
         with:
           mode: test
       - name: Publish to Chromatic
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
