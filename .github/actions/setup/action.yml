@@ -9,6 +9,7 @@ runs:
         node-version: 20
         cache: 'npm'
 
-    - run: npm ci
+    - shell: bash
+      run: npm ci
 
     # Add more steps here as needed
