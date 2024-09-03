@@ -16,11 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
+      - uses: ./.github/actions/setup
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Lint
+        run: npm run lint
 
   unit-integration-tests:
     name: Unit & integration tests
@@ -30,11 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
+      - uses: ./.github/actions/setup
       - name: Test
         run: npm run test:vitest
 
@@ -46,11 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
       - name: Install Playwright (Chromium)
         run: npx playwright install chromium
       - name: Load .env file
