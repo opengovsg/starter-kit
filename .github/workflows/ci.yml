@@ -35,8 +35,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Configure Datadog Test Visibility
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        uses: datadog/test-visibility-github-action@v1
+        with:
+          languages: js
+          service-name: ${{ secrets.DD_SERVICE_NAME }}
+          api-key: ${{ secrets.DD_API_KEY }}
       - name: Test
         run: npm run test:vitest
+        env:
+          # Required to allow Datadog to trace Vitest tests
+          NODE_OPTIONS: -r ${{ env.DD_TRACE_PACKAGE }} --import ${{ env.DD_TRACE_ESM_IMPORT }}
 
   end-to-end-tests:
     name: End-to-end tests
@@ -73,8 +86,21 @@ jobs:
       - name: Build app
         run: npm run build
 
+      - name: Configure Datadog Test Visibility
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        uses: datadog/test-visibility-github-action@v1
+        with:
+          languages: js
+          service-name: ${{ secrets.DD_SERVICE_NAME }}
+          api-key: ${{ secrets.DD_API_KEY }}
       - name: Run Playwright tests
         run: npm run test-ci:e2e
+        env:
+          # Required to allow Datadog to trace Playwright tests
+          NODE_OPTIONS: -r ${{ env.DD_TRACE_PACKAGE }}
 
       - name: Stop test containers
         run: npm run teardown
