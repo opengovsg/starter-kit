@@ -16,6 +16,8 @@ jobs:
   chromatic-deployment:
     # Operating System
     runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     if: ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]')}}
     # Job steps
     steps:
