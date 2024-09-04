@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      # add more branches here for this job to run on
+      # - staging
+      # - production
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Lint
+        run: npm run lint
+
+  unit-integration-tests:
+    name: Unit & integration tests
+    needs:
+      - install
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Test
+        run: npm run test:vitest
+
+  end-to-end-tests:
+    name: End-to-end tests
+    needs:
+      - install
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Install Playwright (Chromium)
+        run: npx playwright install chromium
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
+      - name: Next.js cache
+        uses: actions/cache@v4
+        with:
+          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Start test containers
+        run: npm run setup:test
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run Playwright tests
+        run: npm run test-ci:e2e
+
+      - name: Stop test containers
+        run: npm run teardown
+
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright/test-results/
+          retention-days: 7

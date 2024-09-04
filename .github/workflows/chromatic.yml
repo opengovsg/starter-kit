@@ -18,25 +18,24 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    if: ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]')}}
     # Job steps
     steps:
-      - if: env.CHROMATIC_PROJECT_TOKEN != ''
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
         with:
-          fetch-depth: 0 # Required for v2
-      - if: env.CHROMATIC_PROJECT_TOKEN != ''
-        name: Install dependencies
-        run: npm i
-      - if: env.CHROMATIC_PROJECT_TOKEN != ''
-        name: Load .env file
+          fetch-depth: 0 # Required so Chromatic can compare commits
+      - uses: ./.github/actions/setup
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+      - name: Load .env file
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
         uses: xom9ikk/dotenv@v2
         with:
           mode: test
-      - if: env.CHROMATIC_PROJECT_TOKEN != ''
-        name: Publish to Chromatic
-        uses: chromaui/action@v1
+      - name: Publish to Chromatic
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        uses: chromaui/action@latest
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
           exitOnceUploaded: true
