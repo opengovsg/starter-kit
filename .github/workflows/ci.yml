@@ -43,8 +43,8 @@ jobs:
         uses: datadog/test-visibility-github-action@v1
         with:
           languages: js
-          service-name: ${{ secrets.DD_SERVICE_NAME }}
-          api-key: ${{ secrets.DD_API_KEY }}
+          service: ${{ secrets.DD_SERVICE_NAME }}
+          api_key: ${{ secrets.DD_API_KEY }}
       - name: Test
         run: npm run test:vitest
         env:
@@ -93,8 +93,8 @@ jobs:
         uses: datadog/test-visibility-github-action@v1
         with:
           languages: js
-          service-name: ${{ secrets.DD_SERVICE_NAME }}
-          api-key: ${{ secrets.DD_API_KEY }}
+          service: ${{ secrets.DD_SERVICE_NAME }}
+          api_key: ${{ secrets.DD_API_KEY }}
       - name: Run Playwright tests
         run: npm run test-ci:e2e
         env:
