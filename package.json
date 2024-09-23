@@ -77,7 +77,7 @@
     "pino": "^8.17.2",
     "pino-pretty": "^10.3.1",
     "react": "^18.3.1",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.12",
     "react-hook-form": "^7.51.4",
     "react-icons": "^4.12.0",
