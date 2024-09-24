@@ -35,6 +35,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
       - name: Configure Datadog Test Visibility
         env:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
