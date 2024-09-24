@@ -99,7 +99,7 @@ jobs:
         run: npm run test-ci:e2e
         env:
           # Required to allow Datadog to trace Playwright tests
-          NODE_OPTIONS: ${{ env.DD_API_KEY && env.DD_SERVICE_NAME && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
+          NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
 
       - name: Stop test containers
         run: npm run teardown
