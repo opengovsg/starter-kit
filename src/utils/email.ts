@@ -1,4 +1,9 @@
+import { createEmailSchema } from '@opengovsg/starter-kitty-validators/email'
 import isEmail from 'validator/lib/isEmail'
+
+const emailSchema = createEmailSchema({
+  domains: [{ domain: 'gov.sg', includeSubdomains: true }],
+})
 
 export const getEmailDomain = (email?: string) => {
   if (!email) {
@@ -15,6 +20,8 @@ export const getEmailDomain = (email?: string) => {
  */
 export const isGovEmail = (value: unknown) => {
   return (
-    typeof value === 'string' && isEmail(value) && value.endsWith('.gov.sg')
+    typeof value === 'string' &&
+    isEmail(value) &&
+    emailSchema.safeParse(value).success
   )
 }

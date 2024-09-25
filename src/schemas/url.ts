@@ -1,31 +1,21 @@
 import { z } from 'zod'
 import { HOME } from '~/lib/routes'
-import { UrlValidator } from '@opengovsg/starter-kitty-validators'
+import { createUrlSchema } from '@opengovsg/starter-kitty-validators/url'
 import { getBaseUrl } from '~/utils/getBaseUrl'
 
-const baseUrl = getBaseUrl()
-
-const validator = new UrlValidator({
-  baseOrigin: new URL(baseUrl).origin,
-  whitelist: {
-    protocols: ['http', 'https'],
-    hosts: [new URL(baseUrl).host],
-  },
-})
+const baseUrl = new URL(getBaseUrl())
 
 export const callbackUrlSchema = z
   .string()
   .optional()
   .default(HOME)
-  .transform((url, ctx) => {
-    try {
-      return validator.parse(url)
-    } catch (error) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: (error as Error).message,
-      })
-      return z.NEVER
-    }
-  })
-  .catch(new URL(HOME, baseUrl))
+  .pipe(
+    createUrlSchema({
+      baseOrigin: baseUrl.origin,
+      whitelist: {
+        protocols: ['http', 'https'],
+        hosts: [baseUrl.host],
+      },
+    }),
+  )
+  .catch(new URL(HOME, baseUrl.origin))
