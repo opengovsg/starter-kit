@@ -75,7 +75,7 @@ const sgidServerSchema = z.discriminatedUnion('NEXT_PUBLIC_ENABLE_SGID', [
  */
 const server = z
   .object({
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.string().url().optional(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
     POSTMAN_API_KEY: z.string().optional(),
@@ -122,6 +122,17 @@ const server = z
     message: 'SENDGRID_FROM_ADDRESS is required when SENDGRID_API_KEY is set',
     path: ['SENDGRID_FROM_ADDRESS'],
   })
+  .refine(
+    (val) =>
+      val.NODE_ENV === 'development' ||
+      val.NODE_ENV === 'test' ||
+      val.DATABASE_URL,
+    {
+      message:
+        'DATABASE_URL has to be set if NODE_ENV is not development or test',
+      path: ['DATABASE_URL'],
+    },
+  )
 
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
