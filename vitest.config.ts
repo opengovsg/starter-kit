@@ -9,5 +9,9 @@ export default defineConfig({
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
     },
     setupFiles: ['vitest.setup.ts'],
+    coverage: {
+      provider: 'istanbul',
+      reportOnFailure: true,
+    },
   },
 })
