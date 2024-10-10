@@ -45,6 +45,10 @@ jobs:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}
           api_key: ${{ secrets.DD_API_KEY }}
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: test
       - name: Test
         run: npm run test-ci:coverage
         env:
