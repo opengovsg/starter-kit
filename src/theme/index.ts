@@ -7,10 +7,7 @@ import { textStyles } from './foundations/textStyles'
 
 export const theme = extendTheme(ogpDsTheme, {
   shadows,
-  components: {
-    ...ogpDsTheme.components,
-    ...components,
-  },
+  components,
   textStyles,
   layerStyles,
 })

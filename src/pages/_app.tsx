@@ -1,5 +1,5 @@
 import '@fontsource/ibm-plex-mono' // Import if using code textStyles.
-import 'inter-ui/inter.css' // Strongly recommended.
+import 'inter-ui/inter.css' // Strongly recommended if using OGP design system, as design uses this font.
 
 import { Skeleton, Stack } from '@chakra-ui/react'
 import { ThemeProvider } from '@opengovsg/design-system-react'
