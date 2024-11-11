@@ -12,9 +12,9 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 
-import { SIGN_IN } from '~/lib/routes'
-import { SGID } from '~/lib/errors/auth.sgid'
 import { appendWithRedirect } from '~/utils/url'
+import { SGID } from '~/lib/errors/auth.sgid'
+import { SIGN_IN } from '~/lib/routes'
 
 interface SgidErrorModalProps {
   message: string

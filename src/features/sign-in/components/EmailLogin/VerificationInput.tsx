@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   FormControl,
   FormLabel,
@@ -11,19 +13,18 @@ import {
   Infobox,
   Input,
 } from '@opengovsg/design-system-react'
-import { useRouter } from 'next/router'
-import { CALLBACK_URL_KEY } from '~/constants/params'
-import { useZodForm } from '~/lib/form'
+import { Controller } from 'react-hook-form'
+import { useInterval } from 'usehooks-ts'
+
 import { trpc } from '~/utils/trpc'
+import { CALLBACK_URL_KEY } from '~/constants/params'
+import { useLoginState } from '~/features/auth'
+import { OTP_LENGTH } from '~/lib/auth'
+import { useZodForm } from '~/lib/form'
+import { emailVerifyOtpSchema } from '~/schemas/auth/email/sign-in'
+import { callbackUrlSchema } from '~/schemas/url'
 import { useSignInContext } from '../SignInContext'
 import { ResendOtpButton } from './ResendOtpButton'
-import { useLoginState } from '~/features/auth'
-import { emailVerifyOtpSchema } from '~/schemas/auth/email/sign-in'
-import { Controller } from 'react-hook-form'
-import { OTP_LENGTH } from '~/lib/auth'
-import { useInterval } from 'usehooks-ts'
-import { useState } from 'react'
-import { callbackUrlSchema } from '~/schemas/url'
 
 export const VerificationInput = (): JSX.Element | null => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)

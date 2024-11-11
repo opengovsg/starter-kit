@@ -1,8 +1,8 @@
 import {
   createContext,
+  useCallback,
   useContext,
   type PropsWithChildren,
-  useCallback,
 } from 'react'
 
 import { LOGGED_IN_KEY } from '~/constants/localStorage'

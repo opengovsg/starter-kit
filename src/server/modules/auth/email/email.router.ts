@@ -1,17 +1,18 @@
 import { TRPCError } from '@trpc/server'
-import { publicProcedure, router } from '~/server/trpc'
-import { sendMail } from '~/lib/mail'
-import { getBaseUrl } from '~/utils/getBaseUrl'
-import { createTokenHash, createVfnPrefix, createVfnToken } from '../auth.util'
-import { verifyToken } from '../auth.service'
-import { VerificationError } from '../auth.error'
-import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
-import { defaultMeSelect } from '../../me/me.select'
+
+import { getBaseUrl } from '~/utils/getBaseUrl'
+import { env } from '~/env.mjs'
+import { sendMail } from '~/lib/mail'
 import {
   emailSignInSchema,
   emailVerifyOtpSchema,
 } from '~/schemas/auth/email/sign-in'
+import { publicProcedure, router } from '~/server/trpc'
+import { defaultMeSelect } from '../../me/me.select'
+import { VerificationError } from '../auth.error'
+import { verifyToken } from '../auth.service'
+import { createTokenHash, createVfnPrefix, createVfnToken } from '../auth.util'
 
 export const emailSessionRouter = router({
   // Generate OTP.

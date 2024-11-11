@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import { sgid } from '~/lib/sgid'
+
 import { safeSchemaJsonParse } from '~/utils/zod'
+import { sgid } from '~/lib/sgid'
 
 const pocdexSgidSchema = z.array(
   z.object({

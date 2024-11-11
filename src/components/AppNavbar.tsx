@@ -1,7 +1,8 @@
-import { Flex, HStack } from '@chakra-ui/react'
-import { AvatarMenu, Link, Menu } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { Flex, HStack } from '@chakra-ui/react'
+import { AvatarMenu, Link, Menu } from '@opengovsg/design-system-react'
+
 import { APP_PX } from '~/constants/layouts'
 import { useMe } from '~/features/me/api/useMe'
 

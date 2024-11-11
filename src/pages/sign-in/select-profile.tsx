@@ -1,13 +1,13 @@
-import { Divider, Flex, Link, Stack, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import { PublicPageWrapper } from '~/components/AuthWrappers'
+import { Divider, Flex, Link, Stack, Text } from '@chakra-ui/react'
 
 import { AppFooter } from '~/components/AppFooter'
+import { PublicPageWrapper } from '~/components/AuthWrappers'
 import { SgidProfileList } from '~/features/sign-in/components/SgidProfileList'
+import { useEnv } from '~/hooks/useEnv'
 import { SIGN_IN } from '~/lib/routes'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'
-import { useEnv } from '~/hooks/useEnv'
 
 const SelectProfilePage: NextPageWithLayout = () => {
   const { env } = useEnv()

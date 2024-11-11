@@ -1,3 +1,4 @@
+import NextLink from 'next/link'
 import { Flex, HStack, type As } from '@chakra-ui/react'
 import {
   Button,
@@ -5,7 +6,7 @@ import {
   Link,
   useIsMobile,
 } from '@opengovsg/design-system-react'
-import NextLink from 'next/link'
+
 import { SIGN_IN } from '~/lib/routes'
 import { AppGrid } from '~/templates/AppGrid'
 

@@ -1,5 +1,6 @@
 import { type FC } from 'react'
 import { Flex, type FlexProps } from '@chakra-ui/react'
+
 import { AppGrid } from '~/templates/AppGrid'
 
 export const LandingSection: FC<FlexProps> = ({ bg, children, ...props }) => {

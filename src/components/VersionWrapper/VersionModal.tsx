@@ -1,15 +1,15 @@
+import { useCallback } from 'react'
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { ModalCloseButton } from '@opengovsg/design-system-react'
-import { useCallback } from 'react'
 import { BiRefresh } from 'react-icons/bi'
 
 interface VersionModalProps {

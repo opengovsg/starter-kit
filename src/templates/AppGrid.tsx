@@ -1,4 +1,5 @@
 import { Grid, type GridProps } from '@chakra-ui/react'
+
 import { APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
 
 /**

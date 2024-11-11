@@ -1,6 +1,9 @@
 import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
+import { useCallback, useMemo, useState } from 'react'
+import { Box, Skeleton } from '@chakra-ui/react'
+import { ThemeProvider } from '@opengovsg/design-system-react'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
 import {
   Loader,
@@ -8,23 +11,17 @@ import {
   type Decorator,
   type ReactRenderer,
 } from '@storybook/react'
-import mockdate from 'mockdate'
-import { ErrorBoundary } from 'react-error-boundary'
-
-import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { useCallback, useMemo, useState } from 'react'
-import superjson from 'superjson'
-import { type AppRouter } from '~/server/modules/_app'
-import { theme } from '~/theme'
-
-import { Box, Skeleton } from '@chakra-ui/react'
 import { format } from 'date-fns/format'
 import merge from 'lodash/merge'
+import mockdate from 'mockdate'
 import { initialize, mswLoader } from 'msw-storybook-addon'
+import { ErrorBoundary } from 'react-error-boundary'
+import superjson from 'superjson'
 import { z } from 'zod'
+
 import {
   EnvProvider,
   FeatureContext,
@@ -34,6 +31,8 @@ import { DefaultFallback } from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { env } from '~/env.mjs'
 import { LoginStateContext } from '~/features/auth'
+import { type AppRouter } from '~/server/modules/_app'
+import { theme } from '~/theme'
 
 // Initialize MSW
 initialize({

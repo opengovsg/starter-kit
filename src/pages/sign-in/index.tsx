@@ -1,10 +1,11 @@
 import { Flex } from '@chakra-ui/react'
 import { RestrictedGovtMasthead } from '@opengovsg/design-system-react'
-import { PublicPageWrapper } from '~/components/AuthWrappers'
 
+import { PublicPageWrapper } from '~/components/AuthWrappers'
 import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 import {
   BaseGridLayout,
+  CurrentLoginStep,
   FooterGridArea,
   LoginGridArea,
   LoginImageSvgr,
@@ -12,7 +13,6 @@ import {
   NonMobileSidebarGridArea,
   SignInContextProvider,
 } from '~/features/sign-in/components'
-import { CurrentLoginStep } from '~/features/sign-in/components'
 import { type NextPageWithLayout } from '~/lib/types'
 
 const SignIn: NextPageWithLayout = () => {

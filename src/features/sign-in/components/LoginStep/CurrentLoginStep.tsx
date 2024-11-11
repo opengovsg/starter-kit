@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { useSignInContext } from '../SignInContext'
-import { InitialLoginStep } from './InitialLoginStep'
 import { Flex } from '@chakra-ui/react'
+
+import { useSignInContext } from '../SignInContext'
 import { EmailLoginStep } from './EmailLoginStep'
+import { InitialLoginStep } from './InitialLoginStep'
 
 export const CurrentLoginStep = (): JSX.Element => {
   const { state } = useSignInContext()

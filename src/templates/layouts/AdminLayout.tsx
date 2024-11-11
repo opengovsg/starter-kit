@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react'
+
 import { AppNavbar } from '~/components/AppNavbar'
 import { EnforceLoginStatePageWrapper } from '~/components/AuthWrappers'
 import { type GetLayout } from '~/lib/types'

@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
-import { type VfnStepData, useSignInContext } from '../SignInContext'
+
+import { useSignInContext, type VfnStepData } from '../SignInContext'
 import { EmailInput } from './Emailnput'
 import { VerificationInput } from './VerificationInput'
 

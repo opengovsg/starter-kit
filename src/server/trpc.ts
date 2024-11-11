@@ -8,17 +8,18 @@
  * @see https://trpc.io/docs/v10/procedures
  */
 
+import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
-import { ZodError } from 'zod'
-import { type Context } from './context'
-import { TRPCError, initTRPC } from '@trpc/server'
-import { prisma } from './prisma'
-import { createBaseLogger } from '~/lib/logger'
-import getIP from '~/utils/getClientIp'
 import { type OpenApiMeta } from 'trpc-openapi'
-import { defaultMeSelect } from './modules/me/me.select'
-import { env } from '~/env.mjs'
+import { ZodError } from 'zod'
+
+import getIP from '~/utils/getClientIp'
 import { APP_VERSION_HEADER_KEY } from '~/constants/version'
+import { env } from '~/env.mjs'
+import { createBaseLogger } from '~/lib/logger'
+import { type Context } from './context'
+import { defaultMeSelect } from './modules/me/me.select'
+import { prisma } from './prisma'
 
 const t = initTRPC
   .meta<OpenApiMeta>()

@@ -1,6 +1,7 @@
+import Link from 'next/link'
 import { Flex, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
-import Link from 'next/link'
+
 import { APP_GRID_COLUMN, APP_PX } from '~/constants/layouts'
 import { StarterKitSvgr } from '~/features/home/components/StarterKitSvgr'
 import { type NextPageWithLayout } from '~/lib/types'

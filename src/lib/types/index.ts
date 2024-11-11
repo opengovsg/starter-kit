@@ -1,5 +1,5 @@
-import type { NextPage } from 'next'
 import type { ReactNode } from 'react'
+import type { NextPage } from 'next'
 
 export type GetLayout = (page: ReactNode) => ReactNode
 

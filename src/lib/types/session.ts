@@ -1,5 +1,6 @@
 import { type User } from '@prisma/client'
 import { type IronSession } from 'iron-session'
+
 import { type SgidSessionProfile } from '~/server/modules/auth/sgid/sgid.utils'
 
 export type SessionData = {

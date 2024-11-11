@@ -1,7 +1,8 @@
 import { type PrismaClient } from '@prisma/client'
+
+import { AccountProvider } from '../auth.constants'
 import { createPocdexAccountProviderId } from '../auth.util'
 import { type SgidSessionProfile } from './sgid.utils'
-import { AccountProvider } from '../auth.constants'
 
 export const upsertSgidAccountAndUser = async ({
   prisma,

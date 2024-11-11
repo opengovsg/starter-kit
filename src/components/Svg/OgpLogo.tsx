@@ -1,5 +1,5 @@
-import { chakra } from '@chakra-ui/react'
 import { type SVGProps } from 'react'
+import { chakra } from '@chakra-ui/react'
 
 const _OgpLogo = (props: SVGProps<SVGSVGElement>) => (
   <svg

@@ -1,7 +1,8 @@
-import { Flex, Stack, Text } from '@chakra-ui/react'
-import { Button } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { Flex, Stack, Text } from '@chakra-ui/react'
+import { Button } from '@opengovsg/design-system-react'
+
 import { RestrictedMiniFooter } from '~/components/RestrictedMiniFooter'
 
 // https://nextjs.org/docs/advanced-features/custom-error-page

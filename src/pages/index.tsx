@@ -1,8 +1,9 @@
-import { Box, Flex, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react'
-import { Button, Link, useIsMobile } from '@opengovsg/design-system-react'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { Box, Flex, Icon, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Button, Link, useIsMobile } from '@opengovsg/design-system-react'
 import { BiRightArrowAlt } from 'react-icons/bi'
+
 import { AppFooter } from '~/components/AppFooter'
 import { OgpLogo } from '~/components/Svg/OgpLogo'
 import {

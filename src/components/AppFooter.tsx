@@ -1,4 +1,5 @@
 import { RestrictedFooter } from '@opengovsg/design-system-react'
+
 import { useEnv } from '~/hooks/useEnv'
 
 export const AppFooter = () => {

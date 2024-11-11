@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import SignInPage from '~/pages/sign-in'
-
-import { expect } from '@storybook/test'
-import { userEvent, within } from '@storybook/test'
-import { meHandlers } from 'tests/msw/handlers/me'
-import { getMobileViewParameters } from '../utils/viewports'
+import { expect, userEvent, within } from '@storybook/test'
 import { authEmailHandlers } from 'tests/msw/handlers/auth/email'
+import { meHandlers } from 'tests/msw/handlers/me'
+
+import SignInPage from '~/pages/sign-in'
+import { getMobileViewParameters } from '../utils/viewports'
 
 const VALID_AUTH_EMAIL = 'test@example.gov.sg'
 

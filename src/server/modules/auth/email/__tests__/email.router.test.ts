@@ -2,13 +2,14 @@ import {
   applySession,
   createMockRequest,
 } from 'tests/integration/helpers/iron-session'
-import { it, expect, describe } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { env } from '~/env.mjs'
 import * as mailLib from '~/lib/mail'
 import { prisma } from '~/server/prisma'
+import { createCallerFactory } from '~/server/trpc'
 import { createTokenHash } from '../../auth.util'
 import { emailSessionRouter } from '../email.router'
-import { createCallerFactory } from '~/server/trpc'
 
 const createCaller = createCallerFactory(emailSessionRouter)
 

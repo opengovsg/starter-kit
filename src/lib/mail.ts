@@ -1,7 +1,7 @@
-import wretch from 'wretch'
-import { env } from '~/env.mjs'
-
 import sendgrid from '@sendgrid/mail'
+import wretch from 'wretch'
+
+import { env } from '~/env.mjs'
 
 type SendMailParams = {
   recipient: string

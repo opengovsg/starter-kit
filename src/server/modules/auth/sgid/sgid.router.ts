@@ -5,15 +5,16 @@ import {
 import { TRPCError } from '@trpc/server'
 import set from 'lodash/set'
 import { z } from 'zod'
+
+import { trpcAssert } from '~/utils/trpcAssert'
+import { appendWithRedirect } from '~/utils/url'
+import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
 import { env } from '~/env.mjs'
 import { SGID } from '~/lib/errors/auth.sgid'
 import { SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
 import { callbackUrlSchema } from '~/schemas/url'
 import { publicProcedure, router } from '~/server/trpc'
-import { trpcAssert } from '~/utils/trpcAssert'
-import { appendWithRedirect } from '~/utils/url'
-import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
 import { upsertSgidAccountAndUser } from './sgid.service'
 import {
   getUserInfo,

@@ -1,31 +1,31 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node-postgres
 {
-	"name": "Starter Kit",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "name": "Starter Kit",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-	"secrets": {
-		"POSTMAN_API_KEY": {
-			"description": "Your API key from Postman to send emails. Required for OTP logins.",
-			"documentationUrl": "https://guide.postman.gov.sg/api-guide/generate-your-api-key"
-		}
-	},
+  "secrets": {
+    "POSTMAN_API_KEY": {
+      "description": "Your API key from Postman to send emails. Required for OTP logins.",
+      "documentationUrl": "https://guide.postman.gov.sg/api-guide/generate-your-api-key"
+    }
+  },
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// This can be used to network with other containers or with the host.
-	"forwardPorts": [3000, 5432, 8080],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // This can be used to network with other containers or with the host.
+  "forwardPorts": [3000, 5432, 8080],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install && sed s/SESSION_SECRET=random_session_secret_that_is_at_least_32_characters/SESSION_SECRET=`npx uuid`/ .env.example  | sed s/POSTMAN_API_KEY=// > .env.development.local && export $(grep DATABASE_URL .env.development.local | xargs) && npm run migrate"
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "npm install && sed s/SESSION_SECRET=random_session_secret_that_is_at_least_32_characters/SESSION_SECRET=`npx uuid`/ .env.example  | sed s/POSTMAN_API_KEY=// > .env.development.local && export $(grep DATABASE_URL .env.development.local | xargs) && npm run migrate"
 
-	// Configure tool-specific properties.
-	// "customizations": {},
+  // Configure tool-specific properties.
+  // "customizations": {},
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }

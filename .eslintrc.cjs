@@ -7,12 +7,13 @@ const config = {
   parserOptions: {
     project: path.join(__dirname, 'tsconfig.json'),
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
     'plugin:storybook/recommended',
   ],
   rules: {
@@ -46,6 +47,7 @@ const config = {
       },
     ],
     '@typescript-eslint/no-floating-promises': 'error',
+    'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

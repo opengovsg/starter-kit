@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react'
 import { type Meta, type StoryObj } from '@storybook/react'
 
-import { getMobileViewParameters } from '../utils/viewports'
 import { VersionModal } from '~/components/VersionWrapper/VersionModal'
+import { getMobileViewParameters } from '../utils/viewports'
 
 const meta: Meta<typeof VersionModal> = {
   title: 'Components/Version Modal',

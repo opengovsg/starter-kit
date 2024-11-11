@@ -1,9 +1,10 @@
-import { Button } from '@opengovsg/design-system-react'
 import { useRouter } from 'next/router'
-import { trpc } from '~/utils/trpc'
 import { Box, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react'
-import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
+import { Button } from '@opengovsg/design-system-react'
+
+import { trpc } from '~/utils/trpc'
 import { getRedirectUrl } from '~/utils/url'
+import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()

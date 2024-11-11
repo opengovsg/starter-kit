@@ -1,6 +1,6 @@
-import { Link, Text } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import Image from 'next/image'
+import NextLink from 'next/link'
+import { Link, Text } from '@chakra-ui/react'
 
 export const RestrictedMiniFooter = (): JSX.Element => {
   return (

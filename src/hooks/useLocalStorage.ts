@@ -1,6 +1,7 @@
 // Retrieved and modified from https://usehooks-ts.com/react-hook/use-local-storage
 
-import { type SetStateAction, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type SetStateAction } from 'react'
+
 import { LOCAL_STORAGE_EVENT } from '~/constants/localStorage'
 
 export const useLocalStorage = <T>(

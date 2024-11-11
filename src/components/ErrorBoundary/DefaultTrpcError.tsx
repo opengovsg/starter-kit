@@ -1,10 +1,11 @@
+import { useEffect } from 'react'
 import { Box } from '@chakra-ui/react'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { UnexpectedErrorCard } from './UnexpectedErrorCard'
-import { FullscreenSpinner } from '../FullscreenSpinner'
+
 import { trpc } from '~/utils/trpc'
-import { useEffect } from 'react'
 import { useLoginState } from '~/features/auth'
+import { FullscreenSpinner } from '../FullscreenSpinner'
+import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 
 const UnauthorizedError = () => {
   const utils = trpc.useUtils()
