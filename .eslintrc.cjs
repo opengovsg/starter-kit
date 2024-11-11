@@ -56,6 +56,26 @@ const config = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.tsx', '**/*.jsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '~/env.mjs',
+                importNames: ['env'],
+                message:
+                  'Please use `hooks/useEnv` hook instead. This prevents unusable env variables in client-side code.',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
   ignorePatterns: ['webpack.config.js'],
 }
 module.exports = config

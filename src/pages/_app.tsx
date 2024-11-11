@@ -12,6 +12,7 @@ import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
 import { EnvProvider, FeatureProvider } from '~/components/AppProviders'
 import { LoginStateProvider } from '~/features/auth'
+// eslint-disable-next-line no-restricted-imports
 import { env } from '~/env.mjs'
 import { VersionWrapper } from '~/components/VersionWrapper'
 import { ErrorBoundary } from 'react-error-boundary'

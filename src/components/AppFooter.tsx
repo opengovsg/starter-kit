@@ -1,7 +1,8 @@
 import { RestrictedFooter } from '@opengovsg/design-system-react'
-import { env } from '~/env.mjs'
+import { useEnv } from '~/hooks/useEnv'
 
 export const AppFooter = () => {
+  const { env } = useEnv()
   return (
     // This component can only be used if this is an application created by OGP.
     <RestrictedFooter
