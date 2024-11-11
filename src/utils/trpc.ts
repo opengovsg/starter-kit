@@ -14,7 +14,7 @@ import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import type { AppRouter } from '~/server/modules/_app'
 import { getBaseUrl } from './getBaseUrl'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
+import { LOCAL_STORAGE_EVENT, LOGGED_IN_KEY } from '~/constants/localStorage'
 import { observable } from '@trpc/server/observable'
 import { env } from '~/env.mjs'
 import {
@@ -90,7 +90,7 @@ export const custom401Link: TRPCLink<AppRouter> = () => {
             // We can think of this handler function as a form of client side auth validity
             // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
             window.localStorage.removeItem(LOGGED_IN_KEY)
-            window.dispatchEvent(new Event('local-storage'))
+            window.dispatchEvent(new Event(LOCAL_STORAGE_EVENT))
           }
         },
         complete() {
