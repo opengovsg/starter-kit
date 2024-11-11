@@ -8,6 +8,7 @@ import {
 import { type Session } from '~/lib/types/session'
 import { createContextInner, type Context } from '~/server/context'
 import { auth } from './auth'
+import { type SetOptional } from 'type-fest'
 
 class MockIronStore {
   private static instance: MockIronStore
@@ -92,7 +93,7 @@ export const applySession = () => {
   return session
 }
 
-export const applyAuthedSession = async (user: Partial<User>) => {
+export const applyAuthedSession = async (user: SetOptional<User, 'id'>) => {
   const authedUser = await auth(user)
   const session = applySession()
   session.userId = authedUser.id
