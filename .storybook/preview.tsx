@@ -2,7 +2,12 @@ import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
-import { Loader, type Args, type Decorator, type ReactRenderer } from '@storybook/react'
+import {
+  Loader,
+  type Args,
+  type Decorator,
+  type ReactRenderer,
+} from '@storybook/react'
 import mockdate from 'mockdate'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -17,7 +22,7 @@ import { theme } from '~/theme'
 
 import { Box, Skeleton } from '@chakra-ui/react'
 import { format } from 'date-fns/format'
-import { merge } from 'lodash'
+import merge from 'lodash/merge'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import { z } from 'zod'
 import {
@@ -45,7 +50,7 @@ const StorybookEnvDecorator: Decorator = (story) => {
       NEXT_PUBLIC_ENABLE_SGID: false,
       NEXT_PUBLIC_ENABLE_STORAGE: false,
     },
-    env
+    env,
   )
   return <EnvProvider env={mockEnv}>{story()}</EnvProvider>
 }
@@ -60,13 +65,13 @@ const SetupDecorator: Decorator = (story) => {
           refetchOnWindowFocus: false,
         },
       },
-    })
+    }),
   )
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [httpBatchLink({ url: '' })],
       transformer: superjson,
-    })
+    }),
   )
   return (
     <ErrorBoundary FallbackComponent={DefaultFallback}>
@@ -105,7 +110,7 @@ const WithLayoutDecorator: Decorator = (Story, { parameters }) => {
 
 export const MockFeatureFlagsDecorator: Decorator<Args> = (
   story,
-  { parameters }
+  { parameters },
 ) => {
   const featureSchema = z
     .object({
@@ -126,7 +131,7 @@ export const MockFeatureFlagsDecorator: Decorator<Args> = (
 
 const LoginStateDecorator: Decorator<Args> = (story, { parameters }) => {
   const [hasLoginStateFlag, setLoginStateFlag] = useState(
-    Boolean(parameters.loginState)
+    Boolean(parameters.loginState),
   )
 
   const setHasLoginStateFlag = useCallback(() => {
@@ -195,6 +200,6 @@ export const decorators: Decorator[] = [
   MockDateDecorator,
 ]
 
-export const tags = ['autodocs'];
+export const tags = ['autodocs']
 
 export const loaders: Loader[] = [mswLoader]

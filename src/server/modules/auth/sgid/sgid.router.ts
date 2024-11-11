@@ -3,7 +3,7 @@ import {
   type AuthorizationUrlParams,
 } from '@opengovsg/sgid-client'
 import { TRPCError } from '@trpc/server'
-import { set } from 'lodash'
+import set from 'lodash/set'
 import { z } from 'zod'
 import { env } from '~/env.mjs'
 import { SGID } from '~/lib/errors/auth.sgid'

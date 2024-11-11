@@ -37,7 +37,13 @@ const config = {
             message:
               'Please use Suspense from /components instead. Default React 18 Suspense is not supported for SSR',
           },
+          {
+            name: 'lodash',
+            message:
+              "Please use `import [package] from 'lodash/[package]'` for better tree-shaking instead.",
+          },
         ],
+        patterns: ['!lodash/*'],
       },
     ],
     '@typescript-eslint/no-floating-promises': 'error',
