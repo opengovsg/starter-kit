@@ -12,9 +12,7 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  docs: {
-    autodocs: 'tag',
-  },
+  docs: {},
   staticDirs: ['../public'],
   core: {
     disableTelemetry: true,
