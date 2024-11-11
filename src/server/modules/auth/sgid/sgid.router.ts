@@ -131,67 +131,35 @@ export const sgidRouter = router({
         code: 'FORBIDDEN',
       })
 
-      // More than 1 domain means that the user has multiple profiles
       // Redirect user to choose a profile before logging in.
-      if (pocdexDetails.length > 1) {
-        const sgidProfileToStore = sgidSessionProfileSchema.safeParse({
-          list: pocdexDetails,
-          sub: sgidUserInfo.sub,
-          name: sgidUserInfo.data['myinfo.name'],
-          // expire profiles after 5 minutes to avoid situations where login-jacking when
-          // the previous user navigated away without selecting a profile
-          expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
-        })
-
-        if (!sgidProfileToStore.success) {
-          ctx.logger.warn(
-            { error: sgidProfileToStore.error },
-            'Unable to store sgid profile in session',
-          )
-          throw new TRPCError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: 'Unable to store sgid profile in session',
-          })
-        }
-
-        set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
-        await ctx.session.save()
-        return {
-          selectProfileStep: true,
-          redirectUrl: appendWithRedirect(
-            `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
-            parsedState.data.landingUrl,
-          ),
-        }
-      }
-
-      // Exactly 1 email, create user and tie to account
-      const sgidPocdexEmailResult = normaliseEmail.safeParse(
-        pocdexDetails[0]?.work_email,
-      )
-      if (!sgidPocdexEmailResult.success) {
-        ctx.logger.warn(
-          { error: sgidPocdexEmailResult.error },
-          'Unable to process work email from sgID',
-        )
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Work email was unable to be processed. Please try again.',
-        })
-      }
-      const user = await upsertSgidAccountAndUser({
-        prisma: ctx.prisma,
-        name: sgidUserInfo.data['myinfo.name'],
-        pocdexEmail: sgidPocdexEmailResult.data,
+      const sgidProfileToStore = sgidSessionProfileSchema.safeParse({
+        list: pocdexDetails,
         sub: sgidUserInfo.sub,
+        name: sgidUserInfo.data['myinfo.name'],
+        // expire profiles after 5 minutes to avoid situations where login-jacking when
+        // the previous user navigated away without selecting a profile
+        expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
       })
 
-      ctx.session.destroy()
-      ctx.session.userId = user.id
-      await ctx.session.save()
+      if (!sgidProfileToStore.success) {
+        ctx.logger.warn(
+          { error: sgidProfileToStore.error },
+          'Unable to store sgid profile in session',
+        )
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Unable to store sgid profile in session',
+        })
+      }
 
+      set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
+      await ctx.session.save()
       return {
-        redirectUrl: parsedState.data.landingUrl,
+        selectProfileStep: true,
+        redirectUrl: appendWithRedirect(
+          `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
+          parsedState.data.landingUrl,
+        ),
       }
     }),
   listStoredProfiles: publicProcedure.query(({ ctx }) => {

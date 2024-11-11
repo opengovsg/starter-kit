@@ -29,7 +29,7 @@ export const VerificationInput = (): JSX.Element | null => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const { setHasLoginStateFlag } = useLoginState()
   const router = useRouter()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   const { vfnStepData, timer, setVfnStepData, resetTimer } = useSignInContext()
 

@@ -13,7 +13,7 @@ export const SgidCallback = (): JSX.Element => {
   const { setHasLoginStateFlag } = useLoginState()
 
   const router = useRouter()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   const {
     query: { code, state },
