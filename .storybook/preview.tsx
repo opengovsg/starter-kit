@@ -1,10 +1,10 @@
 import '@fontsource/ibm-plex-mono'
 import 'inter-ui/inter.css'
 
-import { ErrorBoundary } from 'react-error-boundary'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
-import { type ReactRenderer, type Args, type Decorator, type Preview } from '@storybook/react'
+import { Loader, type Args, type Decorator, type ReactRenderer } from '@storybook/react'
 import mockdate from 'mockdate'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -16,19 +16,19 @@ import { type AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
 
 import { Box, Skeleton } from '@chakra-ui/react'
-import { initialize, mswDecorator } from 'msw-storybook-addon'
-import { DefaultFallback } from '~/components/ErrorBoundary'
-import Suspense from '~/components/Suspense'
 import { format } from 'date-fns/format'
+import { merge } from 'lodash'
+import { initialize, mswLoader } from 'msw-storybook-addon'
+import { z } from 'zod'
 import {
-  type EnvContextReturn,
   EnvProvider,
   FeatureContext,
+  type EnvContextReturn,
 } from '~/components/AppProviders'
-import { z } from 'zod'
-import { LoginStateContext } from '~/features/auth'
-import { merge } from 'lodash'
+import { DefaultFallback } from '~/components/ErrorBoundary'
+import Suspense from '~/components/Suspense'
 import { env } from '~/env.mjs'
+import { LoginStateContext } from '~/features/auth'
 
 // Initialize MSW
 initialize({
@@ -95,13 +95,13 @@ const SetupDecorator: Decorator = (story) => {
   }
   ```
  */
-  const WithLayoutDecorator: Decorator = (Story, { parameters }) => {
-    if (!parameters.getLayout) {
-      return Story()
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return <>{parameters.getLayout(<Story />)}</>
+const WithLayoutDecorator: Decorator = (Story, { parameters }) => {
+  if (!parameters.getLayout) {
+    return Story()
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  return <>{parameters.getLayout(<Story />)}</>
+}
 
 export const MockFeatureFlagsDecorator: Decorator<Args> = (
   story,
@@ -180,7 +180,7 @@ export const MockDateDecorator: Decorator<Args> = (story, { parameters }) => {
   )
 }
 
-const decorators: Decorator[] = [
+export const decorators: Decorator[] = [
   WithLayoutDecorator,
   StorybookEnvDecorator,
   MockFeatureFlagsDecorator,
@@ -193,20 +193,8 @@ const decorators: Decorator[] = [
     Provider: ThemeProvider,
   }),
   MockDateDecorator,
-  mswDecorator,
 ]
 
-const preview: Preview = {
-  decorators,
-  parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/,
-      },
-    },
-  },
-}
+export const tags = ['autodocs'];
 
-export default preview
+export const loaders: Loader[] = [mswLoader]

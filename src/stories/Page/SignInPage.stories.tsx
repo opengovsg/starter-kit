@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import SignInPage from '~/pages/sign-in'
 
-import { expect } from '@storybook/jest'
-import { userEvent, within } from '@storybook/testing-library'
+import { expect } from '@storybook/test'
+import { userEvent, within } from '@storybook/test'
 import { meHandlers } from 'tests/msw/handlers/me'
 import { getMobileViewParameters } from '../utils/viewports'
 import { authEmailHandlers } from 'tests/msw/handlers/auth/email'
