@@ -4,12 +4,15 @@ import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 import { trpc } from '~/utils/trpc'
 import { useEffect } from 'react'
+import { useLoginState } from '~/features/auth'
 
 const UnauthorizedError = () => {
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
+  const { removeLoginStateFlag } = useLoginState()
   useEffect(() => {
     void utils.invalidate()
-  }, [utils])
+    removeLoginStateFlag()
+  }, [removeLoginStateFlag, utils])
 
   return <FullscreenSpinner />
 }
