@@ -24,6 +24,13 @@ export const meRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (!env.NEXT_PUBLIC_ENABLE_STORAGE) {
+        throw new TRPCError({
+          code: 'NOT_IMPLEMENTED',
+          message: 'Storage is not enabled',
+        })
+      }
+
       return await ctx.prisma.user.update({
         where: { id: ctx.user.id },
         data: {

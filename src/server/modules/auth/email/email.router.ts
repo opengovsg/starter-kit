@@ -8,7 +8,6 @@ import { VerificationError } from '../auth.error'
 import { env } from '~/env.mjs'
 import { formatInTimeZone } from 'date-fns-tz'
 import { defaultMeSelect } from '../../me/me.select'
-import { generateUsername } from '../../me/me.service'
 import {
   emailSignInSchema,
   emailVerifyOtpSchema,
@@ -86,9 +85,7 @@ export const emailSessionRouter = router({
         update: {},
         create: {
           email,
-          emailVerified: new Date(),
           name: emailName,
-          username: generateUsername(emailName),
         },
         select: defaultMeSelect,
       })

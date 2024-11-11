@@ -1,5 +1,4 @@
 import { type PrismaClient } from '@prisma/client'
-import { generateUsername } from '../../me/me.service'
 import { createPocdexAccountProviderId } from '../auth.util'
 import { type SgidSessionProfile } from './sgid.utils'
 import { AccountProvider } from '../auth.constants'
@@ -21,22 +20,14 @@ export const upsertSgidAccountAndUser = async ({
       where: {
         email: pocdexEmail,
       },
-      update: {},
+      update: {
+        name,
+      },
       create: {
         email: pocdexEmail,
-        emailVerified: new Date(),
         name,
-        username: generateUsername(pocdexEmail),
       },
     })
-
-    // Backwards compatibility -- update username if it is not set
-    if (!user.username) {
-      await tx.user.update({
-        where: { id: user.id },
-        data: { username: generateUsername(pocdexEmail) },
-      })
-    }
 
     // Link user to account
     const pocdexProviderAccountId = createPocdexAccountProviderId(
