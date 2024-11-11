@@ -21,7 +21,6 @@ export default meta
 type Story = StoryObj<typeof NewPostModal>
 
 const defaultRenderFn: Story['render'] = (args) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const modalProps = useDisclosure({ defaultIsOpen: true })
 
   return (
