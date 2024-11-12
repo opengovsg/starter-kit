@@ -15,7 +15,7 @@ const _SgidProfileList = (): JSX.Element => {
 
   const { setHasLoginStateFlag } = useLoginState()
 
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   const [profiles] = trpc.auth.sgid.listStoredProfiles.useSuspenseQuery()
   const selectMutation = trpc.auth.sgid.selectProfile.useMutation({
