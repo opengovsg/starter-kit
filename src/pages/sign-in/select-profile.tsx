@@ -15,7 +15,7 @@ const SelectProfilePage: NextPageWithLayout = () => {
   return (
     <PublicPageWrapper strict>
       <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt">
-        <AppGrid flex={1}>
+        <AppGrid flex={1} py="2rem">
           <Stack
             my="auto"
             gridColumn={{ base: '1 / 5', md: '1 / 12', lg: '5 / 9' }}
