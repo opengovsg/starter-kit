@@ -12,7 +12,7 @@ import { EnvProvider, FeatureProvider } from '~/components/AppProviders'
 import { DefaultFallback } from '~/components/ErrorBoundary/DefaultFallback'
 import Suspense from '~/components/Suspense'
 import { VersionWrapper } from '~/components/VersionWrapper'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { env } from '~/env.mjs'
 import { LoginStateProvider } from '~/features/auth'
 import { type NextPageWithLayout } from '~/lib/types'

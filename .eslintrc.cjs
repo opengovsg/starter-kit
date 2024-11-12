@@ -60,13 +60,14 @@ const config = {
     {
       files: ['**/*.tsx', '**/*.jsx'],
       rules: {
-        'no-restricted-imports': [
+        '@typescript-eslint/no-restricted-imports': [
           'error',
           {
             paths: [
               {
                 name: '~/env.mjs',
                 importNames: ['env'],
+                allowTypeImports: true,
                 message:
                   'Please use `hooks/useEnv` hook instead. This prevents unusable env variables in client-side code.',
               },
