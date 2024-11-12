@@ -1,4 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-env node */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path')
 
 /** @type {import("eslint").Linter.Config} */

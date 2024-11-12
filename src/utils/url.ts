@@ -22,7 +22,7 @@ export const isRelativeUrl = (url: string) => {
   try {
     const normalizedUrl = new URL(url, baseUrl)
     return new URL(baseUrl).origin === normalizedUrl.origin
-  } catch (e) {
+  } catch {
     return false
   }
 }

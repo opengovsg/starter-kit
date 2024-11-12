@@ -1,5 +1,6 @@
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// @ts-ignore
 const GlobEntries = require('webpack-glob-entries')
 
 module.exports = {

@@ -10,7 +10,7 @@ import { callbackUrlSchema } from '~/schemas/url'
 import { SgidProfileItem } from './SgidProfileItem'
 import { SgidProfileListSkeleton } from './SgidProfileListSkeleton'
 
-const _SgidProfileList = (): JSX.Element => {
+const SuspendableSgidProfileList = (): JSX.Element => {
   const router = useRouter()
 
   const { setHasLoginStateFlag } = useLoginState()
@@ -50,6 +50,6 @@ const _SgidProfileList = (): JSX.Element => {
 }
 
 export const SgidProfileList = withSuspense(
-  _SgidProfileList,
+  SuspendableSgidProfileList,
   <SgidProfileListSkeleton />,
 )
