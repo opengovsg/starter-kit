@@ -160,7 +160,7 @@ const LandingPage = () => {
       </LandingSection>
       <AppGrid bg="base.canvas.brand-subtle" px="1.5rem">
         <Box gridColumn={{ base: '1 / -1', md: '2 / 12' }}>
-          <AppFooter />
+          <AppFooter containerProps={{ px: 0 }} />
         </Box>
       </AppGrid>
     </>
