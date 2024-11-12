@@ -3,6 +3,7 @@ import { Divider, Flex, Link, Stack, Text } from '@chakra-ui/react'
 
 import { AppFooter } from '~/components/AppFooter'
 import { PublicPageWrapper } from '~/components/AuthWrappers'
+import { APP_PX } from '~/constants/layouts'
 import { SgidProfileList } from '~/features/sign-in/components/SgidProfileList'
 import { useEnv } from '~/hooks/useEnv'
 import { SIGN_IN } from '~/lib/routes'
@@ -15,7 +16,7 @@ const SelectProfilePage: NextPageWithLayout = () => {
   return (
     <PublicPageWrapper strict>
       <Flex minH="$100vh" flexDir="column" bg="base.canvas.alt">
-        <AppGrid flex={1} py="2rem">
+        <AppGrid flex={1} py="2rem" px={APP_PX}>
           <Stack
             my="auto"
             gridColumn={{ base: '1 / 5', md: '1 / 12', lg: '5 / 9' }}
