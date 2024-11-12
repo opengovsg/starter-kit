@@ -1,7 +1,9 @@
 import 'pino-pretty'
-import { pino } from 'pino'
-import { env } from '~/env.mjs'
+
 import { nanoid } from 'nanoid'
+import { pino } from 'pino'
+
+import { env } from '~/env.mjs'
 
 // use syslog protocol levels as per https://datatracker.ietf.org/doc/html/rfc5424#page-10
 const levels: { [level: string]: number } = {

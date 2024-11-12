@@ -1,10 +1,11 @@
-import { type ComponentType, useMemo } from 'react'
-import { type FallbackProps } from 'react-error-boundary'
-import { SgidErrorModal } from './SgidErrorModal'
+import { useMemo, type ComponentType } from 'react'
 import { useRouter } from 'next/router'
-import { safeSchemaJsonParse } from '~/utils/zod'
+import { type FallbackProps } from 'react-error-boundary'
 import { z } from 'zod'
+
+import { safeSchemaJsonParse } from '~/utils/zod'
 import { HOME } from '~/lib/routes'
+import { SgidErrorModal } from './SgidErrorModal'
 
 export const SgidErrorFallback: ComponentType<FallbackProps> = ({ error }) => {
   const router = useRouter()

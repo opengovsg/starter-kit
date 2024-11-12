@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react'
+import { Icon, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 import { BiChevronRight } from 'react-icons/bi'
 
@@ -18,7 +18,13 @@ export const SgidProfileItem = ({ profile, onClick }: SgidProfileItemProps) => {
       py="1.5rem"
       justifyContent="space-between"
       onClick={onClick}
-      rightIcon={<BiChevronRight fontSize="1.5rem" />}
+      rightIcon={
+        <Icon
+          as={BiChevronRight}
+          color="base.content.medium"
+          fontSize="1.5rem"
+        />
+      }
     >
       <Stack textAlign="start" color="base.content.medium">
         <Text textStyle="subhead-2" color="base.content.strong">

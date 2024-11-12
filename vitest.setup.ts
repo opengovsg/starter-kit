@@ -1,8 +1,8 @@
-import { vi } from 'vitest'
-import { PGlite } from '@electric-sql/pglite'
-import { PrismaPGlite } from 'pglite-prisma-adapter'
-import { PrismaClient } from '@prisma/client'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { PGlite } from '@electric-sql/pglite'
+import { PrismaClient } from '@prisma/client'
+import { PrismaPGlite } from 'pglite-prisma-adapter'
+import { vi } from 'vitest'
 
 const client = new PGlite()
 const adapter = new PrismaPGlite(client)

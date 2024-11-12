@@ -7,6 +7,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, '**/playwright/**', 'tests/load/**'],
     alias: {
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
+      '~tests/': fileURLToPath(new URL('./tests/', import.meta.url)),
     },
     setupFiles: ['vitest.setup.ts'],
     coverage: {

@@ -5,16 +5,6 @@ const emailSchema = createEmailSchema({
   domains: [{ domain: 'gov.sg', includeSubdomains: true }],
 })
 
-export const getEmailDomain = (email?: string) => {
-  if (!email) {
-    return undefined
-  }
-  if (!isEmail(email)) {
-    return undefined
-  }
-  return email.split('@').pop()
-}
-
 /**
  * Returns whether the passed value is a valid government email.
  */

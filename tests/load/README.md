@@ -16,7 +16,14 @@
 
 ## Runing the Load Tests
 
-### Create Post Load Test
+### Email Login Load Test
+
+```
+k6 run tests/load/build/email-login.test.js \
+  -e BASE_URL={{ scheme }}://{{ hostname }}:{{ port }}
+```
+
+### (Hypothetical) Create Post (that requires auth'd cookies) Load Test
 
 ```
 k6 run tests/load/build/create-post.test.js \

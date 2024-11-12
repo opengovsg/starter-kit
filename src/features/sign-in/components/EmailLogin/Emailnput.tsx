@@ -1,14 +1,15 @@
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { FormControl, Stack } from '@chakra-ui/react'
 import {
   Button,
-  Input,
   FormErrorMessage,
   FormLabel,
+  Input,
 } from '@opengovsg/design-system-react'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useZodForm } from '~/lib/form'
+
 import { trpc } from '~/utils/trpc'
+import { useZodForm } from '~/lib/form'
 import { emailSignInSchema } from '~/schemas/auth/email/sign-in'
 import { type VfnStepData } from '../SignInContext'
 

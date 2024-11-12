@@ -1,13 +1,11 @@
 import { type User } from '@prisma/client'
-import { trpcMsw } from '../mockTrpc'
 import { TRPCError } from '@trpc/server'
+
+import { trpcMsw } from '../mockTrpc'
 
 export const defaultUser: User = {
   id: 'cljcnahpn0000xlwynuea40lv',
-  bio: null,
   email: 'test@example.com',
-  emailVerified: new Date('2023-06-26T09:17:05.194Z'),
-  username: 'testUser',
   image: null,
   name: 'Test User',
 }

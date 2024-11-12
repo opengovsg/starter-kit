@@ -2,7 +2,7 @@
 // Used to allow overriding of environment variables in storybook tests.
 import { createContext, type PropsWithChildren } from 'react'
 
-import { type env } from '~/env.mjs'
+import type { env } from '~/env.mjs'
 
 // Typescript magic to only select keys from object T that start with a prefix S.
 type PickStartsWith<T extends object, S extends string> = {

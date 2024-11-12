@@ -1,4 +1,5 @@
 import SgidClient, { type SgidClientParams } from '@opengovsg/sgid-client'
+
 import { env } from '~/env.mjs'
 
 /**

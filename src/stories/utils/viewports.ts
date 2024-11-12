@@ -1,44 +1,53 @@
-import { theme } from '~/theme'
+/**
+ * This file holds the viewports for Storybook rendering, and also for
+ * Choromatic to take snapshots based on the given mode.
+ * @see https://www.chromatic.com/docs/modes/ and the `modes.ts` file.
+ *
+ * Width breakpoints are set as OGPDS defaults (as of writing this ) of
+ *
+ * sm: '30em',
+ * md: '48em',
+ * lg: '64em',
+ * xl: '90em',
+ *
+ * @see https://tailwindcss.com/docs/screens
+ *
+ * If you override default tailwindcss breakpoints, you should update this file
+ * so snapshot widths are consistent with the breakpoints in your app.
+ */
+
+/** Type that conform to what Storybook expects for the `viewport` parameter */
+interface StorybookViewportParameter {
+  viewports: Record<
+    string,
+    {
+      name: string
+    } & (
+      | {
+          styles: {
+            width: string
+            height?: string
+          }
+        }
+      | number
+    )
+  >
+}
 
 /**
- * Helper function to convert theme breakpoint into viewport width in px for
- * Chromatic viewpoint snapshots.
- * @param breakpoint the theme breakpoint to convert
- * @returns the number pixel width of the given breakpoint.
+ * The names of the viewports should correspond to the `viewport` parameter you
+ * set in `modes.ts`.
+ *
+ * An additional `xs` viewport is added specifically for Chromatic to have a
+ * snapshot for the smallest screen size.
  */
-const breakpointToViewportWidth = (
-  breakpoint: keyof typeof theme.breakpoints,
-) => {
-  const rem = 16
-  return parseInt(theme.breakpoints[breakpoint]) * rem
-}
-
-/**
- * Viewports mapping viewport key to their width in (pixel) number.
- * Used for Chromatic viewpoint snapshots which requires the numbers in pixels.
- */
-export const viewports = {
-  xs: 320, // '20rem'
-  sm: breakpointToViewportWidth('sm'),
-  md: breakpointToViewportWidth('md'),
-  lg: breakpointToViewportWidth('lg'),
-  xl: breakpointToViewportWidth('xl'),
-}
-
-export const getMobileViewParameters = () => {
-  return {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-    chromatic: { viewports: [viewports.xs] },
-  }
-}
-
-export const getTabletViewParameters = () => {
-  return {
-    viewport: {
-      defaultViewport: 'tablet',
-    },
-    chromatic: { viewports: [viewports.md] },
-  }
-}
+export const viewport = {
+  viewports: {
+    xs: { name: 'xs', styles: { width: '320px', height: '100%' } },
+    sm: { name: 'sm', styles: { width: '480px', height: '100%' } },
+    md: { name: 'md', styles: { width: '768px', height: '100%' } },
+    lg: { name: 'lg', styles: { width: '1280px', height: '100%' } },
+    xl: { name: 'xl', styles: { width: '1440px', height: '100%' } },
+    '2xl': { name: '2xl', styles: { width: '1536px', height: '100%' } },
+  },
+} as const satisfies StorybookViewportParameter

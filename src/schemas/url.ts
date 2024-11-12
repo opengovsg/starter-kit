@@ -1,7 +1,8 @@
-import { z } from 'zod'
-import { HOME } from '~/lib/routes'
 import { createUrlSchema } from '@opengovsg/starter-kitty-validators/url'
+import { z } from 'zod'
+
 import { getBaseUrl } from '~/utils/getBaseUrl'
+import { HOME } from '~/lib/routes'
 
 const baseUrl = new URL(getBaseUrl())
 

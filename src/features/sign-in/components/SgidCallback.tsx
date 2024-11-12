@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
+import { trpc } from '~/utils/trpc'
 import { FullscreenSpinner } from '~/components/FullscreenSpinner'
 import { useLoginState } from '~/features/auth'
 import { callbackUrlSchema } from '~/schemas/url'
-import { trpc } from '~/utils/trpc'
 
 /**
  * This component is responsible for handling the callback from the SGID login.
@@ -13,7 +13,7 @@ export const SgidCallback = (): JSX.Element => {
   const { setHasLoginStateFlag } = useLoginState()
 
   const router = useRouter()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   const {
     query: { code, state },

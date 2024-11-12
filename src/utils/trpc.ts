@@ -1,3 +1,4 @@
+import { type NextPageContext } from 'next'
 import {
   httpBatchLink,
   loggerLink,
@@ -6,21 +7,21 @@ import {
 } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
-import { type NextPageContext } from 'next'
-import superjson from 'superjson'
-import { TRPCWithErrorCodeSchema } from '~/utils/error'
-// ℹ️ Type-only import:
-// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
-import type { AppRouter } from '~/server/modules/_app'
-import { getBaseUrl } from './getBaseUrl'
-import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
-import { LOGGED_IN_KEY } from '~/constants/localStorage'
 import { observable } from '@trpc/server/observable'
-import { env } from '~/env.mjs'
+import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
+import superjson from 'superjson'
+
+import { TRPCWithErrorCodeSchema } from '~/utils/error'
+import { LOCAL_STORAGE_EVENT, LOGGED_IN_KEY } from '~/constants/localStorage'
 import {
   APP_VERSION_HEADER_KEY,
   REQUIRE_UPDATE_EVENT,
 } from '~/constants/version'
+import { env } from '~/env.mjs'
+// ℹ️ Type-only import:
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
+import type { AppRouter } from '~/server/modules/_app'
+import { getBaseUrl } from './getBaseUrl'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([
   'BAD_REQUEST',
@@ -90,7 +91,7 @@ export const custom401Link: TRPCLink<AppRouter> = () => {
             // We can think of this handler function as a form of client side auth validity
             // handling, and the /api/[trpc] API route as a form of server side auth validity handling.
             window.localStorage.removeItem(LOGGED_IN_KEY)
-            window.dispatchEvent(new Event('local-storage'))
+            window.dispatchEvent(new Event(LOCAL_STORAGE_EVENT))
           }
         },
         complete() {
@@ -116,7 +117,7 @@ export interface SSRContext extends NextPageContext {
   /**
    * Set HTTP Status code
    * @example
-   * const utils = trpc.useContext();
+   * const utils = trpc.useUtils();
    * if (utils.ssrContext) {
    *   utils.ssrContext.status = 404;
    * }

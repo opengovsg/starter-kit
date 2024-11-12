@@ -1,5 +1,5 @@
-import { Text } from '@chakra-ui/react'
 import { type PropsWithChildren } from 'react'
+import { Text } from '@chakra-ui/react'
 
 export const SectionHeadingText = ({
   children,

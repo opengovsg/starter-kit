@@ -1,9 +1,9 @@
 import { Stack, Text } from '@chakra-ui/react'
 
-import { SgidLoginButton } from '../SgidLogin'
-import { EmailLoginButton, EmailLoginForm } from '../EmailLogin'
-import { useEnv } from '~/hooks/useEnv'
 import { useFeatures } from '~/components/AppProviders'
+import { useEnv } from '~/hooks/useEnv'
+import { EmailLoginButton, EmailLoginForm } from '../EmailLogin'
+import { SgidLoginButton } from '../SgidLogin'
 
 export const InitialLoginStep = (): JSX.Element => {
   const {

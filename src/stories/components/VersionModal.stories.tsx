@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react'
 import { type Meta, type StoryObj } from '@storybook/react'
 
-import { getMobileViewParameters } from '../utils/viewports'
 import { VersionModal } from '~/components/VersionWrapper/VersionModal'
+import { withChromaticModes } from '../utils/chromatic'
 
 const meta: Meta<typeof VersionModal> = {
   title: 'Components/Version Modal',
@@ -18,9 +18,11 @@ const meta: Meta<typeof VersionModal> = {
     ),
   ],
   parameters: {
-    layout: 'fullscreen',
     // Prevent flaky tests due to modal animating in.
-    chromatic: { delay: 200 },
+    chromatic: {
+      delay: 200,
+      ...withChromaticModes(['mobile', 'tablet', 'desktop']),
+    },
   },
   args: {
     isOpen: true,
@@ -33,6 +35,3 @@ export default meta
 type Story = StoryObj<typeof VersionModal>
 
 export const Default: Story = {}
-export const Mobile: Story = {
-  parameters: getMobileViewParameters(),
-}

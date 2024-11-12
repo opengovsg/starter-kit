@@ -1,11 +1,12 @@
+import { type User } from '@prisma/client'
 import type * as trpc from '@trpc/server'
 import type { CreateNextContextOptions } from '@trpc/server/adapters/next'
 import { getIronSession } from 'iron-session'
-import { prisma } from './prisma'
+
+import { type Session, type SessionData } from '~/lib/types/session'
 import { sessionOptions } from './modules/auth/session'
-import { type SessionData, type Session } from '~/lib/types/session'
-import { type User } from '@prisma/client'
 import { type defaultMeSelect } from './modules/me/me.select'
+import { prisma } from './prisma'
 
 interface CreateContextOptions {
   session?: Session

@@ -1,5 +1,7 @@
 import { Grid, type GridProps } from '@chakra-ui/react'
 
+import { APP_GRID_TEMPLATE_COLUMN } from '~/constants/layouts'
+
 /**
  * Component that controls the various grid areas according to the app's
  * responsive breakpoints.
@@ -7,7 +9,7 @@ import { Grid, type GridProps } from '@chakra-ui/react'
 export const AppGrid = (props: GridProps) => (
   <Grid
     columnGap={{ base: '0.5rem', lg: '1rem' }}
-    templateColumns={{ base: 'repeat(4, 1fr)', md: 'repeat(12, 1fr)' }}
+    templateColumns={APP_GRID_TEMPLATE_COLUMN}
     {...props}
   />
 )
