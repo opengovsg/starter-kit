@@ -12,7 +12,6 @@ const meta: Meta<typeof SelectProfilePage> = {
       handlers: [authSgidHandlers.listStoredProfiles.returnSingleProfile()],
     },
   },
-  tags: ['!autodocs'],
 }
 
 export default meta

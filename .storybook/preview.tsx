@@ -199,6 +199,4 @@ export const decorators: Decorator[] = [
   MockDateDecorator,
 ]
 
-export const tags = ['autodocs']
-
 export const loaders: Loader[] = [mswLoader]
