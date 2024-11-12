@@ -78,6 +78,12 @@ const config = {
       },
     },
   ],
-  ignorePatterns: ['webpack.config.js'],
+  ignorePatterns: [
+    '**/*.config.*',
+    '.next/**',
+    '!.storybook/**',
+    'public/mockServiceWorker.js',
+    'node_modules/**',
+  ],
 }
 module.exports = config
