@@ -1,4 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-env node */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path')
 
 /** @type {import("eslint").Linter.Config} */
@@ -77,6 +78,12 @@ const config = {
       },
     },
   ],
-  ignorePatterns: ['webpack.config.js'],
+  ignorePatterns: [
+    '**/*.config.*',
+    '.next/**',
+    '!.storybook/**',
+    'public/mockServiceWorker.js',
+    'node_modules/**',
+  ],
 }
 module.exports = config

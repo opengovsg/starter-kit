@@ -22,7 +22,9 @@ export const VersionWrapper = () => {
   }, [handleRequireUpdateEvent])
 
   useEffect(() => {
-    requireUpdate && onOpen()
+    if (requireUpdate) {
+      onOpen()
+    }
   }, [onOpen, requireUpdate])
 
   return (
