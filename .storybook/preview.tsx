@@ -133,7 +133,7 @@ export const MockFeatureFlagsDecorator: Decorator<Args> = (
 
 const LoginStateDecorator: Decorator<Args> = (story, { parameters }) => {
   const [hasLoginStateFlag, setLoginStateFlag] = useState(
-    Boolean(parameters.loginState),
+    Boolean(parameters.loginState ?? true),
   )
 
   const setHasLoginStateFlag = useCallback(() => {

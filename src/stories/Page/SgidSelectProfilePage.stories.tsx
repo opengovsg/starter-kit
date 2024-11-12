@@ -10,6 +10,7 @@ const meta: Meta<typeof SelectProfilePage> = {
   component: SelectProfilePage,
   decorators: [],
   parameters: {
+    loginState: false,
     chromatic: withChromaticModes(['mobile', 'desktop']),
     msw: {
       handlers: [authSgidHandlers.listStoredProfiles.returnSingleProfile()],

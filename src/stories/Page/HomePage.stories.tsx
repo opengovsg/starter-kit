@@ -8,6 +8,7 @@ const meta: Meta<typeof HomePage> = {
   title: 'Pages/Home Page',
   component: HomePage,
   parameters: {
+    getLayout: HomePage.getLayout,
     mockdate: new Date('2023-06-28T07:23:18.349Z'),
     msw: {
       handlers: [meHandlers.me()],

@@ -13,6 +13,7 @@ const meta: Meta<typeof SignInPage> = {
   title: 'Pages/Sign In Page',
   component: SignInPage,
   parameters: {
+    loginState: false,
     msw: {
       handlers: [
         meHandlers.unauthorized(),
