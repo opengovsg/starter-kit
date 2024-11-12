@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { authSgidHandlers } from 'tests/msw/handlers/auth/sgid'
+
+import { authSgidHandlers } from '~tests/msw/handlers/auth/sgid'
+
 import SelectProfilePage from '~/pages/sign-in/select-profile'
 import { withChromaticModes } from '../utils/chromatic'
 

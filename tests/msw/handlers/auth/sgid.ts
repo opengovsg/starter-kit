@@ -1,5 +1,6 @@
 import { delay } from 'msw'
-import { trpcMsw } from 'tests/msw/mockTrpc'
+
+import { trpcMsw } from '~tests/msw/mockTrpc'
 
 export const authSgidHandlers = {
   listStoredProfiles: {

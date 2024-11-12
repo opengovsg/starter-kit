@@ -1,8 +1,9 @@
+import { describe, expect, it } from 'vitest'
+
 import {
   applySession,
   createMockRequest,
-} from 'tests/integration/helpers/iron-session'
-import { describe, expect, it } from 'vitest'
+} from '~tests/integration/helpers/iron-session'
 
 import { env } from '~/env.mjs'
 import * as mailLib from '~/lib/mail'

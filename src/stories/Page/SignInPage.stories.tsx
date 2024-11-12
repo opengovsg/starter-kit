@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { expect, userEvent, within } from '@storybook/test'
-import { authEmailHandlers } from 'tests/msw/handlers/auth/email'
-import { meHandlers } from 'tests/msw/handlers/me'
+
+import { authEmailHandlers } from '~tests/msw/handlers/auth/email'
+import { meHandlers } from '~tests/msw/handlers/me'
 
 import SignInPage from '~/pages/sign-in'
 import { withChromaticModes } from '../utils/chromatic'

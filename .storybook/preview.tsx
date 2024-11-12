@@ -6,11 +6,11 @@ import { Box, Skeleton } from '@chakra-ui/react'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
 import {
-  type Loader,
   type Args,
   type Decorator,
-  type ReactRenderer,
+  type Loader,
   type Parameters,
+  type ReactRenderer,
 } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
@@ -33,9 +33,9 @@ import Suspense from '~/components/Suspense'
 import { env } from '~/env.mjs'
 import { LoginStateContext } from '~/features/auth'
 import { type AppRouter } from '~/server/modules/_app'
-import { theme } from '~/theme'
-import { viewport } from '~/stories/utils/viewports'
 import { withChromaticModes } from '~/stories/utils/chromatic'
+import { viewport } from '~/stories/utils/viewports'
+import { theme } from '~/theme'
 
 // Initialize MSW
 initialize({

@@ -1,4 +1,4 @@
-import { trpcMsw } from 'tests/msw/mockTrpc'
+import { trpcMsw } from '~tests/msw/mockTrpc'
 
 import { type VfnStepData } from '~/features/sign-in/components'
 
