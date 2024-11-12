@@ -6,10 +6,11 @@ import { Box, Skeleton } from '@chakra-ui/react'
 import { ThemeProvider } from '@opengovsg/design-system-react'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
 import {
-  Loader,
+  type Loader,
   type Args,
   type Decorator,
   type ReactRenderer,
+  type Parameters,
 } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
@@ -33,6 +34,8 @@ import { env } from '~/env.mjs'
 import { LoginStateContext } from '~/features/auth'
 import { type AppRouter } from '~/server/modules/_app'
 import { theme } from '~/theme'
+import { viewport } from '~/stories/utils/viewports'
+import { withChromaticModes } from '~/stories/utils/chromatic'
 
 // Initialize MSW
 initialize({
@@ -200,3 +203,24 @@ export const decorators: Decorator[] = [
 ]
 
 export const loaders: Loader[] = [mswLoader]
+
+export const parameters: Parameters = {
+  // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
+  layout: 'fullscreen',
+  viewport,
+  /**
+   * If tablet view is needed, add it on a per-story basis.
+   * @example
+   * ```
+   * export const SomeStory: Story = {
+   *   parameters: {
+   *     chromatic: withChromaticModes(["gsib", "desktop", "tablet"]),
+   *   }
+   * }
+   * ```
+   */
+  chromatic: {
+    ...withChromaticModes(['desktop']),
+    prefersReducedMotion: 'reduce',
+  },
+}
