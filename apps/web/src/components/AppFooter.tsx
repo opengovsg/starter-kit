@@ -1,7 +1,5 @@
-import {
-  RestrictedFooter,
-  type RestrictedFooterProps,
-} from '@opengovsg/design-system-react'
+import type { RestrictedFooterProps } from '@opengovsg/design-system-react'
+import { RestrictedFooter } from '@opengovsg/design-system-react'
 
 import { useEnv } from '~/hooks/useEnv'
 

@@ -7,7 +7,6 @@ import { ThemeProvider } from '@opengovsg/design-system-react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { trpc } from '~/utils/trpc'
 import { EnvProvider, FeatureProvider } from '~/components/AppProviders'
 import { DefaultFallback } from '~/components/ErrorBoundary/DefaultFallback'
 import Suspense from '~/components/Suspense'
@@ -18,6 +17,7 @@ import { LoginStateProvider } from '~/features/auth'
 import { type NextPageWithLayout } from '~/lib/types'
 import { DefaultLayout } from '~/templates/layouts/DefaultLayout'
 import { theme } from '~/theme'
+import { trpc } from '~/utils/trpc'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout

@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { formatInTimeZone } from 'date-fns-tz'
 
-import { getBaseUrl } from '~/utils/getBaseUrl'
 import { env } from '~/env.mjs'
 import { sendMail } from '~/lib/mail'
 import {
@@ -9,6 +8,7 @@ import {
   emailVerifyOtpSchema,
 } from '~/schemas/auth/email/sign-in'
 import { publicProcedure, router } from '~/server/trpc'
+import { getBaseUrl } from '~/utils/getBaseUrl'
 import { defaultMeSelect } from '../../me/me.select'
 import { VerificationError } from '../auth.error'
 import { verifyToken } from '../auth.service'

@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Divider, Stack } from '@chakra-ui/react'
 
-import { trpc } from '~/utils/trpc'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { withSuspense } from '~/hocs/withSuspense'
 import { callbackUrlSchema } from '~/schemas/url'
+import { trpc } from '~/utils/trpc'
 import { SgidProfileItem } from './SgidProfileItem'
 import { SgidProfileListSkeleton } from './SgidProfileListSkeleton'
 

@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { Box } from '@chakra-ui/react'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 
-import { trpc } from '~/utils/trpc'
 import { useLoginState } from '~/features/auth'
+import { trpc } from '~/utils/trpc'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 import { UnexpectedErrorCard } from './UnexpectedErrorCard'
 

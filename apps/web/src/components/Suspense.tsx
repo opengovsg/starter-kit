@@ -1,9 +1,9 @@
+import type { ComponentProps } from 'react'
 import {
   // eslint-disable-next-line no-restricted-imports
   Suspense as ReactSuspense,
   useEffect,
   useState,
-  type ComponentProps,
 } from 'react'
 import { useRouter } from 'next/router'
 

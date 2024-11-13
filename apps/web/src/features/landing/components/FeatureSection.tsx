@@ -1,5 +1,6 @@
+import type { StackProps } from '@chakra-ui/react'
 import { type FC } from 'react'
-import { Box, Flex, Image, Stack, type StackProps } from '@chakra-ui/react'
+import { Box, Flex, Image, Stack } from '@chakra-ui/react'
 
 import { LandingSection } from './LandingSection'
 import { SectionHeadingText } from './SectionHeadingText'

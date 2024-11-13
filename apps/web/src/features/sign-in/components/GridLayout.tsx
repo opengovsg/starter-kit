@@ -1,5 +1,6 @@
+import type { GridProps } from '@chakra-ui/react'
 import { type FC, type PropsWithChildren } from 'react'
-import { GridItem, type GridProps } from '@chakra-ui/react'
+import { GridItem } from '@chakra-ui/react'
 
 import { AppGrid } from '~/templates/AppGrid'
 

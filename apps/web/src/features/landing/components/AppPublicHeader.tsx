@@ -1,5 +1,6 @@
+import type { As } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import { Flex, HStack, type As } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import {
   Button,
   IconButton,

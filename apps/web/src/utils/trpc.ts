@@ -1,26 +1,22 @@
+import type { TRPCLink } from '@trpc/client'
 import { type NextPageContext } from 'next'
-import {
-  httpBatchLink,
-  loggerLink,
-  TRPCClientError,
-  type TRPCLink,
-} from '@trpc/client'
+import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
 import { observable } from '@trpc/server/observable'
 import { type TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc'
 import superjson from 'superjson'
 
-import { TRPCWithErrorCodeSchema } from '~/utils/error'
+// ℹ️ Type-only import:
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
+import type { AppRouter } from '~/server/modules/_app'
 import { LOCAL_STORAGE_EVENT, LOGGED_IN_KEY } from '~/constants/localStorage'
 import {
   APP_VERSION_HEADER_KEY,
   REQUIRE_UPDATE_EVENT,
 } from '~/constants/version'
 import { env } from '~/env.mjs'
-// ℹ️ Type-only import:
-// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
-import type { AppRouter } from '~/server/modules/_app'
+import { TRPCWithErrorCodeSchema } from '~/utils/error'
 import { getBaseUrl } from './getBaseUrl'
 
 const NON_RETRYABLE_ERROR_CODES: Set<TRPC_ERROR_CODE_KEY> = new Set([

@@ -1,5 +1,6 @@
+import type { TextProps } from '@chakra-ui/react'
 import { type PropsWithChildren } from 'react'
-import { Text, type TextProps } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 
 type SectionBodyTextProps = PropsWithChildren<TextProps>
 

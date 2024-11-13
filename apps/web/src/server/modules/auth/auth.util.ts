@@ -1,13 +1,13 @@
 import { scryptSync, timingSafeEqual } from 'node:crypto'
 import { customAlphabet } from 'nanoid'
 
-import { normaliseEmail } from '~/utils/zod'
 import {
   OTP_ALPHABET,
   OTP_LENGTH,
   OTP_PREFIX_ALPHABET,
   OTP_PREFIX_LENGTH,
 } from '~/lib/auth'
+import { normaliseEmail } from '~/utils/zod'
 
 export const createVfnToken = customAlphabet(OTP_ALPHABET, OTP_LENGTH)
 

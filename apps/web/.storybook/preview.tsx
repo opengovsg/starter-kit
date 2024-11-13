@@ -23,11 +23,8 @@ import { ErrorBoundary } from 'react-error-boundary'
 import superjson from 'superjson'
 import { z } from 'zod'
 
-import {
-  EnvProvider,
-  FeatureContext,
-  type EnvContextReturn,
-} from '~/components/AppProviders'
+import type { EnvContextReturn } from '~/components/AppProviders'
+import { EnvProvider, FeatureContext } from '~/components/AppProviders'
 import { DefaultFallback } from '~/components/ErrorBoundary'
 import Suspense from '~/components/Suspense'
 import { env } from '~/env.mjs'

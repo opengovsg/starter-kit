@@ -8,9 +8,9 @@ import {
   Input,
 } from '@opengovsg/design-system-react'
 
-import { trpc } from '~/utils/trpc'
 import { useZodForm } from '~/lib/form'
 import { emailSignInSchema } from '~/schemas/auth/email/sign-in'
+import { trpc } from '~/utils/trpc'
 import { type VfnStepData } from '../SignInContext'
 
 interface EmailInputProps {

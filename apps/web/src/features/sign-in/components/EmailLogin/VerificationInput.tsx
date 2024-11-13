@@ -16,13 +16,13 @@ import {
 import { Controller } from 'react-hook-form'
 import { useInterval } from 'usehooks-ts'
 
-import { trpc } from '~/utils/trpc'
 import { CALLBACK_URL_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { OTP_LENGTH } from '~/lib/auth'
 import { useZodForm } from '~/lib/form'
 import { emailVerifyOtpSchema } from '~/schemas/auth/email/sign-in'
 import { callbackUrlSchema } from '~/schemas/url'
+import { trpc } from '~/utils/trpc'
 import { useSignInContext } from '../SignInContext'
 import { ResendOtpButton } from './ResendOtpButton'
 

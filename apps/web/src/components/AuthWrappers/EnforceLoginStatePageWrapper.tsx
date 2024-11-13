@@ -1,10 +1,11 @@
-import { useMemo, type PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
+import { useMemo } from 'react'
 import { useRouter } from 'next/router'
 
-import { appendWithRedirect } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
 import { SIGN_IN } from '~/lib/routes'
 import { callbackUrlSchema } from '~/schemas/url'
+import { appendWithRedirect } from '~/utils/url'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 interface EnforceLoginStatePageWrapperProps {

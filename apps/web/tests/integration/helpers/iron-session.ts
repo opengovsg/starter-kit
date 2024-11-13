@@ -1,14 +1,12 @@
+import type { RequestOptions, ResponseOptions } from 'node-mocks-http'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import { type User } from '@prisma/client'
-import {
-  createMocks,
-  type RequestOptions,
-  type ResponseOptions,
-} from 'node-mocks-http'
+import { createMocks } from 'node-mocks-http'
 import { type SetOptional } from 'type-fest'
 
+import type { Context } from '~/server/context'
 import { type Session } from '~/lib/types/session'
-import { createContextInner, type Context } from '~/server/context'
+import { createContextInner } from '~/server/context'
 import { auth } from './auth'
 
 class MockIronStore {

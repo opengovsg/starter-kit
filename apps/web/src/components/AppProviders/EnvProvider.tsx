@@ -1,6 +1,10 @@
-// This file allows us to pass in environment variables to our app.
-// Used to allow overriding of environment variables in storybook tests.
-import { createContext, type PropsWithChildren } from 'react'
+/**
+ * This file allows us to pass in environment variables to our app.
+ * Used to allow overriding of environment variables in storybook tests.
+ */
+
+import type { PropsWithChildren } from 'react'
+import { createContext } from 'react'
 
 import type { env } from '~/env.mjs'
 
