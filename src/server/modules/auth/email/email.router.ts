@@ -1,5 +1,6 @@
+import { TZDate } from '@date-fns/tz'
 import { TRPCError } from '@trpc/server'
-import { formatInTimeZone } from 'date-fns-tz'
+import { format } from 'date-fns/format'
 
 import { getBaseUrl } from '~/utils/getBaseUrl'
 import { normaliseEmail } from '~/utils/zod'
@@ -23,7 +24,10 @@ export const emailSessionRouter = router({
     .mutation(async ({ ctx, input: { email } }) => {
       // TODO: instead of storing expires, store issuedAt to calculate when the next otp can be re-issued
       // TODO: rate limit this endpoint also
-      const expires = new Date(Date.now() + env.OTP_EXPIRY * 1000)
+      const expires = new TZDate(
+        Date.now() + env.OTP_EXPIRY * 1000,
+        'Asia/Singapore',
+      )
       const token = createVfnToken()
       const otpPrefix = createVfnPrefix()
       const hashedToken = createTokenHash(token, email)
@@ -50,10 +54,9 @@ export const emailSessionRouter = router({
         }),
         sendMail({
           subject: `Sign in to ${url.host}`,
-          body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${formatInTimeZone(
+          body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${format(
             expires,
-            'Asia/Singapore',
-            'dd MMM yyyy, hh:mmaaa',
+            'dd MMM yyyy, h:mmaaa',
           )}.
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
