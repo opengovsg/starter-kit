@@ -16,21 +16,22 @@
   "dependencies": {
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^9.10.0",
+    "@next/eslint-plugin-next": "^14.2.13",
     "@starter-kit/prettier-config": "*",
     "@starter-kit/tsconfig": "*",
-    "@next/eslint-plugin-next": "^14.2.13",
     "eslint": "^9.10.0",
     "eslint-config-turbo": "^2.1.2",
-    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-react": "^7.36.1",
-    "eslint-plugin-react-hooks": "beta",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-storybook": "^0.11.0",
     "prettier": "^3.3.3",
-    "typescript": "5.6.2",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.6.0"
   },
   "prettier": "@starter-kit/prettier-config",
   "devDependencies": {
-    "@types/eslint": "^9.6.1"
+    "@types/eslint": "^9.6.1",
+    "eslint-plugin-react-hooks": "^5.0.0"
   }
 }

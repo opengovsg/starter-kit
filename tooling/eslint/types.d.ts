@@ -3,19 +3,9 @@
  * we "need" to type some of the plugins manually :(
  */
 
-declare module "@eslint/js" {
-  // Why the hell doesn't eslint themselves export their types?
-  type RulesRecord = import("eslint").Linter.RulesRecord
-
-  export const configs: {
-    readonly recommended: { readonly rules: Readonly<RulesRecord> }
-    readonly all: { readonly rules: Readonly<RulesRecord> }
-  }
-}
-
-declare module "eslint-plugin-import" {
-  type RuleDefinition = import("eslint").Rule.RuleModule
-  type RulesRecord = import("eslint").Linter.RulesRecord
+declare module 'eslint-plugin-import' {
+  type RuleDefinition = import('eslint').Rule.RuleModule
+  type RulesRecord = import('eslint').Linter.RulesRecord
 
   export const configs: {
     recommended: { rules: RulesRecord }
@@ -23,39 +13,44 @@ declare module "eslint-plugin-import" {
   export const rules: Record<string, RuleDefinition>
 }
 
-declare module "eslint-plugin-react" {
-  type RuleDefinition = import("eslint").Rule.RuleModule
-  type RulesRecord = import("eslint").Linter.RulesRecord
-
+// Current types from plugin has error type in that flat is optional when it is not.
+declare module 'eslint-plugin-react' {
   export const configs: {
-    recommended: { rules: RulesRecord }
-    all: { rules: RulesRecord }
-    "jsx-runtime": { rules: RulesRecord }
-  }
-  export const rules: Record<string, RuleDefinition>
-}
-
-declare module "eslint-plugin-react-hooks" {
-  type RuleDefinition = import("eslint").Rule.RuleModule
-  type RuleEntry = import("eslint").Linter.RuleEntry
-
-  export const configs: {
-    recommended: {
-      rules: {
-        "rules-of-hooks": RuleEntry
-        "exhaustive-deps": RuleEntry
+    flat: {
+      recommended: {
+        plugins: { react: PluginDefinition }
+        rules: Record<string, import('eslint').Linter.RuleEntry>
+        languageOptions: import('eslint').Linter.LanguageOptions
       }
     }
   }
-  export const rules: Record<string, RuleDefinition>
 }
 
-declare module "@next/eslint-plugin-next" {
-  type RuleDefinition = import("eslint").Rule.RuleModule
-  type RulesRecord = import("eslint").Linter.RulesRecord
+declare module 'eslint-plugin-react-hooks' {
+  type RuleDefinition = import('eslint').Rule.RuleModule
+  type RuleEntry = import('eslint').Linter.RuleEntry
+
+  export const configs: {
+    recommended: {
+      plugins: ['react-hooks']
+      rules: {
+        'react-hooks/rules-of-hooks': RuleEntry
+        'react-hooks/exhaustive-deps': RuleEntry
+      }
+    }
+  }
+  export const rules: {
+    'rule-of-hooks': RuleDefinition
+    'exhaustive-deps': RuleDefinition
+  }
+}
+
+declare module '@next/eslint-plugin-next' {
+  type RuleDefinition = import('eslint').Rule.RuleModule
+  type RulesRecord = import('eslint').Linter.RulesRecord
   export const configs: {
     recommended: { rules: RulesRecord }
-    "core-web-vitals": { rules: RulesRecord }
+    'core-web-vitals': { rules: RulesRecord }
   }
   export const rules: Record<string, RuleDefinition>
 }

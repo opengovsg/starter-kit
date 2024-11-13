@@ -17,8 +17,8 @@
     "build:theme": "npx chakra-cli tokens src/theme/index.ts",
     "check-types": "tsc --noEmit",
     "start": "next start",
-    "lint": "eslint --report-unused-disable-directives --report-unused-disable-directives .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .prettierignore --config .prettierrc.cjs",
     "format:fix": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .prettierignore --config .prettierrc.cjs",
     "migrate:dev": "prisma migrate dev",
@@ -37,10 +37,6 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "semi": false
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.689.0",
@@ -62,8 +58,6 @@
     "@trpc/next": "10.45.0",
     "@trpc/react-query": "10.45.0",
     "@trpc/server": "10.45.0",
-    "@types/lodash": "^4.14.202",
-    "@types/validator": "^13.11.7",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",
     "iron-session": "^8.0.1",
@@ -93,6 +87,9 @@
     "@electric-sql/pglite": "^0.2.12",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@playwright/test": "^1.40.1",
+    "@starter-kit/eslint-config": "*",
+    "@starter-kit/prettier-config": "*",
+    "@starter-kit/tsconfig": "*",
     "@storybook/addon-a11y": "8.4.2",
     "@storybook/addon-essentials": "8.4.2",
     "@storybook/addon-interactions": "8.4.2",
@@ -102,21 +99,13 @@
     "@storybook/nextjs": "8.4.2",
     "@storybook/react": "8.4.2",
     "@storybook/test": "8.4.2",
-    "@types/eslint": "^8.56.1",
+    "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.5",
     "@types/react": "18.3.12",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
+    "@types/validator": "^13.11.7",
     "@vitest/coverage-istanbul": "^2.1.1",
     "clean-webpack-plugin": "^4.0.0",
     "dotenv-cli": "^7.3.0",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "15.0.3",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-storybook": "^0.11.0",
     "k6-trpc": "^1.0.0",
     "mockdate": "^3.0.5",
     "msw": "^2.6.4",
@@ -125,7 +114,7 @@
     "node-mocks-http": "^1.14.1",
     "npm-run-all": "^4.1.5",
     "pglite-prisma-adapter": "^0.2.0",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "prisma": "^5.7.1",
     "start-server-and-test": "^2.0.3",
     "storybook": "8.4.2",
@@ -143,5 +132,5 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "packageManager": "npm@10.9.0"
+  "prettier": "@starter-kit/prettier-config"
 }
