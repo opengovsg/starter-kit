@@ -6,12 +6,19 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
     },
     "dev": {
       "persistent": true,
       "cache": false
+    },
+    "storybook": {
+      "dependsOn": ["^storybook"],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^test"]
     }
   }
 }

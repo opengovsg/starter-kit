@@ -15,7 +15,7 @@
     "prebuild": "run-s generate migrate",
     "build": "next build",
     "build:theme": "npx chakra-cli tokens src/theme/index.ts",
-    "check-types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

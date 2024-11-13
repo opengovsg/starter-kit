@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test:unit": {
+      "dependsOn": ["generate"]
+    },
+    "test-ci:unit": {},
+    "test-ci:e2e": {
+      "outputs": ["playwright/test-results/**"]
+    },
+    "generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "format": {
+      "dependsOn": ["generate"]
+    },
+    "lint": {
+      "dependsOn": ["generate"]
+    },
+    "typecheck": {
+      "dependsOn": ["generate"]
+    },
+    "db:setup": {
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["db:setup"],
+      "persistent": true,
+      "cache": false,
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.local"]
+    },
+    "build:theme": {},
+    "build": {
+      "dependsOn": ["generate", "build:theme"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    }
+  }
+}
