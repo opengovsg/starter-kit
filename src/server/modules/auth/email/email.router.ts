@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { formatInTimeZone } from 'date-fns-tz'
 
 import { getBaseUrl } from '~/utils/getBaseUrl'
+import { normaliseEmail } from '~/utils/zod'
 import { env } from '~/env.mjs'
 import { sendMail } from '~/lib/mail'
 import {
@@ -10,6 +11,7 @@ import {
 } from '~/schemas/auth/email/sign-in'
 import { publicProcedure, router } from '~/server/trpc'
 import { defaultMeSelect } from '../../me/me.select'
+import { AccountProvider } from '../auth.constants'
 import { VerificationError } from '../auth.error'
 import { verifyToken } from '../auth.service'
 import { createTokenHash, createVfnPrefix, createVfnToken } from '../auth.util'
@@ -81,14 +83,32 @@ export const emailSessionRouter = router({
 
       const emailName = email.split('@')[0] ?? 'unknown'
 
-      const user = await ctx.prisma.user.upsert({
-        where: { email },
-        update: {},
-        create: {
-          email,
-          name: emailName,
-        },
-        select: defaultMeSelect,
+      const user = await ctx.prisma.$transaction(async (tx) => {
+        const user = await tx.user.upsert({
+          where: { email },
+          update: {},
+          create: {
+            email,
+            name: emailName,
+          },
+          select: defaultMeSelect,
+        })
+
+        await tx.accounts.upsert({
+          where: {
+            provider_providerAccountId: {
+              provider: AccountProvider.Email,
+              providerAccountId: normaliseEmail.parse(email),
+            },
+          },
+          update: {},
+          create: {
+            provider: AccountProvider.Email,
+            providerAccountId: normaliseEmail.parse(email),
+            userId: user.id,
+          },
+        })
+        return user
       })
 
       ctx.session.userId = user.id
