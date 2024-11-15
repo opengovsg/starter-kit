@@ -10,6 +10,7 @@
 
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
+import { type OpenApiMeta } from 'trpc-swagger'
 import { ZodError } from 'zod'
 
 import getIP from '~/utils/getClientIp'
@@ -20,27 +21,30 @@ import { type Context } from './context'
 import { defaultMeSelect } from './modules/me/me.select'
 import { prisma } from './prisma'
 
-const t = initTRPC.context<Context>().create({
-  /**
-   * @see https://trpc.io/docs/v10/data-transformers
-   */
-  transformer: superjson,
-  /**
-   * @see https://trpc.io/docs/v10/error-formatting
-   */
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
-            ? error.cause.flatten()
-            : null,
-      },
-    }
-  },
-})
+const t = initTRPC
+  .meta<OpenApiMeta>()
+  .context<Context>()
+  .create({
+    /**
+     * @see https://trpc.io/docs/v10/data-transformers
+     */
+    transformer: superjson,
+    /**
+     * @see https://trpc.io/docs/v10/error-formatting
+     */
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError:
+            error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
+              ? error.cause.flatten()
+              : null,
+        },
+      }
+    },
+  })
 
 // Setting outer context with tRPC will not get us correct path during request batching,
 // only by setting logger context in the middleware do we get the exact path to log
