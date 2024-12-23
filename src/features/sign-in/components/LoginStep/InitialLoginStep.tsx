@@ -2,8 +2,9 @@ import { Stack, Text } from '@chakra-ui/react'
 
 import { useFeatures } from '~/components/AppProviders'
 import { useEnv } from '~/hooks/useEnv'
-import { EmailLoginButton, EmailLoginForm } from '../EmailLogin'
+import { EmailLoginButton } from '../EmailLogin'
 import { SgidLoginButton } from '../SgidLogin'
+import { OktaLoginButton } from '~/features/sign-in/components/OktaLogin'
 
 export const InitialLoginStep = (): JSX.Element => {
   const {
@@ -17,7 +18,10 @@ export const InitialLoginStep = (): JSX.Element => {
         {title}
       </Text>
       {!sgid ? (
-        <EmailLoginForm />
+        <Stack gap="1.5rem">
+          <EmailLoginButton />
+          <OktaLoginButton />
+        </Stack>
       ) : (
         <Stack gap="1.5rem">
           <EmailLoginButton />

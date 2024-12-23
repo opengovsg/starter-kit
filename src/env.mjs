@@ -85,6 +85,10 @@ const server = z
       z.string().length(0),
     ]),
     SESSION_SECRET: z.string().min(32),
+    OKTA_CONFIGURATION_URL: z.string(),
+    OKTA_CLIENT_ID: z.string(),
+    OKTA_CLIENT_SECRET: z.string(),
+    OKTA_REDIRECT_URI: z.string(),
   })
   // Add on schemas as needed that requires conditional validation.
   .merge(baseR2Schema)
@@ -158,6 +162,10 @@ const processEnv = {
   NEXT_PUBLIC_ENABLE_STORAGE: process.env.NEXT_PUBLIC_ENABLE_STORAGE,
   NEXT_PUBLIC_ENABLE_SGID: process.env.NEXT_PUBLIC_ENABLE_SGID,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  OKTA_CONFIGURATION_URL: process.env.OKTA_CONFIGURATION_URL,
+  OKTA_CLIENT_ID: process.env.OKTA_CLIENT_ID,
+  OKTA_CLIENT_SECRET: process.env.OKTA_CLIENT_SECRET,
+  OKTA_REDIRECT_URI: process.env.OKTA_REDIRECT_URI,
 }
 
 // Don't touch the part below

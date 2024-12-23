@@ -12,6 +12,12 @@ export type SessionData = {
     }
     profiles?: SgidSessionProfile
   }
+  okta?: {
+    sessionState?: {
+      codeVerifier: string
+      nonce?: string
+    }
+  }
 }
 
 export type Session = IronSession<SessionData>
