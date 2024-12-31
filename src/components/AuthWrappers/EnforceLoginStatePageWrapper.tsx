@@ -15,7 +15,9 @@ interface EnforceLoginStatePageWrapperProps {
   redirectTo?: string
 }
 
-const Redirect = ({ redirectTo = SIGN_IN }: EnforceLoginStatePageWrapperProps) => {
+const Redirect = ({
+  redirectTo = SIGN_IN,
+}: EnforceLoginStatePageWrapperProps) => {
   const router = useRouter()
   const redirectUrl = useMemo(() => {
     if (typeof window === 'undefined') return '/'
@@ -24,9 +26,7 @@ const Redirect = ({ redirectTo = SIGN_IN }: EnforceLoginStatePageWrapperProps) =
   }, [])
 
   void router.replace(
-    callbackUrlSchema.parse(
-      appendWithRedirect(redirectTo, redirectUrl),
-    ),
+    callbackUrlSchema.parse(appendWithRedirect(redirectTo, redirectUrl)),
   )
 
   return <FullscreenSpinner />
