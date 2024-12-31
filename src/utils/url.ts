@@ -7,7 +7,7 @@ export const appendWithRedirect = (url: string, redirectUrl?: string) => {
   if (!redirectUrl || !isRelativeUrl(redirectUrl)) {
     return url
   }
-  return `${url}?${CALLBACK_URL_KEY}=${redirectUrl}`
+  return `${url}?${CALLBACK_URL_KEY}=${encodeURIComponent(redirectUrl)}`
 }
 
 export const getRedirectUrl = (query: ParsedUrlQuery) => {
