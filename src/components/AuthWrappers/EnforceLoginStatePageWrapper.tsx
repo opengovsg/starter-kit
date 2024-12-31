@@ -18,7 +18,7 @@ interface EnforceLoginStatePageWrapperProps {
 const Redirect = ({ redirectTo = SIGN_IN }: EnforceLoginStatePageWrapperProps) => {
   const router = useRouter()
   const redirectUrl = useMemo(() => {
-    if (typeof window === 'undefined') return encodeURIComponent('/')
+    if (typeof window === 'undefined') return '/'
     const { pathname, search, hash } = window.location
     return `${pathname}${search}${hash}`
   }, [])
