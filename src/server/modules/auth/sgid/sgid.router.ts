@@ -155,7 +155,7 @@ export const sgidRouter = router({
         selectProfileStep: true,
         redirectUrl: appendWithRedirect(
           `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
-          parsedState.data.landingUrl,
+          parsedState.data.landingUrl.href,
         ),
       }
     }),
