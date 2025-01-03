@@ -11,7 +11,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
   const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
     onSuccess: async ({ redirectUrl }) => {
-      await router.push(callbackUrlSchema.parse(redirectUrl))
+      await router.push(redirectUrl)
     },
   })
 
