@@ -15,7 +15,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
     },
   })
 
-  const landingUrl = getRedirectUrl(router.query)
+  const landingUrl = callbackUrlSchema.parse(getRedirectUrl(router.query))
 
   const handleSgidLogin = () => {
     return sgidLoginMutation.mutate({
