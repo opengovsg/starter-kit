@@ -193,7 +193,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       // Otherwise it would just be returning `undefined` and be annoying to debug
       if (!isServer && !prop.startsWith('NEXT_PUBLIC_'))
         throw new Error(
-          ['test', 'development'].includes(env.NODE_ENV)
+          ['test', 'development'].includes(process.env.NODE_ENV)
             ? `❌ Attempted to access server-side environment variable '${prop}' on the client`
             : '❌ Attempted to access a server-side environment variable on the client',
         )
