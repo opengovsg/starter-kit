@@ -23,16 +23,12 @@ import {
 } from './sgid.utils'
 
 const sgidCallbackStateSchema = z.object({
-  landingUrl: z.string(),
+  landingUrl: callbackUrlSchema,
 })
 
 export const sgidRouter = router({
   login: publicProcedure
-    .input(
-      z.object({
-        landingUrl: callbackUrlSchema,
-      }),
-    )
+    .input(sgidCallbackStateSchema)
     .mutation(async ({ ctx, input: { landingUrl } }) => {
       if (!sgid) {
         throw new TRPCError({

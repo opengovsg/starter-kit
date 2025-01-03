@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 import { safeSchemaJsonParse } from '~/utils/zod'
 import { HOME } from '~/lib/routes'
+import { callbackUrlSchema } from '~/schemas/url'
 import { SgidErrorModal } from './SgidErrorModal'
 
 export const SgidErrorFallback: ComponentType<FallbackProps> = ({ error }) => {
@@ -12,12 +13,12 @@ export const SgidErrorFallback: ComponentType<FallbackProps> = ({ error }) => {
   const redirectUrl = useMemo(() => {
     const parsed = safeSchemaJsonParse(
       z.object({
-        landingUrl: z.string(),
+        landingUrl: callbackUrlSchema,
       }),
       String(router.query.state),
     )
     if (parsed.success) {
-      return parsed.data.landingUrl
+      return parsed.data.landingUrl.href
     }
     return HOME
   }, [router.query.state])
