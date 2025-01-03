@@ -16,7 +16,7 @@ const ContentSecurityPolicy = `
   };
   frame-src 'self';
   object-src 'none';
-  script-src 'self' ${env.NODE_ENV === 'production' ? '' : "'unsafe-eval'"};
+  script-src 'self' ${['test', 'development'].includes(env.NODE_ENV) ? "'unsafe-eval'" : ""};
   style-src 'self' https: 'unsafe-inline';
   connect-src 'self' https://browser-intake-datadoghq.com https://*.browser-intake-datadoghq.com https://vitals.vercel-insights.com/v1/vitals ${
     // For POSTing presigned URLs to R2 storage.
@@ -25,7 +25,7 @@ const ContentSecurityPolicy = `
       : ''
   };
   worker-src 'self' blob:;
-  ${env.NODE_ENV === 'production' ? 'upgrade-insecure-requests' : ''}
+  ${['test', 'development'].includes(env.NODE_ENV) ? '' : 'upgrade-insecure-requests'}
 `
 
 /**

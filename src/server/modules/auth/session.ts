@@ -9,6 +9,6 @@ export const sessionOptions: SessionOptions = {
   cookieName: 'auth.session-token',
   ttl: 60 * 60 * 24 * 7, // 7 days
   cookieOptions: {
-    secure: env.NODE_ENV === 'production',
+    secure: env.NODE_ENV !== 'development' && env.NODE_ENV !== 'test',
   },
 }
