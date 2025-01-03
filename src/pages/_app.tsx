@@ -34,7 +34,7 @@ const MyApp = ((props: AppPropsWithAuthAndLayout) => {
                 <Stack spacing={0} minH="$100vh">
                   <VersionWrapper />
                   <ChildWithLayout {...props} />
-                  {process.env.NODE_ENV !== 'production' && (
+                  {['test', 'development'].includes(env.NODE_ENV) && (
                     <ReactQueryDevtools initialIsOpen={false} />
                   )}
                 </Stack>
