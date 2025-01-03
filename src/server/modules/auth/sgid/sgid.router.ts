@@ -209,7 +209,8 @@ export const sgidRouter = router({
       ctx.session.destroy()
 
       const hasProfile = profiles.list.some(
-        (profile) => profile.work_email === email,
+        ({ work_email }) =>
+          work_email && normaliseEmail.parse(work_email) === email,
       )
       trpcAssert(hasProfile, {
         message: 'Error logging in via sgID: selected profile is invalid',
