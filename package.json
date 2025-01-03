@@ -78,7 +78,6 @@
     "type-fest": "^4.26.1",
     "usehooks-ts": "^2.9.2",
     "validator": "^13.11.0",
-    "wretch": "^2.8.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
