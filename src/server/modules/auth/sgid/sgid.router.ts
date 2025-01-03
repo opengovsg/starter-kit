@@ -9,7 +9,6 @@ import { z } from 'zod'
 import { trpcAssert } from '~/utils/trpcAssert'
 import { appendWithRedirect } from '~/utils/url'
 import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
-import { env } from '~/env.mjs'
 import { SGID } from '~/lib/errors/auth.sgid'
 import { SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
@@ -80,7 +79,7 @@ export const sgidRouter = router({
       }),
     )
     .query(async ({ ctx, input: { state, code } }) => {
-      if (!env.NEXT_PUBLIC_ENABLE_SGID) {
+      if (!sgid) {
         ctx.logger.error('SGID is not enabled')
         throw new TRPCError({
           code: 'BAD_REQUEST',
