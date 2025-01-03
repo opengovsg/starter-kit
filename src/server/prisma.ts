@@ -16,6 +16,6 @@ export const prisma: PrismaClient =
     log: env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
 
-if (env.NODE_ENV !== 'production') {
+if (['test', 'development'].includes(env.NODE_ENV)) {
   prismaGlobal.prisma = prisma
 }
