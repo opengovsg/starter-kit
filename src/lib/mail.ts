@@ -1,5 +1,4 @@
 import sendgrid from '@sendgrid/mail'
-import wretch from 'wretch'
 
 import { env } from '~/env.mjs'
 
@@ -17,12 +16,25 @@ export const sgClient = env.SENDGRID_API_KEY ? sendgrid : null
 
 export const sendMail = async (params: SendMailParams): Promise<void> => {
   if (env.POSTMAN_API_KEY) {
-    return await wretch(
+    const response = await fetch(
       'https://api.postman.gov.sg/v1/transactional/email/send',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${env.POSTMAN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      },
     )
-      .auth(`Bearer ${env.POSTMAN_API_KEY}`)
-      .post(params)
-      .res()
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! status: ${response.status} ${response.statusText}`,
+      )
+    }
+
+    return
   }
 
   if (sgClient && env.SENDGRID_FROM_ADDRESS) {
