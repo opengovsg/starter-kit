@@ -170,10 +170,11 @@ const processEnv = {
 let env = /** @type {MergedOutput} */ (process.env)
 
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
+  const isBuild = !!process.env.BUILD_MODE // Allows building of docker image without server-side env validation
   const isServer = typeof window === 'undefined'
 
   const parsed = /** @type {MergedSafeParseReturn} */ (
-    isServer
+    isServer && !isBuild
       ? server.safeParse(processEnv) // on server we can validate all env vars
       : client.safeParse(processEnv) // on client we can only validate the ones that are exposed
   )
