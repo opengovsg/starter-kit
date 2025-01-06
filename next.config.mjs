@@ -33,6 +33,8 @@ const ContentSecurityPolicy = `
  */
 /** @type {import("next").NextConfig} */
 const config = {
+  /** The Dockerfile replaces this with `output: "standalone"` to allow a custom server */
+  output: undefined,
   reactStrictMode: true,
   /**
    * Dynamic configuration available for the browser and server.
