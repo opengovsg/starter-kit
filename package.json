@@ -51,7 +51,7 @@
     "@chakra-ui/utils": "^2.0.15",
     "@hookform/resolvers": "^3.3.4",
     "@opengovsg/design-system-react": "^1.24.0",
-    "@opengovsg/sgid-client": "^2.2.0",
+    "@opengovsg/sgid-client": "^2.3.0",
     "@opengovsg/starter-kitty-validators": "^1.2.10",
     "@prisma/client": "^5.7.1",
     "@sendgrid/mail": "^8.1.3",
