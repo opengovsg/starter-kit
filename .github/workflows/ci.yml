@@ -48,7 +48,8 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        uses: datadog/test-visibility-github-action@v2
+        # datadog/test-visibility-github-action@v2.2.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@fd12a97414bee507eff1270d8ac3286313e3797e
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}
@@ -71,7 +72,8 @@ jobs:
       - name: Install Playwright (Chromium)
         run: npx playwright install chromium
       - name: Load .env file
-        uses: xom9ikk/dotenv@v2
+        # xom9ikk/dotenv@v2, using commit hash to pin as tags may be updated in supply chain attack
+        uses: xom9ikk/dotenv@eff1dce037c4c0143cc4180a810511024c2560c0
         with:
           mode: test
       - name: Next.js cache
@@ -98,7 +100,8 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        uses: datadog/test-visibility-github-action@v2
+        # datadog/test-visibility-github-action@v2.2.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@fd12a97414bee507eff1270d8ac3286313e3797e
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}

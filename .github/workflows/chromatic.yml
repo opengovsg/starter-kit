@@ -29,12 +29,14 @@ jobs:
         if: env.CHROMATIC_PROJECT_TOKEN != ''
       - name: Load .env file
         if: env.CHROMATIC_PROJECT_TOKEN != ''
-        uses: xom9ikk/dotenv@v2
+        # xom9ikk/dotenv@v2, using commit hash to pin as tags may be updated in supply chain attack
+        uses: xom9ikk/dotenv@eff1dce037c4c0143cc4180a810511024c2560c0
         with:
           mode: test
       - name: Publish to Chromatic
         if: env.CHROMATIC_PROJECT_TOKEN != ''
-        uses: chromaui/action@latest
+        # chromaui/action@latest, using commit hash to pin to silence codeQL
+        uses: chromaui/action@012a0241a4df3f0f831c99f02e2085c9641a25ba
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
