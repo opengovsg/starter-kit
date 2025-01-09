@@ -10,6 +10,10 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   install:
     name: Install dependencies
@@ -66,6 +70,10 @@ jobs:
       - install
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+      checks: write
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
