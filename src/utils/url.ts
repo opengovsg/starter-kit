@@ -1,28 +1,44 @@
 import { type ParsedUrlQuery } from 'querystring'
 
-import { CALLBACK_URL_KEY } from '~/constants/params'
-import { getBaseUrl } from './getBaseUrl'
+import { REDIRECT_ROUTE_KEY } from '~/constants/params'
+import { AllRoutes } from '~/lib/routes'
+import { routeKeySchema } from '~/schemas/url'
 
-export const appendWithRedirect = (url: string, redirectUrl?: string) => {
-  if (!redirectUrl || !isRelativeUrl(redirectUrl)) {
-    return url
-  }
-  return `${url}?${CALLBACK_URL_KEY}=${encodeURIComponent(redirectUrl)}`
+/**
+ * Validates routeKey then adds it as a query param to the URL
+ */
+export const appendWithRedirectRouteKey = (
+  url: string,
+  route?: keyof typeof AllRoutes,
+) => {
+  if (!route) return url
+  // validate route
+  route = routeKeySchema.parse(route)
+  const query = new URLSearchParams({
+    [REDIRECT_ROUTE_KEY]: route,
+  })
+  return `${url}?${query}`
 }
 
-export const getRedirectUrl = (query: ParsedUrlQuery) => {
-  if (!query[CALLBACK_URL_KEY]) {
-    return undefined
-  }
-  return decodeURIComponent(String(query[CALLBACK_URL_KEY]))
+/**
+ * Extracts the routeKey from query param and validates it
+ */
+export const getRedirectRouteKey = (query: ParsedUrlQuery) => {
+  return routeKeySchema.parse(query[REDIRECT_ROUTE_KEY])
 }
 
-export const isRelativeUrl = (url: string) => {
-  const baseUrl = getBaseUrl()
-  try {
-    const normalizedUrl = new URL(url, baseUrl)
-    return new URL(baseUrl).origin === normalizedUrl.origin
-  } catch {
-    return false
-  }
+/**
+ * Resolve the routeKey to the actual route
+ */
+export const resolveRouteKey = (
+  v: unknown,
+): (typeof AllRoutes)[keyof typeof AllRoutes] => {
+  return AllRoutes[routeKeySchema.parse(v)]
+}
+
+/**
+ * Convenience function to resolve redirect route from query param
+ */
+export const getRedirectRoute = (query: ParsedUrlQuery) => {
+  return resolveRouteKey(getRedirectRouteKey(query))
 }

@@ -7,12 +7,14 @@ import set from 'lodash/set'
 import { z } from 'zod'
 
 import { trpcAssert } from '~/utils/trpcAssert'
-import { appendWithRedirect } from '~/utils/url'
-import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
+import {
+  createResponseSchema,
+  normaliseEmail,
+  safeSchemaJsonParse,
+} from '~/utils/zod'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
-import { callbackUrlSchema } from '~/schemas/url'
+import { routeKeySchema } from '~/schemas/url'
 import { publicProcedure, router } from '~/server/trpc'
 import { upsertSgidAccountAndUser } from './sgid.service'
 import {
@@ -22,13 +24,13 @@ import {
 } from './sgid.utils'
 
 const sgidCallbackStateSchema = z.object({
-  landingUrl: callbackUrlSchema,
+  landingRouteKey: routeKeySchema,
 })
 
 export const sgidRouter = router({
   login: publicProcedure
     .input(sgidCallbackStateSchema)
-    .mutation(async ({ ctx, input: { landingUrl } }) => {
+    .mutation(async ({ ctx, input: { landingRouteKey } }) => {
       if (!sgid) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -43,12 +45,15 @@ export const sgidRouter = router({
         })
       }
 
-      ctx.logger.info({ landingUrl }, `Starting SGID login flow: ${landingUrl}`)
+      ctx.logger.info(
+        { landingRouteKey },
+        `Starting SGID login flow: ${landingRouteKey}`,
+      )
 
       const { codeChallenge, codeVerifier } = generatePkcePair()
       const options: AuthorizationUrlParams = {
         codeChallenge,
-        state: JSON.stringify({ landingUrl }),
+        state: JSON.stringify({ landingRouteKey }),
         scope: APP_SGID_SCOPE,
       }
       const { url, nonce } = sgid.authorizationUrl(options)
@@ -73,6 +78,14 @@ export const sgidRouter = router({
         state: z.string(),
         code: z.string(),
       }),
+    )
+    .output(
+      createResponseSchema(
+        z.object({
+          selectProfileStep: z.boolean(),
+          landingRouteKey: routeKeySchema,
+        }),
+      ),
     )
     .query(async ({ ctx, input: { state, code } }) => {
       if (!sgid) {
@@ -107,15 +120,13 @@ export const sgidRouter = router({
 
       try {
         sgidUserInfo = await getUserInfo({ code, codeVerifier, nonce })
-      } catch (error) {
+      } catch {
         ctx.logger.warn({ state }, 'Unable to fetch user info from sgID')
         // Redirect back to sign in page with error.
         // TODO: Change this to throw an error instead, and then handle it in the client.
         return {
-          redirectUrl: `/sign-in?error=${
-            (error as Error).message ||
-            'Something went wrong whilst fetching SGID user info'
-          }`,
+          success: false,
+          reason: 'Something went wrong whilst fetching SGID user info',
         }
       }
 
@@ -151,11 +162,11 @@ export const sgidRouter = router({
       set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
       await ctx.session.save()
       return {
-        selectProfileStep: true,
-        redirectUrl: appendWithRedirect(
-          `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
-          parsedState.data.landingUrl.href,
-        ),
+        success: true,
+        data: {
+          selectProfileStep: true,
+          landingRouteKey: parsedState.data.landingRouteKey,
+        },
       }
     }),
   listStoredProfiles: publicProcedure.query(({ ctx }) => {

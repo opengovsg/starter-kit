@@ -12,18 +12,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 
-import { appendWithRedirect } from '~/utils/url'
+import { appendWithRedirectRouteKey } from '~/utils/url'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { SIGN_IN } from '~/lib/routes'
+import { SIGN_IN, type AllRoutes } from '~/lib/routes'
 
 interface SgidErrorModalProps {
   message: string
-  redirectUrl: string
+  redirectRouteKey: keyof typeof AllRoutes
 }
 
 export const SgidErrorModal = ({
   message,
-  redirectUrl,
+  redirectRouteKey,
 }: SgidErrorModalProps) => {
   const { onClose } = useDisclosure()
   const modalSize = useBreakpointValue({
@@ -47,8 +47,8 @@ export const SgidErrorModal = ({
   }, [message])
 
   const backToLoginLink = useMemo(() => {
-    return appendWithRedirect(SIGN_IN, redirectUrl)
-  }, [redirectUrl])
+    return appendWithRedirectRouteKey(SIGN_IN, redirectRouteKey)
+  }, [redirectRouteKey])
 
   return (
     <Modal isOpen onClose={onClose} size={modalSize}>

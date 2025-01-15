@@ -3,23 +3,20 @@ import { Box, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 
 import { trpc } from '~/utils/trpc'
-import { getRedirectUrl } from '~/utils/url'
+import { getRedirectRouteKey } from '~/utils/url'
 import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
-import { callbackUrlSchema } from '~/schemas/url'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
   const sgidLoginMutation = trpc.auth.sgid.login.useMutation({
     onSuccess: async ({ redirectUrl }) => {
-      await router.push(redirectUrl)
+      window.location.href = redirectUrl
     },
   })
 
-  const landingUrl = callbackUrlSchema.parse(getRedirectUrl(router.query)).href
-
   const handleSgidLogin = () => {
     return sgidLoginMutation.mutate({
-      landingUrl,
+      landingRouteKey: getRedirectRouteKey(router.query),
     })
   }
 

@@ -4,24 +4,23 @@ import { type FallbackProps } from 'react-error-boundary'
 import { z } from 'zod'
 
 import { safeSchemaJsonParse } from '~/utils/zod'
-import { HOME } from '~/lib/routes'
-import { callbackUrlSchema } from '~/schemas/url'
+import { routeKeySchema } from '~/schemas/url'
 import { SgidErrorModal } from './SgidErrorModal'
 
 export const SgidErrorFallback: ComponentType<FallbackProps> = ({ error }) => {
   const router = useRouter()
-  const redirectUrl = useMemo(() => {
+  const routeKey = useMemo(() => {
     const parsed = safeSchemaJsonParse(
       z.object({
-        landingUrl: callbackUrlSchema,
+        landingRouteKey: routeKeySchema,
       }),
       String(router.query.state),
     )
     if (parsed.success) {
-      return parsed.data.landingUrl.href
+      return parsed.data.landingRouteKey
     }
-    return HOME
+    return 'HOME'
   }, [router.query.state])
 
-  return <SgidErrorModal message={error.message} redirectUrl={redirectUrl} />
+  return <SgidErrorModal message={error.message} redirectRouteKey={routeKey} />
 }

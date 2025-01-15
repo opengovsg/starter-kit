@@ -1,13 +1,13 @@
 import { type PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
 
-import { CALLBACK_URL_KEY } from '~/constants/params'
+import { getRedirectRoute, resolveRouteKey } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
-import { callbackUrlSchema } from '~/schemas/url'
+import { type AllRoutes } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 type PublicPageWrapperProps =
-  | { strict: true; redirectUrl?: string }
+  | { strict: true; redirectRouteKey?: keyof typeof AllRoutes }
   | { strict: false }
 
 /**
@@ -24,12 +24,10 @@ export const PublicPageWrapper = ({
   const { hasLoginStateFlag } = useLoginState()
 
   if (hasLoginStateFlag && rest.strict) {
-    if (rest.redirectUrl) {
-      void router.replace(callbackUrlSchema.parse(rest.redirectUrl))
+    if (rest.redirectRouteKey) {
+      void router.replace(resolveRouteKey(rest.redirectRouteKey))
     } else {
-      void router.replace(
-        callbackUrlSchema.parse(router.query[CALLBACK_URL_KEY]),
-      )
+      void router.replace(getRedirectRoute(router.query))
     }
     return <FullscreenSpinner />
   }
