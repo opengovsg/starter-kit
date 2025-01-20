@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react'
+import { useEffect, useState, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
 
 import { getRedirectRoute, resolveRouteKey } from '~/utils/url'
@@ -23,12 +23,21 @@ export const PublicPageWrapper = ({
   const router = useRouter()
   const { hasLoginStateFlag } = useLoginState()
 
-  if (hasLoginStateFlag && rest.strict) {
-    if (rest.redirectRouteKey) {
-      void router.replace(resolveRouteKey(rest.redirectRouteKey))
+  const [isRedirecting, setIsRedirecting] = useState(true)
+
+  useEffect(() => {
+    if (hasLoginStateFlag && rest.strict) {
+      if (rest.redirectRouteKey) {
+        void router.replace(resolveRouteKey(rest.redirectRouteKey))
+      } else {
+        void router.replace(getRedirectRoute(router.query))
+      }
     } else {
-      void router.replace(getRedirectRoute(router.query))
+      setIsRedirecting(false)
     }
+  }, [hasLoginStateFlag, rest, router])
+
+  if (isRedirecting) {
     return <FullscreenSpinner />
   }
 
