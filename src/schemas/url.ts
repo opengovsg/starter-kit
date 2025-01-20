@@ -37,7 +37,4 @@ export const appUrlSchema = z
 /**
  * Zod schema for validating callbackUrls
  */
-export const callbackUrlSchema = z
-  .enum(ALLOWED_CALLBACK_ROUTES)
-  .optional()
-  .default('/home')
+export const callbackUrlSchema = z.enum(ALLOWED_CALLBACK_ROUTES).catch(HOME)
