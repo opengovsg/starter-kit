@@ -1,7 +1,7 @@
 import { type ParsedUrlQuery } from 'querystring'
 
 import { REDIRECT_ROUTE_KEY } from '~/constants/params'
-import { AllRoutes } from '~/lib/routes'
+import { ALL_ROUTES } from '~/lib/routes'
 import { routeKeySchema } from '~/schemas/url'
 
 /**
@@ -9,7 +9,7 @@ import { routeKeySchema } from '~/schemas/url'
  */
 export const appendWithRedirectRouteKey = (
   url: string,
-  route?: keyof typeof AllRoutes,
+  route?: keyof typeof ALL_ROUTES,
 ) => {
   if (!route) return url
   // validate route
@@ -32,8 +32,8 @@ export const getRedirectRouteKey = (query: ParsedUrlQuery) => {
  */
 export const resolveRouteKey = (
   v: unknown,
-): (typeof AllRoutes)[keyof typeof AllRoutes] => {
-  return AllRoutes[routeKeySchema.parse(v)]
+): (typeof ALL_ROUTES)[keyof typeof ALL_ROUTES] => {
+  return ALL_ROUTES[routeKeySchema.parse(v)]
 }
 
 /**

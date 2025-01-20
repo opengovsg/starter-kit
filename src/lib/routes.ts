@@ -5,7 +5,7 @@ export const HOME = '/home'
 export const PROFILE = '/profile'
 export const SETTINGS_PROFILE = '/settings/profile'
 
-export const AllRoutes = {
+export const ALL_ROUTES = {
   SIGN_IN,
   SIGN_IN_SELECT_PROFILE,
   HOME,

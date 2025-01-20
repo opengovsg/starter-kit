@@ -14,11 +14,11 @@ import {
 
 import { appendWithRedirectRouteKey } from '~/utils/url'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { SIGN_IN, type AllRoutes } from '~/lib/routes'
+import { SIGN_IN, type ALL_ROUTES } from '~/lib/routes'
 
 interface SgidErrorModalProps {
   message: string
-  redirectRouteKey: keyof typeof AllRoutes
+  redirectRouteKey: keyof typeof ALL_ROUTES
 }
 
 export const SgidErrorModal = ({

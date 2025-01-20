@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 
 import { getRedirectRoute, resolveRouteKey } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
-import { type AllRoutes } from '~/lib/routes'
+import { type ALL_ROUTES } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 type PublicPageWrapperProps =
-  | { strict: true; redirectRouteKey?: keyof typeof AllRoutes }
+  | { strict: true; redirectRouteKey?: keyof typeof ALL_ROUTES }
   | { strict: false }
 
 /**

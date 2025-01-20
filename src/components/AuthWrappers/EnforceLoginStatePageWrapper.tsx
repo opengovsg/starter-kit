@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 
 import { appendWithRedirectRouteKey } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
-import { SIGN_IN, type AllRoutes } from '~/lib/routes'
+import { SIGN_IN, type ALL_ROUTES } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 interface EnforceLoginStatePageWrapperProps {
@@ -11,7 +11,7 @@ interface EnforceLoginStatePageWrapperProps {
    * Route to redirect to after user is authenticated. Defaults to
    * `HOME` route if not provided.
    */
-  routeKeyAfterSignIn?: keyof typeof AllRoutes
+  routeKeyAfterSignIn?: keyof typeof ALL_ROUTES
 }
 
 const Redirect = ({

@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 import { getBaseUrl } from '~/utils/getBaseUrl'
 import { zodEnumFromObjKeys } from '~/utils/zod'
-import { AllRoutes, HOME } from '~/lib/routes'
+import { ALL_ROUTES, HOME } from '~/lib/routes'
 
 const baseUrl = new URL(getBaseUrl())
 
@@ -38,6 +38,6 @@ export const appUrlSchema = z
 /**
  * Zod schema for validating routeKeys
  */
-export const routeKeySchema = zodEnumFromObjKeys(AllRoutes)
+export const routeKeySchema = zodEnumFromObjKeys(ALL_ROUTES)
   .optional()
   .default('HOME')
