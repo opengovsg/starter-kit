@@ -3,12 +3,11 @@ import { useRouter } from 'next/router'
 import { Divider, Stack } from '@chakra-ui/react'
 
 import { trpc } from '~/utils/trpc'
-import { REDIRECT_ROUTE_KEY } from '~/constants/params'
 import { useLoginState } from '~/features/auth'
 import { withSuspense } from '~/hocs/withSuspense'
-import { routeKeySchema } from '~/schemas/url'
 import { SgidProfileItem } from './SgidProfileItem'
 import { SgidProfileListSkeleton } from './SgidProfileListSkeleton'
+import { getRedirectUrl } from '~/utils/url'
 
 const SuspendableSgidProfileList = (): JSX.Element => {
   const router = useRouter()
@@ -22,9 +21,7 @@ const SuspendableSgidProfileList = (): JSX.Element => {
     onSuccess: async () => {
       setHasLoginStateFlag()
       await utils.me.get.invalidate()
-      await router.replace(
-        routeKeySchema.parse(router.query[REDIRECT_ROUTE_KEY]),
-      )
+      await router.replace(getRedirectUrl(router.query))
     },
   })
 

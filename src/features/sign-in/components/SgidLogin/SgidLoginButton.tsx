@@ -3,7 +3,7 @@ import { Box, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { Button } from '@opengovsg/design-system-react'
 
 import { trpc } from '~/utils/trpc'
-import { getRedirectRouteKey } from '~/utils/url'
+import { getRedirectUrl } from '~/utils/url'
 import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
 
 export const SgidLoginButton = (): JSX.Element | null => {
@@ -16,7 +16,7 @@ export const SgidLoginButton = (): JSX.Element | null => {
 
   const handleSgidLogin = () => {
     return sgidLoginMutation.mutate({
-      landingRouteKey: getRedirectRouteKey(router.query),
+      landingUrl: getRedirectUrl(router.query),
     })
   }
 

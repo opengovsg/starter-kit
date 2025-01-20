@@ -17,7 +17,7 @@ import { Controller } from 'react-hook-form'
 import { useInterval } from 'usehooks-ts'
 
 import { trpc } from '~/utils/trpc'
-import { getRedirectRoute } from '~/utils/url'
+import { getRedirectUrl } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
 import { OTP_LENGTH } from '~/lib/auth'
 import { useZodForm } from '~/lib/form'
@@ -60,7 +60,7 @@ export const VerificationInput = (): JSX.Element | null => {
       await utils.me.get.invalidate()
       // accessing router.query values returns decoded URI params automatically,
       // so there's no need to call decodeURIComponent manually when accessing the callback url.
-      await router.push(getRedirectRoute(router.query))
+      await router.push(getRedirectUrl(router.query))
     },
     onError: (error) => {
       switch (error.message) {

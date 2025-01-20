@@ -31,17 +31,6 @@ export const safeSchemaJsonParse = <T extends z.ZodTypeAny>(
 }
 
 /**
- * Creates a Zod enum schema from the keys of an object.
- */
-// https://github.com/colinhacks/zod/discussions/839#discussioncomment-10651593
-export const zodEnumFromObjKeys = <T extends Record<string, U>, U>(obj: T) => {
-  const keys = Object.keys(obj) as Extract<keyof T, string>[]
-  return z.enum(
-    keys as [Extract<keyof T, string>, ...Extract<keyof T, string>[]],
-  )
-}
-
-/**
  * Creates a Zod schema for an API response object discriminated on `success`
  * The schema is {success: true, data: T} | {success: false, reason: string}
  */

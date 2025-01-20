@@ -1,13 +1,14 @@
 import { useEffect, useState, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
 
-import { getRedirectRoute, resolveRouteKey } from '~/utils/url'
+import { getRedirectUrl } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
-import { type ALL_ROUTES } from '~/lib/routes'
+import { callbackUrlSchema } from '~/schemas/url'
 import { FullscreenSpinner } from '../FullscreenSpinner'
+import { type CallbackRoute } from '~/lib/routes'
 
 type PublicPageWrapperProps =
-  | { strict: true; redirectRouteKey?: keyof typeof ALL_ROUTES }
+  | { strict: true; redirectUrl?: CallbackRoute }
   | { strict: false }
 
 /**
@@ -27,10 +28,11 @@ export const PublicPageWrapper = ({
 
   useEffect(() => {
     if (hasLoginStateFlag && rest.strict) {
-      if (rest.redirectRouteKey) {
-        void router.replace(resolveRouteKey(rest.redirectRouteKey))
+      if (rest.redirectUrl) {
+        // must validate redirectUrl param
+        void router.replace(callbackUrlSchema.parse(rest.redirectUrl))
       } else {
-        void router.replace(getRedirectRoute(router.query))
+        void router.replace(getRedirectUrl(router.query))
       }
     } else {
       setIsRedirecting(false)

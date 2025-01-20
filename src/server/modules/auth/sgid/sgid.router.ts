@@ -14,7 +14,7 @@ import {
 } from '~/utils/zod'
 import { SGID } from '~/lib/errors/auth.sgid'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
-import { routeKeySchema } from '~/schemas/url'
+import { callbackUrlSchema } from '~/schemas/url'
 import { publicProcedure, router } from '~/server/trpc'
 import { upsertSgidAccountAndUser } from './sgid.service'
 import {
@@ -24,13 +24,13 @@ import {
 } from './sgid.utils'
 
 const sgidCallbackStateSchema = z.object({
-  landingRouteKey: routeKeySchema,
+  landingUrl: callbackUrlSchema,
 })
 
 export const sgidRouter = router({
   login: publicProcedure
     .input(sgidCallbackStateSchema)
-    .mutation(async ({ ctx, input: { landingRouteKey } }) => {
+    .mutation(async ({ ctx, input: { landingUrl } }) => {
       if (!sgid) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -45,15 +45,12 @@ export const sgidRouter = router({
         })
       }
 
-      ctx.logger.info(
-        { landingRouteKey },
-        `Starting SGID login flow: ${landingRouteKey}`,
-      )
+      ctx.logger.info({ landingUrl }, `Starting SGID login flow: ${landingUrl}`)
 
       const { codeChallenge, codeVerifier } = generatePkcePair()
       const options: AuthorizationUrlParams = {
         codeChallenge,
-        state: JSON.stringify({ landingRouteKey }),
+        state: JSON.stringify({ landingUrl }),
         scope: APP_SGID_SCOPE,
       }
       const { url, nonce } = sgid.authorizationUrl(options)
@@ -83,7 +80,7 @@ export const sgidRouter = router({
       createResponseSchema(
         z.object({
           selectProfileStep: z.boolean(),
-          landingRouteKey: routeKeySchema,
+          landingUrl: callbackUrlSchema,
         }),
       ),
     )
@@ -165,7 +162,7 @@ export const sgidRouter = router({
         success: true,
         data: {
           selectProfileStep: true,
-          landingRouteKey: parsedState.data.landingRouteKey,
+          landingUrl: parsedState.data.landingUrl,
         },
       }
     }),

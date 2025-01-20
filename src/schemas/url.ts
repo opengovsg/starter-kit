@@ -2,8 +2,7 @@ import { createUrlSchema } from '@opengovsg/starter-kitty-validators/url'
 import { z } from 'zod'
 
 import { getBaseUrl } from '~/utils/getBaseUrl'
-import { zodEnumFromObjKeys } from '~/utils/zod'
-import { ALL_ROUTES, HOME } from '~/lib/routes'
+import { ALLOWED_CALLBACK_ROUTES, HOME } from '~/lib/routes'
 
 const baseUrl = new URL(getBaseUrl())
 
@@ -36,8 +35,9 @@ export const appUrlSchema = z
   .catch(new URL(HOME, baseUrl.origin))
 
 /**
- * Zod schema for validating routeKeys
+ * Zod schema for validating callbackUrls
  */
-export const routeKeySchema = zodEnumFromObjKeys(ALL_ROUTES)
+export const callbackUrlSchema = z
+  .enum(ALLOWED_CALLBACK_ROUTES)
   .optional()
-  .default('HOME')
+  .default('/home')

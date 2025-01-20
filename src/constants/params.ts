@@ -1,1 +1,1 @@
-export const REDIRECT_ROUTE_KEY = 'redirectRouteKey' as const
+export const CALLBACK_URL_KEY = 'callbackUrl' as const
