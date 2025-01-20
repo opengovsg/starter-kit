@@ -13,7 +13,7 @@ import {
   type ReactRenderer,
 } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { httpBatchLink } from '@trpc/client'
+import { httpLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
 import { format } from 'date-fns/format'
 import merge from 'lodash/merge'
@@ -71,7 +71,7 @@ const SetupDecorator: Decorator = (story) => {
   )
   const [trpcClient] = useState(() =>
     trpc.createClient({
-      links: [httpBatchLink({ url: '' })],
+      links: [httpLink({ url: '' })],
       transformer: superjson,
     }),
   )

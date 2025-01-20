@@ -1,6 +1,6 @@
 import { type NextPageContext } from 'next'
 import {
-  httpBatchLink,
+  httpLink,
   loggerLink,
   TRPCClientError,
   type TRPCLink,
@@ -156,7 +156,7 @@ export const trpc = createTRPCNext<
             process.env.NODE_ENV === 'development' ||
             (opts.direction === 'down' && opts.result instanceof Error),
         }),
-        httpBatchLink({
+        httpLink({
           url: `${getBaseUrl()}/api/trpc`,
           /**
            * Provide a function that will invoke the current global

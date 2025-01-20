@@ -20,11 +20,11 @@ export default trpcNext.createNextApiHandler({
       ctx?.session?.destroy()
     }
   },
-  /**
-   * Enable query batching
-   */
   batching: {
-    enabled: true,
+    /**
+     * Disable query batching for better logging (and since we mostly self-host the app without Serverless)
+     */
+    enabled: false,
   },
   /**
    * @link https://trpc.io/docs/caching#api-response-caching
