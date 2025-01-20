@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 
 import { appendWithRedirect } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
-import { SIGN_IN, type CallbackRoute, HOME } from '~/lib/routes'
+import { HOME, SIGN_IN, type CallbackRoute } from '~/lib/routes'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 interface EnforceLoginStatePageWrapperProps {

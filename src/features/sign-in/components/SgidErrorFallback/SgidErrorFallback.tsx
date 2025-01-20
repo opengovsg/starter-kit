@@ -4,7 +4,7 @@ import { type FallbackProps } from 'react-error-boundary'
 import { z } from 'zod'
 
 import { safeSchemaJsonParse } from '~/utils/zod'
-import { type CallbackRoute, HOME } from '~/lib/routes'
+import { HOME, type CallbackRoute } from '~/lib/routes'
 import { callbackUrlSchema } from '~/schemas/url'
 import { SgidErrorModal } from './SgidErrorModal'
 

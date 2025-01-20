@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 import { Divider, Stack } from '@chakra-ui/react'
 
 import { trpc } from '~/utils/trpc'
+import { getRedirectUrl } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
 import { withSuspense } from '~/hocs/withSuspense'
 import { SgidProfileItem } from './SgidProfileItem'
 import { SgidProfileListSkeleton } from './SgidProfileListSkeleton'
-import { getRedirectUrl } from '~/utils/url'
 
 const SuspendableSgidProfileList = (): JSX.Element => {
   const router = useRouter()

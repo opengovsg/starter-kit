@@ -14,7 +14,7 @@ import {
 
 import { appendWithRedirect } from '~/utils/url'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { type CallbackRoute, SIGN_IN } from '~/lib/routes'
+import { SIGN_IN, type CallbackRoute } from '~/lib/routes'
 
 interface SgidErrorModalProps {
   message: string

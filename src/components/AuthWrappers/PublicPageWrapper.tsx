@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 
 import { getRedirectUrl } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
+import { type CallbackRoute } from '~/lib/routes'
 import { callbackUrlSchema } from '~/schemas/url'
 import { FullscreenSpinner } from '../FullscreenSpinner'
-import { type CallbackRoute } from '~/lib/routes'
 
 type PublicPageWrapperProps =
   | { strict: true; redirectUrl?: CallbackRoute }
