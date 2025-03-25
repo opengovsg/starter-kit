@@ -22,6 +22,9 @@ describe('auth.email', async () => {
     session = applySession()
     const ctx = await createMockRequest(session)
     caller = createCaller(ctx)
+
+    // Clear all verification tokens before each test.
+    await prisma.verificationToken.deleteMany()
   })
 
   describe('login', async () => {

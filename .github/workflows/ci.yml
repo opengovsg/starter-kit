@@ -44,6 +44,28 @@ jobs:
       - install
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest # should be the same version as used in .github/workflows, docker-compose.test.yml, Dockerfile and live
+        env:
+          POSTGRES_DB: 'test'
+          POSTGRES_USER: 'root'
+          POSTGRES_PASSWORD: 'root'
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      integresql:
+        image: ghcr.io/allaboutapps/integresql:v1.1.0
+        env:
+          PGHOST: 'postgres'
+          PGUSER: 'root'
+          PGPASSWORD: 'root'
+        ports:
+          - 5000:5000
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
