@@ -46,7 +46,7 @@
     "@aws-sdk/s3-request-presigner": "3.774.0",
     "@chakra-ui/anatomy": "^2.3.4",
     "@chakra-ui/react": "^2.8.2",
-    "@chakra-ui/styled-system": "^2.9.2",
+    "@chakra-ui/styled-system": "^2.12.0",
     "@chakra-ui/theme-tools": "^2.1.2",
     "@chakra-ui/utils": "^2.0.15",
     "@hookform/resolvers": "^3.3.4",
