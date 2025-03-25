@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import path from 'path'
 import { PrismaClient } from '@prisma/client'
 
@@ -19,10 +19,14 @@ export default async function setup() {
       DATABASE_URL: connectionUrl,
       PATH: process.env.PATH,
     } as const
-    execSync(`${prismaBin} db push --force-reset --skip-generate`, {
-      env,
-      stdio: 'inherit',
-    })
+    execFileSync(
+      prismaBin,
+      ['db', 'push', '--force-reset', '--skip-generate'],
+      {
+        env,
+        stdio: 'inherit',
+      },
+    )
 
     const prisma = new PrismaClient({
       datasources: { db: { url: connectionUrl } },
