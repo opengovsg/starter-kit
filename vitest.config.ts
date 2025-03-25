@@ -9,7 +9,8 @@ export default defineConfig({
       '~/': fileURLToPath(new URL('./src/', import.meta.url)),
       '~tests/': fileURLToPath(new URL('./tests/', import.meta.url)),
     },
-    setupFiles: ['vitest.setup.ts'],
+    globalSetup: 'vitest.global-setup.ts',
+    setupFiles: ['tests/integration/__mocks__/prisma.ts'],
     coverage: {
       provider: 'istanbul',
       reportOnFailure: true,
