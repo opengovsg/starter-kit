@@ -14,11 +14,11 @@ import {
 
 import { appendWithRedirect } from '~/utils/url'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { SIGN_IN } from '~/lib/routes'
+import { SIGN_IN, type CallbackRoute } from '~/lib/routes'
 
 interface SgidErrorModalProps {
   message: string
-  redirectUrl: string
+  redirectUrl: CallbackRoute
 }
 
 export const SgidErrorModal = ({
