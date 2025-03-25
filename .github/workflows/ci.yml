@@ -64,6 +64,8 @@ jobs:
           PGHOST: 'postgres'
           PGUSER: 'root'
           PGPASSWORD: 'root'
+        ports:
+          - 5000:5000
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
