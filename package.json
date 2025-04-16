@@ -15,7 +15,7 @@
     "prebuild": "run-s generate migrate",
     "build": "next build",
     "build:theme": "npx chakra-cli tokens src/theme/index.ts",
-    "start": "next start",
+    "start": "next start --keepAliveTimeout 70000",
     "lint": "eslint --report-unused-disable-directives --report-unused-disable-directives .",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .prettierignore --config .prettierrc.cjs",
