@@ -86,7 +86,7 @@
     "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-typescript": "^7.23.3",
-    "@chakra-ui/cli": "^2.4.1",
+    "@chakra-ui/cli": "^2.5.8",
     "@date-fns/tz": "^1.2.0",
     "@devoxa/integresql-client": "^2.1.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
