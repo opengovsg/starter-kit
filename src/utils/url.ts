@@ -1,28 +1,28 @@
 import { type ParsedUrlQuery } from 'querystring'
 
 import { CALLBACK_URL_KEY } from '~/constants/params'
-import { getBaseUrl } from './getBaseUrl'
+import { type CallbackRoute } from '~/lib/routes'
+import { callbackUrlSchema } from '~/schemas/url'
 
-export const appendWithRedirect = (url: string, redirectUrl?: string) => {
-  if (!redirectUrl || !isRelativeUrl(redirectUrl)) {
-    return url
-  }
-  return `${url}?${CALLBACK_URL_KEY}=${encodeURIComponent(redirectUrl)}`
+/**
+ * Validates redirectUrl then adds it as a query param to the URL
+ */
+export const appendWithRedirect = (
+  url: string,
+  redirectUrl?: CallbackRoute,
+) => {
+  if (!redirectUrl) return url
+  // validate route
+  redirectUrl = callbackUrlSchema.parse(redirectUrl)
+  const query = new URLSearchParams({
+    [CALLBACK_URL_KEY]: redirectUrl,
+  })
+  return `${url}?${query}`
 }
 
+/**
+ * Extracts the redirectUrl from query param and validates it
+ */
 export const getRedirectUrl = (query: ParsedUrlQuery) => {
-  if (!query[CALLBACK_URL_KEY]) {
-    return undefined
-  }
-  return decodeURIComponent(String(query[CALLBACK_URL_KEY]))
-}
-
-export const isRelativeUrl = (url: string) => {
-  const baseUrl = getBaseUrl()
-  try {
-    const normalizedUrl = new URL(url, baseUrl)
-    return new URL(baseUrl).origin === normalizedUrl.origin
-  } catch {
-    return false
-  }
+  return callbackUrlSchema.parse(query[CALLBACK_URL_KEY])
 }

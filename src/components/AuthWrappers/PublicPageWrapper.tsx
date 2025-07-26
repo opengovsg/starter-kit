@@ -1,13 +1,14 @@
-import { type PropsWithChildren } from 'react'
+import { useEffect, useState, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
 
-import { CALLBACK_URL_KEY } from '~/constants/params'
+import { getRedirectUrl } from '~/utils/url'
 import { useLoginState } from '~/features/auth'
+import { type CallbackRoute } from '~/lib/routes'
 import { callbackUrlSchema } from '~/schemas/url'
 import { FullscreenSpinner } from '../FullscreenSpinner'
 
 type PublicPageWrapperProps =
-  | { strict: true; redirectUrl?: string }
+  | { strict: true; redirectUrl?: CallbackRoute }
   | { strict: false }
 
 /**
@@ -23,14 +24,22 @@ export const PublicPageWrapper = ({
   const router = useRouter()
   const { hasLoginStateFlag } = useLoginState()
 
-  if (hasLoginStateFlag && rest.strict) {
-    if (rest.redirectUrl) {
-      void router.replace(callbackUrlSchema.parse(rest.redirectUrl))
+  const [isRedirecting, setIsRedirecting] = useState(true)
+
+  useEffect(() => {
+    if (hasLoginStateFlag && rest.strict) {
+      if (rest.redirectUrl) {
+        // must validate redirectUrl param
+        void router.replace(callbackUrlSchema.parse(rest.redirectUrl))
+      } else {
+        void router.replace(getRedirectUrl(router.query))
+      }
     } else {
-      void router.replace(
-        callbackUrlSchema.parse(router.query[CALLBACK_URL_KEY]),
-      )
+      setIsRedirecting(false)
     }
+  }, [hasLoginStateFlag, rest, router])
+
+  if (isRedirecting) {
     return <FullscreenSpinner />
   }
 

@@ -7,10 +7,12 @@ import set from 'lodash/set'
 import { z } from 'zod'
 
 import { trpcAssert } from '~/utils/trpcAssert'
-import { appendWithRedirect } from '~/utils/url'
-import { normaliseEmail, safeSchemaJsonParse } from '~/utils/zod'
+import {
+  createResponseSchema,
+  normaliseEmail,
+  safeSchemaJsonParse,
+} from '~/utils/zod'
 import { SGID } from '~/lib/errors/auth.sgid'
-import { SIGN_IN, SIGN_IN_SELECT_PROFILE_SUBROUTE } from '~/lib/routes'
 import { APP_SGID_SCOPE, sgid } from '~/lib/sgid'
 import { callbackUrlSchema } from '~/schemas/url'
 import { publicProcedure, router } from '~/server/trpc'
@@ -74,6 +76,14 @@ export const sgidRouter = router({
         code: z.string(),
       }),
     )
+    .output(
+      createResponseSchema(
+        z.object({
+          selectProfileStep: z.boolean(),
+          landingUrl: callbackUrlSchema,
+        }),
+      ),
+    )
     .query(async ({ ctx, input: { state, code } }) => {
       if (!sgid) {
         ctx.logger.error('SGID is not enabled')
@@ -107,15 +117,13 @@ export const sgidRouter = router({
 
       try {
         sgidUserInfo = await getUserInfo({ code, codeVerifier, nonce })
-      } catch (error) {
+      } catch {
         ctx.logger.warn({ state }, 'Unable to fetch user info from sgID')
         // Redirect back to sign in page with error.
         // TODO: Change this to throw an error instead, and then handle it in the client.
         return {
-          redirectUrl: `/sign-in?error=${
-            (error as Error).message ||
-            'Something went wrong whilst fetching SGID user info'
-          }`,
+          success: false,
+          reason: 'Something went wrong whilst fetching SGID user info',
         }
       }
 
@@ -151,11 +159,11 @@ export const sgidRouter = router({
       set(ctx.session, 'sgid.profiles', sgidProfileToStore.data)
       await ctx.session.save()
       return {
-        selectProfileStep: true,
-        redirectUrl: appendWithRedirect(
-          `${SIGN_IN}${SIGN_IN_SELECT_PROFILE_SUBROUTE}`,
-          parsedState.data.landingUrl.href,
-        ),
+        success: true,
+        data: {
+          selectProfileStep: true,
+          landingUrl: parsedState.data.landingUrl,
+        },
       }
     }),
   listStoredProfiles: publicProcedure.query(({ ctx }) => {

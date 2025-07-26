@@ -5,7 +5,6 @@ import { Button } from '@opengovsg/design-system-react'
 import { trpc } from '~/utils/trpc'
 import { getRedirectUrl } from '~/utils/url'
 import { SingpassFullLogo } from '~/components/Svg/SingpassFullLogo'
-import { callbackUrlSchema } from '~/schemas/url'
 
 export const SgidLoginButton = (): JSX.Element | null => {
   const router = useRouter()
@@ -15,11 +14,9 @@ export const SgidLoginButton = (): JSX.Element | null => {
     },
   })
 
-  const landingUrl = callbackUrlSchema.parse(getRedirectUrl(router.query)).href
-
   const handleSgidLogin = () => {
     return sgidLoginMutation.mutate({
-      landingUrl,
+      landingUrl: getRedirectUrl(router.query),
     })
   }
 
