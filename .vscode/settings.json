@@ -7,5 +7,11 @@
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
+  },
+  "files.associations": {
+    "**/tooling/typescript/base.json": "jsonc",
+    "**/tooling/typescript/compiled-package.json": "jsonc",
+    "tsconfig.json": "jsonc",
+    "*.css": "tailwindcss",
   }
 }
