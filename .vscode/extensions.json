@@ -2,6 +2,8 @@
   "recommendations": [
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "prisma.prisma"
+    "prisma.prisma",
+    "yoavbls.pretty-ts-errors",
+    "bradlc.vscode-tailwindcss"
   ]
 }
