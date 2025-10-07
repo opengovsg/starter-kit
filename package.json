@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "generate": "prisma generate",
     "db:setup": "docker compose -f \"docker-compose.yml\" up -d --wait",
     "db:sleep": "sleep 3",
@@ -14,10 +15,10 @@
     "dev": "next dev",
     "prebuild": "run-s generate migrate",
     "build": "next build",
-    "build:theme": "npx chakra-cli tokens src/theme/index.ts",
+    "build:theme": "chakra-cli tokens src/theme/index.ts",
     "start": "next start",
     "lint": "eslint --report-unused-disable-directives --report-unused-disable-directives .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "pnpm lint --fix",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .prettierignore --config .prettierrc.cjs",
     "format:fix": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .prettierignore --config .prettierrc.cjs",
     "migrate:dev": "prisma migrate dev",
@@ -31,7 +32,7 @@
     "test-ci:e2e": "start-server-and-test start http://127.0.0.1:3000 test:e2e",
     "test-dev:e2e": "start-server-and-test dev http://127.0.0.1:3000 test:e2e",
     "load-test:build": "webpack --config tests/load/webpack.config.js",
-    "postinstall": "npm run generate && npm run build:theme",
+    "postinstall": "pnpm generate && pnpm build:theme",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -86,7 +87,7 @@
     "@babel/plugin-transform-object-rest-spread": "^7.23.4",
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-typescript": "^7.23.3",
-    "@chakra-ui/cli": "^2.4.1",
+    "@chakra-ui/cli": "2.5.8",
     "@date-fns/tz": "^1.2.0",
     "@devoxa/integresql-client": "^2.1.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
@@ -140,5 +141,6 @@
   },
   "msw": {
     "workerDirectory": "public"
-  }
+  },
+  "packageManager": "pnpm@10.18.1+sha512.77a884a165cbba2d8d1c19e3b4880eee6d2fcabd0d879121e282196b80042351d5eb3ca0935fa599da1dc51265cc68816ad2bddd2a2de5ea9fdf92adbec7cd34"
 }
