@@ -1,28 +1,29 @@
 {
-  "name": "@acme/tailwind-config",
+  "name": "@acme/validators",
   "private": true,
   "type": "module",
   "exports": {
-    "./theme": "./theme.css",
-    "./postcss-config": "./postcss-config.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
   },
   "license": "MIT",
   "scripts": {
-    "clean": "git clean -xdf .cache .turbo node_modules",
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "catalog:tailwindcss4",
-    "postcss": "^8.5.6",
-    "tailwindcss": "catalog:tailwindcss4"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "@types/node": "^22.18.1",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
