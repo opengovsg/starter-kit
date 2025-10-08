@@ -14,9 +14,9 @@ const createPrisma = () => {
   return prisma
 }
 
-export const prisma = globalForPrisma.prisma || createPrisma()
+export const db = globalForPrisma.prisma || createPrisma()
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
 // This export is needed to avoid the TypeScript error:
 // The inferred type of 'prisma' cannot be named without a reference to '../node_modules/@repo/database/src/generated/prisma'.
