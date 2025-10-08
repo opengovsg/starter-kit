@@ -1,17 +1,26 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
-  "prettier.configPath": ".prettierrc.cjs",
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
   "files.associations": {
-    "**/tooling/typescript/base.json": "jsonc",
-    "**/tooling/typescript/compiled-package.json": "jsonc",
-    "tsconfig.json": "jsonc",
+    "**/tooling/typescript/*.json": "jsonc",
+    "**/tsconfig.json": "jsonc",
+    "**/tsconfig.*.json": "jsonc",
     "*.css": "tailwindcss",
-  }
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["task-definition.json"],
+      "url": "https://ecs-intellisense.s3-us-west-2.amazonaws.com/task-definition/schema.json"
+    }
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
 }
