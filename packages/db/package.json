@@ -1,0 +1,60 @@
+{
+  "name": "@acme/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./browser": {
+      "types": "./dist/src/browser.d.ts",
+      "default": "./src/browser.ts"
+    },
+    "./enums": {
+      "types": "./dist/src/enums.d.ts",
+      "default": "./src/enums.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "generate": "pnpm with-env prisma generate",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "push": "pnpm with-env prisma db push",
+    "studio": "pnpm with-env prisma studio --port 5556",
+    "migrate:dev": "pnpm with-env prisma migrate dev",
+    "migrate:deploy": "pnpm with-env prisma migrate deploy",
+    "reset": "pnpm with-env prisma migrate reset",
+    "seed": "pnpm with-env prisma db seed",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^6.17.0",
+    "@prisma/client": "^6.17.0",
+    "@t3-oss/env-core": "catalog:t3-env",
+    "pg": "^8.16.3",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/eslint-config": "workspace:*",
+    "@acme/prettier-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "dotenv-cli": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "prisma": "^6.17.0",
+    "typescript": "catalog:"
+  },
+  "prisma": {
+    "seed": "pnpm dlx tsx src/seed.ts"
+  },
+  "prettier": "@acme/prettier-config"
+}

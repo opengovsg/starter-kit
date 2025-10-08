@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated"
+  previewFeatures = ["fullTextSearchPostgres"]
+  engineType      = "client"
+}
+
+model VerificationToken {
+  identifier String   @id
+  token      String
+  attempts   Int      @default(0)
+  expires    DateTime
+}
+
+model User {
+  id       String     @id @default(cuid())
+  name     String?
+  email    String     @unique
+  image    String?
+  accounts Accounts[]
+}
+
+model Accounts {
+  id                String @id @default(cuid())
+  provider          String
+  providerAccountId String
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
