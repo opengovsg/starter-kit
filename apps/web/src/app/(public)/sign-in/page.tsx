@@ -1,10 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 import { env } from '~/env'
+import { getSession } from '~/server/session'
 import { SignInWizard } from './_components/wizard'
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const session = await getSession()
+
+  if (session.userId) {
+    redirect('/admin')
+  }
+
   return (
     <div className="lg:from-interaction-main-subtle-default flex flex-1 lg:bg-gradient-to-r lg:from-50% lg:to-white lg:to-50%">
       <div className="mx-auto flex flex-1 flex-col gap-2 lg:container lg:grid lg:grid-cols-12 lg:gap-4">
