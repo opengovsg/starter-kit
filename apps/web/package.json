@@ -24,6 +24,8 @@
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
     "next": "^15.5.2",
+    "nextjs-toploader": "^3.9.17",
+    "nuqs": "^2.7.1",
     "react": "catalog:react19",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:react19",

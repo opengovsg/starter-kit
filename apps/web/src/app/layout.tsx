@@ -1,13 +1,16 @@
 import type { Metadata } from 'next'
 import { IBM_Plex_Mono, Inter } from 'next/font/google'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import NextTopLoader from 'nextjs-toploader'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import { Toaster } from '@acme/ui/toast'
-
-import { TRPCReactProvider } from '~/trpc/react'
 
 import '~/app/globals.css'
 
 import { cn } from '@opengovsg/oui-theme'
+
+import { ClientProviders } from './provider'
 
 export const metadata: Metadata = {
   title: 'Starter Kit',
@@ -40,8 +43,12 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           ibmPlexMono.variable,
         )}
       >
-        <TRPCReactProvider>{props.children}</TRPCReactProvider>
-        <Toaster />
+        <NextTopLoader color="var(--color-interaction-main-default)" />
+        <ClientProviders>
+          <NuqsAdapter>{props.children}</NuqsAdapter>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Toaster />
+        </ClientProviders>
       </body>
     </html>
   )

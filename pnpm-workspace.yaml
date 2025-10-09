@@ -47,4 +47,4 @@ overrides:
 publicHoistPattern:
   - '*prettier*' # see https://github.com/IanVS/prettier-plugin-sort-imports/issues/205#issuecomment-3139130510
   - '*eslint-plugin*'
-  - typescript-eslint
+  - '*@opengovsg/oui*'
