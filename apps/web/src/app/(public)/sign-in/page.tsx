@@ -19,14 +19,14 @@ export default async function SignInPage() {
         <div className="bg-interaction-main-subtle-default col-span-4 min-h-55 max-sm:hidden lg:col-span-7 lg:h-full">
           <div className="max-lg:px-4">{/* Insert relevant image here */}</div>
         </div>
-        <div className="col-span-3 col-start-9 mt-8 flex-1 lg:mt-[40%]">
-          <div className="flex h-full w-full flex-col gap-4 max-lg:px-4">
+        <div className="mt-8 flex-1 grid-cols-12 md:grid lg:col-span-3 lg:col-start-9 lg:mt-[40%] lg:flex">
+          <div className="flex h-full w-full flex-col gap-4 max-lg:px-4 md:col-span-6 md:col-start-4">
             <h2 className="prose-h3 text-base-content-brand font-semibold">
               {/* Recommend max 2 lines of text here, or add logo */}
               {env.NEXT_PUBLIC_APP_NAME}
             </h2>
             <SignInWizard />
-            <div className="prose-caption-3 my-12 flex whitespace-pre">
+            <div className="prose-caption-3 my-12 flex items-center whitespace-pre">
               Built by{' '}
               <Link
                 href="https://www.open.gov.sg/"
@@ -34,6 +34,7 @@ export default async function SignInPage() {
                 className="inline-flex"
               >
                 <Image
+                  className="h-auto w-auto"
                   src="/assets/restricted-ogp-text-logo.svg"
                   height={12}
                   width={232}
