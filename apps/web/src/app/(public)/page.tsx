@@ -6,6 +6,7 @@ import { LinkButton } from '@acme/ui/link-button'
 import { RestrictedFooter } from '@acme/ui/restricted-footer'
 
 import { env } from '~/env'
+import { getSession } from '~/server/session'
 import { FeatureItem } from './_components/landing-page/feature-item'
 import { LandingPageHeader } from './_components/landing-page/header'
 import {
@@ -14,12 +15,20 @@ import {
   SectionHeader,
 } from './_components/landing-page/section'
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  // Might not be worth subscribing this page to be dynamically rendered just to
+  // check for authentication. Remove this logic if you want to keep this as a static
+  // page.
+  const session = await getSession()
+  const isAuthed = session.userId !== undefined
+
+  const ctaLink = isAuthed ? '/admin' : '/sign-in'
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="bg-base-canvas-brand-subtle">
         <div className="container mx-auto px-4">
-          <LandingPageHeader />
+          <LandingPageHeader isAuthed={isAuthed} />
           <div className="flex flex-col py-14 md:flex-row md:py-22">
             <div className="flex flex-1 flex-col">
               <h1 className="lg:prose-responsive-display-heavy-1280 md:prose-responsive-display-heavy-480 prose-responsive-display-heavy text-base-content-strong">
@@ -32,7 +41,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-10">
                 <LinkButton
-                  href="/sign-in"
+                  href={ctaLink}
                   endContent={<BiRightArrowAlt className="size-6" />}
                 >
                   Explore StarterApp
@@ -76,7 +85,7 @@ export default function LandingPage() {
               immediately. It's free, and requires no onboarding or approvals.
             </SectionBody>
             <div className="mt-10">
-              <LinkButton href="/sign-in">Get started</LinkButton>
+              <LinkButton href={ctaLink}>Get started</LinkButton>
             </div>
           </div>
           <div className="flex-1" aria-hidden="true">
@@ -124,7 +133,7 @@ export default function LandingPage() {
         <SectionHeader className="text-white">
           Start building your app now
         </SectionHeader>
-        <LinkButton href="/sign-in">Get started</LinkButton>
+        <LinkButton href={ctaLink}>Get started</LinkButton>
       </LandingSection>
       <RestrictedFooter
         appName={env.NEXT_PUBLIC_APP_NAME}
