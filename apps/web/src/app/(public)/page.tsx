@@ -32,7 +32,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-10">
                 <LinkButton
-                  href="/login"
+                  href="/sign-in"
                   endContent={<BiRightArrowAlt className="size-6" />}
                 >
                   Explore StarterApp
@@ -76,7 +76,7 @@ export default function LandingPage() {
               immediately. It's free, and requires no onboarding or approvals.
             </SectionBody>
             <div className="mt-10">
-              <LinkButton href="/login">Get started</LinkButton>
+              <LinkButton href="/sign-in">Get started</LinkButton>
             </div>
           </div>
           <div className="flex-1" aria-hidden="true">
@@ -124,7 +124,7 @@ export default function LandingPage() {
         <SectionHeader className="text-white">
           Start building your app now
         </SectionHeader>
-        <LinkButton href="/login">Get started</LinkButton>
+        <LinkButton href="/sign-in">Get started</LinkButton>
       </LandingSection>
       <RestrictedFooter
         appName={env.NEXT_PUBLIC_APP_NAME}

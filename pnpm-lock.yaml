@@ -146,6 +146,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      email-addresses:
+        specifier: ^5.0.0
+        version: 5.0.0
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
@@ -2704,6 +2707,9 @@ packages:
 
   electron-to-chromium@1.5.232:
     resolution: {integrity: sha512-ENirSe7wf8WzyPCibqKUG1Cg43cPaxH4wRR7AJsX7MCABCHBIOFqvaYODSLKUuZdraxUTHRE/0A2Aq8BYKEHOg==}
+
+  email-addresses@5.0.0:
+    resolution: {integrity: sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -7497,6 +7503,8 @@ snapshots:
       fast-check: 3.23.2
 
   electron-to-chromium@1.5.232: {}
+
+  email-addresses@5.0.0: {}
 
   emoji-regex@8.0.0: {}
 
