@@ -3,8 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./modal": "./src/modal.tsx"
+    "./toast": "./src/toast.tsx"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -14,6 +13,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
+    "@opengovsg/oui": "catalog:oui",
+    "@opengovsg/oui-theme": "catalog:oui",
     "react-hook-form": "^7.62.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1"
