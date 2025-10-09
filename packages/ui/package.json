@@ -15,12 +15,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.1",
+    "@hookform/resolvers": "^5.2.2",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
     "react-aria": "^3.44.0",
     "react-aria-components": "catalog:",
-    "react-hook-form": "^7.62.0",
+    "react-hook-form": "^7.64.0",
     "react-icons": "^5.5.0",
     "sonner": "^2.0.7",
     "tailwind-variants": "^3.1.1"

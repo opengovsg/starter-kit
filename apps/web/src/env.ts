@@ -14,7 +14,9 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
+    OTP_EXPIRY: z.coerce.number().positive().optional().default(600), // OTP expiry time in seconds
     DATABASE_URL: z.url(),
+    POSTMAN_API_KEY: z.string().optional(),
   },
 
   /**
@@ -23,6 +25,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
+    NEXT_PUBLIC_APP_URL: z.url().optional(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
   /**
@@ -31,6 +34,7 @@ export const env = createEnv({
   experimental__runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:

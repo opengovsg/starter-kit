@@ -4,6 +4,7 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from '~/server/api/trpc'
+import { authRouter } from './routers/auth/auth.router'
 
 /**
  * This is the primary router for your server.
@@ -13,6 +14,7 @@ import {
 export const appRouter = createTRPCRouter({
   healthcheck: publicProcedure.query(() => 'alive!'),
   me: meRouter,
+  auth: authRouter,
 })
 
 // export type definition of API

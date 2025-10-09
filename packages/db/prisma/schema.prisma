@@ -17,7 +17,7 @@ model VerificationToken {
   identifier String   @id
   token      String
   attempts   Int      @default(0)
-  expires    DateTime
+  issuedAt   DateTime @updatedAt
 }
 
 model User {

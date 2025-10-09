@@ -1,0 +1,15 @@
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    projects: ['packages/*', 'apps/*'],
+    retry: 0,
+    globals: true,
+    exclude: ['node_modules', 'dist', '.turbo'],
+    coverage: {
+      enabled: process.env.CI === 'true',
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+    },
+  },
+})

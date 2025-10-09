@@ -16,6 +16,7 @@
     "@acme/db": "workspace:*",
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
+    "@hookform/resolvers": "^5.2.2",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
     "@t3-oss/env-nextjs": "^0.13.8",
@@ -23,15 +24,19 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "date-fns": "^4.1.0",
+    "nanoid": "^5.1.6",
     "next": "^15.5.2",
     "nextjs-toploader": "^3.9.17",
     "nuqs": "^2.7.1",
     "react": "catalog:react19",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:react19",
+    "react-hook-form": "^7.64.0",
     "react-icons": "^5.5.0",
     "superjson": "2.2.2",
     "type-fest": "^5.0.1",
+    "usehooks-ts": "^3.1.1",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -49,7 +54,9 @@
     "prettier": "catalog:",
     "tailwindcss": "catalog:tailwindcss4",
     "tw-animate-css": "^1.3.8",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "prettier": "@acme/prettier-config"
 }
