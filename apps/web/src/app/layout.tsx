@@ -10,7 +10,6 @@ import '~/app/globals.css'
 
 import { cn } from '@opengovsg/oui-theme'
 
-import { VersionCheckWrapper } from './_components/version-check-wrapper'
 import { ClientProviders } from './provider'
 
 export const metadata: Metadata = {
@@ -46,12 +45,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       >
         <NextTopLoader color="var(--color-interaction-main-default)" />
         <ClientProviders>
-          <NuqsAdapter>
-            <main className="flex min-h-dvh flex-col">
-              <VersionCheckWrapper />
-              {props.children}
-            </main>
-          </NuqsAdapter>
+          <NuqsAdapter>{props.children}</NuqsAdapter>
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster />
         </ClientProviders>

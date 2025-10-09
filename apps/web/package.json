@@ -30,6 +30,7 @@
     "react-aria-components": "catalog:",
     "react-dom": "catalog:react19",
     "superjson": "2.2.2",
+    "type-fest": "^5.0.1",
     "zod": "catalog:"
   },
   "devDependencies": {
