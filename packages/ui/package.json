@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     "./toast": "./src/toast.tsx",
+    "./link-button": "./src/link-button.tsx",
+    "./restricted-footer": "./src/restricted-footer/index.ts",
     "./modal": "./src/modal/index.ts"
   },
   "scripts": {

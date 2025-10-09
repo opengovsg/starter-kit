@@ -10,16 +10,17 @@ import '~/app/globals.css'
 
 import { cn } from '@opengovsg/oui-theme'
 
+import { env } from '~/env'
 import { ClientProviders } from './provider'
 
 export const metadata: Metadata = {
-  title: 'Starter Kit',
+  title: env.NEXT_PUBLIC_APP_NAME,
   description: 'Simple monorepo Starter Kit with for OGP projects',
   openGraph: {
-    title: 'Starter Kit',
+    title: env.NEXT_PUBLIC_APP_NAME,
     description: 'Simple monorepo Starter Kit with for OGP projects',
     url: 'https://start.open.gov.sg',
-    siteName: 'Starter Kit',
+    siteName: env.NEXT_PUBLIC_APP_NAME,
   },
 }
 
@@ -38,7 +39,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'font-sans antialiased',
+          'text-base-content-default font-sans antialiased',
           inter.variable,
           ibmPlexMono.variable,
         )}

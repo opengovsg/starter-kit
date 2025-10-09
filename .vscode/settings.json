@@ -10,6 +10,19 @@
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "prettier.ignorePath": ".gitignore",
   "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
+  "tailwindCSS.experimental.classRegex": [
+    ":\\s*?[\"'`]([^\"'`]*).*?,",
+    [
+      "classNames:\\s*{([\\s\\S]*?)}",
+      "\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?"
+    ],
+    ["classNames={{([^}]*)}}", "[\"'`]([^\"'`]*)[\"'`]"],
+    [
+      "tv\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)",
+      "\"(.*?)\""
+    ],
+    ["class:\\s*?[\"'`]([^\"'`]*).*?,"]
+  ],
   "files.associations": {
     "**/tooling/typescript/*.json": "jsonc",
     "**/tsconfig.json": "jsonc",
