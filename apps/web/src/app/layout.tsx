@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import { IBM_Plex_Mono, Inter } from 'next/font/google'
 
 import { Toaster } from '@acme/ui/toast'
@@ -35,7 +35,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'bg-background text-foreground min-h-screen font-sans antialiased',
+          'min-h-screen font-sans antialiased',
           inter.variable,
           ibmPlexMono.variable,
         )}

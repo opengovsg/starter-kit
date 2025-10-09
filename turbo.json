@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-    "ui": "tui",
-    "tasks": {
+  "ui": "tui",
+  "tasks": {
     "topo": {
       "dependsOn": ["^topo"]
     },
@@ -44,5 +44,6 @@
       "cache": false,
       "interactive": true
     }
-  }
+  },
+  "globalEnv": ["NODE_ENV", "DATABASE_URL"]
 }

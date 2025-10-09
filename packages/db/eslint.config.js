@@ -1,4 +1,4 @@
-import baseConfig from '@askgov/eslint-config/base'
+import baseConfig from '@acme/eslint-config/base'
 
 /** @type {import('typescript-eslint').Config} */
 export default [

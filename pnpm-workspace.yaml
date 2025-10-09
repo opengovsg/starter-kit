@@ -5,13 +5,13 @@ packages:
 
 catalog:
   '@eslint/js': ^9.35.0
-  '@tanstack/react-query': ^5.87.1
   '@types/node': ^22.18.8
   dotenv-cli: ^10.0.0
   eslint: ^9.35.0
   prettier: ^3.6.2
   typescript: ^5.9.3
   zod: ^4.1.5
+  react-aria-components: ^1.13.0
 
 catalogs:
   oui:
@@ -21,6 +21,9 @@ catalogs:
     '@trpc/client': ^11.5.1
     '@trpc/server': ^11.5.1
     '@trpc/tanstack-react-query': ^11.5.1
+  react-query5:
+    '@tanstack/react-query': ^5.90.2
+    '@tanstack/react-query-devtools': ^5.90.2
   react19:
     '@types/react': ^19.1.12
     '@types/react-dom': ^19.1.9
@@ -43,4 +46,5 @@ overrides:
 
 publicHoistPattern:
   - '*prettier*' # see https://github.com/IanVS/prettier-plugin-sort-imports/issues/205#issuecomment-3139130510
+  - '*eslint-plugin*'
   - typescript-eslint

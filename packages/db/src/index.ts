@@ -14,6 +14,7 @@ const createPrisma = () => {
   return prisma
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export const db = globalForPrisma.prisma || createPrisma()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db

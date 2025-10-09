@@ -3,7 +3,7 @@
  *
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
-import { prisma } from '.'
+import { db } from '.'
 
 async function main() {
   // Add seed data here
@@ -14,6 +14,7 @@ main()
     console.error(e)
     process.exit(1)
   })
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   .finally(async () => {
-    await prisma.$disconnect()
+    await db.$disconnect()
   })

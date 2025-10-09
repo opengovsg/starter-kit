@@ -8,5 +8,6 @@ export const env = createEnv({
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
   skipValidation:
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
 })

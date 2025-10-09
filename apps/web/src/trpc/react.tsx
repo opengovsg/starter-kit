@@ -7,8 +7,7 @@ import { createTRPCClient, httpBatchStreamLink, loggerLink } from '@trpc/client'
 import { createTRPCContext } from '@trpc/tanstack-react-query'
 import SuperJSON from 'superjson'
 
-import type { AppRouter } from '@acme/api'
-
+import type { AppRouter } from '~/server/api/root'
 import { env } from '~/env'
 import { createQueryClient } from './query-client'
 
@@ -61,6 +60,5 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') return window.location.origin
   if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`
-  // eslint-disable-next-line no-restricted-properties
-  return `http://localhost:${process.env.PORT ?? 3000}`
+  return 'http://localhost:3000'
 }

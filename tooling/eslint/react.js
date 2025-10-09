@@ -1,9 +1,10 @@
 import reactPlugin from 'eslint-plugin-react'
-import * as reactHooks from 'eslint-plugin-react-hooks'
+import reactHooks from 'eslint-plugin-react-hooks'
+import { defineConfig } from 'eslint/config'
 
-/** @type {Awaited<import('typescript-eslint').Config>} */
-export default [
-  reactHooks.configs.recommended,
+export default defineConfig([
+  // @ts-ignore config exists
+  reactHooks.configs.flat.recommended,
   {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
@@ -11,7 +12,6 @@ export default [
     },
     rules: {
       ...reactPlugin.configs['jsx-runtime'].rules,
-      'react-hooks/react-compiler': 'error',
     },
     languageOptions: {
       globals: {
@@ -19,4 +19,4 @@ export default [
       },
     },
   },
-]
+])

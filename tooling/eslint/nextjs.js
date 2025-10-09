@@ -1,7 +1,7 @@
 import nextPlugin from '@next/eslint-plugin-next'
+import { defineConfig } from 'eslint/config'
 
-/** @type {Awaited<import('typescript-eslint').Config>} */
-export default [
+export default defineConfig([
   {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
@@ -14,4 +14,4 @@ export default [
       '@next/next/no-duplicate-head': 'off',
     },
   },
-]
+])
