@@ -3,17 +3,29 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
-  "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+  "eslint.runtime": "node",
+  "eslint.workingDirectories": [
+    { "pattern": "apps/*/" },
+    { "pattern": "packages/*/" },
+    { "pattern": "tooling/*/" }
+  ],
+  "prettier.ignorePath": ".gitignore",
+  "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
   "files.associations": {
     "**/tooling/typescript/*.json": "jsonc",
     "**/tsconfig.json": "jsonc",
     "**/tsconfig.*.json": "jsonc",
-    "*.css": "tailwindcss",
+    "*.css": "tailwindcss"
   },
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "zod/dist/types/index.d.ts", // Force auto-imports to v4
+    "next/router.d.ts",
+    "next/dist/client/router.d.ts"
+  ],
   "json.schemas": [
     {
       "fileMatch": ["task-definition.json"],
@@ -22,5 +34,5 @@
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  },
+  }
 }
