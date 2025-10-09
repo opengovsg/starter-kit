@@ -56,7 +56,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
         }),
         splitLink({
           condition(op) {
-            return Boolean(op.context.skipStream)
+            return Boolean(op.context.skipStreaming)
           },
           true: httpBatchLink(common),
           false: httpBatchStreamLink(common),
