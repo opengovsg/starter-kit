@@ -1,3 +1,163 @@
+import { useCallback, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { cn } from '@opengovsg/oui-theme'
+import { Button } from '@opengovsg/oui/button'
+import { Spinner } from '@opengovsg/oui/spinner'
+import { useMutation } from '@tanstack/react-query'
+import { Controller, useForm } from 'react-hook-form'
+import { useInterval } from 'usehooks-ts'
+
+import { Infobox } from '@acme/ui/infobox'
+import { TextField } from '@acme/ui/text-field'
+
+import { useTRPC } from '~/trpc/react'
+import { emailVerifyOtpSchema } from '~/validators/auth'
+import { useSignInWizard } from '../context'
+
 export const VerificationStep = () => {
-  return <div>Enter Verification Code Step</div>
+  const router = useRouter()
+  const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
+  const trpc = useTRPC()
+
+  const { vfnStepData, timer, setVfnStepData, resetTimer } = useSignInWizard()
+
+  useInterval(
+    () => setShowOtpDelayMessage(true),
+    // Show otp delay info message after 15 seconds.
+    showOtpDelayMessage ? null : 15000,
+  )
+
+  const { control, handleSubmit, resetField, setFocus, setError } = useForm({
+    resolver: zodResolver(emailVerifyOtpSchema),
+    defaultValues: {
+      email: vfnStepData?.email ?? '',
+      token: '',
+    },
+  })
+
+  const verifyOtpMutation = useMutation(
+    trpc.auth.email.verifyOtp.mutationOptions({
+      onSuccess: () => {
+        router.refresh()
+      },
+      onError: (error) => {
+        setError('token', { message: error.message })
+      },
+      trpc: {
+        context: {
+          // Disable streaming for this request so cookies can be set.
+          skipStreaming: true,
+        },
+      },
+    }),
+  )
+
+  const resendOtpMutation = useMutation(
+    trpc.auth.email.login.mutationOptions({
+      onError: (error) => setError('token', { message: error.message }),
+    }),
+  )
+
+  const handleResendOtp = useCallback(() => {
+    if (timer > 0 || !vfnStepData?.email) return
+    return resendOtpMutation.mutate(
+      { email: vfnStepData.email },
+      {
+        onSuccess: ({ email, otpPrefix }) => {
+          setVfnStepData({ email, otpPrefix })
+          resetField('token')
+          setFocus('token')
+          // On success, restart the timer before this can be called again.
+          resetTimer()
+        },
+      },
+    )
+  }, [
+    resendOtpMutation,
+    resetField,
+    resetTimer,
+    setFocus,
+    setVfnStepData,
+    timer,
+    vfnStepData,
+  ])
+
+  if (!vfnStepData) return null
+
+  return (
+    <form
+      noValidate
+      onSubmit={handleSubmit((values) => verifyOtpMutation.mutate(values))}
+      className="flex flex-1 flex-col gap-4"
+    >
+      <Controller
+        control={control}
+        name="token"
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            size="xs"
+            classNames={{
+              inputGroup: 'inline-flex',
+              input: 'rounded-l-none',
+            }}
+            inputProps={{
+              placeholder: 'Enter your OTP here',
+            }}
+            startContent={
+              <div
+                aria-label={`OTP prefix is ${vfnStepData.otpPrefix}`}
+                className="border-base-divider-strong bg-interaction-support-disabled text-interaction-support-disabled-content prose-body-2 -mr-px inline-flex items-center rounded-l-sm border px-3"
+              >
+                {vfnStepData.otpPrefix} -
+              </div>
+            }
+            errorMessage={error?.message}
+            isRequired
+            isInvalid={!!error}
+            {...field}
+            label={`Enter the OTP sent to ${vfnStepData.email}`}
+          />
+        )}
+      />
+      <div className="flex flex-col gap-3">
+        <Button size="sm" isPending={verifyOtpMutation.isPending} type="submit">
+          Log in
+        </Button>
+        {showOtpDelayMessage && (
+          <Infobox size="sm">
+            OTP might be delayed due to government email traffic. Try again
+            later.
+          </Infobox>
+        )}
+        <Button
+          type="button"
+          variant="unstyled"
+          disableRipple
+          className={cn(
+            'prose-caption-2 disabled:text-interaction-support-disabled-content h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 whitespace-pre enabled:underline',
+          )}
+          size="xs"
+          onPress={handleResendOtp}
+          isPending={resendOtpMutation.isPending}
+          // isPending
+          isDisabled={timer > 0}
+          spinner={
+            <Spinner
+              size="sm"
+              classNames={{
+                base: 'size-4 min-h-[21px]',
+                wrapper: 'h-4 w-4',
+                circle1: 'border-2',
+                circle2: 'border-2',
+              }}
+            />
+          }
+        >
+          Resend OTP
+          <span data-chromatic="ignore">{timer > 0 && ` in ${timer}s`}</span>
+        </Button>
+      </div>
+    </form>
+  )
 }

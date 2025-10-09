@@ -15,5 +15,5 @@ export const getBaseUrl = () => {
     return `https://${env.VERCEL_URL}`
   }
   // assume localhost
-  return `http://localhost:3000`
+  return `http://localhost:${env.PORT ?? 3000}`
 }

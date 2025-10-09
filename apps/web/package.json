@@ -26,6 +26,7 @@
     "@trpc/tanstack-react-query": "catalog:trpc",
     "date-fns": "^4.1.0",
     "email-addresses": "^5.0.0",
+    "iron-session": "^8.0.4",
     "nanoid": "^5.1.6",
     "next": "^15.5.2",
     "nextjs-toploader": "^3.9.17",

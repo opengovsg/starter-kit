@@ -1,8 +1,7 @@
 import { scryptSync, timingSafeEqual } from 'crypto'
 import { customAlphabet } from 'nanoid'
 
-const OTP_LENGTH = 6
-const OTP_PREFIX_LENGTH = 3
+import { OTP_LENGTH, OTP_PREFIX_LENGTH } from '~/validators/auth'
 
 // Alphabet space with ambiguous characters removed.
 const OTP_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'

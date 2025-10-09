@@ -5,6 +5,8 @@
   "exports": {
     "./toast": "./src/toast.tsx",
     "./link-button": "./src/link-button.tsx",
+    "./text-field": "./src/text-field.tsx",
+    "./infobox": "./src/infobox/index.ts",
     "./restricted-footer": "./src/restricted-footer/index.ts",
     "./modal": "./src/modal/index.ts"
   },

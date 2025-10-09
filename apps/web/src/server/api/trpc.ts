@@ -6,9 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from '@trpc/server'
+import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
+
+import { getSession } from '../session'
 
 /**
  * 1. CONTEXT
@@ -22,9 +24,11 @@ import { ZodError } from 'zod'
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: { headers: Headers }) => {
+export const createTRPCContext = async ({ headers }: { headers: Headers }) => {
+  const session = await getSession()
   return {
-    ...opts,
+    headers,
+    session,
   }
 }
 
@@ -90,12 +94,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result
 })
 
-const authMiddleware = t.middleware(async ({ next }) => {
-  // TODO: implement authentication logic
-
-  return next()
-})
-
 /**
  * Public (unauthenticated) procedure
  *
@@ -105,6 +103,24 @@ const authMiddleware = t.middleware(async ({ next }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware)
 
+/**
+ * Protected (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
+ * the session is valid and guarantees `ctx.session.user` is not null.
+ *
+ * @see https://trpc.io/docs/procedures
+ */
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
-  .use(authMiddleware)
+  .use(({ ctx, next }) => {
+    if (!ctx.session.userId) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, userId: ctx.session.userId },
+      },
+    })
+  })

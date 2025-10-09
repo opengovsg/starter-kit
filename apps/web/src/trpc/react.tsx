@@ -1,9 +1,15 @@
 'use client'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { createTRPCClient, httpBatchStreamLink, loggerLink } from '@trpc/client'
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpBatchStreamLink,
+  loggerLink,
+  splitLink,
+} from '@trpc/client'
 import { createTRPCContext } from '@trpc/tanstack-react-query'
 import SuperJSON from 'superjson'
 
@@ -28,6 +34,18 @@ export const { useTRPC, TRPCProvider } = createTRPCContext<AppRouter>()
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient()
 
+  const common = useMemo(() => {
+    return {
+      transformer: SuperJSON,
+      url: getBaseUrl() + '/api/trpc',
+      headers() {
+        const headers = new Headers()
+        headers.set('x-trpc-source', 'nextjs-react')
+        return headers
+      },
+    }
+  }, [])
+
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
@@ -36,14 +54,12 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             env.NODE_ENV === 'development' ||
             (op.direction === 'down' && op.result instanceof Error),
         }),
-        httpBatchStreamLink({
-          transformer: SuperJSON,
-          url: getBaseUrl() + '/api/trpc',
-          headers() {
-            const headers = new Headers()
-            headers.set('x-trpc-source', 'nextjs-react')
-            return headers
+        splitLink({
+          condition(op) {
+            return Boolean(op.context.skipStream)
           },
+          true: httpBatchLink(common),
+          false: httpBatchStreamLink(common),
         }),
       ],
     }),

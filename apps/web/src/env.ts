@@ -14,9 +14,11 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
+    PORT: z.coerce.number().default(3000),
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600), // OTP expiry time in seconds
     DATABASE_URL: z.url(),
     POSTMAN_API_KEY: z.string().optional(),
+    SESSION_SECRET: z.string().min(32),
   },
 
   /**
