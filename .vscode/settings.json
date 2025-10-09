@@ -19,7 +19,8 @@
   "typescript.preferences.autoImportFileExcludePatterns": [
     "zod/dist/types/index.d.ts", // Force auto-imports to v4
     "next/router.d.ts",
-    "next/dist/client/router.d.ts"
+    "next/dist/client/router.d.ts",
+    "tailwind-variants/dist/index.d.ts" // Force imports from oui-theme instead
   ],
   "json.schemas": [
     {
