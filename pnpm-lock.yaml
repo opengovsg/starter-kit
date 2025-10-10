@@ -246,6 +246,9 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.18.8)(jiti@2.6.1)(lightningcss@1.30.1)(yaml@2.8.1)
+      vitest-mock-extended:
+        specifier: ^3.1.0
+        version: 3.1.0(typescript@5.9.3)(vitest@3.2.4(@types/node@22.18.8)(jiti@2.6.1)(lightningcss@1.30.1)(yaml@2.8.1))
 
   packages/db:
     dependencies:
@@ -4821,6 +4824,14 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4'
 
+  ts-essentials@10.1.1:
+    resolution: {integrity: sha512-4aTB7KLHKmUvkjNj8V+EdnmuVTiECzn3K+zIbRthumvHu+j44x3w63xpfs0JL3NGIzGXqoQ7AV591xHO+XrOTw==}
+    peerDependencies:
+      typescript: '>=4.5.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   ts-node@10.9.2:
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
@@ -5067,6 +5078,12 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  vitest-mock-extended@3.1.0:
+    resolution: {integrity: sha512-vCM0VkuocOUBwwqwV7JB7YStw07pqeKvEIrZnR8l3PtwYi6rAAJAyJACeC1UYNfbQWi85nz7EdiXWBFI5hll2g==}
+    peerDependencies:
+      typescript: 3.x || 4.x || 5.x
+      vitest: '>=3.0.0'
 
   vitest@3.2.4:
     resolution: {integrity: sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A==}
@@ -10383,6 +10400,10 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
+  ts-essentials@10.1.1(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
+
   ts-node@10.9.2(@types/node@24.7.0)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -10652,6 +10673,12 @@ snapshots:
       jiti: 2.6.1
       lightningcss: 1.30.1
       yaml: 2.8.1
+
+  vitest-mock-extended@3.1.0(typescript@5.9.3)(vitest@3.2.4(@types/node@22.18.8)(jiti@2.6.1)(lightningcss@1.30.1)(yaml@2.8.1)):
+    dependencies:
+      ts-essentials: 10.1.1(typescript@5.9.3)
+      typescript: 5.9.3
+      vitest: 3.2.4(@types/node@22.18.8)(jiti@2.6.1)(lightningcss@1.30.1)(yaml@2.8.1)
 
   vitest@3.2.4(@types/node@22.18.8)(jiti@2.6.1)(lightningcss@1.30.1)(yaml@2.8.1):
     dependencies:

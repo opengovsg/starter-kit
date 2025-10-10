@@ -10,4 +10,10 @@ export default [
   ...reactConfig,
   ...nextjsConfig,
   ...restrictEnvAccess,
+  {
+    files: ['**/__tests__/**'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
 ]

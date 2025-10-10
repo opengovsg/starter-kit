@@ -23,10 +23,12 @@ export const emailLogin = async (email: string) => {
     update: {
       token: hashedToken,
       attempts: 0,
+      issuedAt: new Date(),
     },
     create: {
       identifier: email,
       token: hashedToken,
+      issuedAt: new Date(),
     },
     select: {
       issuedAt: true,
@@ -46,6 +48,7 @@ export const emailLogin = async (email: string) => {
   })
 
   return {
+    token,
     email,
     otpPrefix,
   }
@@ -59,45 +62,44 @@ export const emailVerifyOtp = async ({
   token: string
 }) => {
   try {
-    await db.$transaction(async (tx) => {
-      const hashedToken = await tx.verificationToken.update({
-        where: {
-          identifier: email,
+    // Not in transaction, because we do not want it to rollback
+    const hashedToken = await db.verificationToken.update({
+      where: {
+        identifier: email,
+      },
+      data: {
+        attempts: {
+          increment: 1,
         },
-        data: {
-          attempts: {
-            increment: 1,
-          },
-        },
+      },
+    })
+
+    if (hashedToken.attempts > 5) {
+      throw new TRPCError({
+        code: 'TOO_MANY_REQUESTS',
+        message:
+          'Wrong OTP was entered too many times. Please request a new OTP.',
       })
+    }
 
-      if (hashedToken.attempts > 5) {
-        throw new TRPCError({
-          code: 'TOO_MANY_REQUESTS',
-          message:
-            'Wrong OTP was entered too many times. Please request a new OTP.',
-        })
-      }
-
-      // Expired
-      const hasExpired =
-        add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
-      if (
-        hasExpired ||
-        !isValidToken({ token, email, hash: hashedToken.token })
-      ) {
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'Token is invalid or has expired. Please request a new OTP.',
-        })
-      }
-
-      // Valid token, delete record to prevent reuse
-      return tx.verificationToken.delete({
-        where: {
-          identifier: email,
-        },
+    // Expired
+    const hasExpired =
+      add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
+    if (
+      hasExpired ||
+      !isValidToken({ token, email, hash: hashedToken.token })
+    ) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Token is invalid or has expired. Please request a new OTP.',
       })
+    }
+
+    // Valid token, delete record to prevent reuse
+    return db.verificationToken.delete({
+      where: {
+        identifier: email,
+      },
     })
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
