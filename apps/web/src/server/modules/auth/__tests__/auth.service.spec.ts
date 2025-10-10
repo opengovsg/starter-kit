@@ -11,14 +11,6 @@ import { emailLogin } from '../auth.service'
 import { createAuthToken, createVfnPrefix } from '../auth.utils'
 
 // Mock dependencies
-vi.mock('@acme/db', () => ({
-  db: {
-    verificationToken: {
-      upsert: vi.fn(),
-    },
-  },
-}))
-
 vi.mock('~/env', () => ({
   env: {
     OTP_EXPIRY: 600,

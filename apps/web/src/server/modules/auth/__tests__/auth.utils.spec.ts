@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest'
-
 import { createAuthToken, createVfnPrefix, isValidToken } from '../auth.utils'
 
 describe('auth.utils', () => {

@@ -14,6 +14,10 @@
       "types": "./dist/src/browser.d.ts",
       "default": "./src/browser.ts"
     },
+    "./client": {
+      "types": "./dist/src/client.d.ts",
+      "default": "./src/client.ts"
+    },
     "./enums": {
       "types": "./dist/src/enums.d.ts",
       "default": "./src/enums.ts"

@@ -22,5 +22,4 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 // This export is needed to avoid the TypeScript error:
 // The inferred type of 'prisma' cannot be named without a reference to '../node_modules/@repo/database/src/generated/prisma'.
 // This is likely not portable. A type annotation is necessary.ts(2742)
-export type { PrismaClient } from './generated/client'
-export { Prisma } from './generated/client'
+export type { Prisma, PrismaClient } from './generated/client'
