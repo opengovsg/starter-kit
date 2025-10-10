@@ -2,7 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
 
-import { db, Prisma } from '@acme/db'
+import { db } from '@acme/db'
+import { Prisma } from '@acme/db/client'
 
 import { env } from '~/env'
 import { getBaseUrl } from '~/utils/get-base-url'

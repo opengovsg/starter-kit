@@ -1,4 +1,4 @@
-import type { Prisma } from '@acme/db'
+import type { Prisma } from '@acme/db/client'
 
 /**
  * Default selector for when retrieving user fields.
