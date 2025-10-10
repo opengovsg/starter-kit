@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "VerificationToken" ALTER COLUMN "issuedAt" SET DEFAULT CURRENT_TIMESTAMP;

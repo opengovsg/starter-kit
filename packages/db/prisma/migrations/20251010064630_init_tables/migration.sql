@@ -3,7 +3,7 @@ CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "attempts" INTEGER NOT NULL DEFAULT 0,
-    "issuedAt" TIMESTAMP(3) NOT NULL,
+    "issuedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("identifier")
 );
