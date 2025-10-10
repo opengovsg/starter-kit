@@ -3,7 +3,7 @@
  *
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
-import { db } from '.'
+import { db } from '../src/index'
 
 async function main() {
   // Add seed data here

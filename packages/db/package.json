@@ -52,8 +52,5 @@
     "prisma": "^6.17.0",
     "typescript": "catalog:"
   },
-  "prisma": {
-    "seed": "pnpm dlx tsx src/seed.ts"
-  },
   "prettier": "@acme/prettier-config"
 }
