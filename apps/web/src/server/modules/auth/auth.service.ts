@@ -90,7 +90,7 @@ export const emailVerifyOtp = async ({
       !isValidToken({ token, email, hash: hashedToken.token })
     ) {
       throw new TRPCError({
-        code: 'UNAUTHORIZED',
+        code: 'BAD_REQUEST',
         message: 'Token is invalid or has expired. Please request a new OTP.',
       })
     }
@@ -108,7 +108,7 @@ export const emailVerifyOtp = async ({
       error.code === 'P2025'
     ) {
       throw new TRPCError({
-        code: 'UNAUTHORIZED',
+        code: 'BAD_REQUEST',
         message: 'Invalid login email',
       })
     }

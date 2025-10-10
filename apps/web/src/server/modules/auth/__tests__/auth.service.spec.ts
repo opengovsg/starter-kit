@@ -161,7 +161,7 @@ describe('auth.service', () => {
       )
     })
 
-    it('should throw UNAUTHORIZED error for non-existent email', async () => {
+    it('should throw error for non-existent email', async () => {
       const email = 'nonexistent@example.com'
       const token = '123456'
 
