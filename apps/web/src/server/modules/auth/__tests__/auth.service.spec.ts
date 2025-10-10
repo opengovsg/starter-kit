@@ -14,7 +14,7 @@ const mockedMailService = mock(mailService)
 
 describe('auth.service', () => {
   beforeEach(async () => {
-    await resetTables(['VerificationToken', 'User', 'Accounts'])
+    await resetTables(['VerificationToken', 'User', 'Account'])
   })
 
   describe('emailLogin', () => {

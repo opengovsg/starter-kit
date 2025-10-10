@@ -22,7 +22,7 @@ export const upsertUserAndAccountByEmail = async (email: string) => {
       select: defaultUserSelect,
     })
 
-    await tx.accounts.upsert({
+    await tx.account.upsert({
       where: {
         provider_providerAccountId: {
           provider: AccountProvider.Email,

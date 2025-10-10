@@ -19,23 +19,23 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Accounts" (
+CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
     "providerAccountId" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
 
-    CONSTRAINT "Accounts_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE INDEX "Accounts_user_id_idx" ON "Accounts"("user_id");
+CREATE INDEX "Account_user_id_idx" ON "Account"("user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Accounts_provider_providerAccountId_key" ON "Accounts"("provider", "providerAccountId");
+CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- AddForeignKey
-ALTER TABLE "Accounts" ADD CONSTRAINT "Accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Account" ADD CONSTRAINT "Account_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

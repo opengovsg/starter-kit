@@ -8,7 +8,7 @@ import { upsertUserAndAccountByEmail } from '../user.service'
 
 describe('user.service', () => {
   beforeEach(async () => {
-    await resetTables(['VerificationToken', 'User', 'Accounts'])
+    await resetTables(['VerificationToken', 'User', 'Account'])
   })
 
   describe('upsertUserAndAccountByEmail', () => {
@@ -29,7 +29,7 @@ describe('user.service', () => {
       expect(dbUser?.email).toBe(email)
 
       // Verify account was created
-      const account = await db.accounts.findFirst({
+      const account = await db.account.findFirst({
         where: {
           userId: user.id,
           provider: AccountProvider.Email,
@@ -79,7 +79,7 @@ describe('user.service', () => {
       await upsertUserAndAccountByEmail(email)
 
       // Should only have one account in database
-      const accounts = await db.accounts.findMany({
+      const accounts = await db.account.findMany({
         where: {
           userId: user1.id,
           provider: AccountProvider.Email,
@@ -121,7 +121,7 @@ describe('user.service', () => {
       expect(user.email).toBe(email)
       expect(user.id).toBeTruthy()
 
-      const account = await db.accounts.findFirst({
+      const account = await db.account.findFirst({
         where: {
           userId: user.id,
           provider: AccountProvider.Email,
@@ -139,7 +139,7 @@ describe('user.service', () => {
       const dbUser = await db.user.findUnique({
         where: { email },
       })
-      const account = await db.accounts.findFirst({
+      const account = await db.account.findFirst({
         where: {
           userId: user.id,
           provider: AccountProvider.Email,
@@ -174,7 +174,7 @@ describe('user.service', () => {
 
       // Each user should have one account
       for (const user of users) {
-        const accounts = await db.accounts.findMany({
+        const accounts = await db.account.findMany({
           where: {
             userId: user.id,
             provider: AccountProvider.Email,
@@ -209,7 +209,7 @@ describe('user.service', () => {
 
       const user = await upsertUserAndAccountByEmail(email)
 
-      const account = await db.accounts.findFirst({
+      const account = await db.account.findFirst({
         where: {
           userId: user.id,
         },

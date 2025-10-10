@@ -21,14 +21,14 @@ model VerificationToken {
 }
 
 model User {
-  id       String     @id @default(cuid())
+  id       String    @id @default(cuid())
   name     String?
-  email    String     @unique
+  email    String    @unique
   image    String?
-  accounts Accounts[]
+  accounts Account[]
 }
 
-model Accounts {
+model Account {
   id                String @id @default(cuid())
   provider          String
   providerAccountId String
