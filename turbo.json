@@ -54,7 +54,7 @@
       "env": ["DATABASE_URL"]
     }
   },
-  "globalEnv": ["DATABASE_URL", "SESSION_SECRET", "PORT"],
+  "globalEnv": ["DATABASE_URL", "SESSION_SECRET", "PORT", "POSTMAN_API_KEY"],
   "globalPassThroughEnv": [
     "NODE_ENV",
     "CI",
