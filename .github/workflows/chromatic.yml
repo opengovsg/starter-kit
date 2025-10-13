@@ -27,18 +27,21 @@ jobs:
               - 'apps/web/**'
   web:
     needs: [changes]
+    # Only run if the user is not a bot and has changes
+    if: ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]') && needs.changes.outputs.web == 'true' }}
+    runs-on: ubuntu-latest
     env:
       CHROMATIC_WEB_PROJECT_TOKEN: ${{ secrets.CHROMATIC_WEB_PROJECT_TOKEN }}
-    # Only run if the user is not a bot and has changes
-    if: env.CHROMATIC_WEB_PROJECT_TOKEN != '' && ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]') && needs.changes.outputs.web == 'true' }}
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
         with:
           fetch-depth: 0 # Required for v5
       - name: Setup
+        if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
         uses: ./tooling/github/setup
       - name: Publish to Chromatic
+        if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
         uses: chromaui/action@latest
         with:
           workingDir: apps/web
