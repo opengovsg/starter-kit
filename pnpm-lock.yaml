@@ -201,6 +201,9 @@ importers:
       '@acme/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier
+      '@acme/storybook-config':
+        specifier: workspace:*
+        version: link:../../tooling/storybook
       '@acme/tailwind-config':
         specifier: workspace:*
         version: link:../../tooling/tailwind
@@ -484,6 +487,27 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 22.18.8
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  tooling/storybook:
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint
+      '@acme/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier
+      '@acme/tsconfig':
+        specifier: workspace:*
+        version: link:../typescript
+      eslint:
+        specifier: 'catalog:'
+        version: 9.37.0(jiti@2.6.1)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.6.2
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
