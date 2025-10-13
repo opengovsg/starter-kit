@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
+    "vercel-build": "next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --turbopack",
     "format": "prettier --check . --ignore-path ../../.gitignore",

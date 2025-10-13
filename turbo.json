@@ -9,6 +9,15 @@
       "dependsOn": ["^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"]
     },
+    "vercel-build": {
+      "dependsOn": [
+        "@acme/db#generate",
+        "@acme/db#migrate:deploy",
+        "^vercel-build"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/cache/**"]
+    },
     "dev": {
       "dependsOn": ["^dev"],
       "cache": false,
@@ -40,9 +49,9 @@
       "cache": false,
       "persistent": true
     },
-    "ui-add": {
+    "migrate:deploy": {
       "cache": false,
-      "interactive": true
+      "env": ["DATABASE_URL"]
     }
   },
   "globalEnv": ["DATABASE_URL", "SESSION_SECRET", "PORT"],
