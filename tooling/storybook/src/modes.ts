@@ -4,11 +4,16 @@
  * The names should correspond to the viewports exported in `viewports.ts`.
  */
 
-export type ChromaticModeKey = keyof typeof modes
+import type { ViewportKey } from './viewports'
 
-export const modes = {
+export type ChromaticModeKey = 'mobile' | 'tablet' | 'desktop'
+
+export const modes: Record<ChromaticModeKey, { viewport: ViewportKey }> = {
   mobile: {
     viewport: 'sm',
+  },
+  tablet: {
+    viewport: 'md',
   },
   desktop: {
     viewport: 'xl',

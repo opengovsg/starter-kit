@@ -51,3 +51,5 @@ export const viewport = {
     '2xl': { name: '2xl', styles: { width: '1536px', height: '100%' } },
   },
 } as const satisfies StorybookViewportParameter
+
+export type ViewportKey = keyof typeof viewport.viewports

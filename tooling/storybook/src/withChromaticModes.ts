@@ -1,6 +1,7 @@
+import type { ChromaticModeKey } from './modes'
 import { modes } from './modes'
 
-export const withChromaticModes = (args: (keyof typeof modes)[]) => {
+export const withChromaticModes = (args: ChromaticModeKey[]) => {
   const modesArr = Array.from(new Set(args))
   return {
     modes: modesArr.reduce(
