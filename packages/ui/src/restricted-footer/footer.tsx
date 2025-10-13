@@ -29,7 +29,7 @@ export function RestrictedFooter({
     <footer className="bg-base-canvas-brand-subtle px-4 py-12">
       <div className="container mx-auto flex flex-col gap-10">
         <div className="flex flex-col justify-between gap-4 lg:flex-row">
-          <h4 className="prose-h4 flex-1">{appName}</h4>
+          <div className="prose-h4 flex-1">{appName}</div>
           {navLinks.length > 0 && (
             <nav className="prose-body-2 flex flex-1 flex-col justify-end gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-6">
               {navLinks.map((link) => (
@@ -53,6 +53,7 @@ export function RestrictedFooter({
             <Link
               href="https://www.open.gov.sg/"
               target="_blank"
+              aria-label="Open Government Products"
               rel="noreferrer"
             >
               <RestrictedOgpHoriSvgr />

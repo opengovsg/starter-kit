@@ -20,6 +20,13 @@ const config: StorybookConfig = {
     name: getAbsolutePath('@storybook/nextjs-vite'),
     options: {},
   },
+  async viteFinal(config) {
+    // TailwindCSS is not being imported properly within Storybook, so we add the
+    // TailwindCSS plugin to Vite directly here.
+    const { default: tailwindcss } = await import('@tailwindcss/vite')
+    const { mergeConfig } = await import('vite')
+    return mergeConfig(config, { plugins: [tailwindcss()] })
+  },
   staticDirs: ['../public'],
 }
 export default config

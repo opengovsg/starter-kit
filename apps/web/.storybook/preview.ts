@@ -8,6 +8,7 @@ import '../src/app/globals.css'
 
 const preview: Preview = {
   parameters: {
+    layout: 'fullscreen',
     viewport,
     chromatic: {
       prefersReducedMotion: 'reduce',
