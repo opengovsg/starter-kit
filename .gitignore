@@ -41,3 +41,6 @@ dist/
 # turbo
 .turbo
 packages/db/src/generated
+
+*storybook.log
+storybook-static

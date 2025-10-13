@@ -10,6 +10,6 @@
     },
     "plugins": [{ "name": "next" }]
   },
-  "include": [".", ".next/types/**/*.ts"],
+  "include": [".", ".next/types/**/*.ts", ".storybook/**/*"],
   "exclude": ["node_modules"]
 }
