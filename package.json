@@ -90,7 +90,7 @@
     "@date-fns/tz": "^1.2.0",
     "@devoxa/integresql-client": "^2.1.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
-    "@playwright/test": "^1.40.1",
+    "@playwright/test": "^1.56.1",
     "@storybook/addon-a11y": "8.4.7",
     "@storybook/addon-essentials": "8.4.7",
     "@storybook/addon-interactions": "8.4.7",
