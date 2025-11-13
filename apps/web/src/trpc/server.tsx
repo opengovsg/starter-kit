@@ -1,12 +1,13 @@
 import type { TRPCQueryOptions } from '@trpc/tanstack-react-query'
 import { cache } from 'react'
 import { headers } from 'next/headers'
+import { forbidden, notFound, redirect } from 'next/navigation'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import type { AppRouter } from '~/server/api/root'
 import { appRouter } from '~/server/api/root'
-import { createTRPCContext } from '~/server/api/trpc'
+import { createCallerFactory, createTRPCContext } from '~/server/api/trpc'
 import { createQueryClient } from './query-client'
 
 /**
@@ -37,6 +38,37 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   ctx: createContext,
   queryClient: getQueryClient,
 })
+
+const callerFactory = createCallerFactory(appRouter)
+/**
+ */
+
+/**
+ * Create a server-side caller for the tRPC API.
+ * Note that this method is detached from your query client and does not store the data in the cache.
+ * This means that you cannot use the data in a server component and expect it to be available in the client.
+ * If you want to stream the data to the client, use the `prefetch` method in apps/web/src/trpc/server.tsx.
+ * @example
+ * const trpc = createCaller(createContext);
+ * const res = await trpc.post.all();
+ *       ^? Post[]
+ */
+export const createCaller = async () =>
+  callerFactory(await createContext(), {
+    onError: ({ error, ctx }) => {
+      switch (error.code) {
+        case 'NOT_FOUND':
+          return notFound()
+        case 'UNAUTHORIZED':
+          ctx?.session.destroy()
+          return redirect('/sign-in')
+        case 'FORBIDDEN':
+          return forbidden()
+        default:
+          console.error('>>> tRPC Error in RSC caller', error)
+      }
+    },
+  })
 
 export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient()
