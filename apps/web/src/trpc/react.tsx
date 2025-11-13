@@ -54,11 +54,16 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             env.NODE_ENV === 'development' ||
             (op.direction === 'down' && op.result instanceof Error),
         }),
+        // By default, we use httpBatchStreamLink for better performance with RSC.
+        // If you require the ability to change/set response headers (which includes cookies) from within your procedures,
+        // make sure to set `skipStreaming: true` in the context!
+        // This is due to the fact that httpBatchStreamLink does not support setting headers once the stream has begun.
         splitLink({
           condition(op) {
             return Boolean(op.context.skipStreaming)
           },
           true: httpBatchLink(common),
+          // See https://trpc.io/docs/client/links/httpBatchStreamLink
           false: httpBatchStreamLink(common),
         }),
       ],

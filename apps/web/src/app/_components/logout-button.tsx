@@ -16,6 +16,7 @@ export const LogoutButton = () => {
       },
       trpc: {
         context: {
+          // Disable streaming for this request so cookies can be set.
           skipStreaming: true,
         },
       },
