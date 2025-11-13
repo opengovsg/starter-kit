@@ -35,6 +35,14 @@ catalogs:
     '@trpc/client': ^11.5.1
     '@trpc/server': ^11.5.1
     '@trpc/tanstack-react-query': ^11.5.1
+  storybook10:
+    storybook: 10.0.7
+    '@storybook/addon-a11y': 10.0.7
+    '@storybook/addon-docs': 10.0.7
+    '@storybook/addon-vitest': 10.0.7
+    '@storybook/nextjs-vite': 10.0.7
+    storybook-addon-vite-mock: ^1.1.0
+    eslint-plugin-storybook: 10.0.7
 
 linkWorkspacePackages: true
 
