@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { cn } from '@opengovsg/oui-theme'
@@ -59,7 +59,7 @@ export const VerificationStep = () => {
     }),
   )
 
-  const handleResendOtp = useCallback(() => {
+  const handleResendOtp = () => {
     if (timer > 0 || !vfnStepData?.email) return
     return resendOtpMutation.mutate(
       { email: vfnStepData.email },
@@ -73,15 +73,7 @@ export const VerificationStep = () => {
         },
       },
     )
-  }, [
-    resendOtpMutation,
-    resetField,
-    resetTimer,
-    setFocus,
-    setVfnStepData,
-    timer,
-    vfnStepData,
-  ])
+  }
 
   if (!vfnStepData) return null
 

@@ -1,7 +1,7 @@
 'use client'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import {
   createTRPCClient,
@@ -34,17 +34,15 @@ export const { useTRPC, TRPCProvider } = createTRPCContext<AppRouter>()
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient()
 
-  const common = useMemo(() => {
-    return {
-      transformer: SuperJSON,
-      url: getBaseUrl() + '/api/trpc',
-      headers() {
-        const headers = new Headers()
-        headers.set('x-trpc-source', 'nextjs-react')
-        return headers
-      },
-    }
-  }, [])
+  const common = {
+    transformer: SuperJSON,
+    url: getBaseUrl() + '/api/trpc',
+    headers() {
+      const headers = new Headers()
+      headers.set('x-trpc-source', 'nextjs-react')
+      return headers
+    },
+  }
 
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({

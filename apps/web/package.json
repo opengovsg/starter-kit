@@ -28,6 +28,7 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "babel-plugin-react-compiler": "^1.0.0",
     "date-fns": "^4.1.0",
     "email-addresses": "^5.0.0",
     "iron-session": "^8.0.4",
@@ -80,11 +81,5 @@
     "vitest": "^3.2.4",
     "vitest-mock-extended": "^3.1.0"
   },
-  "prettier": "@acme/prettier-config",
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.4",
-      "@types/react-dom": "19.2.3"
-    }
-  }
+  "prettier": "@acme/prettier-config"
 }

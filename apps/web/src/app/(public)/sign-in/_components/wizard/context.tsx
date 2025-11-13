@@ -1,7 +1,7 @@
 'use client'
 
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 
 interface SignInState {
@@ -47,10 +47,7 @@ export const SignInWizardProvider = ({
   const [vfnStepData, setVfnStepData] = useState<VfnStepData>()
   const [timer, setTimer] = useState(delayForResendSeconds)
 
-  const resetTimer = useCallback(
-    () => setTimer(delayForResendSeconds),
-    [delayForResendSeconds],
-  )
+  const resetTimer = () => setTimer(delayForResendSeconds)
 
   // Start the resend timer once in the vfn step.
   useInterval(

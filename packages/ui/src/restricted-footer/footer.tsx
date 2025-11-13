@@ -1,7 +1,6 @@
 'use client'
 
 import type { ComponentType } from 'react'
-import { useMemo } from 'react'
 import { Link } from 'react-aria-components'
 
 import { DEFAULT_SOCIAL_MEDIA_LINKS } from './constants'
@@ -23,7 +22,7 @@ export function RestrictedFooter({
   navLinks = [],
   socialMediaLinks = DEFAULT_SOCIAL_MEDIA_LINKS,
 }: FooterProps) {
-  const currentYear = useMemo(() => new Date().getFullYear(), [])
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-base-canvas-brand-subtle px-4 py-12">
