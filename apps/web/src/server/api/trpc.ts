@@ -94,6 +94,19 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result
 })
 
+const authMiddleware = t.middleware(({ ctx, next }) => {
+  if (!ctx.session.userId) {
+    ctx.session.destroy()
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, userId: ctx.session.userId },
+    },
+  })
+})
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -113,14 +126,4 @@ export const publicProcedure = t.procedure.use(timingMiddleware)
  */
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session.userId) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
-    }
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, userId: ctx.session.userId },
-      },
-    })
-  })
+  .use(authMiddleware)
