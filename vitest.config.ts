@@ -8,7 +8,6 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.turbo'],
     coverage: {
       enabled: process.env.CI === 'true',
-      provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
     },
   },
