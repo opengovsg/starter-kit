@@ -22,7 +22,15 @@ const createContext = cache(async () => {
   })
 })
 
-export const getQueryClient = cache(createQueryClient)
+/**
+ * Avoid using this directly in a server component to fetch data for rendering
+ * (i.e. `queryClient.fetchQuery(trpc.some.procedure.queryOptions()`)), as any thrown errors
+ * will not be properly handled by `@tanstack/react-query`.
+ * Instead, use a try-catch block around your tRPC data fetching code in the server component
+ * and handle errors appropriately (e.g., by rendering an error message or redirecting).
+ * Read https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr#data-ownership-and-revalidation
+ */
+const getQueryClient = cache(createQueryClient)
 
 export const trpc = createTRPCOptionsProxy<AppRouter>({
   router: appRouter,

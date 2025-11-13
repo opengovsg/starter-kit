@@ -1,5 +1,5 @@
 import { createEnv } from '@t3-oss/env-core'
-import { z } from 'zod/v4'
+import z from 'zod'
 
 export const env = createEnv({
   server: {
@@ -8,6 +8,5 @@ export const env = createEnv({
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
   skipValidation:
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
 })
