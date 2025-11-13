@@ -17,6 +17,9 @@ interface EmailStepProps {
 export const EmailStep = ({ onNext }: EmailStepProps) => {
   const { handleSubmit, setError, control } = useForm({
     resolver: zodResolver(emailSignInSchema),
+    defaultValues: {
+      email: '',
+    },
   })
 
   const [queryError] = useQueryState('error', { defaultValue: '' })
