@@ -18,5 +18,12 @@ export default defineConfig({
       'tests/db/setup.ts',
       // 'tests/redis/setup.ts'
     ],
+    env: {
+      // Add any other test specific environment variables here.
+      // These environment variables will still be validated against the schema in `env.ts`.
+      DATABASE_URL: 'postgresql://root:root@localhost:54321/willbeoverridden',
+      NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+      SESSION_SECRET: 'thisisasecretthatshouldbeatleast32characters!',
+    },
   },
 })

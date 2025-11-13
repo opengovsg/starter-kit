@@ -12,7 +12,7 @@
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "test": "pnpm with-env vitest",
+    "test": "vitest",
     "storybook": "CI=1 storybook dev -p 6006",
     "build-storybook": "CI=1 storybook build"
   },
