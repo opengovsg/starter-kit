@@ -5,7 +5,7 @@ import storybookConfig from '@acme/eslint-config/storybook'
 
 export default [
   {
-    ignores: ['.next/**'],
+    ignores: ['.next/**', 'public/mockServiceWorker.js'],
   },
   ...baseConfig,
   ...reactConfig,

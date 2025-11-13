@@ -6,10 +6,11 @@
     "jsx": "preserve",
     "paths": {
       "~/*": ["./src/*"],
+      "~storybook/*": ["./.storybook/*"],
       "~tests/*": ["./tests/*"]
     },
     "plugins": [{ "name": "next" }]
   },
   "include": [".", ".next/types/**/*.ts", ".storybook/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "public/mockServiceWorker.js"]
 }

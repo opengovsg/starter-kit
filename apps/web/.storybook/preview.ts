@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/nextjs-vite'
+import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import { viewport } from '@acme/storybook-config'
 
@@ -6,8 +7,16 @@ import { ibmPlexMono, inter } from '~/lib/fonts'
 
 import '../src/app/globals.css'
 
+// Initialize MSW
+initialize({
+  onUnhandledRequest: 'bypass',
+})
+
 const preview: Preview = {
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     layout: 'fullscreen',
     viewport,
     chromatic: {
@@ -33,6 +42,7 @@ const preview: Preview = {
       return Story()
     },
   ],
+  loaders: [mswLoader],
 }
 
 export default preview
