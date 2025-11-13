@@ -32,7 +32,10 @@ const handler = async (req: NextRequest) => {
       createTRPCContext({
         headers: req.headers,
       }),
-    onError({ error, path }) {
+    onError({ error, path, ctx }) {
+      if (error.code === 'UNAUTHORIZED') {
+        ctx?.session.destroy()
+      }
       console.error(`>>> tRPC Error on '${path}'`, error)
     },
   })
