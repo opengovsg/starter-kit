@@ -39,8 +39,8 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^6.17.0",
-    "@prisma/client": "^6.17.0",
+    "@prisma/adapter-pg": "catalog:prisma",
+    "@prisma/client": "catalog:prisma",
     "@t3-oss/env-core": "catalog:t3-env",
     "pg": "^8.16.3",
     "zod": "catalog:"
@@ -53,11 +53,8 @@
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "prisma": "^6.17.0",
+    "prisma": "catalog:prisma",
     "typescript": "catalog:"
   },
-  "onlyBuiltDependencies": [
-    "@prisma/client"
-  ],
   "prettier": "@acme/prettier-config"
 }
