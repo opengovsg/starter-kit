@@ -16,6 +16,9 @@ interface LandingPageComponentProps {
   isAuthed: boolean
 }
 
+/**
+ * Exported for testing.
+ */
 export const LandingPageComponent = ({
   isAuthed,
   appName,
