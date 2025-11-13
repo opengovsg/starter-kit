@@ -3,6 +3,7 @@ name: CI
 on:
   pull_request:
     branches: ['*']
+    types: [opened, reopened, synchronize]
   push:
     branches: ['main']
   merge_group:
