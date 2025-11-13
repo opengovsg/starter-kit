@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
-    "vercel-build": "next build",
+    "vercel-build": "pnpm with-env next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --turbopack",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -63,11 +63,15 @@
     "@types/node": "^22.18.1",
     "@types/react": "19.2.4",
     "@types/react-dom": "19.2.3",
-    "@vitest/browser": "3.2.4",
-    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/browser": "catalog:vitest",
+    "@vitest/browser-playwright": "catalog:vitest",
+    "@vitest/coverage-v8": "catalog:vitest",
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "jiti": "^2.5.1",
+    "msw": "^2.12.1",
+    "msw-storybook-addon": "^2.0.6",
+    "msw-trpc": "^2.0.1",
     "playwright": "^1.56.0",
     "prettier": "catalog:",
     "storybook": "catalog:storybook10",
@@ -78,8 +82,13 @@
     "typescript": "catalog:",
     "vite": "^7.1.9",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.8",
+    "vitest": "catalog:vitest",
     "vitest-mock-extended": "^3.1.0"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/prettier-config",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }

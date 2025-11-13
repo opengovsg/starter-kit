@@ -43,6 +43,11 @@ catalogs:
     '@storybook/nextjs-vite': 10.0.7
     storybook-addon-vite-mock: ^1.1.0
     eslint-plugin-storybook: 10.0.7
+  vitest:
+    vitest: 4.0.8
+    '@vitest/browser': 4.0.8
+    '@vitest/browser-playwright': 4.0.8
+    '@vitest/coverage-v8': 4.0.8
 
 linkWorkspacePackages: true
 
