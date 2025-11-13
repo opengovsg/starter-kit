@@ -8,13 +8,7 @@ await jiti.import('./src/env')
 /** @type {import("next").NextConfig} */
 const config = {
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: [
-    '@acme/api',
-    '@acme/auth',
-    '@acme/db',
-    '@acme/ui',
-    '@acme/validators',
-  ],
+  transpilePackages: ['@acme/db', '@acme/ui', '@acme/validators'],
 
   reactCompiler: true,
 

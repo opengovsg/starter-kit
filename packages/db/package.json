@@ -56,5 +56,8 @@
     "prisma": "^6.17.0",
     "typescript": "catalog:"
   },
+  "onlyBuiltDependencies": [
+    "@prisma/client"
+  ],
   "prettier": "@acme/prettier-config"
 }
