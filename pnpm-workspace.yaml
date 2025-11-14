@@ -50,7 +50,7 @@ catalogs:
     '@trpc/tanstack-react-query': ^11.7.1
   vitest:
     '@vitest/browser': 4.0.8
-    '@vitest/browser-playwright': 4.0.8
+    '@vitest/browser-playwright': 4.0.9
     '@vitest/coverage-v8': 4.0.8
     vitest: 4.0.8
 
