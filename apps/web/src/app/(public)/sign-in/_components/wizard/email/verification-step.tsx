@@ -99,7 +99,7 @@ export const VerificationStep = () => {
             startContent={
               <div
                 aria-label={`OTP prefix is ${vfnStepData.otpPrefix}`}
-                className="border-base-divider-strong bg-interaction-support-disabled text-interaction-support-disabled-content prose-body-2 -mr-px inline-flex items-center rounded-l-sm border px-3"
+                className="border-base-divider-strong bg-interaction-support-disabled text-base-content-default prose-body-2 -mr-px inline-flex items-center rounded-l-sm border px-3"
               >
                 {vfnStepData.otpPrefix} -
               </div>
