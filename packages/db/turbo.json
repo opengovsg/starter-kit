@@ -2,7 +2,9 @@
   "$schema": "https://turborepo.org/schema.json",
   "extends": ["//"],
   "tasks": {
-    "generate": {},
+    "generate": {
+      "cache": false
+    },
     "typecheck": {
       "dependsOn": ["generate"]
     },
