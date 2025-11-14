@@ -1,154 +1,59 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      # add more branches here for this job to run on
-      # - staging
-      # - production
   pull_request:
-    types: [opened, synchronize]
+    branches: ['*']
+    types: [opened, reopened, synchronize]
+  push:
+    branches: ['main']
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  FORCE_COLOR: 3
 
 permissions:
   contents: read
   checks: write
 
 jobs:
-  install:
-    name: Install dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
+
       - name: Lint
-        run: npm run lint
+        run: pnpm lint && pnpm lint:ws
 
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - name: Lint
-        run: npm run format
+      - uses: actions/checkout@v5
 
-  unit-integration-tests:
-    name: Unit & integration tests
-    needs:
-      - install
-    timeout-minutes: 15
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Format
+        run: pnpm format
+
+  typecheck:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:latest # should be the same version as used in .github/workflows, docker-compose.test.yml, Dockerfile and live
-        env:
-          POSTGRES_DB: 'test'
-          POSTGRES_USER: 'root'
-          POSTGRES_PASSWORD: 'root'
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-      integresql:
-        image: ghcr.io/allaboutapps/integresql:v1.1.0
-        env:
-          PGHOST: 'postgres'
-          PGUSER: 'root'
-          PGPASSWORD: 'root'
-        ports:
-          - 5000:5000
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - name: Configure Datadog Test Visibility
-        env:
-          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
-        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        # datadog/test-visibility-github-action@v2.2.0, using commit hash to pin to silence codeQL
-        uses: datadog/test-visibility-github-action@fd12a97414bee507eff1270d8ac3286313e3797e
-        with:
-          languages: js
-          service: ${{ secrets.DD_SERVICE_NAME }}
-          api_key: ${{ secrets.DD_API_KEY }}
-      - name: Test
-        run: npm run test-ci:coverage
-        env:
-          # Required to allow Datadog to trace Vitest tests
-          NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0} --import {1}', env.DD_TRACE_PACKAGE, env.DD_TRACE_ESM_IMPORT) || '' }}
+      - uses: actions/checkout@v5
 
-  end-to-end-tests:
-    name: End-to-end tests
-    needs:
-      - install
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: write
-      checks: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - name: Install Playwright (Chromium)
-        run: npx playwright install chromium
-      - name: Load .env file
-        # xom9ikk/dotenv@v2, using commit hash to pin as tags may be updated in supply chain attack
-        uses: xom9ikk/dotenv@eff1dce037c4c0143cc4180a810511024c2560c0
-        with:
-          mode: test
-      - name: Next.js cache
-        uses: actions/cache@v4
-        with:
-          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
-          path: |
-            ~/.npm
-            ${{ github.workspace }}/.next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Setup
+        uses: ./tooling/github/setup
 
-      - name: Start test containers
-        run: npm run setup:test
-
-      - name: Build app
-        run: npm run build
-
-      - name: Configure Datadog Test Visibility
-        env:
-          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
-        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        # datadog/test-visibility-github-action@v2.2.0, using commit hash to pin to silence codeQL
-        uses: datadog/test-visibility-github-action@fd12a97414bee507eff1270d8ac3286313e3797e
-        with:
-          languages: js
-          service: ${{ secrets.DD_SERVICE_NAME }}
-          api_key: ${{ secrets.DD_API_KEY }}
-      - name: Run Playwright tests
-        run: npm run test-ci:e2e
-        env:
-          # Required to allow Datadog to trace Playwright tests
-          NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
-
-      - name: Stop test containers
-        run: npm run teardown
-
-      - name: Upload test results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright/test-results/
-          retention-days: 7
+      - name: Typecheck
+        run: pnpm typecheck
+# TODO: Add test CI

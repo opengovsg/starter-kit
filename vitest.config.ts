@@ -1,19 +1,14 @@
-import { fileURLToPath } from 'url'
-import { configDefaults, defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
+    projects: ['packages/*', 'apps/*'],
+    retry: 0,
     globals: true,
-    exclude: [...configDefaults.exclude, '**/playwright/**', 'tests/load/**'],
-    alias: {
-      '~/': fileURLToPath(new URL('./src/', import.meta.url)),
-      '~tests/': fileURLToPath(new URL('./tests/', import.meta.url)),
-    },
-    globalSetup: 'vitest.global-setup.ts',
-    setupFiles: ['tests/integration/__mocks__/prisma.ts'],
+    exclude: ['node_modules', 'dist', '.turbo'],
     coverage: {
-      provider: 'istanbul',
-      reportOnFailure: true,
+      enabled: process.env.CI === 'true',
+      reporter: ['text', 'json', 'html'],
     },
   },
 })

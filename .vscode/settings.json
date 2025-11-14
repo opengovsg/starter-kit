@@ -1,11 +1,47 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
-  "prettier.configPath": ".prettierrc.cjs",
-  "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
+  },
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "prettier.ignorePath": ".gitignore",
+  "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
+  "tailwindCSS.experimental.classRegex": [
+    ":\\s*?[\"'`]([^\"'`]*).*?,",
+    [
+      "classNames:\\s*{([\\s\\S]*?)}",
+      "\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?"
+    ],
+    ["classNames={{([^}]*)}}", "[\"'`]([^\"'`]*)[\"'`]"],
+    [
+      "tv\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)",
+      "\"(.*?)\""
+    ],
+    ["class:\\s*?[\"'`]([^\"'`]*).*?,"]
+  ],
+  "files.associations": {
+    "**/tooling/typescript/*.json": "jsonc",
+    "**/tsconfig.json": "jsonc",
+    "**/tsconfig.*.json": "jsonc",
+    "*.css": "tailwindcss"
+  },
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "zod/dist/types/index.d.ts", // Force auto-imports to v4
+    "next/router.d.ts",
+    "next/dist/client/router.d.ts",
+    "tailwind-variants/dist/index.d.ts" // Force imports from oui-theme instead
+  ],
+  "json.schemas": [
+    {
+      "fileMatch": ["task-definition.json"],
+      "url": "https://ecs-intellisense.s3-us-west-2.amazonaws.com/task-definition/schema.json"
+    }
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
   }
 }

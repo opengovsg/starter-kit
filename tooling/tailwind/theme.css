@@ -1,0 +1,8 @@
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-ibm-plex-mono);
+
+  /* add your application's color theme overrides here */
+  /* --color-brand-primary-50: #eff6ff; */
+  --theme-border-color-focus-ring: var(--color-utility-focus-default);
+}

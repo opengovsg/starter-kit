@@ -1,0 +1,73 @@
+packages:
+  - apps/*
+  - packages/*
+  - tooling/*
+
+catalog:
+  '@eslint/js': ^9.39.1
+  '@types/node': ^24.10.1
+  dotenv-cli: ^11.0.0
+  eslint: ^9.39.1
+  prettier: ^3.6.2
+  react-aria-components: 1.13.0
+  react-hook-form: ^7.66.0
+  typescript: ^5.9.3
+  zod: ^4.1.12
+
+catalogs:
+  oui:
+    '@opengovsg/oui': 0.0.23
+    '@opengovsg/oui-theme': 0.0.23
+  prisma:
+    '@prisma/adapter-pg': ^6.19.0
+    '@prisma/client': ^6.19.0
+    prisma: ^6.19.0
+  react-query5:
+    '@tanstack/react-query': ^5.90.8
+    '@tanstack/react-query-devtools': ^5.90.2
+  react19:
+    '@types/react': ^19.2.4
+    '@types/react-dom': ^19.2.3
+    react: ^19.2.0
+    react-dom: 19.2.0
+  storybook10:
+    '@storybook/addon-a11y': ^10.0.7
+    '@storybook/addon-docs': ^10.0.7
+    '@storybook/addon-vitest': ^10.0.7
+    '@storybook/nextjs-vite': ^10.0.7
+    eslint-plugin-storybook: ^10.0.7
+    storybook: ^10.0.7
+    storybook-addon-vite-mock: ^1.1.0
+  t3-env:
+    '@t3-oss/env-core': ^0.13.8
+    '@t3-oss/env-nextjs': ^0.13.8
+  tailwindcss4:
+    '@tailwindcss/postcss': ^4.1.17
+    tailwindcss: ^4.1.17
+  trpc:
+    '@trpc/client': ^11.7.1
+    '@trpc/server': ^11.7.1
+    '@trpc/tanstack-react-query': ^11.7.1
+  vitest:
+    '@vitest/browser': 4.0.8
+    '@vitest/browser-playwright': 4.0.8
+    '@vitest/coverage-v8': 4.0.8
+    vitest: 4.0.8
+
+linkWorkspacePackages: true
+
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+
+overrides:
+  '@types/minimatch': 5.1.2
+
+publicHoistPattern:
+  - '*prettier*'
+  - '*eslint-plugin*'
+  - '*@opengovsg/oui*'
+  - '*prisma*'
+  - pg
