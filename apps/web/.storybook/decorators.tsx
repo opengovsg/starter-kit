@@ -5,7 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { createTRPCClient, httpLink } from '@trpc/client'
+import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import SuperJSON from 'superjson'
 
@@ -40,12 +40,25 @@ export const AppDecorator: Decorator = (Story, context) => {
     },
   })
 
+  const baseUrl =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : 'http://localhost:6006'
+
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
+        loggerLink({
+          enabled: () => true,
+        }),
         httpLink({
           transformer: SuperJSON,
-          url: '/api/trpc',
+          url: `${baseUrl}/api/trpc`,
+          headers() {
+            const headers = new Headers()
+            headers.set('x-trpc-source', 'storybook')
+            return headers
+          },
         }),
       ],
     }),
