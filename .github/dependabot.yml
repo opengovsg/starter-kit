@@ -3,12 +3,54 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: daily
+      interval: weekly
+    cooldown:
+      default-days: 7 # to make supply chain attacks harder
     open-pull-requests-limit: 2
-    ignore:
-      # Storybook packages should be updated together to avoid breaking changes, but dependabot updates them separately.
-      - dependency-name: 'storybook*'
-      - dependency-name: '@storybook*'
-      - dependency-name: 'prisma*'
-      - dependency-name: '@prisma*'
-      - dependency-name: '@trpc*'
+    groups:
+      prisma:
+        applies-to: version-updates
+        patterns:
+          - 'prisma'
+          - '@prisma/client'
+      react:
+        applies-to: version-updates
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      react-query:
+        applies-to: version-updates
+        patterns:
+          - '@tanstack/react-query'
+          - '@tanstack/react-query-devtools'
+      storybook:
+        applies-to: version-updates
+        patterns:
+          - '@storybook/addon-a11y'
+          - '@storybook/addon-docs'
+          - '@storybook/addon-vitest'
+          - '@storybook/nextjs-vite'
+          - 'eslint-plugin-storybook'
+          - 'storybook'
+          - 'storybook-addon-vite-mock'
+      tailwindcss:
+        applies-to: version-updates
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/postcss'
+      trpc:
+        applies-to: version-updates
+        patterns:
+          - '@trpc/*'
+      turbo:
+        applies-to: version-updates
+        patterns:
+          - 'eslint-plugin-turbo'
+          - 'turbo'
+          - '@turbo/gen'
+      oui:
+        applies-to: version-updates
+        patterns:
+          - '@opengovsg/oui*'
