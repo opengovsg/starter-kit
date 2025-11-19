@@ -9,6 +9,7 @@ catalog:
   dotenv-cli: ^11.0.0
   eslint: ^9.39.1
   prettier: ^3.6.2
+  prisma-kysely: ^2.2.1
   react-aria-components: 1.13.0
   react-hook-form: ^7.66.0
   typescript: ^5.9.3

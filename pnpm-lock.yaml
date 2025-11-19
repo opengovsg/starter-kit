@@ -21,6 +21,9 @@ catalogs:
     prettier:
       specifier: ^3.6.2
       version: 3.6.2
+    prisma-kysely:
+      specifier: ^2.2.1
+      version: 2.2.1
     react-aria-components:
       specifier: 1.13.0
       version: 1.13.0
@@ -395,7 +398,7 @@ importers:
         specifier: catalog:prisma
         version: 6.19.0(magicast@0.3.5)(typescript@5.9.3)
       prisma-kysely:
-        specifier: ^2.2.1
+        specifier: 'catalog:'
         version: 2.2.1(magicast@0.3.5)(prisma@6.19.0(magicast@0.3.5)(typescript@5.9.3))
       typescript:
         specifier: 'catalog:'

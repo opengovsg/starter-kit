@@ -55,7 +55,7 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "prisma": "catalog:prisma",
-    "prisma-kysely": "^2.2.1",
+    "prisma-kysely": "catalog:",
     "typescript": "catalog:"
   },
   "prettier": "@acme/prettier-config"
