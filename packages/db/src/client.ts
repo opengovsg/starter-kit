@@ -1,2 +1,2 @@
 /** Mainly exported for testing to use raw PrismaClient */
-export * from './generated/client'
+export * from './generated/prisma/client'
