@@ -56,6 +56,12 @@ export const VerificationStep = () => {
   const resendOtpMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
       onError: (error) => setError('token', { message: error.message }),
+      trpc: {
+        context: {
+          // Need to set session data for nonce
+          skipStreaming: true,
+        },
+      },
     }),
   )
 

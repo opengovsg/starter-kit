@@ -10,15 +10,21 @@ import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
 import { createAuthToken, createVfnPrefix, isValidToken } from './auth.utils'
 
-export const emailLogin = async (email: string) => {
-  const { token, hashedToken } = createAuthToken(email)
+export const emailLogin = async ({
+  email,
+  nonce,
+}: {
+  email: string
+  nonce: string
+}) => {
+  const { token, hashedToken } = createAuthToken({ email, nonce })
   const otpPrefix = createVfnPrefix()
 
   const url = new URL(getBaseUrl())
 
   const { issuedAt } = await db.verificationToken.upsert({
     where: {
-      identifier: email,
+      identifier: nonce,
     },
     update: {
       token: hashedToken,
@@ -26,7 +32,7 @@ export const emailLogin = async (email: string) => {
       issuedAt: new Date(),
     },
     create: {
-      identifier: email,
+      identifier: nonce,
       token: hashedToken,
       issuedAt: new Date(),
     },
@@ -57,15 +63,17 @@ export const emailLogin = async (email: string) => {
 export const emailVerifyOtp = async ({
   email,
   token,
+  nonce,
 }: {
   email: string
   token: string
+  nonce: string
 }) => {
   try {
     // Not in transaction, because we do not want it to rollback
     const hashedToken = await db.verificationToken.update({
       where: {
-        identifier: email,
+        identifier: nonce,
       },
       data: {
         attempts: {
@@ -87,7 +95,7 @@ export const emailVerifyOtp = async ({
       add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
     if (
       hasExpired ||
-      !isValidToken({ token, email, hash: hashedToken.token })
+      !isValidToken({ token, email, nonce, hash: hashedToken.token })
     ) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -98,7 +106,7 @@ export const emailVerifyOtp = async ({
     // Valid token, delete record to prevent reuse
     return db.verificationToken.delete({
       where: {
-        identifier: email,
+        identifier: nonce,
       },
     })
   } catch (error) {
@@ -109,7 +117,7 @@ export const emailVerifyOtp = async ({
     ) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Invalid login email',
+        message: 'Invalid login email or missing nonce',
       })
     }
     throw error

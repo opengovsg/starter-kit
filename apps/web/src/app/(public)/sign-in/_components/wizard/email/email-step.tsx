@@ -36,6 +36,12 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     trpc.auth.email.login.mutationOptions({
       onSuccess: onNext,
       onError: (error) => setError('email', { message: error.message }),
+      trpc: {
+        context: {
+          // Need to set session data for nonce
+          skipStreaming: true,
+        },
+      },
     }),
   )
 
