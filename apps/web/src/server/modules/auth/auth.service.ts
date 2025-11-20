@@ -124,9 +124,10 @@ export const emailVerifyOtp = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'
     ) {
+      // TODO: Log error, this means the nonce does not exist
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Invalid login email or missing nonce',
+        message: 'Token is invalid or has expired. Please request a new OTP.',
       })
     }
     throw error
