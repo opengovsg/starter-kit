@@ -13,6 +13,11 @@ generator client {
   engineType      = "client"
 }
 
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../src/generated/zod"
+}
+
 generator kysely {
   provider = "prisma-kysely"
 
