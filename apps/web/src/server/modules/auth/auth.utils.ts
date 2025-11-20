@@ -47,10 +47,15 @@ export const isValidToken = ({
   hash: string
   nonce: string
 }) => {
-  return timingSafeEqual(
-    Buffer.from(hash),
-    Buffer.from(createTokenHash({ token, email, nonce })),
-  )
+  try {
+    return timingSafeEqual(
+      Buffer.from(hash),
+      Buffer.from(createTokenHash({ token, email, nonce })),
+    )
+  } catch {
+    // In case of any error (e.g. buffer size mismatch), return false
+    return false
+  }
 }
 
 export const createAuthToken = ({
