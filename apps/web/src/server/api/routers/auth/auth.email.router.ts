@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+import { TRPCError } from '@trpc/server'
 import z from 'zod'
 
 import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
@@ -19,8 +21,15 @@ export const emailAuthRouter = createTRPCRouter({
         otpPrefix: z.string().length(OTP_PREFIX_LENGTH),
       }),
     )
-    .mutation(async ({ input }) => {
-      const { email, otpPrefix } = await emailLogin(input.email)
+    .mutation(async ({ input, ctx }) => {
+      const nonce = randomUUID()
+      const { email, otpPrefix } = await emailLogin({
+        email: input.email,
+        nonce,
+      })
+
+      ctx.session.nonce = nonce
+      await ctx.session.save()
       return {
         email,
         otpPrefix,
@@ -28,10 +37,20 @@ export const emailAuthRouter = createTRPCRouter({
     }),
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
-    .mutation(async ({ input, ctx }) => {
-      await emailVerifyOtp(input)
-      const user = await upsertUserAndAccountByEmail(input.email)
+    .mutation(async ({ input: { email, token }, ctx }) => {
+      const nonce = ctx.session.nonce
+      // Ensure nonce exists in session
+      if (!nonce) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            'Something went wrong. Please request for a new OTP before retrying.',
+        })
+      }
 
+      await emailVerifyOtp({ email, token, nonce })
+      const user = await upsertUserAndAccountByEmail(email)
+      ctx.session.nonce = undefined
       ctx.session.userId = user.id
       await ctx.session.save()
       return user

@@ -8,17 +8,30 @@ import { Prisma } from '@acme/db/client'
 import { env } from '~/env'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
-import { createAuthToken, createVfnPrefix, isValidToken } from './auth.utils'
+import {
+  createAuthToken,
+  createVfnIdentifier,
+  createVfnPrefix,
+  isValidToken,
+} from './auth.utils'
 
-export const emailLogin = async (email: string) => {
-  const { token, hashedToken } = createAuthToken(email)
+export const emailLogin = async ({
+  email,
+  nonce,
+}: {
+  email: string
+  nonce: string
+}) => {
+  const { token, hashedToken } = createAuthToken({ email, nonce })
   const otpPrefix = createVfnPrefix()
 
   const url = new URL(getBaseUrl())
 
+  const vfnIdentifier = createVfnIdentifier({ email, nonce })
+
   const { issuedAt } = await db.verificationToken.upsert({
     where: {
-      identifier: email,
+      identifier: vfnIdentifier,
     },
     update: {
       token: hashedToken,
@@ -26,7 +39,7 @@ export const emailLogin = async (email: string) => {
       issuedAt: new Date(),
     },
     create: {
-      identifier: email,
+      identifier: vfnIdentifier,
       token: hashedToken,
       issuedAt: new Date(),
     },
@@ -57,15 +70,19 @@ export const emailLogin = async (email: string) => {
 export const emailVerifyOtp = async ({
   email,
   token,
+  nonce,
 }: {
   email: string
   token: string
+  nonce: string
 }) => {
+  const vfnIdentifier = createVfnIdentifier({ email, nonce })
+
   try {
     // Not in transaction, because we do not want it to rollback
     const hashedToken = await db.verificationToken.update({
       where: {
-        identifier: email,
+        identifier: vfnIdentifier,
       },
       data: {
         attempts: {
@@ -87,7 +104,7 @@ export const emailVerifyOtp = async ({
       add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
     if (
       hasExpired ||
-      !isValidToken({ token, email, hash: hashedToken.token })
+      !isValidToken({ token, email, nonce, hash: hashedToken.token })
     ) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -98,7 +115,7 @@ export const emailVerifyOtp = async ({
     // Valid token, delete record to prevent reuse
     return db.verificationToken.delete({
       where: {
-        identifier: email,
+        identifier: vfnIdentifier,
       },
     })
   } catch (error) {
@@ -107,9 +124,10 @@ export const emailVerifyOtp = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'
     ) {
+      // TODO: Log error, this means the nonce does not exist
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Invalid login email',
+        message: 'Token is invalid or has expired. Please request a new OTP.',
       })
     }
     throw error

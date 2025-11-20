@@ -5,6 +5,8 @@ import { getIronSession } from 'iron-session'
 import { env } from '~/env'
 
 export interface SessionData {
+  // Used to verify that the same user that started the authentication flow is the one verifying it
+  nonce?: string
   userId?: string
   // Add other session data as needed
 }
