@@ -12,7 +12,7 @@ import { env } from './env'
 import { PrismaClient } from './generated/prisma/client'
 
 const globalForPrisma = global as unknown as {
-  prisma: PrismaClient
+  prisma: ReturnType<typeof createPrisma>
 }
 
 const createPrisma = () => {
