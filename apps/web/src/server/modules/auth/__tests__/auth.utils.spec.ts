@@ -1,6 +1,65 @@
-import { createAuthToken, createVfnPrefix, isValidToken } from '../auth.utils'
+import {
+  createAuthToken,
+  createVfnIdentifier,
+  createVfnPrefix,
+  isValidToken,
+} from '../auth.utils'
 
 describe('auth.utils', () => {
+  describe('createVfnIdentifier', () => {
+    it('should create identifier in format "nonce:email"', () => {
+      const email = 'test@example.com'
+      const nonce = 'test-nonce-123'
+
+      const identifier = createVfnIdentifier({ email, nonce })
+
+      expect(identifier).toBe('test-nonce-123:test@example.com')
+    })
+
+    it('should create different identifiers for different nonces with same email', () => {
+      const email = 'test@example.com'
+      const nonce1 = 'nonce-1'
+      const nonce2 = 'nonce-2'
+
+      const identifier1 = createVfnIdentifier({ email, nonce: nonce1 })
+      const identifier2 = createVfnIdentifier({ email, nonce: nonce2 })
+
+      expect(identifier1).not.toBe(identifier2)
+      expect(identifier1).toBe('nonce-1:test@example.com')
+      expect(identifier2).toBe('nonce-2:test@example.com')
+    })
+
+    it('should handle special characters in email', () => {
+      const email = 'user+tag@example.com'
+      const nonce = 'test-nonce'
+
+      const identifier = createVfnIdentifier({ email, nonce })
+
+      expect(identifier).toBe('test-nonce:user+tag@example.com')
+    })
+
+    it('should handle special characters in nonce', () => {
+      const email = 'test@example.com'
+      const nonce = 'nonce-with-special_chars.123'
+
+      const identifier = createVfnIdentifier({ email, nonce })
+
+      expect(identifier).toBe('nonce-with-special_chars.123:test@example.com')
+    })
+
+    it('should create deterministic identifiers', () => {
+      const email = 'test@example.com'
+      const nonce = 'test-nonce'
+
+      const identifier1 = createVfnIdentifier({ email, nonce })
+      const identifier2 = createVfnIdentifier({ email, nonce })
+      const identifier3 = createVfnIdentifier({ email, nonce })
+
+      expect(identifier1).toBe(identifier2)
+      expect(identifier2).toBe(identifier3)
+    })
+  })
+
   describe('createVfnPrefix', () => {
     it('should generate a 3-character prefix', () => {
       const prefix = createVfnPrefix()

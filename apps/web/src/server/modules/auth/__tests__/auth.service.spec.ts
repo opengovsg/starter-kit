@@ -8,7 +8,7 @@ import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
-import { createAuthToken } from '../auth.utils'
+import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
 const mockedMailService = mock(mailService)
 
@@ -30,9 +30,10 @@ describe('auth.service', () => {
         otpPrefix: expect.any(String),
       })
 
-      // Verify token was created in database with nonce as identifier
+      // Verify token was created in database with vfnIdentifier
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       const token = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(token).toBeDefined()
       expect(mockedMailService.sendMail).toHaveBeenCalledWith({
@@ -49,9 +50,10 @@ describe('auth.service', () => {
       // First login
       await emailLogin({ email, nonce })
 
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       // Simulate failed attempts
       await db.verificationToken.update({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
         data: { attempts: 3 },
       })
 
@@ -59,7 +61,7 @@ describe('auth.service', () => {
       await emailLogin({ email, nonce })
 
       const token = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(token?.attempts).toBe(0)
     })
@@ -71,9 +73,10 @@ describe('auth.service', () => {
       await emailLogin({ email, nonce })
       await emailLogin({ email, nonce })
 
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       // Should only have one record
       const tokens = await db.verificationToken.findMany({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(tokens).toHaveLength(1)
     })
@@ -87,11 +90,13 @@ describe('auth.service', () => {
       await emailLogin({ email, nonce: nonce2 })
 
       // Should have two records with different nonces
+      const vfnIdentifier1 = createVfnIdentifier({ email, nonce: nonce1 })
+      const vfnIdentifier2 = createVfnIdentifier({ email, nonce: nonce2 })
       const token1 = await db.verificationToken.findUnique({
-        where: { identifier: nonce1 },
+        where: { identifier: vfnIdentifier1 },
       })
       const token2 = await db.verificationToken.findUnique({
-        where: { identifier: nonce2 },
+        where: { identifier: vfnIdentifier2 },
       })
 
       expect(token1).toBeDefined()
@@ -114,8 +119,9 @@ describe('auth.service', () => {
       ).resolves.not.toThrow()
 
       // Token should be deleted after successful verification
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(verificationToken).toBeNull()
     })
@@ -137,11 +143,12 @@ describe('auth.service', () => {
 
       const { token, hashedToken } = createAuthToken({ email, nonce })
 
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       // Create a verification token with an old issuedAt date
       const oldDate = add(new Date(), { seconds: -700 }) // 700 seconds ago (beyond 600s expiry)
       await db.verificationToken.create({
         data: {
-          identifier: nonce,
+          identifier: vfnIdentifier,
           token: hashedToken,
           issuedAt: oldDate,
         },
@@ -159,17 +166,18 @@ describe('auth.service', () => {
 
       await emailLogin({ email, nonce })
 
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       // First attempt
       await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow()
       let verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(verificationToken?.attempts).toBe(1)
 
       // Second attempt
       await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow()
       verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(verificationToken?.attempts).toBe(2)
     })
@@ -210,8 +218,9 @@ describe('auth.service', () => {
       await emailVerifyOtp({ email, token, nonce })
 
       // Token should be deleted
+      const vfnIdentifier = createVfnIdentifier({ email, nonce })
       const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: nonce },
+        where: { identifier: vfnIdentifier },
       })
       expect(verificationToken).toBeNull()
     })
@@ -245,8 +254,9 @@ describe('auth.service', () => {
       ).rejects.toThrow('Invalid login email or missing nonce')
 
       // Original token should still exist
+      const vfnIdentifier1 = createVfnIdentifier({ email, nonce: nonce1 })
       const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: nonce1 },
+        where: { identifier: vfnIdentifier1 },
       })
       expect(verificationToken).toBeDefined()
     })

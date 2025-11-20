@@ -14,6 +14,16 @@ export const createVfnPrefix = customAlphabet(
   OTP_PREFIX_LENGTH,
 )
 
+export const createVfnIdentifier = ({
+  email,
+  nonce,
+}: {
+  email: string
+  nonce: string
+}) => {
+  return `${nonce}:${email}`
+}
+
 const createTokenHash = ({
   token,
   email,

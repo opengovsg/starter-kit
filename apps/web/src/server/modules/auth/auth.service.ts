@@ -8,7 +8,12 @@ import { Prisma } from '@acme/db/client'
 import { env } from '~/env'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
-import { createAuthToken, createVfnPrefix, isValidToken } from './auth.utils'
+import {
+  createAuthToken,
+  createVfnIdentifier,
+  createVfnPrefix,
+  isValidToken,
+} from './auth.utils'
 
 export const emailLogin = async ({
   email,
@@ -22,9 +27,11 @@ export const emailLogin = async ({
 
   const url = new URL(getBaseUrl())
 
+  const vfnIdentifier = createVfnIdentifier({ email, nonce })
+
   const { issuedAt } = await db.verificationToken.upsert({
     where: {
-      identifier: nonce,
+      identifier: vfnIdentifier,
     },
     update: {
       token: hashedToken,
@@ -32,7 +39,7 @@ export const emailLogin = async ({
       issuedAt: new Date(),
     },
     create: {
-      identifier: nonce,
+      identifier: vfnIdentifier,
       token: hashedToken,
       issuedAt: new Date(),
     },
@@ -69,11 +76,13 @@ export const emailVerifyOtp = async ({
   token: string
   nonce: string
 }) => {
+  const vfnIdentifier = createVfnIdentifier({ email, nonce })
+
   try {
     // Not in transaction, because we do not want it to rollback
     const hashedToken = await db.verificationToken.update({
       where: {
-        identifier: nonce,
+        identifier: vfnIdentifier,
       },
       data: {
         attempts: {
@@ -106,7 +115,7 @@ export const emailVerifyOtp = async ({
     // Valid token, delete record to prevent reuse
     return db.verificationToken.delete({
       where: {
-        identifier: nonce,
+        identifier: vfnIdentifier,
       },
     })
   } catch (error) {
