@@ -37,43 +37,58 @@ describe('auth.utils', () => {
 
   describe('createAuthToken', () => {
     const testEmail = 'test@example.com'
+    const testNonce = 'test-nonce-123'
 
     it('should generate a 6-character token', () => {
-      const { token } = createAuthToken(testEmail)
+      const { token } = createAuthToken({ email: testEmail, nonce: testNonce })
       expect(token).toHaveLength(6)
     })
 
     it('should generate a hashed token', () => {
-      const { hashedToken } = createAuthToken(testEmail)
+      const { hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
       expect(hashedToken).toBeTruthy()
       expect(typeof hashedToken).toBe('string')
       expect(hashedToken.length).toBeGreaterThan(0)
     })
 
     it('should only contain characters from the allowed alphabet', () => {
-      const { token } = createAuthToken(testEmail)
+      const { token } = createAuthToken({ email: testEmail, nonce: testNonce })
       const allowedChars = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]+$/
       expect(token).toMatch(allowedChars)
     })
 
-    it('should generate different tokens for the same email on multiple calls', () => {
-      const result1 = createAuthToken(testEmail)
-      const result2 = createAuthToken(testEmail)
-      const result3 = createAuthToken(testEmail)
+    it('should generate different tokens for the same email and nonce on multiple calls', () => {
+      const result1 = createAuthToken({ email: testEmail, nonce: testNonce })
+      const result2 = createAuthToken({ email: testEmail, nonce: testNonce })
+      const result3 = createAuthToken({ email: testEmail, nonce: testNonce })
 
       expect(result1.token).not.toBe(result2.token)
       expect(result2.token).not.toBe(result3.token)
       expect(result1.hashedToken).not.toBe(result2.hashedToken)
     })
 
-    it('should generate different hashed tokens for different emails with same token', () => {
+    it('should generate different hashed tokens for different emails with same nonce', () => {
       const email1 = 'user1@example.com'
       const email2 = 'user2@example.com'
 
-      const result1 = createAuthToken(email1)
-      const result2 = createAuthToken(email2)
+      const result1 = createAuthToken({ email: email1, nonce: testNonce })
+      const result2 = createAuthToken({ email: email2, nonce: testNonce })
 
-      // Even if tokens were the same, hashes should be different due to email salt
+      // Hashes should be different due to email being used as salt
+      expect(result1.hashedToken).not.toBe(result2.hashedToken)
+    })
+
+    it('should generate different hashed tokens for different nonces with same email', () => {
+      const nonce1 = 'nonce-1'
+      const nonce2 = 'nonce-2'
+
+      const result1 = createAuthToken({ email: testEmail, nonce: nonce1 })
+      const result2 = createAuthToken({ email: testEmail, nonce: nonce2 })
+
+      // Hashes should be different due to nonce being part of the hash input
       expect(result1.hashedToken).not.toBe(result2.hashedToken)
     })
 
@@ -81,7 +96,7 @@ describe('auth.utils', () => {
       // Generate multiple tokens to ensure consistency
       const tokens = Array.from(
         { length: 50 },
-        () => createAuthToken(testEmail).token,
+        () => createAuthToken({ email: testEmail, nonce: testNonce }).token,
       )
       const combinedString = tokens.join('')
 
@@ -94,13 +109,18 @@ describe('auth.utils', () => {
 
   describe('isValidToken', () => {
     const testEmail = 'test@example.com'
+    const testNonce = 'test-nonce-123'
 
     it('should return true for a valid token and hash combination', () => {
-      const { token, hashedToken } = createAuthToken(testEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
 
       const isValid = isValidToken({
         token,
         email: testEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
@@ -108,12 +128,16 @@ describe('auth.utils', () => {
     })
 
     it('should return false for an invalid token', () => {
-      const { hashedToken } = createAuthToken(testEmail)
+      const { hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
       const invalidToken = '999999'
 
       const isValid = isValidToken({
         token: invalidToken,
         email: testEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
@@ -121,12 +145,33 @@ describe('auth.utils', () => {
     })
 
     it('should return false for a different email', () => {
-      const { token, hashedToken } = createAuthToken(testEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
       const differentEmail = 'different@example.com'
 
       const isValid = isValidToken({
         token,
         email: differentEmail,
+        nonce: testNonce,
+        hash: hashedToken,
+      })
+
+      expect(isValid).toBe(false)
+    })
+
+    it('should return false for a different nonce', () => {
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
+      const differentNonce = 'different-nonce'
+
+      const isValid = isValidToken({
+        token,
+        email: testEmail,
+        nonce: differentNonce,
         hash: hashedToken,
       })
 
@@ -134,12 +179,16 @@ describe('auth.utils', () => {
     })
 
     it('should return false for a tampered hash', () => {
-      const { token, hashedToken } = createAuthToken(testEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
       const tamperedHash = hashedToken.slice(0, -1) + 'X'
 
       const isValid = isValidToken({
         token,
         email: testEmail,
+        nonce: testNonce,
         hash: tamperedHash,
       })
 
@@ -147,12 +196,16 @@ describe('auth.utils', () => {
     })
 
     it('should be case-sensitive for email addresses', () => {
-      const { token, hashedToken } = createAuthToken(testEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
       const uppercaseEmail = testEmail.toUpperCase()
 
       const isValid = isValidToken({
         token,
         email: uppercaseEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
@@ -160,23 +213,29 @@ describe('auth.utils', () => {
     })
 
     it('should handle multiple validation attempts consistently', () => {
-      const { token, hashedToken } = createAuthToken(testEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
 
       const result1 = isValidToken({
         token,
         email: testEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
       const result2 = isValidToken({
         token,
         email: testEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
       const result3 = isValidToken({
         token,
         email: testEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
@@ -186,7 +245,10 @@ describe('auth.utils', () => {
     })
 
     it('should protect against timing attacks by using constant-time comparison', () => {
-      const { hashedToken } = createAuthToken(testEmail)
+      const { hashedToken } = createAuthToken({
+        email: testEmail,
+        nonce: testNonce,
+      })
 
       // Test with various invalid tokens of different lengths
       const invalidTokens = ['A', 'AB', 'ABC123', 'ABCDEF', 'INVALID']
@@ -195,6 +257,7 @@ describe('auth.utils', () => {
         const isValid = isValidToken({
           token: invalidToken,
           email: testEmail,
+          nonce: testNonce,
           hash: hashedToken,
         })
         expect(isValid).toBe(false)
@@ -203,11 +266,15 @@ describe('auth.utils', () => {
 
     it('should validate tokens with special characters in email', () => {
       const specialEmail = 'user+tag@example.com'
-      const { token, hashedToken } = createAuthToken(specialEmail)
+      const { token, hashedToken } = createAuthToken({
+        email: specialEmail,
+        nonce: testNonce,
+      })
 
       const isValid = isValidToken({
         token,
         email: specialEmail,
+        nonce: testNonce,
         hash: hashedToken,
       })
 
@@ -218,14 +285,16 @@ describe('auth.utils', () => {
   describe('Integration: Full token lifecycle', () => {
     it('should create, hash, and validate a token successfully', () => {
       const email = 'user@example.com'
+      const nonce = 'session-nonce-123'
 
       // Create token
-      const { token, hashedToken } = createAuthToken(email)
+      const { token, hashedToken } = createAuthToken({ email, nonce })
 
       // Validate token
       const isValid = isValidToken({
         token,
         email,
+        nonce,
         hash: hashedToken,
       })
 
@@ -234,21 +303,21 @@ describe('auth.utils', () => {
       expect(isValid).toBe(true)
     })
 
-    it('should create unique tokens for multiple users', () => {
+    it('should create unique tokens for multiple users with different nonces', () => {
       const users = [
-        'user1@example.com',
-        'user2@example.com',
-        'user3@example.com',
+        { email: 'user1@example.com', nonce: 'nonce-1' },
+        { email: 'user2@example.com', nonce: 'nonce-2' },
+        { email: 'user3@example.com', nonce: 'nonce-3' },
       ]
 
-      const tokens = users.map((email) => {
-        const { token, hashedToken } = createAuthToken(email)
-        return { email, token, hashedToken }
+      const tokens = users.map(({ email, nonce }) => {
+        const { token, hashedToken } = createAuthToken({ email, nonce })
+        return { email, nonce, token, hashedToken }
       })
 
-      // Verify each token is valid for its own email
-      tokens.forEach(({ email, token, hashedToken }) => {
-        const isValid = isValidToken({ token, email, hash: hashedToken })
+      // Verify each token is valid for its own email and nonce
+      tokens.forEach(({ email, nonce, token, hashedToken }) => {
+        const isValid = isValidToken({ token, email, nonce, hash: hashedToken })
         expect(isValid).toBe(true)
       })
 
@@ -256,6 +325,50 @@ describe('auth.utils', () => {
       const tokenStrings = tokens.map((t) => t.token)
       const uniqueTokens = new Set(tokenStrings)
       expect(uniqueTokens.size).toBe(tokens.length)
+    })
+
+    it('should not allow cross-session token validation', () => {
+      const email = 'user@example.com'
+      const nonce1 = 'session-1'
+      const nonce2 = 'session-2'
+
+      // Create token for session 1
+      const { token: token1, hashedToken: hash1 } = createAuthToken({
+        email,
+        nonce: nonce1,
+      })
+
+      // Create token for session 2
+      const { token: token2, hashedToken: hash2 } = createAuthToken({
+        email,
+        nonce: nonce2,
+      })
+
+      // Token from session 1 should not validate with nonce from session 2
+      const crossValidation1 = isValidToken({
+        token: token1,
+        email,
+        nonce: nonce2,
+        hash: hash1,
+      })
+      expect(crossValidation1).toBe(false)
+
+      // Token from session 2 should not validate with nonce from session 1
+      const crossValidation2 = isValidToken({
+        token: token2,
+        email,
+        nonce: nonce1,
+        hash: hash2,
+      })
+      expect(crossValidation2).toBe(false)
+
+      // But each token should still work with its own nonce
+      expect(
+        isValidToken({ token: token1, email, nonce: nonce1, hash: hash1 }),
+      ).toBe(true)
+      expect(
+        isValidToken({ token: token2, email, nonce: nonce2, hash: hash2 }),
+      ).toBe(true)
     })
   })
 })
