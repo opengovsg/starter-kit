@@ -23,7 +23,7 @@ catalogs:
     '@prisma/client': ^6.19.0
     prisma: ^6.19.0
   react-query5:
-    '@tanstack/react-query': ^5.90.8
+    '@tanstack/react-query': ^5.90.10
     '@tanstack/react-query-devtools': ^5.90.2
   react19:
     '@types/react': ^19.2.4
