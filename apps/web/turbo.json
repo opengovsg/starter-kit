@@ -6,8 +6,12 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"]
     },
+    "docker": {
+      "cache": false
+    },
     "dev": {
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["docker"]
     }
   }
 }
