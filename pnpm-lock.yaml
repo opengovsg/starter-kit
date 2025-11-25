@@ -130,6 +130,11 @@ catalogs:
 overrides:
   '@types/minimatch': 5.1.2
 
+patchedDependencies:
+  prisma-extension-kysely@3.0.0:
+    hash: 9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827
+    path: patches/prisma-extension-kysely@3.0.0.patch
+
 importers:
 
   .:
@@ -374,7 +379,7 @@ importers:
         version: 8.16.3
       prisma-extension-kysely:
         specifier: 'catalog:'
-        version: 3.0.0(@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3))
+        version: 3.0.0(patch_hash=9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827)(@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3))
       zod:
         specifier: 'catalog:'
         version: 4.1.13
@@ -11879,7 +11884,7 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 17.0.2
 
-  prisma-extension-kysely@3.0.0(@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)):
+  prisma-extension-kysely@3.0.0(patch_hash=9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827)(@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)):
     dependencies:
       '@prisma/client': 7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
 

@@ -67,6 +67,9 @@ onlyBuiltDependencies:
 overrides:
   '@types/minimatch': 5.1.2
 
+patchedDependencies:
+  prisma-extension-kysely@3.0.0: patches/prisma-extension-kysely@3.0.0.patch
+
 publicHoistPattern:
   - '*prettier*'
   - '*eslint-plugin*'
