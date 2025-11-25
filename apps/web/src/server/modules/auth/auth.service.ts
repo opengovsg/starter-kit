@@ -112,12 +112,14 @@ export const emailVerifyOtp = async ({
       })
     }
 
+    // NOTE: You can also use `kysely` for your queries
+    // if you want more fine-grained control.
     // Valid token, delete record to prevent reuse
-    return db.verificationToken.delete({
-      where: {
-        identifier: vfnIdentifier,
-      },
-    })
+    return db.$kysely
+      .deleteFrom('VerificationToken')
+      .where('identifier', '=', vfnIdentifier)
+      .returningAll()
+      .executeTakeFirstOrThrow()
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
     if (
