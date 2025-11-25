@@ -57,7 +57,7 @@
     "prettier": "catalog:",
     "prisma": "catalog:prisma",
     "prisma-kysely": "catalog:",
-    "prisma-zod-generator": "^1.32.1",
+    "prisma-zod-generator": "^2.1.2",
     "typescript": "catalog:"
   },
   "prettier": "@acme/prettier-config"
