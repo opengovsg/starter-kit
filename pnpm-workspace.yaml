@@ -14,16 +14,16 @@ catalog:
   react-aria-components: 1.13.0
   react-hook-form: ^7.66.0
   typescript: ^5.9.3
-  zod: ^4.1.12
+  zod: ^4.1.13
 
 catalogs:
   oui:
     '@opengovsg/oui': 0.0.23
     '@opengovsg/oui-theme': 0.0.23
   prisma:
-    '@prisma/adapter-pg': ^6.19.0
-    '@prisma/client': ^6.19.0
-    prisma: ^6.19.0
+    '@prisma/adapter-pg': ^7.0.0
+    '@prisma/client': ^7.0.0
+    prisma: ^7.0.0
   react-query5:
     '@tanstack/react-query': ^5.90.8
     '@tanstack/react-query-devtools': ^5.90.2
@@ -66,6 +66,9 @@ onlyBuiltDependencies:
 
 overrides:
   '@types/minimatch': 5.1.2
+
+patchedDependencies:
+  prisma-extension-kysely@3.0.0: patches/prisma-extension-kysely@3.0.0.patch
 
 publicHoistPattern:
   - '*prettier*'

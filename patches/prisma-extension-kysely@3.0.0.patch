@@ -1,0 +1,26 @@
+diff --git a/dist/cjs/index.js b/dist/cjs/index.js
+index ab08b5d36b43ea10a2b3c5e480b2e9af2c12929c..412e6c0ca3154299b7e41ab9c847f9164d1bfe4e 100644
+--- a/dist/cjs/index.js
++++ b/dist/cjs/index.js
+@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.PrismaKyselyExtensionError = void 0;
+-const client_1 = require("@prisma/client");
++const client_1 = require("@prisma/client/extension");
+ const driver_js_1 = require("./driver.js");
+ class PrismaKyselyExtensionError extends Error {
+     constructor(message) {
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index bead5527355754c7e33104311d39ae6261acf781..e90737404674470197a83334926cdc92d1bfdbd5 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+         step((generator = generator.apply(thisArg, _arguments || [])).next());
+     });
+ };
+-import { Prisma } from "@prisma/client";
++import { Prisma } from "@prisma/client/extension";
+ import { PrismaDriver } from "./driver.js";
+ export class PrismaKyselyExtensionError extends Error {
+     constructor(message) {
