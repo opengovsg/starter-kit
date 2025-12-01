@@ -41,6 +41,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "catalog:prisma",
     "@prisma/client": "catalog:prisma",
+    "@prisma/client-runtime-utils": "catalog:prisma",
     "@t3-oss/env-core": "catalog:t3-env",
     "kysely": "^0.28.8",
     "pg": "^8.16.3",

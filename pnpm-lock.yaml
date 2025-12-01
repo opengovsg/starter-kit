@@ -53,6 +53,9 @@ catalogs:
     '@prisma/client':
       specifier: ^7.0.0
       version: 7.0.0
+    '@prisma/client-runtime-utils':
+      specifier: ^7.0.1
+      version: 7.0.1
     prisma:
       specifier: ^7.0.0
       version: 7.0.0
@@ -368,9 +371,12 @@ importers:
       '@prisma/client':
         specifier: catalog:prisma
         version: 7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
+      '@prisma/client-runtime-utils':
+        specifier: catalog:prisma
+        version: 7.0.1
       '@t3-oss/env-core':
         specifier: catalog:t3-env
-        version: 0.13.8(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(zod@4.1.13)
+        version: 0.13.8(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(zod@4.1.12)
       kysely:
         specifier: ^0.28.8
         version: 0.28.8
@@ -382,7 +388,7 @@ importers:
         version: 3.0.0(patch_hash=9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827)(@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3))
       zod:
         specifier: 'catalog:'
-        version: 4.1.13
+        version: 4.1.12
     devDependencies:
       '@acme/eslint-config':
         specifier: workspace:*
@@ -413,7 +419,7 @@ importers:
         version: 2.2.1(magicast@0.3.5)(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))
       prisma-zod-generator:
         specifier: ^2.1.2
-        version: 2.1.2(magicast@0.3.5)(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)(zod@4.1.13)
+        version: 2.1.2(magicast@0.3.5)(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)(zod@4.1.12)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1397,6 +1403,9 @@ packages:
 
   '@prisma/client-runtime-utils@7.0.0':
     resolution: {integrity: sha512-PAiFgMBPrLSaakBwUpML5NevipuKSL3rtNr8pZ8CZ3OBXo0BFcdeGcBIKw/CxJP6H4GNa4+l5bzJPrk8Iq6tDw==}
+
+  '@prisma/client-runtime-utils@7.0.1':
+    resolution: {integrity: sha512-R26BVX9D/iw4toUmZKZf3jniM/9pMGHHdZN5LVP2L7HNiCQKNQQx/9LuMtjepbgRqSqQO3oHN0yzojHLnKTGEw==}
 
   '@prisma/client@7.0.0':
     resolution: {integrity: sha512-FM1NtJezl0zH3CybLxcbJwShJt7xFGSRg+1tGhy3sCB8goUDnxnBR+RC/P35EAW8gjkzx7kgz7bvb0MerY2VSw==}
@@ -7216,6 +7225,8 @@ snapshots:
 
   '@prisma/client-runtime-utils@7.0.0': {}
 
+  '@prisma/client-runtime-utils@7.0.1': {}
+
   '@prisma/client@7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@prisma/client-runtime-utils': 7.0.0
@@ -8690,12 +8701,6 @@ snapshots:
       typescript: 5.9.3
       valibot: 1.1.0(typescript@5.9.3)
       zod: 4.1.12
-
-  '@t3-oss/env-core@0.13.8(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(zod@4.1.13)':
-    optionalDependencies:
-      typescript: 5.9.3
-      valibot: 1.1.0(typescript@5.9.3)
-      zod: 4.1.13
 
   '@t3-oss/env-nextjs@0.13.8(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(zod@4.1.12)':
     dependencies:
@@ -11899,7 +11904,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  prisma-zod-generator@2.1.2(magicast@0.3.5)(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)(zod@4.1.13):
+  prisma-zod-generator@2.1.2(magicast@0.3.5)(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)(zod@4.1.12):
     dependencies:
       '@prisma/client': 7.0.0(prisma@7.0.0(@types/react@19.2.4)(magicast@0.3.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
       '@prisma/generator-helper': 7.0.0
@@ -11915,7 +11920,7 @@ snapshots:
       node-fetch: 3.3.2
       prettier: 3.6.2
       tslib: 2.8.1
-      zod: 4.1.13
+      zod: 4.1.12
     transitivePeerDependencies:
       - magicast
       - prisma
