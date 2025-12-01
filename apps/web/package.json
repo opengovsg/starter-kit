@@ -14,6 +14,7 @@
     "with-env": "dotenv -e ../../.env --",
     "test": "vitest",
     "storybook": "CI=1 storybook dev -p 6006",
+    "docker": "docker-compose up",
     "build-storybook": "CI=1 storybook build"
   },
   "dependencies": {
