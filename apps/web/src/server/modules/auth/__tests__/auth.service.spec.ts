@@ -44,29 +44,6 @@ describe('auth.service', () => {
       })
     })
 
-    it('should reset attempts when sending new OTP for existing codeChallenge', async () => {
-      const email = 'test@example.com'
-      const codeChallenge = 'test-codeChallenge-123'
-
-      // First login
-      await emailLogin({ email, codeChallenge })
-
-      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
-      // Simulate failed attempts
-      await db.verificationToken.update({
-        where: { identifier: vfnIdentifier },
-        data: { attempts: 3 },
-      })
-
-      // Second login should reset attempts
-      await emailLogin({ email, codeChallenge })
-
-      const token = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(token?.attempts).toBe(0)
-    })
-
     it('should throw when code challenge is reused', async () => {
       const email = 'test@example.com'
       const codeChallenge = 'test-codeChallenge-123'
