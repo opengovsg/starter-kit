@@ -20,7 +20,7 @@ export const VerificationStep = () => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
-  const { vfnStepData, timer, setVfnStepData, resetTimer, newChallenge, getVerifier } = useSignInWizard()
+  const { vfnStepData, timer, setVfnStepData, resetTimer, newChallenge, getVerifier, clearVerifierMap } = useSignInWizard()
   const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
@@ -40,6 +40,7 @@ export const VerificationStep = () => {
   const verifyOtpMutation = useMutation(
     trpc.auth.email.verifyOtp.mutationOptions({
       onSuccess: () => {
+        clearVerifierMap()
         router.refresh()
       },
       onError: (error) => {

@@ -13,6 +13,7 @@ interface SignInState {
   setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
   getVerifier: (challenge: string) => string | undefined
   newChallenge: () => string
+  clearVerifierMap: () => void
 }
 
 export const SignInWizardContext = createContext<SignInState | undefined>(
@@ -62,6 +63,9 @@ export const SignInWizardProvider = ({
   const getVerifier = useCallback((challenge: string)=>{
     return challengeToVerifierMap.current.get(challenge)
   }, []) // stable reference no deps
+  const clearVerifierMap = useCallback(()=>{
+    challengeToVerifierMap.current.clear()
+  }, []) // stable reference no deps
 
   const resetTimer = () => setTimer(delayForResendSeconds)
 
@@ -80,7 +84,8 @@ export const SignInWizardProvider = ({
         timer,
         resetTimer,
         newChallenge,
-        getVerifier
+        getVerifier,
+        clearVerifierMap
       }}
     >
       {children}
