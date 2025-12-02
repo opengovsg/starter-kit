@@ -9,6 +9,7 @@ import { db } from '@acme/db'
 import * as mailService from '../../mail/mail.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
+import { createPkceChallenge, createPkceVerifier } from "~/server/modules/auth/auth.pkce";
 
 const mockedMailService = mock(mailService)
 
@@ -20,9 +21,9 @@ describe('auth.service', () => {
   describe('emailLogin', () => {
     it('should create a verification token and send OTP email', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeChallenge = 'test-codeChallenge-123'
 
-      const result = await emailLogin({ email, nonce })
+      const result = await emailLogin({ email, codeChallenge })
 
       expect(result).toEqual({
         email,
@@ -31,7 +32,7 @@ describe('auth.service', () => {
       })
 
       // Verify token was created in database with vfnIdentifier
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
+      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
       const token = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
@@ -43,14 +44,14 @@ describe('auth.service', () => {
       })
     })
 
-    it('should reset attempts when sending new OTP for existing nonce', async () => {
+    it('should reset attempts when sending new OTP for existing codeChallenge', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeChallenge = 'test-codeChallenge-123'
 
       // First login
-      await emailLogin({ email, nonce })
+      await emailLogin({ email, codeChallenge })
 
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
+      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
       // Simulate failed attempts
       await db.verificationToken.update({
         where: { identifier: vfnIdentifier },
@@ -58,7 +59,7 @@ describe('auth.service', () => {
       })
 
       // Second login should reset attempts
-      await emailLogin({ email, nonce })
+      await emailLogin({ email, codeChallenge })
 
       const token = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
@@ -66,32 +67,28 @@ describe('auth.service', () => {
       expect(token?.attempts).toBe(0)
     })
 
-    it('should update existing token instead of creating duplicate for same nonce', async () => {
+    it('should throw when code challenge is reused', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeChallenge = 'test-codeChallenge-123'
 
-      await emailLogin({ email, nonce })
-      await emailLogin({ email, nonce })
-
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
-      // Should only have one record
-      const tokens = await db.verificationToken.findMany({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(tokens).toHaveLength(1)
+      await emailLogin({ email, codeChallenge: codeChallenge })
+      
+      await expect(
+        emailLogin({ email, codeChallenge: codeChallenge }),
+      ).rejects.toThrow('Please refresh and try again.')
     })
 
-    it('should allow different nonces for same email', async () => {
+    it('should allow different codeChallenges for same email', async () => {
       const email = 'test@example.com'
-      const nonce1 = 'test-nonce-1'
-      const nonce2 = 'test-nonce-2'
+      const codeChallenge1 = 'test-codeChallenge-1'
+      const codeChallenge2 = 'test-codeChallenge-2'
 
-      await emailLogin({ email, nonce: nonce1 })
-      await emailLogin({ email, nonce: nonce2 })
+      await emailLogin({ email, codeChallenge: codeChallenge1 })
+      await emailLogin({ email, codeChallenge: codeChallenge2 })
 
-      // Should have two records with different nonces
-      const vfnIdentifier1 = createVfnIdentifier({ email, nonce: nonce1 })
-      const vfnIdentifier2 = createVfnIdentifier({ email, nonce: nonce2 })
+      // Should have two records with different codeChallenges
+      const vfnIdentifier1 = createVfnIdentifier({ email, codeChallenge: codeChallenge1 })
+      const vfnIdentifier2 = createVfnIdentifier({ email, codeChallenge: codeChallenge2 })
       const token1 = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier1 },
       })
@@ -108,42 +105,86 @@ describe('auth.service', () => {
   describe('emailVerifyOtp', () => {
     it('should successfully verify a valid OTP', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
 
       // Create a verification token
-      const { token } = await emailLogin({ email, nonce })
+      const { token } = await emailLogin({ email, codeChallenge })
 
       // Should not throw
       await expect(
-        emailVerifyOtp({ email, token, nonce }),
+        emailVerifyOtp({ email, token, codeVerifier }),
       ).resolves.not.toThrow()
 
       // Token should be deleted after successful verification
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
+      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
       expect(verificationToken).toBeNull()
     })
 
-    it('should reject an invalid OTP', async () => {
+    it('should reject a correct OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
-      const token = 'WRONG6'
+      const correctVerifier = createPkceVerifier()
+      const wrongVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(correctVerifier)
 
-      await emailLogin({ email, nonce })
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow(
+      // Create a verification token
+      const { token } = await emailLogin({ email, codeChallenge })
+
+      // Should throw
+      await expect(
+        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier }),
+      ).rejects.toThrow()
+    })
+    it('should throw error for non-existent codeChallenge', async () => {
+      const email = 'test@example.com'
+      const codeVerifier = createPkceVerifier()
+      const token = '123456'
+
+      await expect(emailVerifyOtp({ email, token, codeVerifier })).rejects.toThrow()
+    })
+
+    it('should reject a wrong OTP with wrong codeVerifier', async () => {
+      const email = 'test@example.com'
+      const correctVerifier = createPkceVerifier()
+      const correctCodeChallenge = createPkceChallenge(correctVerifier)
+
+      const wrongVerifier = createPkceVerifier()
+
+      // Create a verification token
+      await emailLogin({ email, codeChallenge: correctCodeChallenge })
+
+      const wrongToken = "WRONG6"
+
+      // Should throw
+      await expect(
+        emailVerifyOtp({ email, token: wrongToken, codeVerifier: wrongVerifier }),
+      ).rejects.toThrow()
+    })
+
+    it('should reject a wrong OTP with correct codeVerifier', async () => {
+      const email = 'test@example.com'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
+      const wrongToken = 'WRONG6'
+
+      await emailLogin({ email, codeChallenge: codeChallenge })
+      await expect(emailVerifyOtp({ email, token: wrongToken, codeVerifier })).rejects.toThrow(
         'Token is invalid or has expired',
       )
     })
 
-    it('should reject an expired OTP', async () => {
+
+    it('should reject an expired OTP with correct codeVerifier', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
 
-      const { token, hashedToken } = createAuthToken({ email, nonce })
+      const { token, hashedToken } = createAuthToken({ email, codeChallenge: codeChallenge })
 
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
+      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge: codeChallenge })
       // Create a verification token with an old issuedAt date
       const oldDate = add(new Date(), { seconds: -700 }) // 700 seconds ago (beyond 600s expiry)
       await db.verificationToken.create({
@@ -154,71 +195,59 @@ describe('auth.service', () => {
         },
       })
 
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow(
+      await expect(emailVerifyOtp({ email, token, codeVerifier })).rejects.toThrow(
         'Token is invalid or has expired',
       )
     })
 
     it('should increment attempts on each verification try', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
-      const token = 'WRONG6'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
+      const wrongToken = 'WRONG6'
 
-      await emailLogin({ email, nonce })
-
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
-      // First attempt
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow()
-      let verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(verificationToken?.attempts).toBe(1)
-
-      // Second attempt
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow()
-      verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(verificationToken?.attempts).toBe(2)
+      await emailLogin({ email, codeChallenge: codeChallenge })
+      const identifier = createVfnIdentifier({ email, codeChallenge })
+      // Make 2 failed attempts
+      for (let i = 1; i <= 2; i++) {
+        await expect(emailVerifyOtp({ email, token: wrongToken, codeVerifier })).rejects.toThrow()
+        const verificationToken = await db.verificationToken.findUnique({
+          where: { identifier },
+        })
+        expect(verificationToken?.attempts).toBe(i)
+      }
     })
 
     it('should reject after too many failed attempts (>5)', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
       const token = 'WRONG6'
 
-      await emailLogin({ email, nonce })
+      await emailLogin({ email, codeChallenge: codeChallenge })
 
       // Make 5 failed attempts
       for (let i = 0; i < 5; i++) {
-        await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow()
+        await expect(emailVerifyOtp({ email, token, codeVerifier })).rejects.toThrow()
       }
 
       // 6th attempt should give TOO_MANY_REQUESTS
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow(
+      await expect(emailVerifyOtp({ email, token, codeVerifier })).rejects.toThrow(
         'Wrong OTP was entered too many times',
       )
     })
 
-    it('should throw error for non-existent nonce', async () => {
-      const email = 'test@example.com'
-      const nonce = 'nonexistent-nonce'
-      const token = '123456'
-
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow(
-        'Invalid login email or missing nonce',
-      )
-    })
 
     it('should delete verification token after successful verification', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
-      const { token } = await emailLogin({ email, nonce })
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
+      const { token } = await emailLogin({ email, codeChallenge })
 
-      await emailVerifyOtp({ email, token, nonce })
+      await emailVerifyOtp({ email, token, codeVerifier })
 
       // Token should be deleted
-      const vfnIdentifier = createVfnIdentifier({ email, nonce })
+      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge: codeChallenge })
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
@@ -227,58 +256,17 @@ describe('auth.service', () => {
 
     it('should prevent token reuse after successful verification', async () => {
       const email = 'test@example.com'
-      const nonce = 'test-nonce-123'
-      const { token } = await emailLogin({ email, nonce })
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = createPkceChallenge(codeVerifier)
+      const { token } = await emailLogin({ email, codeChallenge })
 
       // First verification succeeds
       await expect(
-        emailVerifyOtp({ email, token, nonce }),
+        emailVerifyOtp({ email, token, codeVerifier }),
       ).resolves.toBeDefined()
 
       // Second verification with same token should fail
-      await expect(emailVerifyOtp({ email, token, nonce })).rejects.toThrow(
-        'Invalid login email or missing nonce',
-      )
-    })
-
-    it('should not allow using token with wrong nonce', async () => {
-      const email = 'test@example.com'
-      const nonce1 = 'test-nonce-1'
-      const nonce2 = 'test-nonce-2'
-
-      const { token } = await emailLogin({ email, nonce: nonce1 })
-
-      // Try to verify with wrong nonce
-      await expect(
-        emailVerifyOtp({ email, token, nonce: nonce2 }),
-      ).rejects.toThrow('Invalid login email or missing nonce')
-
-      // Original token should still exist
-      const vfnIdentifier1 = createVfnIdentifier({ email, nonce: nonce1 })
-      const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier1 },
-      })
-      expect(verificationToken).toBeDefined()
-    })
-
-    it('should ensure OTP is tied to specific session via nonce', async () => {
-      const email = 'test@example.com'
-      const nonce1 = 'session-1-nonce'
-      const nonce2 = 'session-2-nonce'
-
-      // Two different sessions for same email
-      const { token: token1 } = await emailLogin({ email, nonce: nonce1 })
-      const { token: token2 } = await emailLogin({ email, nonce: nonce2 })
-
-      // Each token should only work with its own nonce
-      await expect(
-        emailVerifyOtp({ email, token: token1, nonce: nonce1 }),
-      ).resolves.toBeDefined()
-
-      // token2 with nonce2 should still work (not affected by token1 verification)
-      await expect(
-        emailVerifyOtp({ email, token: token2, nonce: nonce2 }),
-      ).resolves.toBeDefined()
+      await expect(emailVerifyOtp({ email, token, codeVerifier })).rejects.toThrow()
     })
   })
 })

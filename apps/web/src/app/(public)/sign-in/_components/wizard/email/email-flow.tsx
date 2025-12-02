@@ -8,8 +8,8 @@ import { VerificationStep } from './verification-step'
 export const EmailFlow = () => {
   const { setVfnStepData, vfnStepData } = useSignInWizard()
 
-  const handleOnSuccessEmail = ({ email, otpPrefix }: VfnStepData) => {
-    setVfnStepData({ email, otpPrefix })
+  const handleOnSuccessEmail = ({ email, otpPrefix, codeChallenge }: VfnStepData) => {
+    setVfnStepData({ email, otpPrefix, codeChallenge })
   }
 
   if (vfnStepData?.email) {

@@ -1,14 +1,18 @@
 'use client'
 
-import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import type { Dispatch, PropsWithChildren, SetStateAction } from 'react';
+import { useCallback, useRef} from 'react'
 import { createContext, useContext, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
+import { createPkceChallenge, createPkceVerifier } from "~/server/modules/auth/auth.pkce";
 
 interface SignInState {
   timer: number
   resetTimer: () => void
   vfnStepData: VfnStepData | undefined
   setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
+  getVerifier: (challenge: string) => string | undefined
+  newChallenge: () => string
 }
 
 export const SignInWizardContext = createContext<SignInState | undefined>(
@@ -38,6 +42,7 @@ interface SignInWizardProviderProps {
 export interface VfnStepData {
   email: string
   otpPrefix: string
+  codeChallenge: string
 }
 
 export const SignInWizardProvider = ({
@@ -46,6 +51,17 @@ export const SignInWizardProvider = ({
 }: PropsWithChildren<SignInWizardProviderProps>) => {
   const [vfnStepData, setVfnStepData] = useState<VfnStepData>()
   const [timer, setTimer] = useState(delayForResendSeconds)
+
+  const challengeToVerifierMap = useRef(new Map<string, string>())
+  const newChallenge = useCallback(()=>{
+    const verifier = createPkceVerifier()
+    const challenge = createPkceChallenge(verifier)
+    challengeToVerifierMap.current.set(challenge, verifier)
+    return challenge
+  }, []) // stable reference no deps
+  const getVerifier = useCallback((challenge: string)=>{
+    return challengeToVerifierMap.current.get(challenge)
+  }, []) // stable reference no deps
 
   const resetTimer = () => setTimer(delayForResendSeconds)
 
@@ -63,6 +79,8 @@ export const SignInWizardProvider = ({
         setVfnStepData,
         timer,
         resetTimer,
+        newChallenge,
+        getVerifier
       }}
     >
       {children}

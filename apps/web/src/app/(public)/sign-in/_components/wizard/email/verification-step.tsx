@@ -20,7 +20,8 @@ export const VerificationStep = () => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
-  const { vfnStepData, timer, setVfnStepData, resetTimer } = useSignInWizard()
+  const { vfnStepData, timer, setVfnStepData, resetTimer, newChallenge, getVerifier } = useSignInWizard()
+  const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
     () => setShowOtpDelayMessage(true),
@@ -29,7 +30,7 @@ export const VerificationStep = () => {
   )
 
   const { control, handleSubmit, resetField, setFocus, setError } = useForm({
-    resolver: zodResolver(emailVerifyOtpSchema),
+    resolver: zodResolver(emailVerifyOtpSchema.omit({codeVerifier: true})),
     defaultValues: {
       email: vfnStepData?.email ?? '',
       token: '',
@@ -56,22 +57,20 @@ export const VerificationStep = () => {
   const resendOtpMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
       onError: (error) => setError('token', { message: error.message }),
-      trpc: {
-        context: {
-          // Need to set session data for nonce
-          skipStreaming: true,
-        },
-      },
     }),
   )
 
   const handleResendOtp = () => {
     if (timer > 0 || !vfnStepData?.email) return
     return resendOtpMutation.mutate(
-      { email: vfnStepData.email },
+      { email: vfnStepData.email, codeChallenge: newChallenge() },
       {
-        onSuccess: ({ email, otpPrefix }) => {
-          setVfnStepData({ email, otpPrefix })
+        onSuccess: (res, req) => {
+          setVfnStepData({
+            email: res.email,
+            otpPrefix: res.otpPrefix,
+            codeChallenge: req.codeChallenge
+          })
           resetField('token')
           setFocus('token')
           // On success, restart the timer before this can be called again.
@@ -86,7 +85,7 @@ export const VerificationStep = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((values) => verifyOtpMutation.mutate(values))}
+      onSubmit={handleSubmit(({email, token}) => verifyOtpMutation.mutate({email, token, codeVerifier}))}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller
