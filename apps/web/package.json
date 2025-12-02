@@ -62,7 +62,7 @@
     "@tanstack/react-query-devtools": "catalog:react-query5",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
-    "@types/react": "19.2.4",
+    "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitest/browser": "catalog:vitest",
     "@vitest/browser-playwright": "catalog:vitest",
