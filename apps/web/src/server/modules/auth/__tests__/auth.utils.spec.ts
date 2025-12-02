@@ -75,7 +75,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
       }).token)
 
-      expect(new Set(tokens).size).equals(N)
+      expect(new Set(tokens).size).toBe(N)
     })
 
     it('should generate different tokens for the same email and codeChallenge on multiple calls', () => {
