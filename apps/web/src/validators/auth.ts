@@ -17,7 +17,7 @@ export const emailSignInSchema = z.object({
       }
     },
     {
-      message: 'Must be a valid base64-encoded SHA-256 hash (32 bytes)',
+      message: 'Must be a valid base64url-encoded SHA-256 hash (32 bytes)',
     },
   ),
 })
