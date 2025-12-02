@@ -1,9 +1,5 @@
 import '../../mail/__mocks__/mail.service'
 
-import {
-  createPkceChallenge,
-  createPkceVerifier,
-} from '~server/modules/auth/auth.pkce'
 import { resetTables } from '~tests/db/utils'
 import { add } from 'date-fns/add'
 import { mock } from 'vitest-mock-extended'
@@ -11,6 +7,7 @@ import { mock } from 'vitest-mock-extended'
 import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
+import { createPkceChallenge, createPkceVerifier } from '../auth.pkce'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
