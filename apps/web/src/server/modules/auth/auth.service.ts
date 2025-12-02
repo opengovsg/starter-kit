@@ -41,7 +41,7 @@ export const emailLogin = async ({
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2025'
+      error.code === 'P2002'
     ) {
       // That means a duplicate code challenge was with the same email
       throw new TRPCError({
