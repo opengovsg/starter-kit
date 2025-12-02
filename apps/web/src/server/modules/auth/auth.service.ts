@@ -6,6 +6,7 @@ import { db } from '@acme/db'
 import { Prisma } from '@acme/db/client'
 
 import { env } from '~/env'
+import { createPkceChallenge } from '~/server/modules/auth/auth.pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
 import {
@@ -14,7 +15,6 @@ import {
   createVfnPrefix,
   isValidToken,
 } from './auth.utils'
-import { createPkceChallenge } from "~/server/modules/auth/auth.pkce";
 
 export const emailLogin = async ({
   email,
@@ -28,7 +28,7 @@ export const emailLogin = async ({
 
   let issuedAt: Date
   try {
-    ({ issuedAt } = await db.verificationToken.create({
+    ;({ issuedAt } = await db.verificationToken.create({
       data: {
         identifier,
         token: hashedToken,
@@ -50,9 +50,7 @@ export const emailLogin = async ({
       })
     }
     throw error
-
   }
-
 
   const url = new URL(getBaseUrl())
   const otpPrefix = createVfnPrefix() // for frontend display purposes: helps user to match OTP to session
@@ -139,7 +137,8 @@ export const emailVerifyOtp = async ({
       // Or user is trying to reuse an OTP
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
+        message:
+          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
       })
     }
     throw error

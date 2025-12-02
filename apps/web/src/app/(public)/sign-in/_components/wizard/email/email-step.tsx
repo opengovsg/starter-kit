@@ -7,10 +7,10 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { TextField } from '@acme/ui/text-field'
 
-import type { VfnStepData } from '../context';
-import { useSignInWizard } from '../context'
+import type { VfnStepData } from '../context'
 import { useTRPC } from '~/trpc/react'
 import { emailSignInSchema } from '~/validators/auth'
+import { useSignInWizard } from '../context'
 
 interface EmailStepProps {
   onNext: ({ email, otpPrefix, codeChallenge }: VfnStepData) => void
@@ -18,10 +18,10 @@ interface EmailStepProps {
 export const EmailStep = ({ onNext }: EmailStepProps) => {
   const { newChallenge } = useSignInWizard()
   const { handleSubmit, setError, control } = useForm({
-    resolver: zodResolver(emailSignInSchema.omit({codeChallenge: true})),
+    resolver: zodResolver(emailSignInSchema.omit({ codeChallenge: true })),
     defaultValues: {
       email: '',
-    }
+    },
   })
 
   const [queryError] = useQueryState('error', { defaultValue: '' })
@@ -36,7 +36,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
 
   const loginMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
-      onSuccess: (res, req)=>{
+      onSuccess: (res, req) => {
         return onNext({
           email: res.email,
           otpPrefix: res.otpPrefix,
@@ -50,7 +50,9 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(({ email }) => loginMutation.mutate({ email, codeChallenge: newChallenge() }))}
+      onSubmit={handleSubmit(({ email }) =>
+        loginMutation.mutate({ email, codeChallenge: newChallenge() }),
+      )}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller

@@ -20,7 +20,15 @@ export const VerificationStep = () => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
-  const { vfnStepData, timer, setVfnStepData, resetTimer, newChallenge, getVerifier, clearVerifierMap } = useSignInWizard()
+  const {
+    vfnStepData,
+    timer,
+    setVfnStepData,
+    resetTimer,
+    newChallenge,
+    getVerifier,
+    clearVerifierMap,
+  } = useSignInWizard()
   const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
@@ -30,7 +38,7 @@ export const VerificationStep = () => {
   )
 
   const { control, handleSubmit, resetField, setFocus, setError } = useForm({
-    resolver: zodResolver(emailVerifyOtpSchema.omit({codeVerifier: true})),
+    resolver: zodResolver(emailVerifyOtpSchema.omit({ codeVerifier: true })),
     defaultValues: {
       email: vfnStepData?.email ?? '',
       token: '',
@@ -70,7 +78,7 @@ export const VerificationStep = () => {
           setVfnStepData({
             email: res.email,
             otpPrefix: res.otpPrefix,
-            codeChallenge: req.codeChallenge
+            codeChallenge: req.codeChallenge,
           })
           resetField('token')
           setFocus('token')
@@ -86,7 +94,9 @@ export const VerificationStep = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(({email, token}) => verifyOtpMutation.mutate({email, token, codeVerifier}))}
+      onSubmit={handleSubmit(({ email, token }) =>
+        verifyOtpMutation.mutate({ email, token, codeVerifier }),
+      )}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller

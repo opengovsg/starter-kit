@@ -1,7 +1,7 @@
-import {scryptSync, timingSafeEqual} from 'crypto'
-import {customAlphabet} from 'nanoid'
+import { scryptSync, timingSafeEqual } from 'crypto'
+import { customAlphabet } from 'nanoid'
 
-import {OTP_LENGTH, OTP_PREFIX_LENGTH} from '~/validators/auth'
+import { OTP_LENGTH, OTP_PREFIX_LENGTH } from '~/validators/auth'
 
 // Alphabet space with ambiguous characters removed.
 const OTP_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
@@ -55,7 +55,7 @@ export const isValidToken = ({
   try {
     return timingSafeEqual(
       Buffer.from(hash),
-      Buffer.from(createTokenHash({token, email, codeChallenge})),
+      Buffer.from(createTokenHash({ token, email, codeChallenge })),
     )
   } catch {
     // In case of any error (e.g. buffer size mismatch), return false
@@ -72,7 +72,7 @@ export const createAuthToken = ({
   codeChallenge: string
 }) => {
   const token = createVfnToken()
-  const hashedToken = createTokenHash({token, email, codeChallenge})
+  const hashedToken = createTokenHash({ token, email, codeChallenge })
 
   return {
     token,

@@ -1,10 +1,13 @@
 'use client'
 
-import type { Dispatch, PropsWithChildren, SetStateAction } from 'react';
-import { useCallback, useRef} from 'react'
-import { createContext, useContext, useState } from 'react'
+import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import { createContext, useCallback, useContext, useRef, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
-import { createPkceChallenge, createPkceVerifier } from "~/server/modules/auth/auth.pkce";
+
+import {
+  createPkceChallenge,
+  createPkceVerifier,
+} from '~/server/modules/auth/auth.pkce'
 
 interface SignInState {
   timer: number
@@ -54,16 +57,16 @@ export const SignInWizardProvider = ({
   const [timer, setTimer] = useState(delayForResendSeconds)
 
   const challengeToVerifierMap = useRef(new Map<string, string>())
-  const newChallenge = useCallback(()=>{
+  const newChallenge = useCallback(() => {
     const verifier = createPkceVerifier()
     const challenge = createPkceChallenge(verifier)
     challengeToVerifierMap.current.set(challenge, verifier)
     return challenge
   }, []) // stable reference no deps
-  const getVerifier = useCallback((challenge: string)=>{
+  const getVerifier = useCallback((challenge: string) => {
     return challengeToVerifierMap.current.get(challenge)
   }, []) // stable reference no deps
-  const clearVerifierMap = useCallback(()=>{
+  const clearVerifierMap = useCallback(() => {
     challengeToVerifierMap.current.clear()
   }, []) // stable reference no deps
 
@@ -85,7 +88,7 @@ export const SignInWizardProvider = ({
         resetTimer,
         newChallenge,
         getVerifier,
-        clearVerifierMap
+        clearVerifierMap,
       }}
     >
       {children}
