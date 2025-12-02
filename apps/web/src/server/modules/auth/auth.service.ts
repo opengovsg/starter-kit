@@ -43,7 +43,7 @@ export const emailLogin = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
-      // That means a duplicate code challenge was with the same email
+      // That means a duplicate code challenge was used with the same email
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Please refresh and try again.',
