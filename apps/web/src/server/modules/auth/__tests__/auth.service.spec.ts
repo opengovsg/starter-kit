@@ -9,7 +9,7 @@ import { db } from '@acme/db'
 import * as mailService from '../../mail/mail.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
-import { createPkceChallenge, createPkceVerifier } from "~/server/modules/auth/auth.pkce";
+import { createPkceChallenge, createPkceVerifier } from '~server/modules/auth/auth.pkce';
 
 const mockedMailService = mock(mailService)
 
