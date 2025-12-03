@@ -1,13 +1,13 @@
 'use client'
 
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import { createContext, useContext, useRef, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 
 import {
-  createPkceChallenge,
-  createPkceVerifier,
-} from '~/server/modules/auth/auth.pkce'
+  browserCreatePkceChallenge,
+  browserCreatePkceVerifier,
+} from '~/lib/pkce/browser-pkce'
 
 interface SignInState {
   timer: number
@@ -15,7 +15,7 @@ interface SignInState {
   vfnStepData: VfnStepData | undefined
   setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
   getVerifier: (challenge: string) => string | undefined
-  newChallenge: () => string
+  newChallenge: () => Promise<string>
   clearVerifierMap: () => void
 }
 
@@ -57,18 +57,18 @@ export const SignInWizardProvider = ({
   const [timer, setTimer] = useState(delayForResendSeconds)
 
   const challengeToVerifierMap = useRef(new Map<string, string>())
-  const newChallenge = useCallback(() => {
-    const verifier = createPkceVerifier()
-    const challenge = createPkceChallenge(verifier)
+  const newChallenge = async () => {
+    const verifier = browserCreatePkceVerifier()
+    const challenge = await browserCreatePkceChallenge(verifier)
     challengeToVerifierMap.current.set(challenge, verifier)
     return challenge
-  }, []) // stable reference no deps
-  const getVerifier = useCallback((challenge: string) => {
+  }
+  const getVerifier = (challenge: string) => {
     return challengeToVerifierMap.current.get(challenge)
-  }, []) // stable reference no deps
-  const clearVerifierMap = useCallback(() => {
+  }
+  const clearVerifierMap = () => {
     challengeToVerifierMap.current.clear()
-  }, []) // stable reference no deps
+  }
 
   const resetTimer = () => setTimer(delayForResendSeconds)
 

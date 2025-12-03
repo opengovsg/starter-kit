@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@opengovsg/oui/button'
 import { useMutation } from '@tanstack/react-query'
@@ -15,8 +15,11 @@ import { useSignInWizard } from '../context'
 interface EmailStepProps {
   onNext: ({ email, otpPrefix, codeChallenge }: VfnStepData) => void
 }
+
 export const EmailStep = ({ onNext }: EmailStepProps) => {
   const { newChallenge } = useSignInWizard()
+  const [newChallengePending, setNewChallengePending] = useState(false)
+
   const { handleSubmit, setError, control } = useForm({
     resolver: zodResolver(emailSignInSchema.omit({ codeChallenge: true })),
     defaultValues: {
@@ -47,12 +50,23 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     }),
   )
 
+  const isPending = loginMutation.isPending || newChallengePending
+
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(({ email }) =>
-        loginMutation.mutate({ email, codeChallenge: newChallenge() }),
-      )}
+      onSubmit={handleSubmit(({ email }) => {
+        if (isPending) return
+        setNewChallengePending(true)
+        newChallenge()
+          .then((codeChallenge) => {
+            loginMutation.mutate({ email, codeChallenge })
+          })
+          .catch(console.error)
+          .finally(() => {
+            setNewChallengePending(false)
+          })
+      })}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller
@@ -72,7 +86,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
           />
         )}
       />
-      <Button size="sm" isPending={loginMutation.isPending} type="submit">
+      <Button size="sm" isPending={isPending} type="submit">
         Get OTP
       </Button>
     </form>

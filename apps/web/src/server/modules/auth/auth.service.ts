@@ -6,7 +6,7 @@ import { db } from '@acme/db'
 import { Prisma } from '@acme/db/client'
 
 import { env } from '~/env'
-import { createPkceChallenge } from '~/server/modules/auth/auth.pkce'
+import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
 import {
@@ -43,6 +43,7 @@ export const emailLogin = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
+      // P2025 cant happen currently because there is no relation on verificationToken table
       // That means a duplicate code challenge was used with the same email
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -83,7 +84,7 @@ export const emailVerifyOtp = async ({
   token: string
   codeVerifier: string
 }) => {
-  const codeChallenge = createPkceChallenge(codeVerifier)
+  const codeChallenge = ssCreatePkceChallenge(codeVerifier)
   const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
 
   try {

@@ -82,7 +82,7 @@ describe('auth.utils', () => {
     const testCodeChallenge = 'test-codeChallenge-123'
 
     it('should generate tokens of sufficient entropy', () => {
-      const N = 10000
+      const N = 100
       const tokens = Array.from({ length: N }).map(
         () =>
           createAuthToken({

@@ -29,6 +29,7 @@ export const VerificationStep = () => {
     getVerifier,
     clearVerifierMap,
   } = useSignInWizard()
+  const [newChallengePending, setNewChallengePending] = useState(false)
   const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
@@ -65,28 +66,34 @@ export const VerificationStep = () => {
 
   const resendOtpMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
+      onSuccess: (res, req) => {
+        setVfnStepData({
+          email: res.email,
+          otpPrefix: res.otpPrefix,
+          codeChallenge: req.codeChallenge,
+        })
+        resetField('token')
+        setFocus('token')
+        // On success, restart the timer before this can be called again.
+        resetTimer()
+      },
       onError: (error) => setError('token', { message: error.message }),
     }),
   )
 
+  const isResendPending = resendOtpMutation.isPending || newChallengePending
   const handleResendOtp = () => {
     if (timer > 0 || !vfnStepData?.email) return
-    return resendOtpMutation.mutate(
-      { email: vfnStepData.email, codeChallenge: newChallenge() },
-      {
-        onSuccess: (res, req) => {
-          setVfnStepData({
-            email: res.email,
-            otpPrefix: res.otpPrefix,
-            codeChallenge: req.codeChallenge,
-          })
-          resetField('token')
-          setFocus('token')
-          // On success, restart the timer before this can be called again.
-          resetTimer()
-        },
-      },
-    )
+    if (isResendPending) return
+    setNewChallengePending(true)
+    newChallenge()
+      .then((codeChallenge) => {
+        resendOtpMutation.mutate({ email: vfnStepData.email, codeChallenge })
+      })
+      .catch(console.error)
+      .finally(() => {
+        setNewChallengePending(false)
+      })
   }
 
   if (!vfnStepData) return null
@@ -147,7 +154,7 @@ export const VerificationStep = () => {
           )}
           size="xs"
           onPress={handleResendOtp}
-          isPending={resendOtpMutation.isPending}
+          isPending={isResendPending}
           // isPending
           isDisabled={timer > 0}
           spinner={

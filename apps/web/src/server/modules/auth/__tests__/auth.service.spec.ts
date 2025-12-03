@@ -6,8 +6,11 @@ import { mock } from 'vitest-mock-extended'
 
 import { db } from '@acme/db'
 
+import {
+  ssCreatePkceChallenge,
+  ssCreatePkceVerifier,
+} from '~/lib/pkce/server-pkce'
 import * as mailService from '../../mail/mail.service'
-import { createPkceChallenge, createPkceVerifier } from '../auth.pkce'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
@@ -88,8 +91,8 @@ describe('auth.service', () => {
   describe('emailVerifyOtp', () => {
     it('should successfully verify a valid OTP', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
 
       // Create a verification token
       const { token } = await emailLogin({ email, codeChallenge })
@@ -109,9 +112,9 @@ describe('auth.service', () => {
 
     it('should reject a correct OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const correctVerifier = createPkceVerifier()
-      const wrongVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(correctVerifier)
+      const correctVerifier = ssCreatePkceVerifier()
+      const wrongVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(correctVerifier)
 
       // Create a verification token
       const { token } = await emailLogin({ email, codeChallenge })
@@ -123,7 +126,7 @@ describe('auth.service', () => {
     })
     it('should throw error for non-existent codeChallenge', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
+      const codeVerifier = ssCreatePkceVerifier()
       const token = '123456'
 
       await expect(
@@ -133,10 +136,10 @@ describe('auth.service', () => {
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const correctVerifier = createPkceVerifier()
-      const correctCodeChallenge = createPkceChallenge(correctVerifier)
+      const correctVerifier = ssCreatePkceVerifier()
+      const correctCodeChallenge = ssCreatePkceChallenge(correctVerifier)
 
-      const wrongVerifier = createPkceVerifier()
+      const wrongVerifier = ssCreatePkceVerifier()
 
       // Create a verification token
       await emailLogin({ email, codeChallenge: correctCodeChallenge })
@@ -155,8 +158,8 @@ describe('auth.service', () => {
 
     it('should reject a wrong OTP with correct codeVerifier', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const wrongToken = 'WRONG6'
 
       await emailLogin({ email, codeChallenge: codeChallenge })
@@ -167,8 +170,8 @@ describe('auth.service', () => {
 
     it('should reject an expired OTP with correct codeVerifier', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
 
       const { token, hashedToken } = createAuthToken({
         email,
@@ -196,8 +199,8 @@ describe('auth.service', () => {
 
     it('should increment attempts on each verification try', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const wrongToken = 'WRONG6'
 
       await emailLogin({ email, codeChallenge: codeChallenge })
@@ -216,8 +219,8 @@ describe('auth.service', () => {
 
     it('should reject after too many failed attempts (>5)', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const token = 'WRONG6'
 
       await emailLogin({ email, codeChallenge: codeChallenge })
@@ -237,8 +240,8 @@ describe('auth.service', () => {
 
     it('should delete verification token after successful verification', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ email, codeChallenge })
 
       await emailVerifyOtp({ email, token, codeVerifier })
@@ -256,8 +259,8 @@ describe('auth.service', () => {
 
     it('should prevent token reuse after successful verification', async () => {
       const email = 'test@example.com'
-      const codeVerifier = createPkceVerifier()
-      const codeChallenge = createPkceChallenge(codeVerifier)
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ email, codeChallenge })
 
       // First verification succeeds
