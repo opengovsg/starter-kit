@@ -35,7 +35,7 @@
     "iron-session": "^8.0.4",
     "lodash-es": "^4.17.21",
     "nanoid": "^5.1.6",
-    "next": "16.0.7",
+    "next": "catalog:next",
     "nextjs-toploader": "^3.9.17",
     "nuqs": "^2.8.2",
     "react": "catalog:react",

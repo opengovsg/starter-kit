@@ -31,15 +31,15 @@
     "@acme/eslint-config": "workspace:*",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "@types/react": "catalog:react19",
+    "@types/react": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "react": "catalog:react19",
+    "react": "catalog:react",
     "typescript": "catalog:",
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "react": "catalog:react19",
+    "react": "catalog:react",
     "zod": "catalog:"
   },
   "prettier": "@acme/prettier-config"
