@@ -16,41 +16,46 @@ export const createVfnPrefix = customAlphabet(
 
 export const createVfnIdentifier = ({
   email,
-  nonce,
+  codeChallenge,
 }: {
   email: string
-  nonce: string
+  codeChallenge: string
 }) => {
-  return `${nonce}:${email}`
+  // Use a JSON stringified array to avoid ambiguity, avoids string concatenation issues
+  return JSON.stringify([email, codeChallenge])
 }
 
 const createTokenHash = ({
   token,
   email,
-  nonce,
+  codeChallenge,
 }: {
   token: string
   email: string
-  nonce: string
+  codeChallenge: string
 }) => {
-  return scryptSync(`${nonce}${token}`, email, 64).toString('base64')
+  // email and codeChallenge are not private values, so we use them as a salt
+  const identifier = createVfnIdentifier({ email, codeChallenge })
+  // in theory we should generate a unique salt per entry, but this is sufficient for OTPs
+  return scryptSync(token, identifier, 64).toString('base64')
 }
 
+// extracted for testing
 export const isValidToken = ({
   token,
   email,
   hash,
-  nonce,
+  codeChallenge,
 }: {
   token: string
   email: string
   hash: string
-  nonce: string
+  codeChallenge: string
 }) => {
   try {
     return timingSafeEqual(
       Buffer.from(hash),
-      Buffer.from(createTokenHash({ token, email, nonce })),
+      Buffer.from(createTokenHash({ token, email, codeChallenge })),
     )
   } catch {
     // In case of any error (e.g. buffer size mismatch), return false
@@ -58,15 +63,16 @@ export const isValidToken = ({
   }
 }
 
+// extracted for testing
 export const createAuthToken = ({
   email,
-  nonce,
+  codeChallenge,
 }: {
   email: string
-  nonce: string
+  codeChallenge: string
 }) => {
   const token = createVfnToken()
-  const hashedToken = createTokenHash({ token, email, nonce })
+  const hashedToken = createTokenHash({ token, email, codeChallenge })
 
   return {
     token,
