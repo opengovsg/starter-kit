@@ -3,14 +3,30 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider        = "prisma-client"
-  output          = "../src/generated"
+  output          = "../src/generated/prisma"
   previewFeatures = ["fullTextSearchPostgres"]
   engineType      = "client"
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../src/generated/zod"
+}
+
+generator kysely {
+  provider = "prisma-kysely"
+
+  // Optionally provide a destination directory for the generated file
+  // and a filename of your choice
+  output       = "../src/generated/kysely"
+  fileName     = "types.ts"
+  // Optionally generate runtime enums to a separate file
+  enumFileName = "enums.ts"
+  readOnlyIds  = true
 }
 
 model VerificationToken {

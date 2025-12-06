@@ -121,14 +121,26 @@ export const emailVerifyOtp = async ({
       })
     }
 
+    // NOTE: You can also use `kysely` for your queries
+    // if you want more fine-grained control.
     // Valid token, delete record to prevent reuse
-    return db.verificationToken.delete({
-      where: {
-        identifier: vfnIdentifier,
-      },
-    })
+    return db.$kysely
+      .deleteFrom('VerificationToken')
+      .where('identifier', '=', vfnIdentifier)
+      .returningAll()
+      .executeTakeFirstOrThrow(
+        // NOTE: If we are unable to find the token,
+        // this means that it has been deleted between
+        // our initial query and the deletion here
+        () =>
+          new TRPCError({
+            code: 'BAD_REQUEST',
+            message:
+              'Token is invalid or has expired. Please request a new OTP.',
+          }),
+      )
   } catch (error) {
-    // see error code here: https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
+    // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'

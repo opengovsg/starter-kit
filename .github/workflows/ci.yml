@@ -54,6 +54,10 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
+
       - name: Typecheck
         run: pnpm typecheck
 # TODO: Add test CI
