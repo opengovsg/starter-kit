@@ -26,14 +26,14 @@ catalogs:
     '@prisma/client-runtime-utils': 7.0.1
     prisma: ^7.0.0
   next:
-    '@next/env': 16.0.7
-    '@next/eslint-plugin-next': 16.0.7
-    next: 16.0.7
+    '@next/env': 16.0.10
+    '@next/eslint-plugin-next': 16.0.10
+    next: 16.0.10
   react:
     '@types/react': ^19.2.7
     '@types/react-dom': ^19.2.3
-    react: ^19.2.1
-    react-dom: ^19.2.1
+    react: ^19.2.3
+    react-dom: ^19.2.3
   react-query5:
     '@tanstack/react-query': ^5.90.11
     '@tanstack/react-query-devtools': ^5.91.1
