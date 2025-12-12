@@ -22,9 +22,9 @@ catalogs:
     '@opengovsg/oui-theme': 0.0.23
   prisma:
     '@prisma/adapter-pg': ^7.0.0
-    '@prisma/client': ^7.0.0
+    '@prisma/client': ^7.1.0
     '@prisma/client-runtime-utils': 7.0.1
-    prisma: ^7.0.0
+    prisma: ^7.1.0
   next:
     '@next/env': 16.0.10
     '@next/eslint-plugin-next': 16.0.10
