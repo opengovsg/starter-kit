@@ -6,6 +6,7 @@ import { db } from '@acme/db'
 import { Prisma } from '@acme/db/client'
 
 import { env } from '~/env'
+import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
 import {
@@ -17,37 +18,43 @@ import {
 
 export const emailLogin = async ({
   email,
-  nonce,
+  codeChallenge,
 }: {
   email: string
-  nonce: string
+  codeChallenge: string
 }) => {
-  const { token, hashedToken } = createAuthToken({ email, nonce })
-  const otpPrefix = createVfnPrefix()
+  const identifier = createVfnIdentifier({ email, codeChallenge })
+  const { token, hashedToken } = createAuthToken({ email, codeChallenge })
+
+  let issuedAt: Date
+  try {
+    ;({ issuedAt } = await db.verificationToken.create({
+      data: {
+        identifier,
+        token: hashedToken,
+        issuedAt: new Date(),
+      },
+      select: {
+        issuedAt: true,
+      },
+    }))
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      // P2025 cant happen currently because there is no relation on verificationToken table
+      // That means a duplicate code challenge was used with the same email
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Please refresh and try again.',
+      })
+    }
+    throw error
+  }
 
   const url = new URL(getBaseUrl())
-
-  const vfnIdentifier = createVfnIdentifier({ email, nonce })
-
-  const { issuedAt } = await db.verificationToken.upsert({
-    where: {
-      identifier: vfnIdentifier,
-    },
-    update: {
-      token: hashedToken,
-      attempts: 0,
-      issuedAt: new Date(),
-    },
-    create: {
-      identifier: vfnIdentifier,
-      token: hashedToken,
-      issuedAt: new Date(),
-    },
-    select: {
-      issuedAt: true,
-    },
-  })
-
+  const otpPrefix = createVfnPrefix() // for frontend display purposes: helps user to match OTP to session
   const expiry = add(issuedAt, { seconds: env.OTP_EXPIRY })
   await sendMail({
     subject: `Sign in to ${url.host}`,
@@ -60,6 +67,7 @@ export const emailLogin = async ({
     recipient: email,
   })
 
+  // return email if you want to send the OTP to a different email
   return {
     token,
     email,
@@ -70,13 +78,14 @@ export const emailLogin = async ({
 export const emailVerifyOtp = async ({
   email,
   token,
-  nonce,
+  codeVerifier,
 }: {
   email: string
   token: string
-  nonce: string
+  codeVerifier: string
 }) => {
-  const vfnIdentifier = createVfnIdentifier({ email, nonce })
+  const codeChallenge = ssCreatePkceChallenge(codeVerifier)
+  const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
 
   try {
     // Not in transaction, because we do not want it to rollback
@@ -104,7 +113,7 @@ export const emailVerifyOtp = async ({
       add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
     if (
       hasExpired ||
-      !isValidToken({ token, email, nonce, hash: hashedToken.token })
+      !isValidToken({ token, email, codeChallenge, hash: hashedToken.token })
     ) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -136,10 +145,13 @@ export const emailVerifyOtp = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'
     ) {
-      // TODO: Log error, this means the nonce does not exist
+      // TODO: Log error, this means the codeChallenge does not exist
+      // Likely the user used the OTP on a different session than the one it was generated for
+      // Or user is trying to reuse an OTP
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Token is invalid or has expired. Please request a new OTP.',
+        message:
+          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
       })
     }
     throw error
