@@ -1,17 +1,16 @@
 'use client'
 
+import type { ModalProps } from '@opengovsg/oui/modal'
 import { useCallback, useEffect, useState } from 'react'
 import { Banner } from '@opengovsg/oui/banner'
 import { Button } from '@opengovsg/oui/button'
-
-import type { ModalProps } from '@acme/ui/modal'
 import {
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from '@acme/ui/modal'
+} from '@opengovsg/oui/modal'
 
 import { REQUIRE_UPDATE_EVENT } from '~/constants'
 

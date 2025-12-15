@@ -1,14 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg'
-import {
-  Kysely,
-  PostgresAdapter,
-  PostgresIntrospector,
-  PostgresQueryCompiler,
-} from 'kysely'
-import kyselyExtension from 'prisma-extension-kysely'
 
-import type { DB } from './generated/kysely/types'
 import { env } from './env'
+import { kyselyPrismaExtension } from './extensions'
 import { PrismaClient } from './generated/prisma/client'
 
 const globalForPrisma = global as unknown as {
@@ -18,17 +11,7 @@ const globalForPrisma = global as unknown as {
 const createPrisma = () => {
   const pool = new PrismaPg({ connectionString: env.DATABASE_URL })
   const prisma = new PrismaClient({ adapter: pool }).$extends(
-    kyselyExtension({
-      kysely: (driver) =>
-        new Kysely<DB>({
-          dialect: {
-            createAdapter: () => new PostgresAdapter(),
-            createDriver: () => driver,
-            createIntrospector: (db) => new PostgresIntrospector(db),
-            createQueryCompiler: () => new PostgresQueryCompiler(),
-          },
-        }),
-    }),
+    kyselyPrismaExtension,
   )
 
   return prisma

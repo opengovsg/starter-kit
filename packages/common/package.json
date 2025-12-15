@@ -1,0 +1,29 @@
+{
+  "name": "@acme/common",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./format": "./src/format.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "devDependencies": {
+    "@acme/eslint-config": "workspace:*",
+    "@acme/prettier-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/prettier-config",
+  "dependencies": {
+    "@date-fns/tz": "^1.4.1",
+    "date-fns": "^4.1.0"
+  }
+}

@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./empty-placeholder": "./src/empty-placeholder.tsx",
+    "./svgs": "./src/svgs/index.ts",
     "./toast": "./src/toast.tsx",
     "./link-button": "./src/link-button.tsx",
     "./text-field": "./src/text-field.tsx",
@@ -17,7 +19,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "catalog:",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
     "react-aria": "^3.44.0",

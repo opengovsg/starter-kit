@@ -11,7 +11,7 @@ import { SignInWizard } from './wizard'
  */
 export const SignInPageComponent = () => {
   return (
-    <div className="lg:from-interaction-main-subtle-default flex flex-1 lg:bg-gradient-to-r lg:from-50% lg:to-white lg:to-50%">
+    <div className="lg:from-interaction-main-subtle-default flex flex-1 lg:bg-linear-to-r lg:from-50% lg:to-white lg:to-50%">
       <div className="mx-auto flex flex-1 flex-col gap-2 lg:container lg:grid lg:grid-cols-12 lg:gap-4">
         <div className="bg-interaction-main-subtle-default col-span-4 min-h-55 max-sm:hidden lg:col-span-7 lg:h-full">
           <div className="max-lg:px-4">{/* Insert relevant image here */}</div>

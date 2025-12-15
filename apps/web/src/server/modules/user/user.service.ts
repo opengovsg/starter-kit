@@ -39,3 +39,10 @@ export const upsertUserAndAccountByEmail = async (email: string) => {
     return user
   })
 }
+
+export const getUserById = async (userId: string) => {
+  return await db.user.findUnique({
+    where: { id: userId },
+    select: defaultUserSelect,
+  })
+}

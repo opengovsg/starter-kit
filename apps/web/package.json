@@ -18,10 +18,11 @@
     "build-storybook": "CI=1 storybook build"
   },
   "dependencies": {
+    "@acme/common": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "catalog:",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
     "@t3-oss/env-nextjs": "^0.13.8",

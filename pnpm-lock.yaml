@@ -9,6 +9,9 @@ catalogs:
     '@eslint/js':
       specifier: ^9.39.1
       version: 9.39.1
+    '@hookform/resolvers':
+      specifier: ^5.2.2
+      version: 5.2.2
     '@types/node':
       specifier: ^24.10.1
       version: 24.10.1
@@ -31,8 +34,8 @@ catalogs:
       specifier: 1.13.0
       version: 1.13.0
     react-hook-form:
-      specifier: ^7.67.0
-      version: 7.66.0
+      specifier: ^7.68.0
+      version: 7.69.0
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
@@ -48,11 +51,11 @@ catalogs:
       version: 16.0.10
   oui:
     '@opengovsg/oui':
-      specifier: 0.0.23
-      version: 0.0.23
+      specifier: 0.0.31
+      version: 0.0.31
     '@opengovsg/oui-theme':
-      specifier: 0.0.23
-      version: 0.0.23
+      specifier: 0.0.31
+      version: 0.0.31
   prisma:
     '@prisma/adapter-pg':
       specifier: ^7.0.0
@@ -182,6 +185,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@acme/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@acme/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -192,14 +198,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/validators
       '@hookform/resolvers':
-        specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.66.0(react@19.2.3))
+        specifier: 'catalog:'
+        version: 5.2.2(react-hook-form@7.69.0(react@19.2.3))
       '@opengovsg/oui':
         specifier: catalog:oui
-        version: 0.0.23(@opengovsg/oui-theme@0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 0.0.31(@opengovsg/oui-theme@0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@opengovsg/oui-theme':
         specifier: catalog:oui
-        version: 0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
+        version: 0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12)
@@ -235,13 +241,13 @@ importers:
         version: 5.1.6
       next:
         specifier: catalog:next
-        version: 16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       nextjs-toploader:
         specifier: ^3.9.17
-        version: 3.9.17(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 3.9.17(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       nuqs:
         specifier: ^2.8.2
-        version: 2.8.2(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+        version: 2.8.2(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       react:
         specifier: catalog:react
         version: 19.2.3
@@ -253,7 +259,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       react-hook-form:
         specifier: 'catalog:'
-        version: 7.66.0(react@19.2.3)
+        version: 7.69.0(react@19.2.3)
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.2.3)
@@ -296,7 +302,7 @@ importers:
         version: 10.1.10(@vitest/browser-playwright@4.0.8)(@vitest/browser@4.0.8(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))(vitest@4.0.8))(@vitest/runner@4.0.10)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(vitest@4.0.8)
       '@storybook/nextjs-vite':
         specifier: catalog:storybook10
-        version: 10.1.10(@babel/core@7.28.5)(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
+        version: 10.1.10(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       '@tailwindcss/vite':
         specifier: ^4.1.17
         version: 4.1.17(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
@@ -379,6 +385,34 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(typescript@5.9.3)(vitest@4.0.8)
 
+  packages/common:
+    dependencies:
+      '@date-fns/tz':
+        specifier: ^1.4.1
+        version: 1.4.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@acme/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@acme/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.1(jiti@2.6.1)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.6.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/db:
     dependencies:
       '@prisma/adapter-pg':
@@ -396,6 +430,9 @@ importers:
       kysely:
         specifier: ^0.28.8
         version: 0.28.8
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       pg:
         specifier: ^8.16.3
         version: 8.16.3
@@ -415,6 +452,9 @@ importers:
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
@@ -443,14 +483,14 @@ importers:
   packages/ui:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.66.0(react@19.2.3))
+        specifier: 'catalog:'
+        version: 5.2.2(react-hook-form@7.69.0(react@19.2.3))
       '@opengovsg/oui':
         specifier: catalog:oui
-        version: 0.0.23(@opengovsg/oui-theme@0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 0.0.31(@opengovsg/oui-theme@0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@opengovsg/oui-theme':
         specifier: catalog:oui
-        version: 0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
+        version: 0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       react-aria:
         specifier: ^3.44.0
         version: 3.44.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -459,7 +499,7 @@ importers:
         version: 1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react-hook-form:
         specifier: 'catalog:'
-        version: 7.66.0(react@19.2.3)
+        version: 7.69.0(react@19.2.3)
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.2.3)
@@ -766,6 +806,9 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@date-fns/tz@1.4.1':
+    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
   '@electric-sql/pglite-socket@0.0.6':
     resolution: {integrity: sha512-6RjmgzphIHIBA4NrMGJsjNWK4pu+bCWJlEWlwcxFTVY3WT86dFpKwbZaGWZV6C5Rd7sCk1Z0CI76QEfukLAUXw==}
@@ -1576,20 +1619,20 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opengovsg/oui-theme@0.0.23':
-    resolution: {integrity: sha512-slZsVcPziPWigBdKtyxb5oco/BItyhAVhr1VN6TMfbajB2LIPkJptg7uQhW6eJPs7D/0SAtMzpFlFsMTGsMY7w==}
+  '@opengovsg/oui-theme@0.0.31':
+    resolution: {integrity: sha512-hcAncYMfv7e8X76tG2lrO1+RqttXd3rdLi9uQMxNDHajKy+2dWAowt6Uo2KPReUR3DusSaQuRSr02hzK44bkGw==}
     peerDependencies:
       react: '>=18'
       tailwind-variants: '>=3'
       tailwindcss: '>=4'
 
-  '@opengovsg/oui@0.0.23':
-    resolution: {integrity: sha512-OPVEMzuqTiCsRJCRpbDeBDmOI7cQSYoICFTWzo25zYwGQSILk+su57JzEf0sJ797TyFn5Bi3d9quu2PLP5GoIw==}
+  '@opengovsg/oui@0.0.31':
+    resolution: {integrity: sha512-y4Km8adhLwYBenMtL5K8OQnF9k9tnrtFGlpmz18WQHZaRQeMEfV5uL0cpi4Ev6LwomV1nUEplS75Y9oCNhGa1Q==}
     peerDependencies:
-      '@opengovsg/oui-theme': 0.0.23
+      '@opengovsg/oui-theme': 0.0.31
       motion: '>=11.12.0 || >=12.0.0-alpha.1'
       react: '>= 18'
-      react-aria-components: ^1.12.2
+      react-aria-components: ^1.13.0
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -5778,8 +5821,8 @@ packages:
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
 
-  react-hook-form@7.66.0:
-    resolution: {integrity: sha512-xXBqsWGKrY46ZqaHDo+ZUYiMUgi8suYu5kdrS20EG8KiL7VRQitEbNjm+UcrDYrNi1YLyfpmAeGjCZYXLT9YBw==}
+  react-hook-form@7.69.0:
+    resolution: {integrity: sha512-yt6ZGME9f4F6WHwevrvpAjh42HMvocuSnSIHUGycBqXIJdhqGSPQzTpGF+1NLREk/58IdPxEMfPcFCjlMhclGw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7014,6 +7057,8 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
+  '@date-fns/tz@1.4.1': {}
+
   '@electric-sql/pglite-socket@0.0.6(@electric-sql/pglite@0.3.2)':
     dependencies:
       '@electric-sql/pglite': 0.3.2
@@ -7286,10 +7331,10 @@ snapshots:
     dependencies:
       hono: 4.10.6
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.66.0(react@19.2.3))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.69.0(react@19.2.3))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.66.0(react@19.2.3)
+      react-hook-form: 7.69.0(react@19.2.3)
 
   '@humanfs/core@0.19.1': {}
 
@@ -7599,7 +7644,7 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opengovsg/oui-theme@0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))':
+  '@opengovsg/oui-theme@0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))':
     dependencies:
       '@tailwindcss/vite': 4.1.11(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       clsx: 2.1.1
@@ -7613,12 +7658,14 @@ snapshots:
     transitivePeerDependencies:
       - vite
 
-  '@opengovsg/oui@0.0.23(@opengovsg/oui-theme@0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@opengovsg/oui@0.0.31(@opengovsg/oui-theme@0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)))(motion@12.23.22(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-aria-components@1.13.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@internationalized/date': 3.10.0
-      '@opengovsg/oui-theme': 0.0.23(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
+      '@opengovsg/oui-theme': 0.0.31(react@19.2.3)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.1.17))(tailwindcss@4.1.17)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       '@react-aria/calendar': 3.9.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/focus': 3.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/i18n': 3.12.13(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/interactions': 3.25.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/utils': 3.31.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-stately/calendar': 3.9.0(react@19.2.3)
       '@react-stately/collections': 3.12.8(react@19.2.3)
@@ -7638,6 +7685,7 @@ snapshots:
       react-dropzone: 14.3.8(react@19.2.3)
       react-stately: 3.42.0(react@19.2.3)
       scroll-into-view-if-needed: 3.1.0
+      sonner: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       type-fest: 4.41.0
       use-deep-compare: 1.3.0(react@19.2.3)
       usehooks-ts: 3.1.1(react@19.2.3)
@@ -9092,18 +9140,18 @@ snapshots:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
-  '@storybook/nextjs-vite@10.1.10(@babel/core@7.28.5)(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))':
+  '@storybook/nextjs-vite@10.1.10(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))':
     dependencies:
       '@storybook/builder-vite': 10.1.10(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
       '@storybook/react': 10.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
       '@storybook/react-vite': 10.1.10(esbuild@0.27.0)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.53.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
-      next: 16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       storybook: 10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      styled-jsx: 5.1.6(@babel/core@7.28.5)(react@19.2.3)
+      styled-jsx: 5.1.6(react@19.2.3)
       vite: 7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)
-      vite-plugin-storybook-nextjs: 3.1.2(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
+      vite-plugin-storybook-nextjs: 3.1.2(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2))
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -12063,7 +12111,7 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       '@next/env': 16.0.10
       '@swc/helpers': 0.5.15
@@ -12071,7 +12119,7 @@ snapshots:
       postcss: 8.4.31
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
-      styled-jsx: 5.1.6(@babel/core@7.28.5)(react@19.2.3)
+      styled-jsx: 5.1.6(react@19.2.3)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.0.10
       '@next/swc-darwin-x64': 16.0.10
@@ -12087,9 +12135,9 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-toploader@3.9.17(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  nextjs-toploader@3.9.17(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      next: 16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 19.2.3
@@ -12133,12 +12181,12 @@ snapshots:
 
   nprogress@0.2.0: {}
 
-  nuqs@2.8.2(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3):
+  nuqs@2.8.2(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3):
     dependencies:
       '@standard-schema/spec': 1.0.0
       react: 19.2.3
     optionalDependencies:
-      next: 16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
 
   nypm@0.6.2:
     dependencies:
@@ -12712,7 +12760,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.3
 
-  react-hook-form@7.66.0(react@19.2.3):
+  react-hook-form@7.69.0(react@19.2.3):
     dependencies:
       react: 19.2.3
 
@@ -13314,12 +13362,10 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.6(@babel/core@7.28.5)(react@19.2.3):
+  styled-jsx@5.1.6(react@19.2.3):
     dependencies:
       client-only: 0.0.1
       react: 19.2.3
-    optionalDependencies:
-      '@babel/core': 7.28.5
 
   superjson@2.2.5:
     dependencies:
@@ -13749,13 +13795,13 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-plugin-storybook-nextjs@3.1.2(next@16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)):
+  vite-plugin-storybook-nextjs@3.1.2(next@16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)):
     dependencies:
       '@next/env': 16.0.0
       image-size: 2.0.2
       magic-string: 0.30.21
       module-alias: 2.2.3
-      next: 16.0.10(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       storybook: 10.1.10(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       ts-dedent: 2.2.0
       vite: 7.2.6(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.2)

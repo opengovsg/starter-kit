@@ -1,9 +1,9 @@
+import { toast } from '@opengovsg/oui/toast'
 import { defaultShouldDehydrateQuery, QueryClient } from '@tanstack/react-query'
 import { isTRPCClientError } from '@trpc/client'
 import SuperJSON from 'superjson'
 
-import { toast } from '@acme/ui/toast'
-
+import { LOGIN_ROUTE } from '~/constants'
 import { trpcHandleableErrorCodeSchema } from '~/validators/trpc'
 
 export const createQueryClient = () =>
@@ -31,7 +31,7 @@ export const createQueryClient = () =>
               }
 
               if (code === 'UNAUTHORIZED') {
-                window.location.href = '/login'
+                window.location.href = LOGIN_ROUTE
                 return
               }
 

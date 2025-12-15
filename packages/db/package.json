@@ -10,6 +10,10 @@
       "types": "./dist/src/index.d.ts",
       "default": "./src/index.ts"
     },
+    "./extensions": {
+      "types": "./dist/src/extensions.d.ts",
+      "default": "./src/extensions.ts"
+    },
     "./browser": {
       "types": "./dist/src/browser.d.ts",
       "default": "./src/browser.ts"
@@ -21,6 +25,14 @@
     "./enums": {
       "types": "./dist/src/enums.d.ts",
       "default": "./src/enums.ts"
+    },
+    "./validators": {
+      "types": "./dist/src/generated/zod/schemas/index.d.ts",
+      "default": "./src/generated/zod/schemas/index.ts"
+    },
+    "./kysely": {
+      "types": "./dist/src/generated/kysely/types.d.ts",
+      "default": "./src/generated/kysely/types.ts"
     }
   },
   "scripts": {
@@ -44,6 +56,7 @@
     "@prisma/client-runtime-utils": "catalog:prisma",
     "@t3-oss/env-core": "catalog:t3-env",
     "kysely": "^0.28.8",
+    "lodash-es": "^4.17.21",
     "pg": "^8.16.3",
     "prisma-extension-kysely": "catalog:",
     "zod": "catalog:"
@@ -52,6 +65,7 @@
     "@acme/eslint-config": "workspace:*",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",

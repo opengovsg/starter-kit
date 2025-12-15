@@ -24,6 +24,7 @@ import { parse } from 'superjson'
 import { vi } from 'vitest'
 
 import { PrismaClient } from '@acme/db/client'
+import { kyselyPrismaExtension } from '@acme/db/extensions'
 
 import { CONTAINER_INFORMATION_SCHEMA } from '../common'
 
@@ -87,9 +88,9 @@ const applyMigrations = async (client: PrismaClient) => {
   }
 }
 
-const db: PrismaClient = new PrismaClient({
+const db = new PrismaClient({
   adapter: new PrismaPg({ connectionString }),
-})
+}).$extends(kyselyPrismaExtension)
 
 vi.mock('@acme/db', () => ({
   db,
