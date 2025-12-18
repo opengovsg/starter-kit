@@ -10,6 +10,7 @@ import { useInterval } from 'usehooks-ts'
 
 import { Infobox } from '@acme/ui/infobox'
 import { TextField } from '@acme/ui/text-field'
+import { toast } from '@acme/ui/toast'
 
 import { useTRPC } from '~/trpc/react'
 import { emailVerifyOtpSchema } from '~/validators/auth'
@@ -20,7 +21,17 @@ export const VerificationStep = () => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
-  const { vfnStepData, timer, setVfnStepData, resetTimer } = useSignInWizard()
+  const {
+    vfnStepData,
+    timer,
+    setVfnStepData,
+    resetTimer,
+    newChallenge,
+    getVerifier,
+    clearVerifierMap,
+  } = useSignInWizard()
+  const [newChallengePending, setNewChallengePending] = useState(false)
+  const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
     () => setShowOtpDelayMessage(true),
@@ -29,7 +40,7 @@ export const VerificationStep = () => {
   )
 
   const { control, handleSubmit, resetField, setFocus, setError } = useForm({
-    resolver: zodResolver(emailVerifyOtpSchema),
+    resolver: zodResolver(emailVerifyOtpSchema.omit({ codeVerifier: true })),
     defaultValues: {
       email: vfnStepData?.email ?? '',
       token: '',
@@ -39,6 +50,7 @@ export const VerificationStep = () => {
   const verifyOtpMutation = useMutation(
     trpc.auth.email.verifyOtp.mutationOptions({
       onSuccess: () => {
+        clearVerifierMap()
         router.refresh()
       },
       onError: (error) => {
@@ -55,30 +67,40 @@ export const VerificationStep = () => {
 
   const resendOtpMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
-      onError: (error) => setError('token', { message: error.message }),
-      trpc: {
-        context: {
-          // Need to set session data for nonce
-          skipStreaming: true,
-        },
+      onSuccess: (res, req) => {
+        setVfnStepData({
+          email: res.email,
+          otpPrefix: res.otpPrefix,
+          codeChallenge: req.codeChallenge,
+        })
+        resetField('token')
+        setFocus('token')
+        // On success, restart the timer before this can be called again.
+        resetTimer()
       },
+      onError: (error) => setError('token', { message: error.message }),
     }),
   )
 
+  const isResendPending = resendOtpMutation.isPending || newChallengePending
   const handleResendOtp = () => {
     if (timer > 0 || !vfnStepData?.email) return
-    return resendOtpMutation.mutate(
-      { email: vfnStepData.email },
-      {
-        onSuccess: ({ email, otpPrefix }) => {
-          setVfnStepData({ email, otpPrefix })
-          resetField('token')
-          setFocus('token')
-          // On success, restart the timer before this can be called again.
-          resetTimer()
-        },
-      },
-    )
+    if (isResendPending) return
+    setNewChallengePending(true)
+    newChallenge()
+      .then((codeChallenge) => {
+        if (!codeChallenge) {
+          toast.error(
+            'Something went wrong generating a sign-in challenge. Please try again.',
+          )
+          return
+        }
+        resendOtpMutation.mutate({ email: vfnStepData.email, codeChallenge })
+      })
+      .catch(console.error)
+      .finally(() => {
+        setNewChallengePending(false)
+      })
   }
 
   if (!vfnStepData) return null
@@ -86,7 +108,9 @@ export const VerificationStep = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((values) => verifyOtpMutation.mutate(values))}
+      onSubmit={handleSubmit(({ email, token }) =>
+        verifyOtpMutation.mutate({ email, token, codeVerifier }),
+      )}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller
@@ -137,8 +161,7 @@ export const VerificationStep = () => {
           )}
           size="xs"
           onPress={handleResendOtp}
-          isPending={resendOtpMutation.isPending}
-          // isPending
+          isPending={isResendPending}
           isDisabled={timer > 0}
           spinner={
             <Spinner
