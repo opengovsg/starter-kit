@@ -1,4 +1,4 @@
-import { pkceVerifierGenerator } from '~/lib/pkce/pkce'
+import { pkceVerifierGenerator } from '~/lib/pkce/constants'
 
 // This file hosts functions pertaining to PKCE (Proof Key for Code Exchange) as per RFC 7636
 // If you need to understand PKCE, read https://datatracker.ietf.org/doc/html/rfc7636

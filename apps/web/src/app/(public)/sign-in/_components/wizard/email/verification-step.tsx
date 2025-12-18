@@ -155,7 +155,6 @@ export const VerificationStep = () => {
           size="xs"
           onPress={handleResendOtp}
           isPending={isResendPending}
-          // isPending
           isDisabled={timer > 0}
           spinner={
             <Spinner

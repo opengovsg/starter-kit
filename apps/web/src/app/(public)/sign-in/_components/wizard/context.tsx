@@ -4,6 +4,8 @@ import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { createContext, useContext, useRef, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 
+import { toast } from '@acme/ui/toast'
+
 import {
   browserCreatePkceChallenge,
   browserCreatePkceVerifier,
@@ -58,10 +60,17 @@ export const SignInWizardProvider = ({
 
   const challengeToVerifierMap = useRef(new Map<string, string>())
   const newChallenge = async () => {
-    const verifier = browserCreatePkceVerifier()
-    const challenge = await browserCreatePkceChallenge(verifier)
-    challengeToVerifierMap.current.set(challenge, verifier)
-    return challenge
+    try {
+      const verifier = browserCreatePkceVerifier()
+      const challenge = await browserCreatePkceChallenge(verifier)
+      challengeToVerifierMap.current.set(challenge, verifier)
+      return challenge
+    } catch (error) {
+      toast.error(
+        'Something went wrong generating a sign-in challenge. Please try again.',
+      )
+      throw error
+    }
   }
   const getVerifier = (challenge: string) => {
     return challengeToVerifierMap.current.get(challenge)
