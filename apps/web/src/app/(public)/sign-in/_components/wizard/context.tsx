@@ -4,8 +4,6 @@ import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { createContext, useContext, useRef, useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 
-import { toast } from '@acme/ui/toast'
-
 import {
   browserCreatePkceChallenge,
   browserCreatePkceVerifier,
@@ -17,7 +15,7 @@ interface SignInState {
   vfnStepData: VfnStepData | undefined
   setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
   getVerifier: (challenge: string) => string | undefined
-  newChallenge: () => Promise<string>
+  newChallenge: () => Promise<string | undefined>
   clearVerifierMap: () => void
 }
 
@@ -66,10 +64,8 @@ export const SignInWizardProvider = ({
       challengeToVerifierMap.current.set(challenge, verifier)
       return challenge
     } catch (error) {
-      toast.error(
-        'Something went wrong generating a sign-in challenge. Please try again.',
-      )
-      throw error
+      console.error(error)
+      return undefined
     }
   }
   const getVerifier = (challenge: string) => {

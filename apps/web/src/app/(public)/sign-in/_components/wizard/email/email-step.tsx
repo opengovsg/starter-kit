@@ -6,6 +6,7 @@ import { useQueryState } from 'nuqs'
 import { Controller, useForm } from 'react-hook-form'
 
 import { TextField } from '@acme/ui/text-field'
+import { toast } from '@acme/ui/toast'
 
 import type { VfnStepData } from '../context'
 import { useTRPC } from '~/trpc/react'
@@ -60,6 +61,12 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
         setNewChallengePending(true)
         newChallenge()
           .then((codeChallenge) => {
+            if (!codeChallenge) {
+              toast.error(
+                'Something went wrong generating a sign-in challenge. Please try again.',
+              )
+              return
+            }
             loginMutation.mutate({ email, codeChallenge })
           })
           .catch(console.error)

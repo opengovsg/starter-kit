@@ -10,6 +10,7 @@ import { useInterval } from 'usehooks-ts'
 
 import { Infobox } from '@acme/ui/infobox'
 import { TextField } from '@acme/ui/text-field'
+import { toast } from '@acme/ui/toast'
 
 import { useTRPC } from '~/trpc/react'
 import { emailVerifyOtpSchema } from '~/validators/auth'
@@ -88,6 +89,12 @@ export const VerificationStep = () => {
     setNewChallengePending(true)
     newChallenge()
       .then((codeChallenge) => {
+        if (!codeChallenge) {
+          toast.error(
+            'Something went wrong generating a sign-in challenge. Please try again.',
+          )
+          return
+        }
         resendOtpMutation.mutate({ email: vfnStepData.email, codeChallenge })
       })
       .catch(console.error)
