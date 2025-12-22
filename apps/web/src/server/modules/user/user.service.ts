@@ -15,12 +15,12 @@ export const loginUserByEmail = async (email: string) => {
     const user = await tx.user.upsert({
       where: { email },
       update: {
-        lastLoginAt: new Date(),
+        lastLogin: new Date(),
       },
       create: {
         email,
         name: parsedEmail.name,
-        lastLoginAt: new Date(),
+        lastLogin: new Date(),
       },
       select: defaultUserSelect,
     })
