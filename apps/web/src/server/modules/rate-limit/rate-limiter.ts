@@ -128,5 +128,6 @@ export const createRateLimitFingerprint = ({
   if (userId) {
     return `userId:${userId}`
   }
-  return `ip:${ipAddress ?? 'unknown'}`
+  // Process IP address and remove colon characters to avoid issues with Redis keys
+  return `ip:${ipAddress?.replaceAll(':', '_') ?? 'unknown'}`
 }
