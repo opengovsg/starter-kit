@@ -1,6 +1,6 @@
 @import 'tailwindcss' source('../..');
 @source '../../../../packages/ui';
 @import '@opengovsg/oui-theme/tailwind.css';
-@source '../../../../node_modules/@opengovsg/oui-theme';
+@source '../../node_modules/@opengovsg/oui-theme/dist';
 
 @import '@acme/tailwind-config/theme';
