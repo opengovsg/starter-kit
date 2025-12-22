@@ -20,6 +20,7 @@
   "dependencies": {
     "@acme/common": "workspace:*",
     "@acme/db": "workspace:*",
+    "@acme/redis": "workspace:*",
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
     "@hookform/resolvers": "catalog:",
