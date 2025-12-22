@@ -14,7 +14,7 @@ export const RATE_LIMIT_NAMESPACE_KEY = 'rate-limit:'
 export const RATE_LIMIT_BURST_NAMESPACE_KEY = 'rate-limit-burst:'
 
 /**
- * Defaults to 5 requests per second
+ * Defaults to 2 requests per second
  * and allows bursts of up to 5 requests per 10 seconds.
  *
  * This should be enough to allow normal usage.
@@ -128,6 +128,7 @@ export const createRateLimitFingerprint = ({
   if (userId) {
     return `userId:${userId}`
   }
-  // Process IP address and remove colon characters to avoid issues with Redis keys
+  // Process IP address and replace colons so Redis keys stay compatible with the common
+  // "namespace:subkey" convention and any tooling that treats ":" as a key separator.
   return `ip:${ipAddress?.replaceAll(':', '_') ?? 'unknown'}`
 }
