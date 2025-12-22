@@ -19,6 +19,9 @@ const createRedisClient = (): Redis | null => {
     retryStrategy: (attempt) => {
       return Math.min(attempt * 100, 5000)
     },
+    // Only reconnect when the error contains "READONLY"
+    // during node failover, this is thrown: 149: -READONLY You can't write against a read only replica.
+    reconnectOnError: (error) => error.message.includes('READONLY'),
   })
 
   redisClient.on('error', (err) => {
