@@ -1,7 +1,7 @@
 import z from 'zod'
 
 import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
-import { upsertUserAndAccountByEmail } from '~/server/modules/user/user.service'
+import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
   emailSignInSchema,
   emailVerifyOtpSchema,
@@ -35,7 +35,7 @@ export const emailAuthRouter = createTRPCRouter({
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
       await emailVerifyOtp({ email, token, codeVerifier })
-      const user = await upsertUserAndAccountByEmail(email)
+      const user = await loginUserByEmail(email)
       ctx.session.userId = user.id
       await ctx.session.save()
       return user

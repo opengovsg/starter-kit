@@ -5,7 +5,7 @@ import { db } from '@acme/db'
 import { AccountProvider } from '../auth/auth.constants'
 import { defaultUserSelect } from './user.select'
 
-export const upsertUserAndAccountByEmail = async (email: string) => {
+export const loginUserByEmail = async (email: string) => {
   const parsedEmail = parseOneAddress(email)
   if (!parsedEmail || parsedEmail.type === 'group') {
     throw new Error('Invalid email address')
@@ -14,10 +14,13 @@ export const upsertUserAndAccountByEmail = async (email: string) => {
   return await db.$transaction(async (tx) => {
     const user = await tx.user.upsert({
       where: { email },
-      update: {},
+      update: {
+        lastLogin: new Date(),
+      },
       create: {
         email,
         name: parsedEmail.name,
+        lastLogin: new Date(),
       },
       select: defaultUserSelect,
     })
@@ -37,5 +40,12 @@ export const upsertUserAndAccountByEmail = async (email: string) => {
       },
     })
     return user
+  })
+}
+
+export const getUserById = async (userId: string) => {
+  return await db.user.findUnique({
+    where: { id: userId },
+    select: defaultUserSelect,
   })
 }

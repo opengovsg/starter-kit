@@ -3,10 +3,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import NextTopLoader from 'nextjs-toploader'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
-import { Toaster } from '@acme/ui/toast'
-
 import '~/app/globals.css'
 
+import { Toaster } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
 
 import { env } from '~/env'

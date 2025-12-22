@@ -6,6 +6,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import type { AppRouter } from '~/server/api/root'
+import { LOGIN_ROUTE } from '~/constants'
 import { appRouter } from '~/server/api/root'
 import { createCallerFactory, createTRPCContext } from '~/server/api/trpc'
 import { createQueryClient } from './query-client'
@@ -58,7 +59,7 @@ export const createCaller = async () =>
           return notFound()
         case 'UNAUTHORIZED':
           ctx?.session.destroy()
-          return redirect('/sign-in')
+          return redirect(LOGIN_ROUTE)
         case 'FORBIDDEN':
           return forbidden()
         default:
@@ -76,14 +77,14 @@ export function HydrateClient(props: { children: React.ReactNode }) {
   )
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
+export async function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
   queryOptions: T,
 ) {
   const queryClient = getQueryClient()
   if (queryOptions.queryKey[1]?.type === 'infinite') {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-    void queryClient.prefetchInfiniteQuery(queryOptions as any)
+    await queryClient.prefetchInfiniteQuery(queryOptions as any)
   } else {
-    void queryClient.prefetchQuery(queryOptions)
+    await queryClient.prefetchQuery(queryOptions)
   }
 }

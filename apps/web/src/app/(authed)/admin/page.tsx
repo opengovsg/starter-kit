@@ -1,10 +1,8 @@
-import { LogoutButton } from '~/app/_components/logout-button'
-
-export default function TestPage() {
+export default function AdminRootPage() {
   return (
     <div>
-      Admin page. You should only be able to see this if you are auth'd
-      <LogoutButton />
+      This is the root admin page. This page is gated by authentication and is
+      only accessible to logged-in users.
     </div>
   )
 }

@@ -12,14 +12,15 @@ catalog:
   prisma-extension-kysely: ^3.0.0
   prisma-kysely: ^2.2.1
   react-aria-components: 1.13.0
-  react-hook-form: ^7.67.0
+  react-hook-form: ^7.68.0
+  '@hookform/resolvers': '^5.2.2'
   typescript: ^5.9.3
   zod: ^4.1.13
 
 catalogs:
   oui:
-    '@opengovsg/oui': 0.0.23
-    '@opengovsg/oui-theme': 0.0.23
+    '@opengovsg/oui': 0.0.31
+    '@opengovsg/oui-theme': 0.0.31
   prisma:
     '@prisma/adapter-pg': ^7.0.0
     '@prisma/client': ^7.1.0
@@ -71,6 +72,7 @@ minimumReleaseAgeExclude:
   - '@next/eslint-plugin-next'
   - react
   - react-dom
+  - '@opengovsg/*'
   - storybook
   - '@storybook/*'
   - eslint-plugin-storybook

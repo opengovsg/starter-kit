@@ -5,6 +5,9 @@
     "generate": {
       "cache": false
     },
+    "migrate:dev": {
+      "dependsOn": ["generate"]
+    },
     "typecheck": {
       "dependsOn": ["generate"]
     },

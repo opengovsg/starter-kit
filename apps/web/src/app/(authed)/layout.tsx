@@ -1,8 +1,12 @@
 import { redirect } from 'next/navigation'
 
 import type { DynamicLayoutProps } from '~/types/nextjs'
+import { LOGIN_ROUTE } from '~/constants'
 import { getSession } from '~/server/session'
+import { HydrateClient, prefetch, trpc } from '~/trpc/server'
+import { EnvBanner } from '../_components/env-banner'
 import { VersionCheckWrapper } from '../_components/version-check-wrapper'
+import { AuthedNavbar } from './_components/authed-navbar'
 
 export default async function AuthedLayout({ children }: DynamicLayoutProps) {
   // DO NOT SKIP AUTHENTICATION CHECKS IN YOUR PROCEDURES.
@@ -11,13 +15,20 @@ export default async function AuthedLayout({ children }: DynamicLayoutProps) {
 
   const session = await getSession()
   if (!session.userId) {
-    redirect('/sign-in')
+    redirect(LOGIN_ROUTE)
   }
+  await prefetch(trpc.me.get.queryOptions())
 
   return (
-    <main className="flex min-h-dvh flex-col">
-      <VersionCheckWrapper />
-      {children}
-    </main>
+    <HydrateClient>
+      <main className="flex min-h-dvh flex-col">
+        <EnvBanner />
+        <VersionCheckWrapper />
+        <AuthedNavbar />
+        <div className="container mx-auto flex flex-col gap-4 p-4">
+          {children}
+        </div>
+      </main>
+    </HydrateClient>
   )
 }

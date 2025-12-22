@@ -10,8 +10,7 @@
       "cache": false
     },
     "dev": {
-      "persistent": true,
-      "dependsOn": ["docker"]
+      "persistent": true
     }
   }
 }
