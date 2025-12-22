@@ -1,0 +1,18 @@
+[install]
+
+# Delay installation of packages published less than 86400 secons (1 day) ago
+# This helps protect against supply chain attacks by avoiding newly published packages
+minimum-release-age = 86400
+
+# Exclude trusted packages from the age gate
+minimumReleaseAgeExcludes = [
+  "next",
+  "@next/env",
+  "@next/eslint-plugin-next",
+  "react",
+  "react-dom",
+  "@opengovsg/*",
+  "storybook",
+  "@storybook/*",
+  "eslint-plugin-storybook",
+]
