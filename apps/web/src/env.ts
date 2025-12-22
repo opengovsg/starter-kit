@@ -17,6 +17,7 @@ export const env = createEnv({
     PORT: z.coerce.number().default(3000),
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600), // OTP expiry time in seconds
     DATABASE_URL: z.url(),
+    REDIS_URL: z.url().optional(),
     POSTMAN_API_KEY: z.string().optional(),
     SESSION_SECRET: z.string().min(32),
   },
