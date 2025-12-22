@@ -18,6 +18,12 @@ export const useAuth = () => {
         toast.success('Successfully logged out.')
         router.refresh()
       },
+      trpc: {
+        context: {
+          // Disable streaming for this request so cookies can be set.
+          skipStreaming: true,
+        },
+      },
     }),
   )
 
