@@ -34,7 +34,6 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "date-fns": "^4.1.0",
     "email-addresses": "^5.0.0",
-    "ioredis": "^5.8.2",
     "iron-session": "^8.0.4",
     "lodash-es": "^4.17.21",
     "nanoid": "^5.1.6",

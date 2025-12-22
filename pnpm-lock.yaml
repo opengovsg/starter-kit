@@ -233,9 +233,6 @@ importers:
       email-addresses:
         specifier: ^5.0.0
         version: 5.0.0
-      ioredis:
-        specifier: ^5.8.2
-        version: 5.8.2
       iron-session:
         specifier: ^8.0.4
         version: 8.0.4
