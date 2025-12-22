@@ -42,6 +42,8 @@ model User {
   email    String    @unique
   image    String?
   accounts Account[]
+
+  lastLogin DateTime?
 }
 
 model Account {
