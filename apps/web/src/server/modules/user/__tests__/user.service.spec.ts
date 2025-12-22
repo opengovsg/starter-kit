@@ -11,7 +11,7 @@ describe('user.service', () => {
     await resetTables(['VerificationToken', 'User', 'Account'])
   })
 
-  describe('upsertUserAndAccountByEmail', () => {
+  describe('loginUserByEmail', () => {
     it('should create a new user and account for a new email', async () => {
       const email = 'newuser@example.com'
 
