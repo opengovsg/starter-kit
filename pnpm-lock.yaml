@@ -191,6 +191,9 @@ importers:
       '@acme/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@acme/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
       '@acme/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -482,6 +485,40 @@ importers:
       prisma-zod-generator:
         specifier: ^2.1.2
         version: 2.1.2(magicast@0.3.5)(prisma@7.1.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)(zod@4.1.12)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/redis:
+    dependencies:
+      '@t3-oss/env-core':
+        specifier: catalog:t3-env
+        version: 0.13.8(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12)
+      ioredis:
+        specifier: ^5.8.2
+        version: 5.8.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@acme/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@acme/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.10.1
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.1(jiti@2.6.1)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.6.2
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
