@@ -92,7 +92,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
  * // In a tRPC middleware:
  * await checkRateLimit({
  *   key: getRateLimitKey(ctx),
- *   config: { points: 10, duration: 60 }
+ *   options: { points: 10, duration: 60 }
  * })
  */
 export const checkRateLimit = async ({

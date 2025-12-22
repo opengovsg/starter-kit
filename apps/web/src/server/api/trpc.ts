@@ -15,7 +15,7 @@ import { env } from '~/env'
 import {
   checkRateLimit,
   createRateLimitFingerprint,
-} from '../modules/rate-limit/rate-limiter'
+} from '../modules/rate-limit/rate-limit.service'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
 
