@@ -28,9 +28,11 @@ const handler = async (req: NextRequest) => {
     endpoint: '/api/trpc',
     router: appRouter,
     req,
-    createContext: () =>
+    allowBatching: false,
+    createContext: ({ resHeaders }) =>
       createTRPCContext({
         headers: req.headers,
+        resHeaders,
       }),
     onError({ error, path, ctx }) {
       if (error.code === 'UNAUTHORIZED') {

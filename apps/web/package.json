@@ -20,6 +20,7 @@
   "dependencies": {
     "@acme/common": "workspace:*",
     "@acme/db": "workspace:*",
+    "@acme/redis": "workspace:*",
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
     "@hookform/resolvers": "catalog:",
@@ -39,6 +40,7 @@
     "next": "catalog:next",
     "nextjs-toploader": "^3.9.17",
     "nuqs": "^2.8.2",
+    "rate-limiter-flexible": "^9.0.1",
     "react": "catalog:react",
     "react-aria-components": "catalog:",
     "react-dom": "catalog:react",
