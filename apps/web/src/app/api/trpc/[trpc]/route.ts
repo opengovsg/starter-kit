@@ -30,6 +30,7 @@ const handler = async (req: NextRequest) => {
     endpoint: '/api/trpc',
     router: appRouter,
     req,
+    allowBatching: false,
     createContext: () =>
       createTRPCContext({
         headers: req.headers,
