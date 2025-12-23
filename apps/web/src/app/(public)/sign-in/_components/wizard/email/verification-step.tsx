@@ -56,12 +56,6 @@ export const VerificationStep = () => {
       onError: (error) => {
         setError('token', { message: error.message })
       },
-      trpc: {
-        context: {
-          // Disable streaming for this request so cookies can be set.
-          skipStreaming: true,
-        },
-      },
     }),
   )
 

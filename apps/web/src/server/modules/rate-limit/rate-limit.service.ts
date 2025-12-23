@@ -1,14 +1,13 @@
+import type { RateLimiterRes } from 'rate-limiter-flexible'
 import {
   BurstyRateLimiter,
   RateLimiterMemory,
   RateLimiterRedis,
-  RateLimiterRes,
 } from 'rate-limiter-flexible'
 
 import { redis } from '@acme/redis'
 
 import type { RateLimiterConfig } from '~/server/modules/rate-limit/types'
-import { TRPCRateLimitError } from '~/server/modules/rate-limit/errors'
 
 export const RATE_LIMIT_NAMESPACE_KEY = 'rate-limit:'
 export const RATE_LIMIT_BURST_NAMESPACE_KEY = 'rate-limit-burst:'
@@ -105,17 +104,7 @@ export const checkRateLimit = async ({
   pointsToConsume?: number
 }): Promise<RateLimiterRes> => {
   const limiter = createRateLimiter(options)
-
-  try {
-    return await limiter.consume(key, pointsToConsume)
-  } catch (error) {
-    if (error instanceof RateLimiterRes) {
-      throw new TRPCRateLimitError({
-        retryAfterSeconds: Math.ceil(error.msBeforeNext / 1000),
-      })
-    }
-    throw error
-  }
+  return limiter.consume(key, pointsToConsume)
 }
 
 export const createRateLimitFingerprint = ({
