@@ -7,6 +7,7 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC, TRPCError } from '@trpc/server'
+import { RateLimiterRes } from 'rate-limiter-flexible'
 import superjson from 'superjson'
 import z, { ZodError } from 'zod'
 
@@ -31,11 +32,19 @@ import { extractIpAddress } from '../utils/request'
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async ({ headers }: { headers: Headers }) => {
+export const createTRPCContext = async ({
+  headers,
+  resHeaders,
+}: {
+  headers: Headers
+  // resHeaders may not exist if called directly from RSC without an active request
+  resHeaders?: Headers
+}) => {
   const session = await getSession()
   return {
     headers,
     session,
+    resHeaders,
   }
 }
 
@@ -126,15 +135,35 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta }) => {
     return next()
   }
 
-  await checkRateLimit({
-    key: createRateLimitFingerprint({
-      ipAddress: extractIpAddress(ctx.headers),
-      userId: ctx.session.userId,
-    }),
-    options: rateLimitOptions,
-  })
-
-  return next()
+  try {
+    await checkRateLimit({
+      key: createRateLimitFingerprint({
+        ipAddress: extractIpAddress(ctx.headers),
+        userId: ctx.session.userId,
+      }),
+      options: rateLimitOptions,
+    })
+    return next()
+  } catch (error) {
+    // Handle rate limit error separately to add rate limit headers
+    if (error instanceof RateLimiterRes) {
+      ctx.resHeaders?.set(
+        'Retry-After',
+        String(Math.ceil(error.msBeforeNext / 1000)),
+      )
+      ctx.resHeaders?.set(
+        'X-RateLimit-Reset',
+        String(Math.ceil((Date.now() + error.msBeforeNext) / 1000)),
+      )
+      throw new TRPCError({
+        code: 'TOO_MANY_REQUESTS',
+        message: `Rate limit exceeded. Try again in ${Math.ceil(
+          error.msBeforeNext / 1000,
+        )} seconds.`,
+      })
+    }
+    throw error
+  }
 })
 
 const authMiddleware = t.middleware(({ ctx, next }) => {
