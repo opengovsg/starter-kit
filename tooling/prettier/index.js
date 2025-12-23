@@ -2,13 +2,17 @@
 /** @typedef {import("prettier-plugin-tailwindcss").PluginOptions} TailwindConfig */
 /** @typedef {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
 
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+
 /** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 const config = {
   semi: false,
   singleQuote: true,
   plugins: [
-    '@ianvs/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
+    require.resolve('@ianvs/prettier-plugin-sort-imports'),
+    require.resolve('prettier-plugin-tailwindcss'),
   ],
   tailwindFunctions: ['cn', 'cva'],
   importOrder: [

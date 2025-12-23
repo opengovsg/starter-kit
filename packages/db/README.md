@@ -40,7 +40,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/database"
 ### 2. Generate Prisma Client
 
 ```bash
-pnpm generate
+bun generate
 ```
 
 This generates:
@@ -49,16 +49,16 @@ This generates:
 - Kysely types
 - Zod schemas
 
-This auto-runs before `npm run dev`
+This auto-runs before `bun run dev`
 
 ### 3. Run Migrations
 
 ```bash
 # Development
-pnpm migrate:dev
+bun migrate:dev
 
 # Production
-pnpm migrate:deploy
+bun migrate:deploy
 ```
 
 ## Usage
@@ -209,37 +209,37 @@ Prisma\'s `queryRaw` and `executeRaw` template strings automatically escapes to 
 
 ```bash
 # Generate Prisma Client, Kysely types, and Zod schemas
-pnpm generate
+bun generate
 
-# Open Prisma Studio (database GUI on port 5556). This is also available at root as `pnpm db:studio`
-pnpm studio
+# Open Prisma Studio (database GUI on port 5556). This is also available at root as `bun db:studio`
+bun studio
 
-# Push schema changes to database (development only). This is also available at root as `pnpm db:push`
-pnpm push
+# Push schema changes to database (development only). This is also available at root as `bun db:push`
+bun push
 
 # Create a new migration
-pnpm migrate:dev
+bun migrate:dev
 
 # Apply migrations (production)
-pnpm migrate:deploy
+bun migrate:deploy
 
 # Reset database and run migrations
-pnpm reset
+bun reset
 
 # Seed database
-pnpm seed
+bun seed
 
 # Build TypeScript
-pnpm build
+bun run build
 
 # Type checking
-pnpm typecheck
+bun typecheck
 
 # Linting
-pnpm lint
+bun lint
 
 # Format checking
-pnpm format
+bun format
 ```
 
 ## Package Exports
@@ -283,15 +283,15 @@ Prisma-generated enums for use in queries.
 ### Adding a New Model
 
 1. Update `prisma/schema.prisma` with your new model
-2. Generate migration: `pnpm migrate:dev --name add_new_model`
-3. Regenerate types: `pnpm generate`
+2. Generate migration: `bun migrate:dev --name add_new_model`
+3. Regenerate types: `bun generate`
 4. The generated types will be available automatically
 
 ### Modifying Existing Models
 
 1. Update the model in `prisma/schema.prisma`
-2. Create migration: `pnpm migrate:dev --name describe_change`
-3. Regenerate types: `pnpm generate`
+2. Create migration: `bun migrate:dev --name describe_change`
+3. Regenerate types: `bun generate`
 
 ### Seeding Data
 
@@ -313,7 +313,7 @@ async function main() {
 Run the seed:
 
 ```bash
-pnpm seed
+bun seed
 ```
 
 ## Type Safety
@@ -348,14 +348,14 @@ const result = await db.$kysely
 
 ### Prisma Client Not Found
 
-Run `pnpm generate` to generate the Prisma Client.
+Run `bun generate` to generate the Prisma Client.
 
 ### Migration Errors
 
 If migrations fail, you can reset the database:
 
 ```bash
-pnpm reset
+bun reset
 ```
 
 **Warning**: This will delete all data.
@@ -365,14 +365,14 @@ pnpm reset
 After modifying the schema, always run:
 
 ```bash
-pnpm generate
+bun generate
 ```
 
 This regenerates all types and ensures TypeScript has the latest schema information.
 
 ### Generation Errors
 
-If `pnpm generate` fails, ensure your `schema.prisma` is valid and that your database is reachable. If you have modified the list of plugins recently, delete the `src/generated` folder and try again.
+If `bun generate` fails, ensure your `schema.prisma` is valid and that your database is reachable. If you have modified the list of plugins recently, delete the `src/generated` folder and try again.
 
 ## Links
 

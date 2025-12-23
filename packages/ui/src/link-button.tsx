@@ -6,7 +6,8 @@ import { buttonStyles } from '@opengovsg/oui-theme'
 import { Link } from 'react-aria-components'
 
 interface LinkButtonProps
-  extends Omit<LinkProps, 'className' | 'children'>,
+  extends
+    Omit<LinkProps, 'className' | 'children'>,
     VariantProps<typeof buttonStyles> {
   className?: string
   children: React.ReactNode
