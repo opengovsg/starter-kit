@@ -9,6 +9,16 @@ services:
       - POSTGRES_PASSWORD=root
     volumes:
       - postgres-volume:/var/lib/postgresql
+  cache:
+    image: redis:8.2-alpine
+    ports:
+      - '63791:6379'
+    environment:
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+    volumes:
+      - cache-volume:/data
 
 volumes:
   postgres-volume:
+  cache-volume:

@@ -10,7 +10,14 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import z, { ZodError } from 'zod'
 
+import type { RateLimiterConfig } from '../modules/rate-limit/types'
+import { env } from '~/env'
+import {
+  checkRateLimit,
+  createRateLimitFingerprint,
+} from '../modules/rate-limit/rate-limit.service'
 import { getSession } from '../session'
+import { extractIpAddress } from '../utils/request'
 
 /**
  * 1. CONTEXT
@@ -32,6 +39,12 @@ export const createTRPCContext = async ({ headers }: { headers: Headers }) => {
   }
 }
 
+interface Meta {
+  // Rate limit options for this procedure. If null, rate limiting is disabled.
+  // Defaults to empty object, which applies default rate limiting.
+  rateLimitOptions?: RateLimiterConfig | null
+}
+
 /**
  * 2. INITIALIZATION
  *
@@ -39,19 +52,27 @@ export const createTRPCContext = async ({ headers }: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? z.flattenError(error.cause) : null,
-      },
-    }
-  },
-})
+const t = initTRPC
+  .context<typeof createTRPCContext>()
+  .meta<Meta>()
+  .create({
+    defaultMeta: {
+      rateLimitOptions: {},
+    },
+    transformer: superjson,
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError:
+            error.cause instanceof ZodError
+              ? z.flattenError(error.cause)
+              : null,
+        },
+      }
+    },
+  })
 
 /**
  * Create a server-side caller.
@@ -94,6 +115,28 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result
 })
 
+const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta }) => {
+  const rateLimitOptions =
+    meta?.rateLimitOptions === undefined ? {} : meta.rateLimitOptions
+  if (rateLimitOptions === null) {
+    return next()
+  }
+
+  if (env.NODE_ENV === 'test') {
+    return next()
+  }
+
+  await checkRateLimit({
+    key: createRateLimitFingerprint({
+      ipAddress: extractIpAddress(ctx.headers),
+      userId: ctx.session.userId,
+    }),
+    options: rateLimitOptions,
+  })
+
+  return next()
+})
+
 const authMiddleware = t.middleware(({ ctx, next }) => {
   if (!ctx.session.userId) {
     ctx.session.destroy()
@@ -107,6 +150,10 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
   })
 })
 
+const defaultProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(rateLimitMiddleware)
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -114,7 +161,7 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware)
+export const publicProcedure = defaultProcedure
 
 /**
  * Protected (authenticated) procedure
@@ -124,6 +171,4 @@ export const publicProcedure = t.procedure.use(timingMiddleware)
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(authMiddleware)
+export const protectedProcedure = defaultProcedure.use(authMiddleware)

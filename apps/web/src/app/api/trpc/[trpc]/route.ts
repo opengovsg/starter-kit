@@ -1,8 +1,10 @@
 import type { NextRequest } from 'next/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 
 import { appRouter } from '~/server/api/root'
 import { createTRPCContext } from '~/server/api/trpc'
+import { TRPCRateLimitError } from '~/server/modules/rate-limit/errors'
 
 /**
  * Configure basic CORS headers
@@ -37,6 +39,25 @@ const handler = async (req: NextRequest) => {
         ctx?.session.destroy()
       }
       console.error(`>>> tRPC Error on '${path}'`, error)
+    },
+    responseMeta(opts) {
+      const { errors } = opts
+      const firstError = errors[0]
+      if (firstError) {
+        if (firstError instanceof TRPCRateLimitError) {
+          return {
+            status: getHTTPStatusCodeFromError(firstError),
+            headers: new Headers([
+              ['Retry-After', String(firstError.retryAfterSeconds)],
+            ]),
+          }
+        }
+        return {
+          status: getHTTPStatusCodeFromError(firstError),
+        }
+      }
+
+      return {}
     },
   })
 

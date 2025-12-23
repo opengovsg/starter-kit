@@ -31,8 +31,8 @@
       "default": "./src/generated/zod/schemas/index.ts"
     },
     "./kysely": {
-      "types": "./dist/src/generated/kysely/types.d.ts",
-      "default": "./src/generated/kysely/types.ts"
+      "types": "./dist/src/kysely.d.ts",
+      "default": "./src/kysely.ts"
     }
   },
   "scripts": {
