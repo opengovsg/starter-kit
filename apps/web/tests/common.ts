@@ -18,6 +18,7 @@ const baseContainerConfiguration = z.object({
     .array(z.object({ host: z.string(), ipAddress: z.string() }))
     .optional(),
   command: z.array(z.string()).optional(),
+  reuse: z.boolean().optional(),
   wait: z
     .union([
       z.object({ type: z.literal('PORT'), timeout: z.number().optional() }),
@@ -88,6 +89,7 @@ export const setup = async (
       environment,
       command,
       wait,
+      reuse,
       image,
     } = configuration
 
@@ -111,6 +113,10 @@ export const setup = async (
 
     if (network) {
       container = container.withNetwork(network).withNetworkAliases(name)
+    }
+
+    if (reuse) {
+      container = container.withReuse()
     }
 
     if (wait) {
