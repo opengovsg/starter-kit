@@ -81,7 +81,7 @@ jobs:
           service: ${{ secrets.DD_SERVICE_NAME }}
           api_key: ${{ secrets.DD_API_KEY }}
       - name: Run tests
-        run: pnpm test --coverage
+        run: pnpm test:ci
         env:
           # Required to allow Datadog to trace Vitest tests
           NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0} --import {1}', env.DD_TRACE_PACKAGE, env.DD_TRACE_ESM_IMPORT) || '' }}

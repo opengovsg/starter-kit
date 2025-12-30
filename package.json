@@ -8,7 +8,8 @@
   "scripts": {
     "build": "turbo run build",
     "vercel-build": "turbo run vercel-build",
-    "test": "vitest",
+    "test": "turbo run test",
+    "test:ci": "turbo run test:ci",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
     "db:push": "turbo -F @acme/db push",

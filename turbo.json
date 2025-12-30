@@ -52,6 +52,15 @@
     "migrate:deploy": {
       "cache": false,
       "env": ["DATABASE_URL"]
+    },
+    "test": {
+      "dependsOn": ["@acme/db#generate"],
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "test:ci": {
+      "dependsOn": ["@acme/db#generate"]
     }
   },
   "globalEnv": ["DATABASE_URL", "SESSION_SECRET", "PORT", "POSTMAN_API_KEY"],

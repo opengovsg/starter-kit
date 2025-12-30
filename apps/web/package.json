@@ -15,6 +15,7 @@
     "with-env": "dotenv -e ../../.env --",
     "with-e2e-env": "dotenv -e ./.env.e2e --",
     "test": "vitest",
+    "test:ci": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:ui": "pnpm e2e -- --ui",
     "storybook": "SKIP_ENV_VALIDATION=1 storybook dev -p 6006",
