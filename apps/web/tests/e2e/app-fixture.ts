@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-empty-pattern */
 import { test as baseTest } from '@playwright/test'
 
 import {
@@ -6,25 +8,40 @@ import {
   startDatabase,
   takeDbSnapshot,
 } from './setup/db-setup'
+import { flushRedis as flushRedisFn, startRedis } from './setup/redis-setup'
 
 interface DatabaseFixture {
   databaseContainer: Awaited<ReturnType<typeof startDatabase>>
   resetDatabase: () => Promise<void>
 }
 
-const test = baseTest.extend<DatabaseFixture>({
-  // eslint-disable-next-line no-empty-pattern
+interface RedisFixture {
+  redisContainer: Awaited<ReturnType<typeof startRedis>>
+  flushRedis: () => Promise<void>
+}
+
+const test = baseTest.extend<DatabaseFixture & RedisFixture>({
   databaseContainer: async ({}, use) => {
     const container = await startDatabase()
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(container)
   },
 
   resetDatabase: async ({ databaseContainer }, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(async () => {
       await resetDbToSnapshot(databaseContainer)
+    })
+  },
+
+  redisContainer: async ({}, use) => {
+    const container = await startRedis()
+
+    await use(container)
+  },
+
+  flushRedis: async ({ redisContainer }, use) => {
+    await use(async () => {
+      await flushRedisFn(redisContainer)
     })
   },
 })
@@ -35,12 +52,15 @@ test.beforeAll(async ({ databaseContainer }) => {
   await takeDbSnapshot(databaseContainer)
 })
 
-test.afterAll(async ({ databaseContainer }) => {
-  await databaseContainer.container.stop()
+test.afterAll(async ({ databaseContainer, redisContainer }) => {
+  await Promise.all([
+    databaseContainer.container.stop(),
+    redisContainer.container.stop(),
+  ])
 })
 
-test.afterEach(async ({ resetDatabase }) => {
-  await resetDatabase()
+test.afterEach(async ({ resetDatabase, flushRedis }) => {
+  await Promise.all([resetDatabase(), flushRedis()])
 })
 
 export { test }
