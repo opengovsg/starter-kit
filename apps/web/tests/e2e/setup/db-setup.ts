@@ -117,7 +117,7 @@ export async function resetDbToSnapshot(container: DatabaseContainer) {
   ])
 
   if (resetResult.exitCode !== 0) {
-    console.error('Failed when trying to take a reset the db', resetResult)
+    console.error('Failed when trying to reset the db', resetResult)
   } else {
     console.log('Database reset to snapshot')
   }
