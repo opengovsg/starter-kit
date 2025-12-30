@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
+    silent: true,
     projects: ['packages/*', 'apps/*'],
     retry: 0,
     globals: true,
