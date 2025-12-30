@@ -7,8 +7,7 @@ import { CONTAINER_CONFIGURATIONS, setup, teardown } from './common'
 export default async () => {
   const containers = await setup([
     CONTAINER_CONFIGURATIONS.database,
-    // Uncomment if you application uses Redis
-    // CONTAINER_CONFIGURATIONS.redis,
+    CONTAINER_CONFIGURATIONS.redis,
   ])
 
   Object.defineProperty(process.env, 'testcontainers', {

@@ -4,19 +4,17 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
+    silent: true,
     retry: 0,
     globals: true,
     environment: 'node',
-    exclude: ['node_modules', 'dist', '.turbo'],
+    exclude: ['node_modules', 'dist', '.turbo', 'tests/e2e'],
     coverage: {
       enabled: process.env.CI === 'true',
       reporter: ['text', 'json', 'html'],
     },
     globalSetup: 'tests/global-setup.ts',
-    setupFiles: [
-      'tests/db/setup.ts',
-      // 'tests/redis/setup.ts'
-    ],
+    setupFiles: ['tests/db/setup.ts', 'tests/redis/setup.ts'],
     env: {
       // Add any other test specific environment variables here.
       // These environment variables will still be validated against the schema in `env.ts`.
