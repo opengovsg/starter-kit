@@ -60,4 +60,28 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
-# TODO: Add test CI
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Configure Datadog Test Visibility
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        # datadog/test-visibility-github-action@v2.5.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@f4b026bb8b8b53f323960cf86a849a0231ff93b9
+        with:
+          languages: js
+          service: ${{ secrets.DD_SERVICE_NAME }}
+          api_key: ${{ secrets.DD_API_KEY }}
+      - name: Run tests
+        run: pnpm test:ci
+        env:
+          # Required to allow Datadog to trace Vitest tests
+          NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0} --import {1}', env.DD_TRACE_PACKAGE, env.DD_TRACE_ESM_IMPORT) || '' }}

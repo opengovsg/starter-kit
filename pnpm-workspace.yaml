@@ -5,57 +5,60 @@ packages:
 
 catalog:
   '@eslint/js': ^9.39.1
-  '@types/node': ^24.10.1
+  '@hookform/resolvers': ^5.2.2
+  '@types/node': ^24.10.4
   dotenv-cli: ^11.0.0
-  eslint: ^9.39.1
-  prettier: ^3.7.3
+  eslint: ^9.39.2
+  prettier: ^3.7.4
   prisma-extension-kysely: ^3.0.0
   prisma-kysely: ^2.2.1
   react-aria-components: 1.13.0
-  react-hook-form: ^7.68.0
-  '@hookform/resolvers': '^5.2.2'
+  react-hook-form: ^7.69.0
   typescript: ^5.9.3
-  zod: ^4.1.13
+  zod: ^4.2.1
 
 catalogs:
+  next:
+    '@next/env': 16.0.10
+    '@next/eslint-plugin-next': 16.0.10
+    next: 16.0.10
   oui:
     '@opengovsg/oui': 0.0.31
     '@opengovsg/oui-theme': 0.0.31
+  playwright:
+    '@playwright/test': 1.57.0
+    playwright: 1.57.0
   prisma:
     '@prisma/adapter-pg': ^7.0.0
     '@prisma/client': ^7.1.0
     '@prisma/client-runtime-utils': 7.0.1
     prisma: ^7.1.0
-  next:
-    '@next/env': 16.0.10
-    '@next/eslint-plugin-next': 16.0.10
-    next: 16.0.10
   react:
     '@types/react': ^19.2.7
     '@types/react-dom': ^19.2.3
     react: ^19.2.3
     react-dom: ^19.2.3
   react-query5:
-    '@tanstack/react-query': ^5.90.11
-    '@tanstack/react-query-devtools': ^5.91.1
+    '@tanstack/react-query': ^5.90.14
+    '@tanstack/react-query-devtools': ^5.91.2
   storybook10:
-    '@storybook/addon-a11y': ^10.1.10
-    '@storybook/addon-docs': ^10.1.10
-    '@storybook/addon-vitest': ^10.1.10
-    '@storybook/nextjs-vite': ^10.1.10
+    '@storybook/addon-a11y': ^10.1.11
+    '@storybook/addon-docs': ^10.1.11
+    '@storybook/addon-vitest': ^10.1.11
+    '@storybook/nextjs-vite': ^10.1.11
     eslint-plugin-storybook: ^10.1.10
-    storybook: ^10.1.10
-    storybook-addon-vite-mock: ^1.1.0
+    storybook: ^10.1.11
+    storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
     '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
     '@tailwindcss/postcss': ^4.1.17
-    tailwindcss: ^4.1.17
+    tailwindcss: ^4.1.18
   trpc:
-    '@trpc/client': ^11.7.2
-    '@trpc/server': ^11.7.2
-    '@trpc/tanstack-react-query': ^11.7.2
+    '@trpc/client': ^11.8.1
+    '@trpc/server': ^11.8.1
+    '@trpc/tanstack-react-query': ^11.8.1
   vitest:
     '@vitest/browser': 4.0.8
     '@vitest/browser-playwright': 4.0.8
