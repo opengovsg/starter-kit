@@ -51,8 +51,8 @@ const callerFactory = createCallerFactory(appRouter)
  * const res = await trpc.post.all();
  *       ^? Post[]
  */
-export const createCaller = async () =>
-  callerFactory(await createContext(), {
+export const createCaller = async (contextFn = createContext) => {
+  return callerFactory(await contextFn(), {
     onError: ({ error, ctx }) => {
       switch (error.code) {
         case 'NOT_FOUND':
@@ -67,6 +67,7 @@ export const createCaller = async () =>
       }
     },
   })
+}
 
 export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient()
