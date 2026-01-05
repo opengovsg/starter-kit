@@ -59,6 +59,22 @@ You may work on the codebase with:
 - A [GitHub Codespace](#using-github-codespaces) provided by us, or;
 - With your [local machine](#using-your-local-developer-environment).
 
+### Quick Start
+
+Copy this template using `Use this template` button on GitHub > `Create a new repository`.
+
+To change the repository name in the codebase, run the following command after cloning:
+
+```bash
+# Replace `@acme` (case-sensitive search) monorepo scope with your desired scope (e.g. `@myprojectname`)
+grep -rl '@acme' --exclude='*.md' --exclude-dir='.git' --exclude-dir='node_modules' . | xargs sed -i '' 's/@acme/@<your_project_name>/g'
+
+# Replace `Starter Kit` (case-sensitive search) with your project name with proper casing
+grep -rl 'Starter Kit' --exclude='*.md' --exclude-dir='.git' --exclude-dir='node_modules' . | xargs sed -i '' 's/Starter Kit/<your_project_name>/g'
+```
+
+Then, follow the instructions instructions to get started.
+
 ### Using GitHub Codespaces
 
 Follow the official GitHub [guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository)
