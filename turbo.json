@@ -63,7 +63,13 @@
       "dependsOn": ["@acme/db#generate"]
     }
   },
-  "globalEnv": ["DATABASE_URL", "SESSION_SECRET", "PORT", "POSTMAN_API_KEY"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "SESSION_SECRET",
+    "PORT",
+    "POSTMAN_API_KEY",
+    "DD_SERVICE"
+  ],
   "globalPassThroughEnv": [
     "NODE_ENV",
     "CI",

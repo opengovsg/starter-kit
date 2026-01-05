@@ -7,12 +7,16 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC, TRPCError } from '@trpc/server'
+import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 import { RateLimiterRes } from 'rate-limiter-flexible'
 import superjson from 'superjson'
 import z, { ZodError } from 'zod'
 
+import type { Logger, ScopedLogger } from '@acme/logging'
+
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { env } from '~/env'
+import { createLogger } from '~/lib/logger'
 import {
   checkRateLimit,
   createRateLimitFingerprint,
@@ -40,8 +44,17 @@ export const createTRPCContext = async ({
   // resHeaders may not exist if called directly from RSC without an active request
   resHeaders?: Headers
 }) => {
+  // Pass in base context
+  // Logger is created in the context so functions relying on the context will
+  // be provided a base logger even without `loggerMiddleware`, which adds the
+  // the proper procedure path to the logs.
+  // This is useful for functions such as a rate limiter middleware, which may
+  // or may not have been chained with the logger middleware.
+  const logger = createLogger({ path: 'trpc', headers })
+
   const session = await getSession()
   return {
+    logger: logger as Logger | ScopedLogger,
     headers,
     session,
     resHeaders,
@@ -104,22 +117,36 @@ export const createCallerFactory = t.createCallerFactory
  */
 export const createTRPCRouter = t.router
 
-/**
- * Middleware for timing procedure execution and adding an artificial delay in development.
- *
- * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
- * network latency that would occur in production but not in local development.
- */
-const timingMiddleware = t.middleware(async ({ next, path }) => {
+const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const start = performance.now()
+  const logger = ctx.logger.createScopedLogger({ action: path })
 
-  const result = await next()
+  const result = await next({
+    ctx: { logger },
+  })
 
   const end = performance.now()
 
   const durationInMs = Math.round(end - start)
 
-  console.log(`[TRPC] ${path} took ${durationInMs}ms to execute`)
+  if (result.ok) {
+    logger.debug({
+      message: `${path} took ${durationInMs}ms to execute`,
+      merged: {
+        durationInMs,
+        statusCode: 200,
+      },
+    })
+  } else {
+    logger.error({
+      merged: {
+        durationInMs,
+        statusCode: getHTTPStatusCodeFromError(result.error),
+      },
+      error: result.error,
+      message: result.error.message,
+    })
+  }
 
   return result
 })
@@ -180,7 +207,7 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
 })
 
 const defaultProcedure = t.procedure
-  .use(timingMiddleware)
+  .use(loggerMiddleware)
   .use(rateLimitMiddleware)
 
 /**

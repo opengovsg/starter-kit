@@ -25,6 +25,7 @@
   "dependencies": {
     "@acme/common": "workspace:*",
     "@acme/db": "workspace:*",
+    "@acme/logging": "workspace:*",
     "@acme/redis": "workspace:*",
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
