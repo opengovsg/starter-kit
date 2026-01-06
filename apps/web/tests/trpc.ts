@@ -1,8 +1,14 @@
 import type { IronSession } from 'iron-session'
 
+import { createBaseLogger } from '@acme/logging'
+
 import type { SessionData } from '~/server/session'
 import { appRouter } from '~/server/api/root'
 import { createCallerFactory } from '~/server/api/trpc'
+
+const testLogger = createBaseLogger({
+  path: 'tests',
+})
 
 /**
  * Creates a mock session object for testing purposes.
@@ -32,6 +38,7 @@ export const createTestContext = ({
   headers: new Headers(),
   session: createMockSession(session),
   resHeaders: new Headers(),
+  logger: testLogger,
 })
 
 /**

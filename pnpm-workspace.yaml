@@ -7,8 +7,11 @@ catalog:
   '@eslint/js': ^9.39.1
   '@hookform/resolvers': ^5.2.2
   '@types/node': ^24.10.4
+  dd-trace: ^5.81.0
   dotenv-cli: ^11.0.0
   eslint: ^9.39.2
+  pino: ^10.1.0
+  pino-pretty: ^13.1.3
   prettier: ^3.7.4
   prisma-extension-kysely: ^3.0.0
   prisma-kysely: ^2.2.1
@@ -19,9 +22,9 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.0.10
-    '@next/eslint-plugin-next': 16.0.10
-    next: 16.0.10
+    '@next/env': 16.1.1
+    '@next/eslint-plugin-next': 16.1.1
+    next: 16.1.1
   oui:
     '@opengovsg/oui': 0.0.31
     '@opengovsg/oui-theme': 0.0.31

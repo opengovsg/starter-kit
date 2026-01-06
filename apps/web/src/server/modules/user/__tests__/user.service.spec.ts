@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { db } from '@acme/db'
 
 import { AccountProvider } from '../../auth/auth.constants'
-import { loginUserByEmail } from '../user.service'
+import { getUserById, loginUserByEmail } from '../user.service'
 
 describe('user.service', () => {
   beforeEach(async () => {
@@ -217,6 +217,32 @@ describe('user.service', () => {
 
       expect(account?.provider).toBe(AccountProvider.Email)
       expect(account?.provider).toBe('email')
+    })
+  })
+
+  describe('getUserById', () => {
+    it('should return user when user exists', async () => {
+      const email = 'getuser@example.com'
+      const createdUser = await db.user.create({
+        data: { email, name: 'Test user' },
+      })
+
+      const user = await getUserById(createdUser.id)
+
+      expect(user).toStrictEqual({
+        id: createdUser.id,
+        email,
+        image: null,
+        name: 'Test user',
+      })
+    })
+
+    it('should return null when user does not exist', async () => {
+      const nonExistentId = 'non-existent-user-id'
+
+      const user = await getUserById(nonExistentId)
+
+      expect(user).toBeNull()
     })
   })
 })
