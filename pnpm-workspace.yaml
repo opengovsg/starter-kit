@@ -34,7 +34,6 @@ catalogs:
   prisma:
     '@prisma/adapter-pg': 7.2.0
     '@prisma/client': 7.2.0
-    '@prisma/client-runtime-utils': 7.2.0
     prisma: 7.2.0
   react:
     '@types/react': ^19.2.7
@@ -93,7 +92,6 @@ overrides:
   '@types/minimatch': 5.1.2
 
 patchedDependencies:
-  '@prisma/client': patches/@prisma__client.patch
   prisma-extension-kysely@3.0.0: patches/prisma-extension-kysely@3.0.0.patch
 
 publicHoistPattern:
