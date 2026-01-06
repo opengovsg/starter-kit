@@ -97,7 +97,7 @@ pnpm i
 
 # Configure environment variables
 # There is an `.env.example` in the root directory you can use for reference
-cp .env.example .env.local
+cp .env.example .env
 
 # Start docker containers
 # use `docker compose down` to stop the containers afterwards
