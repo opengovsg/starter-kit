@@ -33,7 +33,7 @@ model VerificationToken {
   identifier String   @id
   token      String
   attempts   Int      @default(0)
-  issuedAt   DateTime @default(now())
+  issuedAt   DateTime @default(now()) @db.Timestamptz(3)
 }
 
 model User {
@@ -43,7 +43,7 @@ model User {
   image    String?
   accounts Account[]
 
-  lastLogin DateTime?
+  lastLogin DateTime? @db.Timestamptz(3)
 }
 
 model Account {
