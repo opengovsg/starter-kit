@@ -22,9 +22,9 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.1.1
-    '@next/eslint-plugin-next': 16.1.1
-    next: 16.1.1
+    '@next/env': 16.1.5
+    '@next/eslint-plugin-next': 16.1.5
+    next: 16.1.5
   oui:
     '@opengovsg/oui': 0.0.31
     '@opengovsg/oui-theme': 0.0.31
@@ -38,8 +38,8 @@ catalogs:
   react:
     '@types/react': ^19.2.7
     '@types/react-dom': ^19.2.3
-    react: ^19.2.3
-    react-dom: ^19.2.3
+    react: ^19.2.4
+    react-dom: ^19.2.4
   react-query5:
     '@tanstack/react-query': ^5.90.14
     '@tanstack/react-query-devtools': ^5.91.2
