@@ -151,7 +151,7 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   return result
 })
 
-const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta }) => {
+const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
   const rateLimitOptions =
     meta?.rateLimitOptions === undefined ? {} : meta.rateLimitOptions
   if (rateLimitOptions === null) {
@@ -167,6 +167,7 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta }) => {
       key: createRateLimitFingerprint({
         ipAddress: extractIpAddress(ctx.headers),
         userId: ctx.session.userId,
+        path,
       }),
       options: rateLimitOptions,
     })
