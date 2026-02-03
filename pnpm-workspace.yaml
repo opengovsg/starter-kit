@@ -36,7 +36,7 @@ catalogs:
     '@prisma/client': 7.2.0
     prisma: 7.2.0
   react:
-    '@types/react': ^19.2.7
+    '@types/react': ^19.2.9
     '@types/react-dom': ^19.2.3
     react: ^19.2.4
     react-dom: ^19.2.4
