@@ -2,7 +2,7 @@ import z from 'zod'
 
 import { govEmailSchema } from './email'
 
-export const OTP_LENGTH = 6
+export const OTP_LENGTH = 8
 export const OTP_PREFIX_LENGTH = 3
 export const PKCE_LENGTH = 128 // max length as per RFC 7636
 export const PKCE_VERIFIER_ALPHABET =
