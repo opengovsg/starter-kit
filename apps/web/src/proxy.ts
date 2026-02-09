@@ -41,7 +41,7 @@ function generateCspHeader(policies: CspPolicy[]): string {
 
 const defaultPolicy: CspPolicy = {
   'default-src': ["'self'"],
-  'script-src': ["'self'", "'strict-dynamic'"],
+  'script-src': ["'self'"],
   'connect-src': ["'self'"],
   'style-src': ["'self'", "'unsafe-inline'"],
   'img-src': ["'self'", 'data:', 'blob:'],
