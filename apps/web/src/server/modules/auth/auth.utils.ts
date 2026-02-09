@@ -53,12 +53,20 @@ export const isValidToken = ({
   codeChallenge: string
 }) => {
   try {
-    return timingSafeEqual(
-      Buffer.from(hash),
-      Buffer.from(createTokenHash({ token, email, codeChallenge })),
+    const storedBuffer = Buffer.from(hash)
+    const submittedBuffer = Buffer.from(
+      createTokenHash({ token, email, codeChallenge }),
     )
+
+    if (storedBuffer.length !== submittedBuffer.length) {
+      // Don't throw error on length mismatch to prevent timing attacks
+      timingSafeEqual(submittedBuffer, submittedBuffer)
+      return false
+    }
+
+    return timingSafeEqual(storedBuffer, submittedBuffer)
   } catch {
-    // In case of any error (e.g. buffer size mismatch), return false
+    // In case of any other error, return false
     return false
   }
 }
