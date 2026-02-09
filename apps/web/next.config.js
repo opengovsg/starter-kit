@@ -7,6 +7,9 @@ await jiti.import('./src/env')
 
 /** @type {import("next").NextConfig} */
 const config = {
+  experimental: {
+    proxyClientMaxBodySize: '2mb',
+  },
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     '@acme/db',
