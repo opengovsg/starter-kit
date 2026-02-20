@@ -13,11 +13,13 @@ interface ErrorCardProps {
   svg?: React.ReactNode
 }
 
+const DEFAULT_ERROR_SVG = <ErrorSvg />
+
 export const ErrorCard = ({
   fullscreen = true,
   title,
   message,
-  svg = <ErrorSvg />,
+  svg = DEFAULT_ERROR_SVG,
 }: ErrorCardProps) => {
   const router = useRouter()
 
