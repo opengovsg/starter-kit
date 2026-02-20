@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
 import { Button } from '@opengovsg/oui/button'
@@ -28,18 +28,17 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     },
   })
 
-  const [queryError] = useQueryState('error', { defaultValue: '' })
-
-  useEffect(() => {
-    if (queryError) {
-      setError('email', { message: String(queryError) })
-    }
-  }, [queryError, setError])
+  const [queryError, setQueryError] = useQueryState('error', {
+    defaultValue: '',
+  })
 
   const trpc = useTRPC()
 
   const loginMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
+      onMutate: () => {
+        return setQueryError('')
+      },
       onSuccess: (res, req) => {
         return onNext({
           email: res.email,
@@ -85,9 +84,9 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
             inputProps={{
               placeholder: 'e.g. jane@data.gov.sg',
             }}
-            errorMessage={error?.message}
+            errorMessage={error?.message ?? queryError}
             isRequired
-            isInvalid={!!error}
+            isInvalid={!!error || !!queryError}
             {...field}
             label="Log in with a .gov.sg or whitelisted email address"
           />

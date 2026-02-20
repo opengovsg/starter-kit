@@ -52,6 +52,7 @@ export const VersionCheckWrapper = () => {
 
   const handleRequireUpdateEvent = useCallback(() => {
     setRequireUpdate(true)
+    setIsOpen(true)
   }, [])
 
   useEffect(() => {
@@ -61,13 +62,6 @@ export const VersionCheckWrapper = () => {
       window.removeEventListener(REQUIRE_UPDATE_EVENT, handleRequireUpdateEvent)
     }
   }, [handleRequireUpdateEvent])
-
-  useEffect(() => {
-    if (requireUpdate) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsOpen(true)
-    }
-  }, [requireUpdate])
 
   return (
     <>

@@ -7,6 +7,8 @@ import { DEFAULT_SOCIAL_MEDIA_LINKS } from './constants'
 import { FooterLink } from './footer-link'
 import { RestrictedOgpHoriSvgr } from './restricted-ogp-hori-svgr'
 
+const EMPTY_NAV_LINKS: { label: string; href: string }[] = []
+
 interface FooterProps {
   appName: string
   navLinks?: { label: string; href: string }[]
@@ -19,7 +21,7 @@ interface FooterProps {
 
 export function RestrictedFooter({
   appName,
-  navLinks = [],
+  navLinks = EMPTY_NAV_LINKS,
   socialMediaLinks = DEFAULT_SOCIAL_MEDIA_LINKS,
 }: FooterProps) {
   const currentYear = new Date().getFullYear()
@@ -61,9 +63,9 @@ export function RestrictedFooter({
 
           <div className="flex flex-col gap-2 lg:items-end">
             <div className="flex flex-row gap-4">
-              {socialMediaLinks.map(({ label, href, Icon }, index) => (
+              {socialMediaLinks.map(({ label, href, Icon }) => (
                 <Link
-                  key={index}
+                  key={href}
                   target="_blank"
                   href={href}
                   aria-label={label}
