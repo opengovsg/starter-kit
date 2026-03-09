@@ -6,7 +6,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import type { AppRouter } from '~/server/api/root'
-import { LOGIN_ROUTE } from '~/constants'
+import { SIGN_OUT_API_ROUTE } from '~/constants'
 import { appRouter } from '~/server/api/root'
 import { createCallerFactory, createTRPCContext } from '~/server/api/trpc'
 import { createQueryClient } from './query-client'
@@ -53,13 +53,12 @@ const callerFactory = createCallerFactory(appRouter)
  */
 export const createCaller = async (contextFn = createContext) => {
   return callerFactory(await contextFn(), {
-    onError: ({ error, ctx }) => {
+    onError: ({ error }) => {
       switch (error.code) {
         case 'NOT_FOUND':
           return notFound()
         case 'UNAUTHORIZED':
-          ctx?.session.destroy()
-          return redirect(LOGIN_ROUTE)
+          return redirect(SIGN_OUT_API_ROUTE)
         case 'FORBIDDEN':
           return forbidden()
         default:

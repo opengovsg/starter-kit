@@ -1,13 +1,41 @@
 import { toast } from '@opengovsg/oui/toast'
-import { defaultShouldDehydrateQuery, QueryClient } from '@tanstack/react-query'
+import {
+  defaultShouldDehydrateQuery,
+  MutationCache,
+  QueryCache,
+  QueryClient,
+} from '@tanstack/react-query'
 import { isTRPCClientError } from '@trpc/client'
 import SuperJSON from 'superjson'
 
-import { LOGIN_ROUTE } from '~/constants'
+import { SIGN_OUT_API_ROUTE } from '~/constants'
 import { trpcHandleableErrorCodeSchema } from '~/validators/trpc'
+
+function handleTRPCError(error: Error): boolean {
+  if (!isTRPCClientError(error)) return false
+  const result = trpcHandleableErrorCodeSchema.safeParse(error)
+  if (!result.success) return false
+
+  const code = result.data.data.code
+  if (code === 'UNAUTHORIZED') {
+    window.location.href = SIGN_OUT_API_ROUTE
+    return true
+  }
+  return false
+}
 
 export const createQueryClient = () =>
   new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => {
+        handleTRPCError(error)
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        handleTRPCError(error)
+      },
+    }),
     defaultOptions: {
       queries: {
         // With SSR, we usually want to set some default staleTime
@@ -18,6 +46,8 @@ export const createQueryClient = () =>
       mutations: {
         retry: false,
         onError: (error) => {
+          // UNAUTHORIZED is already handled by mutationCache.onError
+          if (handleTRPCError(error)) return
           // TODO: Log the error to an error reporting service
           console.error('>>> Error in mutation', error)
           if (isTRPCClientError(error)) {
@@ -28,11 +58,6 @@ export const createQueryClient = () =>
                 return toast.error(
                   'You are not allowed to perform this action.',
                 )
-              }
-
-              if (code === 'UNAUTHORIZED') {
-                window.location.href = LOGIN_ROUTE
-                return
               }
 
               return toast.error('The requested resource was not found.')

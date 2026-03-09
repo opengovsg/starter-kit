@@ -2,3 +2,4 @@ export const REQUIRE_UPDATE_EVENT = 'require-update' // Window event when versio
 
 export const AUTHED_ROOT_ROUTE = '/admin'
 export const LOGIN_ROUTE = '/sign-in'
+export const SIGN_OUT_API_ROUTE = '/api/auth/sign-out'
