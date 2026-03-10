@@ -8,7 +8,9 @@ import { createTRPCContext } from '@trpc/tanstack-react-query'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'
+import { REQUIRE_UPDATE_EVENT } from '~/constants'
 import { env } from '~/env'
+import { APP_VERSION_HEADER_KEY } from '~/lib/logger'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { createQueryClient } from './query-client'
 
@@ -43,6 +45,21 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers()
             headers.set('x-trpc-source', 'nextjs-react')
             return headers
+          },
+          fetch(url, options) {
+            return fetch(url, options).then((response) => {
+              const serverVersion = response.headers.get(
+                APP_VERSION_HEADER_KEY,
+              )
+              if (
+                serverVersion &&
+                env.NEXT_PUBLIC_APP_VERSION &&
+                serverVersion !== env.NEXT_PUBLIC_APP_VERSION
+              ) {
+                window.dispatchEvent(new Event(REQUIRE_UPDATE_EVENT))
+              }
+              return response
+            })
           },
         }),
       ],

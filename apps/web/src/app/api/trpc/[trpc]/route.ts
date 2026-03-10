@@ -1,6 +1,8 @@
 import type { NextRequest } from 'next/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
+import { env } from '~/env'
+import { APP_VERSION_HEADER_KEY } from '~/lib/logger'
 import { appRouter } from '~/server/api/root'
 import { createTRPCContext } from '~/server/api/trpc'
 
@@ -43,6 +45,9 @@ const handler = async (req: NextRequest) => {
   })
 
   setCorsHeaders(response)
+  if (env.NEXT_PUBLIC_APP_VERSION) {
+    response.headers.set(APP_VERSION_HEADER_KEY, env.NEXT_PUBLIC_APP_VERSION)
+  }
   return response
 }
 
