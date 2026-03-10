@@ -47,9 +47,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           },
           fetch(url, options) {
             return fetch(url, options).then((response) => {
-              const serverVersion = response.headers.get(
-                APP_VERSION_HEADER_KEY,
-              )
+              const serverVersion = response.headers.get(APP_VERSION_HEADER_KEY)
               if (
                 serverVersion &&
                 env.NEXT_PUBLIC_APP_VERSION &&
