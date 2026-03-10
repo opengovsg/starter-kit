@@ -1,9 +1,7 @@
 import { createBaseLogger } from '@acme/logging'
 
+import { APP_VERSION_HEADER_KEY } from '~/constants'
 import { env } from '~/env'
-
-// Used to check the app version from the client
-export const APP_VERSION_HEADER_KEY = 'X-App-Version'
 
 export const createLogger = ({
   path,

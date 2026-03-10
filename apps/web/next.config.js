@@ -7,6 +7,7 @@ await jiti.import('./src/env')
 
 /** @type {import("next").NextConfig} */
 const config = {
+  deploymentId: process.env.NEXT_PUBLIC_APP_VERSION,
   experimental: {
     // Limits body size in our endpoints.
     // Only affects route matches in proxy.ts, so you must be careful to not remove matches in that file
