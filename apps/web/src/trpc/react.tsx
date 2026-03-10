@@ -8,9 +8,8 @@ import { createTRPCContext } from '@trpc/tanstack-react-query'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'
-import { REQUIRE_UPDATE_EVENT } from '~/constants'
+import { APP_VERSION_HEADER_KEY, REQUIRE_UPDATE_EVENT } from '~/constants'
 import { env } from '~/env'
-import { APP_VERSION_HEADER_KEY } from '~/lib/logger'
 import { getBaseUrl } from '~/utils/get-base-url'
 import { createQueryClient } from './query-client'
 

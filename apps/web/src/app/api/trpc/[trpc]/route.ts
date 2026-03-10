@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
 import { env } from '~/env'
-import { APP_VERSION_HEADER_KEY } from '~/lib/logger'
+import { APP_VERSION_HEADER_KEY } from '~/constants'
 import { appRouter } from '~/server/api/root'
 import { createTRPCContext } from '~/server/api/trpc'
 
