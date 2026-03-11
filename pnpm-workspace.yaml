@@ -44,10 +44,10 @@ catalogs:
     '@tanstack/react-query': ^5.90.19
     '@tanstack/react-query-devtools': ^5.91.2
   storybook10:
-    '@storybook/addon-a11y': ^10.2.4
-    '@storybook/addon-docs': ^10.2.4
-    '@storybook/addon-vitest': ^10.2.4
-    '@storybook/nextjs-vite': ^10.2.4
+    '@storybook/addon-a11y': ^10.2.10
+    '@storybook/addon-docs': ^10.2.10
+    '@storybook/addon-vitest': ^10.2.10
+    '@storybook/nextjs-vite': ^10.2.10
     eslint-plugin-storybook: ^10.2.10
     storybook: ^10.2.10
     storybook-addon-vite-mock: ^1.1.1
