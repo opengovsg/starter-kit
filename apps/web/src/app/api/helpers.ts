@@ -10,9 +10,12 @@ import { callerFactory, createTRPCContext } from '~/server/api/trpc'
  * @param resHeaders - Optional response headers object for rate limit headers
  */
 export async function createApiCaller(req: NextRequest, resHeaders?: Headers) {
+  const headers = new Headers(req.headers)
+  headers.set('x-trpc-source', 'rest-api')
+
   return callerFactory(
     await createTRPCContext({
-      headers: req.headers,
+      headers,
       resHeaders,
     }),
   )
