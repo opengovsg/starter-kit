@@ -8,8 +8,12 @@ export async function GET(req: NextRequest) {
     const caller = await createApiCaller(req)
     const result = await caller.healthcheck()
 
-    return Response.json(result, { status: 200 })
+    const response = Response.json(result, { status: 200 })
+    response.headers.set('Cache-Control', 'no-store')
+    return response
   } catch (e) {
-    return handleTRPCError(e, 'Healthcheck failed')
+    const errorResponse = handleTRPCError(e, 'Healthcheck failed')
+    errorResponse.headers.set('Cache-Control', 'no-store')
+    return errorResponse
   }
 }
