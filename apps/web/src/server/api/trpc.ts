@@ -23,6 +23,7 @@ import {
 } from '../modules/rate-limit/rate-limit.service'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
+import { appRouter } from './root'
 
 /**
  * 1. CONTEXT
@@ -229,3 +230,5 @@ export const publicProcedure = defaultProcedure
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = defaultProcedure.use(authMiddleware)
+
+export const callerFactory = createCallerFactory(appRouter)

@@ -2,8 +2,7 @@ import type { NextRequest } from 'next/server'
 import { TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 
-import { createTRPCContext } from '~/server/api/trpc'
-import { callerFactory } from '~/trpc/server'
+import { callerFactory, createTRPCContext } from '~/server/api/trpc'
 
 /**
  * Helper to create a tRPC caller for REST API endpoints

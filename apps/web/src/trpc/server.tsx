@@ -8,7 +8,7 @@ import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import type { AppRouter } from '~/server/api/root'
 import { SIGN_OUT_API_ROUTE } from '~/constants'
 import { appRouter } from '~/server/api/root'
-import { createCallerFactory, createTRPCContext } from '~/server/api/trpc'
+import { callerFactory, createTRPCContext } from '~/server/api/trpc'
 import { createQueryClient } from './query-client'
 
 /**
@@ -37,7 +37,6 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   queryClient: getQueryClient,
 })
 
-export const callerFactory = createCallerFactory(appRouter)
 /**
  */
 
