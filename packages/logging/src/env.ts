@@ -8,7 +8,7 @@ export const env = createEnv({
       .default('development'),
   },
   client: {
-    NEXT_PUBLIC_ENVIRONMENT: z
+    NEXT_PUBLIC_APP_ENV: z
       .enum(['development', 'staging', 'production', 'test', 'vapt'])
       .default('development'),
     NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),

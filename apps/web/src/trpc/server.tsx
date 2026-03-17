@@ -1,28 +1,12 @@
 import type { TRPCQueryOptions } from '@trpc/tanstack-react-query'
 import { cache } from 'react'
-import { headers } from 'next/headers'
-import { forbidden, notFound, redirect } from 'next/navigation'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import type { AppRouter } from '~/server/api/root'
-import { SIGN_OUT_API_ROUTE } from '~/constants'
 import { appRouter } from '~/server/api/root'
-import { createCallerFactory, createTRPCContext } from '~/server/api/trpc'
+import { createContext } from './context'
 import { createQueryClient } from './query-client'
-
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-const createContext = cache(async () => {
-  const heads = new Headers(await headers())
-  heads.set('x-trpc-source', 'rsc')
-
-  return createTRPCContext({
-    headers: heads,
-  })
-})
 
 /**
  * Only use this function if you really need to use the data both on the server as well as inside client components
@@ -36,37 +20,6 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   ctx: createContext,
   queryClient: getQueryClient,
 })
-
-const callerFactory = createCallerFactory(appRouter)
-/**
- */
-
-/**
- * Create a server-side caller for the tRPC API.
- * Note that this method is detached from your query client and does not store the data in the cache.
- * This means that you cannot use the data in a server component and expect it to be available in the client.
- * If you want to stream the data to the client, use the `prefetch` method in apps/web/src/trpc/server.tsx.
- * @example
- * const trpc = createCaller(createContext);
- * const res = await trpc.post.all();
- *       ^? Post[]
- */
-export const createCaller = async (contextFn = createContext) => {
-  return callerFactory(await contextFn(), {
-    onError: ({ error }) => {
-      switch (error.code) {
-        case 'NOT_FOUND':
-          return notFound()
-        case 'UNAUTHORIZED':
-          return redirect(SIGN_OUT_API_ROUTE)
-        case 'FORBIDDEN':
-          return forbidden()
-        default:
-          console.error('>>> tRPC Error in RSC caller', error)
-      }
-    },
-  })
-}
 
 export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient()

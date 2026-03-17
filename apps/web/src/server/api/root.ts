@@ -9,7 +9,6 @@ import { authRouter } from './routers/auth/auth.router'
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  // TODO: Add logger for healthcheck failures
   healthcheck: publicProcedure
     .meta({
       // Allow higher rate limit for healthchecks

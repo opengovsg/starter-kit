@@ -8,7 +8,7 @@ export function initTracer({ service }: { service?: string } = {}) {
   }
   tracer.init({
     service: service,
-    env: env.NEXT_PUBLIC_ENVIRONMENT,
+    env: env.NEXT_PUBLIC_APP_ENV,
     version: env.NEXT_PUBLIC_APP_VERSION,
     logInjection: true,
     runtimeMetrics: true,

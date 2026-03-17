@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import { db } from '@acme/db'
 
 export const healthcheck = async () => {
@@ -7,9 +9,11 @@ export const healthcheck = async () => {
     return {
       database: 'up',
     }
-  } catch {
-    return {
-      database: 'down',
-    }
+  } catch (error) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Healthcheck failed',
+      cause: error,
+    })
   }
 }
