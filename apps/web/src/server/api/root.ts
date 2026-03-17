@@ -17,11 +17,7 @@ export const appRouter = createTRPCRouter({
         duration: 1,
       },
     })
-    .query(({ ctx }) =>
-      healthcheck({
-        logger: ctx.logger,
-      }),
-    ),
+    .query(() => healthcheck()),
   me: meRouter,
   auth: authRouter,
 })

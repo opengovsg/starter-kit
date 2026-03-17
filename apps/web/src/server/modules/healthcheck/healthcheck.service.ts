@@ -1,9 +1,8 @@
 import { TRPCError } from '@trpc/server'
 
-import type { ScopedLogger, WithLogger } from '@acme/logging'
 import { db } from '@acme/db'
 
-export const healthcheck = async ({ logger }: WithLogger<ScopedLogger>) => {
+export const healthcheck = async () => {
   try {
     await db.$queryRaw`SELECT 1`
 
@@ -11,13 +10,10 @@ export const healthcheck = async ({ logger }: WithLogger<ScopedLogger>) => {
       database: 'up',
     }
   } catch (error) {
-    logger.error({
-      message: 'Database connection failed',
-      error,
-    })
     throw new TRPCError({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Healthcheck failed',
+      cause: error,
     })
   }
 }
