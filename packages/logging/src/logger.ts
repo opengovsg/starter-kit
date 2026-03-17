@@ -44,7 +44,7 @@ export class PinoLogger {
         formatters: {
           bindings: (bindings) => {
             return {
-              env: env.NEXT_PUBLIC_ENVIRONMENT,
+              env: env.NEXT_PUBLIC_APP_ENV,
               version: env.NEXT_PUBLIC_APP_VERSION,
               ...bindings,
             }
@@ -97,7 +97,7 @@ export class PinoLogger {
       client_version: clientVersion,
       server_version: serverVersion,
       source,
-      in_latest_version: clientVersion === serverVersion,
+      is_latest_version: clientVersion === serverVersion,
     })
   }
 }

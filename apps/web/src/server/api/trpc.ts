@@ -138,14 +138,21 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
       },
     })
   } else {
-    logger.error({
+    const statusCode = getHTTPStatusCodeFromError(result.error)
+    const logPayload = {
       merged: {
         durationInMs,
-        statusCode: getHTTPStatusCodeFromError(result.error),
+        statusCode,
       },
       error: result.error,
       message: result.error.message,
-    })
+    }
+
+    if (statusCode >= 500) {
+      logger.error(logPayload)
+    } else {
+      logger.warn(logPayload)
+    }
   }
 
   return result
@@ -196,7 +203,6 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
 
 const authMiddleware = t.middleware(({ ctx, next }) => {
   if (!ctx.session.userId) {
-    ctx.session.destroy()
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
   return next({
