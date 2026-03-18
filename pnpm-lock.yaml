@@ -34,8 +34,8 @@ catalogs:
       specifier: ^3.7.4
       version: 3.6.2
     prisma-extension-kysely:
-      specifier: ^3.0.0
-      version: 3.0.0
+      specifier: ^4.0.0
+      version: 4.0.0
     prisma-kysely:
       specifier: ^3.1.0
       version: 3.1.0
@@ -162,11 +162,6 @@ catalogs:
 overrides:
   '@types/minimatch': 5.1.2
   '@img/sharp-libvips-darwin-arm64': '-'
-
-patchedDependencies:
-  prisma-extension-kysely@3.0.0:
-    hash: 9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827
-    path: patches/prisma-extension-kysely@3.0.0.patch
 
 importers:
 
@@ -461,7 +456,7 @@ importers:
         version: 8.16.3
       prisma-extension-kysely:
         specifier: 'catalog:'
-        version: 3.0.0(patch_hash=9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))
+        version: 4.0.0(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(kysely@0.28.8)
       zod:
         specifier: 'catalog:'
         version: 4.1.12
@@ -6373,10 +6368,11 @@ packages:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
 
-  prisma-extension-kysely@3.0.0:
-    resolution: {integrity: sha512-J8gtIINuqsmbucei7PehAiuKvlPEe6SpRNXM6SdG7wXvY2aNxm5RnjnTwWITLTvzM3smarsKfMMfpMcNua82mA==}
+  prisma-extension-kysely@4.0.0:
+    resolution: {integrity: sha512-DR7/XwxnAB2Z2or7d4QrcRxj1g/G0OR/e48o7AdRMs123YMjs0h5gqJUSijiFNCc2HuDx5pp/SL5FSDPwJlN+A==}
     peerDependencies:
-      '@prisma/client': latest
+      '@prisma/client': ^7.0.0
+      kysely: ^0.27.0 || ^0.28.0
 
   prisma-kysely@3.1.0:
     resolution: {integrity: sha512-8b/5MmjR52rcuC5ZmZh65zS32/j1WTI+xkbADgtCGEtEhzH9VkZZ6jg3MXxiym7oHN8Qf+TNEhjp7cAEmwZqKA==}
@@ -14411,9 +14407,10 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 17.0.2
 
-  prisma-extension-kysely@3.0.0(patch_hash=9c42e9101198e2a811c3bbc340d104ac02bfe42534e64ef50bacd3872ef91827)(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)):
+  prisma-extension-kysely@4.0.0(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(kysely@0.28.8):
     dependencies:
       '@prisma/client': 7.3.0(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
+      kysely: 0.28.8
 
   prisma-kysely@3.1.0(magicast@0.3.5)(prisma@7.3.0(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)):
     dependencies:
