@@ -22,8 +22,8 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.1.5
-    '@next/eslint-plugin-next': 16.1.5
+    '@next/env': 16.1.7
+    '@next/eslint-plugin-next': 16.1.7
     next: 16.1.7
   oui:
     '@opengovsg/oui': 0.0.31
