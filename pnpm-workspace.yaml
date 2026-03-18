@@ -15,7 +15,7 @@ catalog:
   prettier: ^3.7.4
   prisma-extension-kysely: ^4.0.0
   prisma-kysely: ^3.1.0
-  react-aria-components: 1.13.0
+  react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
   typescript: ^5.9.3
   zod: ^4.2.1
@@ -26,8 +26,8 @@ catalogs:
     '@next/eslint-plugin-next': 16.1.7
     next: 16.1.7
   oui:
-    '@opengovsg/oui': 0.0.31
-    '@opengovsg/oui-theme': 0.0.31
+    '@opengovsg/oui': 0.0.52
+    '@opengovsg/oui-theme': 0.0.52
   playwright:
     '@playwright/test': 1.57.0
     playwright: 1.57.0
