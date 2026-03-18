@@ -33,8 +33,8 @@ catalogs:
     playwright: 1.57.0
   prisma:
     '@prisma/adapter-pg': 7.3.0
-    '@prisma/client': 7.3.0
-    prisma: 7.3.0
+    '@prisma/client': 7.4.2
+    prisma: 7.4.2
   react:
     '@types/react': ^19.2.14
     '@types/react-dom': ^19.2.3
