@@ -54,7 +54,7 @@
     "@prisma/adapter-pg": "catalog:prisma",
     "@prisma/client": "catalog:prisma",
     "@t3-oss/env-core": "catalog:t3-env",
-    "kysely": "^0.28.8",
+    "kysely": "^0.28.11",
     "lodash-es": "^4.17.22",
     "pg": "^8.16.3",
     "prisma-extension-kysely": "catalog:",
