@@ -18,11 +18,11 @@ const createMockSession = (
   sessionData?: SessionData,
 ): IronSession<SessionData> => ({
   ...sessionData,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // oxlint-disable-next-line typescript-eslint/no-empty-function
   save: async () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // oxlint-disable-next-line typescript-eslint/no-empty-function
   destroy: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // oxlint-disable-next-line typescript-eslint/no-empty-function
   updateConfig: () => {},
 })
 

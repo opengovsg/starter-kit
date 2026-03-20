@@ -18,7 +18,7 @@ export function ClientProviders({ children }: PropsWithChildren) {
   const router = useRouter()
 
   return (
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+    // oxlint-disable-next-line typescript-eslint/unbound-method
     <RouterProvider navigate={router.push}>
       <TRPCReactProvider>{children}</TRPCReactProvider>
     </RouterProvider>
