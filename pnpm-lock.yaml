@@ -651,6 +651,8 @@ importers:
 
   tooling/github: {}
 
+  tooling/oxlint: {}
+
   tooling/prettier:
     dependencies:
       '@ianvs/prettier-plugin-sort-imports':
