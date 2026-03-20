@@ -29,7 +29,7 @@
     },
     "lint": {
       "dependsOn": ["^topo", "^build"],
-      "outputs": [".cache/.eslintcache"]
+      "outputs": []
     },
     "typecheck": {
       "dependsOn": ["^topo", "^build"],
