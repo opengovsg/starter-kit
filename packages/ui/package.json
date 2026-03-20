@@ -14,7 +14,7 @@
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
@@ -31,11 +31,10 @@
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "eslint": "catalog:",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
     "react": "catalog:react",
     "typescript": "catalog:",
     "zod": "catalog:"
@@ -43,6 +42,5 @@
   "peerDependencies": {
     "react": "catalog:react",
     "zod": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }
