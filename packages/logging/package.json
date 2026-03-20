@@ -7,9 +7,9 @@
     "./tracer": "./src/tracer.ts"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsgo",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
+    "dev": "tsgo",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsgo --noEmit"
