@@ -1,5 +1,7 @@
 import z from 'zod'
 
+import { createTRPCRouter, publicProcedure } from '../../trpc'
+
 import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
 import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
@@ -7,7 +9,6 @@ import {
   emailVerifyOtpSchema,
   OTP_PREFIX_LENGTH,
 } from '~/validators/auth'
-import { createTRPCRouter, publicProcedure } from '../../trpc'
 
 export const emailAuthRouter = createTRPCRouter({
   // TODO: Implement rate limiting for auth endpoints
@@ -17,7 +18,7 @@ export const emailAuthRouter = createTRPCRouter({
       z.object({
         email: z.email(),
         otpPrefix: z.string().length(OTP_PREFIX_LENGTH),
-      }),
+      })
     )
     .mutation(async ({ input: { email, codeChallenge } }) => {
       // returnedEmail may differ from input email

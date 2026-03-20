@@ -1,5 +1,6 @@
-import type { SlotsToClasses } from '@opengovsg/oui-theme'
 import type { PropsWithChildren } from 'react'
+
+import type { SlotsToClasses } from '@opengovsg/oui-theme'
 import { cn } from '@opengovsg/oui-theme'
 
 export const LandingSection = ({
@@ -15,7 +16,7 @@ export const LandingSection = ({
       <div
         className={cn(
           'container mx-auto flex flex-col gap-4 px-4 py-14 md:py-22',
-          classNames?.inner,
+          classNames?.inner
         )}
       >
         {children}
@@ -32,7 +33,7 @@ export const SectionHeader = ({
     <h2
       className={cn(
         'md:prose-responsive-heading-heavy-480 prose-responsive-heading-heavy text-base-content-strong',
-        className,
+        className
       )}
     >
       {children}

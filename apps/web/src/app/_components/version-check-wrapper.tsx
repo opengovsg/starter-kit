@@ -1,9 +1,10 @@
 'use client'
 
-import type { ModalProps } from '@opengovsg/oui/modal'
 import { useCallback, useEffect, useState } from 'react'
+
 import { Banner } from '@opengovsg/oui/banner'
 import { Button } from '@opengovsg/oui/button'
+import type { ModalProps } from '@opengovsg/oui/modal'
 import {
   Modal,
   ModalBody,

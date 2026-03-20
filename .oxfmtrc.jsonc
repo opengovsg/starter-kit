@@ -1,0 +1,87 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["turbo/generators/templates/**/*.hbs"],
+  "printWidth": 80,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "sortTailwindcss": {
+    "functions": ["cn", "cva"],
+  },
+  "sortPackageJson": {
+    "sortScripts": true,
+  },
+  "sortImports": {
+    "internalPattern": ["@acme", "~/", "@/"],
+    "newlinesBetween": true,
+    "customGroups": [
+      {
+        "elementNamePattern": ["react", "react/*"],
+        "groupName": "react-types",
+        "selector": "type",
+      },
+      {
+        "elementNamePattern": ["react", "react/*"],
+        "groupName": "react-values",
+        "selector": "external",
+        "modifiers": ["value"],
+      },
+      {
+        "elementNamePattern": ["react-dom", "react-dom/*"],
+        "groupName": "react-types",
+        "selector": "type",
+      },
+      {
+        "elementNamePattern": ["react-dom", "react-dom/*"],
+        "groupName": "react-values",
+        "selector": "external",
+        "modifiers": ["value"],
+      },
+      {
+        "elementNamePattern": ["next", "next/*"],
+        "groupName": "next-types",
+        "selector": "type",
+      },
+      {
+        "elementNamePattern": ["next", "next/*"],
+        "groupName": "next-values",
+        "selector": "external",
+        "modifiers": ["value"],
+      },
+      {
+        "elementNamePattern": ["@acme", "@acme/*"],
+        "groupName": "acme-types",
+        "selector": "type",
+      },
+      {
+        "elementNamePattern": ["@acme", "@acme/*"],
+        "groupName": "acme-values",
+        "selector": "internal",
+        "modifiers": ["value"],
+      },
+    ],
+    "groups": [
+      "react-types",
+      "react-values",
+      "next-types",
+      "next-values",
+      "builtin",
+      "external",
+      "acme-types",
+      "acme-values",
+      ["parent", "sibling", "index"],
+      "style",
+      "unknown",
+    ],
+  },
+  "overrides": [
+    {
+      "files": ["*.json.hbs"],
+      "options": {},
+    },
+    {
+      "files": ["*.js.hbs"],
+      "options": {},
+    },
+  ],
+}

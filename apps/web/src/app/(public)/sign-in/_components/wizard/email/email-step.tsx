@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
 import { Button } from '@opengovsg/oui/button'
@@ -6,12 +7,12 @@ import { useMutation } from '@tanstack/react-query'
 import { useQueryState } from 'nuqs'
 import { Controller, useForm } from 'react-hook-form'
 
-import { TextField } from '@acme/ui/text-field'
-
 import type { VfnStepData } from '../context'
+import { useSignInWizard } from '../context'
+
+import { TextField } from '@acme/ui/text-field'
 import { useTRPC } from '~/trpc/react'
 import { emailSignInSchema } from '~/validators/auth'
-import { useSignInWizard } from '../context'
 
 interface EmailStepProps {
   onNext: ({ email, otpPrefix, codeChallenge }: VfnStepData) => void
@@ -47,7 +48,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
         })
       },
       onError: (error) => setError('email', { message: error.message }),
-    }),
+    })
   )
 
   const isPending = loginMutation.isPending || newChallengePending
@@ -62,7 +63,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
           .then((codeChallenge) => {
             if (!codeChallenge) {
               toast.error(
-                'Something went wrong generating a sign-in challenge. Please try again.',
+                'Something went wrong generating a sign-in challenge. Please try again.'
               )
               return
             }

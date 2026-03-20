@@ -1,4 +1,5 @@
 import { scryptSync, timingSafeEqual } from 'crypto'
+
 import { customAlphabet } from 'nanoid'
 
 import { OTP_LENGTH, OTP_PREFIX_LENGTH } from '~/validators/auth'
@@ -11,7 +12,7 @@ const createVfnToken = customAlphabet(OTP_ALPHABET, OTP_LENGTH)
 
 export const createVfnPrefix = customAlphabet(
   OTP_PREFIX_ALPHABET,
-  OTP_PREFIX_LENGTH,
+  OTP_PREFIX_LENGTH
 )
 
 export const createVfnIdentifier = ({
@@ -55,7 +56,7 @@ export const isValidToken = ({
   try {
     const storedBuffer = Buffer.from(hash)
     const submittedBuffer = Buffer.from(
-      createTokenHash({ token, email, codeChallenge }),
+      createTokenHash({ token, email, codeChallenge })
     )
 
     if (storedBuffer.length !== submittedBuffer.length) {

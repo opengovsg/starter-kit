@@ -1,7 +1,8 @@
 import { GovtBanner } from '@opengovsg/oui/govt-banner'
 
-import type { DynamicLayoutProps } from '~/types/nextjs'
 import { VersionCheckWrapper } from '../_components/version-check-wrapper'
+
+import type { DynamicLayoutProps } from '~/types/nextjs'
 
 export default function PublicLayout({ children }: DynamicLayoutProps) {
   return (

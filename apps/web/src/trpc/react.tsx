@@ -1,17 +1,19 @@
 'use client'
 
-import type { QueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
+
+import type { QueryClient } from '@tanstack/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
 import { createTRPCContext } from '@trpc/tanstack-react-query'
 import SuperJSON from 'superjson'
 
-import type { AppRouter } from '~/server/api/root'
+import { createQueryClient } from './query-client'
+
 import { APP_VERSION_HEADER_KEY, REQUIRE_UPDATE_EVENT } from '~/constants'
 import { env } from '~/env'
+import type { AppRouter } from '~/server/api/root'
 import { getBaseUrl } from '~/utils/get-base-url'
-import { createQueryClient } from './query-client'
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined
 const getQueryClient = () => {
@@ -63,7 +65,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           },
         }),
       ],
-    }),
+    })
   )
 
   return (

@@ -12,7 +12,7 @@ export const withChromaticModes = (args: ChromaticModeKey[]) => {
           [mode]: modes[mode],
         }
       },
-      {} as Partial<typeof modes>,
+      {} as Partial<typeof modes>
     ),
   }
 }

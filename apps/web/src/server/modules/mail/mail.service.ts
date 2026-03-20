@@ -15,12 +15,12 @@ export const sendMail = async (params: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(params),
-      },
+      }
     )
 
     if (!response.ok) {
       throw new Error(
-        `HTTP error! status: ${response.status} ${response.statusText}`,
+        `HTTP error! status: ${response.status} ${response.statusText}`
       )
     }
 
@@ -29,7 +29,7 @@ export const sendMail = async (params: {
 
   console.warn(
     '!!!! This should not be seen on prod !!!! POSTMAN_API_KEY missing. Logging the following mail: ',
-    params,
+    params
   )
   return
 }
