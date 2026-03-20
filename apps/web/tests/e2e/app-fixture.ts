@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable no-empty-pattern */
+/* oxlint-disable react-hooks/rules-of-hooks */
+/* oxlint-disable no-empty-pattern */
 import { test as baseTest } from '@playwright/test'
 
 import {

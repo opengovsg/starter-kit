@@ -36,8 +36,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: "add",
-        path: "packages/{{ name }}/eslint.config.js",
-        templateFile: "templates/eslint.config.js.hbs",
+        path: "packages/{{ name }}/.oxlintrc.json",
+        templateFile: "templates/.oxlintrc.json.hbs",
       },
       {
         type: "add",

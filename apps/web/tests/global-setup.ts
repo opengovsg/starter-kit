@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-properties */
+/* oxlint-disable no-restricted-properties */
 import { stringify } from 'superjson'
 
 import type { ContainerInformation } from './common'

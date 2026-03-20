@@ -14,17 +14,17 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "lint": "oxlint .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "eslint": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
