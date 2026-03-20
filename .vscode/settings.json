@@ -5,9 +5,9 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.oxc": "always"
   },
-  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "oxc.typeAware": true,
   "prettier.ignorePath": ".gitignore",
   "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
   "tailwindCSS.experimental.classRegex": [
