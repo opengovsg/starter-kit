@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
+    "oxc.oxc-vscode",
     "dbaeumer.vscode-eslint",
     "prisma.prisma",
     "yoavbls.pretty-ts-errors",
