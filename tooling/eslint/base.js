@@ -1,6 +1,7 @@
 /// <reference types="./types.d.ts" />
 
 import * as path from 'node:path'
+
 import { includeIgnoreFile } from '@eslint/compat'
 import eslint from '@eslint/js'
 import importPlugin from 'eslint-plugin-import'
@@ -35,7 +36,7 @@ export const restrictEnvAccess = tseslint.config(
         },
       ],
     },
-  },
+  }
 )
 
 export default defineConfig(
@@ -81,5 +82,5 @@ export default defineConfig(
   {
     linterOptions: { reportUnusedDisableDirectives: true },
     languageOptions: { parserOptions: { projectService: true } },
-  },
+  }
 )

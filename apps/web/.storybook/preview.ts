@@ -4,7 +4,6 @@ import { initialize, mswLoader } from 'msw-storybook-addon'
 import { viewport } from '@acme/storybook-config'
 
 import { ibmPlexMono, inter } from '~/lib/fonts'
-
 import '../src/app/globals.css'
 
 // Initialize MSW
@@ -37,7 +36,7 @@ const preview: Preview = {
         inter.variable,
         'text-base-content-default',
         'font-sans',
-        'antialiased',
+        'antialiased'
       )
       return Story()
     },

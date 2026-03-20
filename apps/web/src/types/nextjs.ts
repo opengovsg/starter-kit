@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+
 import type { UnionToIntersection } from 'type-fest'
 
 export interface DynamicPageProps<
@@ -20,8 +21,9 @@ export interface DynamicPageProps<
 }
 
 // No search params in layouts
-export interface DynamicLayoutProps<TParams extends string = never>
-  extends PropsWithChildren {
+export interface DynamicLayoutProps<
+  TParams extends string = never,
+> extends PropsWithChildren {
   params: Promise<
     UnionToIntersection<
       {

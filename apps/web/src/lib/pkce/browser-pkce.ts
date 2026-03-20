@@ -11,7 +11,7 @@ export function browserCreatePkceVerifier(): string {
 }
 
 export async function browserCreatePkceChallenge(
-  codeVerifier: string,
+  codeVerifier: string
 ): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(codeVerifier)

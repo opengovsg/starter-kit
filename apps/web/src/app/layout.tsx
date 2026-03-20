@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import NextTopLoader from 'nextjs-toploader'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-
-import '~/app/globals.css'
 
 import { Toaster } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+import '~/app/globals.css'
+import NextTopLoader from 'nextjs-toploader'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+
+import { ClientProviders } from './provider'
 
 import { env } from '~/env'
 import { ibmPlexMono, inter } from '~/lib/fonts'
-import { ClientProviders } from './provider'
 
 export const metadata: Metadata = {
   title: env.NEXT_PUBLIC_APP_NAME,
@@ -30,7 +31,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         className={cn(
           'text-base-content-default font-sans antialiased',
           inter.variable,
-          ibmPlexMono.variable,
+          ibmPlexMono.variable
         )}
       >
         <NextTopLoader color="var(--color-interaction-main-default)" />

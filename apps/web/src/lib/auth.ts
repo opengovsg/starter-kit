@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+
 import { toast } from '@opengovsg/oui'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -18,7 +19,7 @@ export const useAuth = () => {
         toast.success('Successfully logged out.')
         router.refresh()
       },
-    }),
+    })
   )
 
   return { user, logout: logoutMutation.mutate }

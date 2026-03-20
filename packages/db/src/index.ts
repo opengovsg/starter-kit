@@ -11,7 +11,7 @@ const globalForPrisma = global as unknown as {
 const createPrisma = () => {
   const pool = new PrismaPg({ connectionString: env.DATABASE_URL })
   const prisma = new PrismaClient({ adapter: pool }).$extends(
-    kyselyPrismaExtension,
+    kyselyPrismaExtension
   )
 
   return prisma
