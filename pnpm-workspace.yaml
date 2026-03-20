@@ -7,6 +7,7 @@ catalog:
   '@eslint/js': ^9.39.1
   '@hookform/resolvers': ^5.2.2
   '@types/node': ^24.10.4
+  '@typescript/native-preview': 7.0.0-dev.20260320.1
   dd-trace: ^5.81.0
   dotenv-cli: ^11.0.0
   eslint: ^9.39.2
@@ -78,6 +79,7 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - '@opengovsg/*'
+  - '@typescript/native-preview*'
   - storybook
   - '@storybook/*'
   - eslint-plugin-storybook
