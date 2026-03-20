@@ -7,12 +7,12 @@
     "./tracer": "./src/tracer.ts"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsgo",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
+    "dev": "tsgo",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
@@ -26,6 +26,7 @@
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
