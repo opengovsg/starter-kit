@@ -15,6 +15,9 @@ catalogs:
     '@types/node':
       specifier: ^24.10.4
       version: 24.10.4
+    '@typescript/native-preview':
+      specifier: 7.0.0-dev.20260320.1
+      version: 7.0.0-dev.20260320.1
     dd-trace:
       specifier: ^5.81.0
       version: 5.81.0
@@ -339,6 +342,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:react
         version: 19.2.3(@types/react@19.2.14)
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       '@vitest/browser':
         specifier: catalog:vitest
         version: 4.0.8(msw@2.12.7(@types/node@24.10.4)(typescript@5.9.3))(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.44.0)(yaml@2.8.2))(vitest@4.0.8)
@@ -424,6 +430,9 @@ importers:
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -476,6 +485,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       dotenv-cli:
         specifier: 'catalog:'
         version: 11.0.0
@@ -528,6 +540,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -562,6 +577,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -614,6 +632,9 @@ importers:
       '@types/react':
         specifier: catalog:react
         version: 19.2.14
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -645,6 +666,9 @@ importers:
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -697,6 +721,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -727,6 +754,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -742,6 +772,9 @@ importers:
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../typescript
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -776,6 +809,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@typescript/native-preview':
+        specifier: 'catalog:'
+        version: 7.0.0-dev.20260320.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -4120,6 +4156,45 @@ packages:
   '@typescript-eslint/visitor-keys@8.53.1':
     resolution: {integrity: sha512-oy+wV7xDKFPRyNggmXuZQSBzvoLnpmJs+GhzRhPjrxl2b/jIlyjVokzm47CZCDUdXKr2zd7ZLodPfOBpOPyPlg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-9zadqk/wJ+4bCheapoP/wZZxIGbHotKj+QDvwlCeB93LFrcuIYDt8q91xW1tzrc12YrUTgWXqJuYHTNZ9fzyHw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-uw3sflQVaIIJhfu6xtFFogE8aC0MQ4xt9yRx2CDngp8/PQ0Qp8xp0LrUigQHbwtt7Y8AKR3YCRaX53rbovj4dg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-fmi8apETnFd6KhLzcGFLUcPRTZO+6vHnFw0Yz08IT68aX2Vft91LnxlJuuaiKVfzE8w9fxQlU1lAZyTVWARGIg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-tCKwcnikt4uvSfHc14A6FJwEQox1yTsKcssTsAhxycH2bYuUr05AQNUdud3W41tr0MySHrcQG4CstzFxE9C86w==}
+    cpu: [arm]
+    os: [linux]
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-ouNWS+eUHna/mxP0tLQRzBfR5CwldCrG9mi+pTZY1pKnjvvu7b0i6OOFh9em36wIsDCjPGu6dQiv2sfBCCyRwA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-fG32mrKJOW8U9pq3VdHNXCfxCN3T7Uh5zkf3beH3mFIRtIv65BUONwW6rh63DCtyGZTeBkF6GTJO2nIIfx3dbA==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-iklQlFdDWkV62GbxqVltm7y148vL6TC18BYZRzRaJjf2r+Gd2UGW3FPydNwKViTRfvWWwNx0aU8fnqTaoMBGqw==}
+    cpu: [x64]
+    os: [win32]
+
+  '@typescript/native-preview@7.0.0-dev.20260320.1':
+    resolution: {integrity: sha512-uLkkdYwvJQ/atPqMW9RUt1j71lcbL53e7a+G/I3AXb5QioMdWkG6nbNfKPM+06RgXwPDyDV9+bI0FT/13BEVgg==}
+    hasBin: true
 
   '@vitest/browser-playwright@4.0.8':
     resolution: {integrity: sha512-MUi0msIAPXcA2YAuVMcssrSYP/yylxLt347xyTC6+ODl0c4XQFs0d2AN3Pc3iTa0pxIGmogflUV6eogXpPbJeA==}
@@ -12680,6 +12755,37 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.53.1
       eslint-visitor-keys: 4.2.1
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260320.1':
+    optional: true
+
+  '@typescript/native-preview@7.0.0-dev.20260320.1':
+    optionalDependencies:
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260320.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260320.1
 
   '@vitest/browser-playwright@4.0.8(msw@2.12.7(@types/node@24.10.4)(typescript@5.9.3))(playwright@1.57.0)(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.44.0)(yaml@2.8.2))(vitest@4.0.8)':
     dependencies:
