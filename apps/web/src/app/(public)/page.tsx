@@ -1,6 +1,7 @@
+import { LandingPageComponent } from './_components/landing-page/_page'
+
 import { env } from '~/env'
 import { getSession } from '~/server/session'
-import { LandingPageComponent } from './_components/landing-page/_page'
 
 export default async function LandingPage() {
   // Might not be worth subscribing this page to be dynamically rendered just to

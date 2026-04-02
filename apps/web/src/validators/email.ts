@@ -10,7 +10,7 @@ export const emailSchema = z
   .check(
     z.trim(),
     z.email({ error: 'Please enter a valid email address.' }),
-    z.toLowerCase(),
+    z.toLowerCase()
   )
 
 export const govEmailSchema = emailSchema.refine(
@@ -22,5 +22,5 @@ export const govEmailSchema = emailSchema.refine(
       parsedEmail.domain === 'gov.sg' || parsedEmail.domain.endsWith('.gov.sg')
     )
   },
-  { error: 'Please enter a valid .gov.sg email address.' },
+  { error: 'Please enter a valid .gov.sg email address.' }
 )

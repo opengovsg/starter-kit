@@ -19,17 +19,18 @@ import { randomUUID } from 'crypto'
 import { readdirSync, readFileSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+
 import { PrismaPg } from '@prisma/adapter-pg'
 import { parse } from 'superjson'
 import { vi } from 'vitest'
 
+import { CONTAINER_INFORMATION_SCHEMA } from '../common'
+
 import { PrismaClient } from '@acme/db/client'
 import { kyselyPrismaExtension } from '@acme/db/extensions'
 
-import { CONTAINER_INFORMATION_SCHEMA } from '../common'
-
 const parsed = CONTAINER_INFORMATION_SCHEMA.parse(
-  parse(process.env.testcontainers ?? ''),
+  parse(process.env.testcontainers ?? '')
 )
 const container = parsed.find((c) => c.configuration.name === 'database')
 
@@ -73,7 +74,7 @@ const prismaMigrationDir = join(
   'packages',
   'db',
   'prisma',
-  'migrations',
+  'migrations'
 )
 
 // Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs

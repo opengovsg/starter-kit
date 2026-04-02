@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, waitFor } from 'storybook/test'
 import { AppDecorator } from '~storybook/decorators'
 import { authHandlers } from '~tests/msw/handlers/auth'
-import { expect, waitFor } from 'storybook/test'
 
 import { withChromaticModes } from '@acme/storybook-config'
 
@@ -31,7 +31,7 @@ export const LoginStepRequiredError: Story = {
     await userEvent.click(submitButton)
 
     await expect(
-      await canvas.findByText('Please enter an email address.'),
+      await canvas.findByText('Please enter an email address.')
     ).toBeInTheDocument()
   },
 }

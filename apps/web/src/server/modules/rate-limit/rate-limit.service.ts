@@ -77,7 +77,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
         points: mergedConfig.burstPoints,
         duration: mergedConfig.burstDuration,
       }),
-    }),
+    })
   )
 
   rateLimiterCache.set(cacheKey, limiter)

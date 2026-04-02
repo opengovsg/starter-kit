@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+
 import { Button } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
 
@@ -38,7 +39,7 @@ export const ErrorCard = ({
     <div
       className={cn(
         'flex w-full flex-col items-center justify-center',
-        fullscreen ? 'gap-8 p-8' : 'gap-0 p-0',
+        fullscreen ? 'gap-8 p-8' : 'gap-0 p-0'
       )}
     >
       {svg}

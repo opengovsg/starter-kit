@@ -9,7 +9,7 @@ const baseContainerConfiguration = z.object({
       z.union([
         z.number(),
         z.object({ container: z.number(), host: z.number() }),
-      ]),
+      ])
     )
     .optional(),
   environment: z.record(z.string(), z.string()).optional(),
@@ -44,7 +44,7 @@ export const CONTAINER_INFORMATION_SCHEMA = z.array(
     configuration: baseContainerConfiguration.extend({
       image: z.string(),
     }),
-  }),
+  })
 )
 
 export type ContainerInformation = z.infer<
@@ -79,7 +79,7 @@ export const CONTAINER_CONFIGURATIONS: Record<
 
 export const setup = async (
   configurations: ContainerConfiguration[],
-  network?: StartedNetwork,
+  network?: StartedNetwork
 ) => {
   const containerTemplates = configurations.map((configuration) => {
     const {
@@ -144,7 +144,7 @@ export const setup = async (
       name,
       container,
       ports: ports.map((port) =>
-        typeof port === 'number' ? port : port.container,
+        typeof port === 'number' ? port : port.container
       ),
       configuration,
     }
@@ -170,16 +170,16 @@ export const setup = async (
         ports: mappedPorts,
         container: startedContainer,
       }
-    }),
+    })
   )
 
   return startedContainers
 }
 
 export const teardown = async (
-  containers: { container: StartedTestContainer }[],
+  containers: { container: StartedTestContainer }[]
 ) => {
   await Promise.all(
-    containers.map((container) => container.container.stop({ remove: true })),
+    containers.map((container) => container.container.stop({ remove: true }))
   )
 }
