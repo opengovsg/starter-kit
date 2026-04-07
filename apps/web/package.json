@@ -41,7 +41,7 @@
     "date-fns": "^4.1.0",
     "email-addresses": "^5.0.0",
     "iron-session": "^8.0.4",
-    "lodash-es": "^4.17.22",
+    "lodash-es": "^4.18.1",
     "nanoid": "^5.1.6",
     "next": "catalog:next",
     "nextjs-toploader": "^3.9.17",
