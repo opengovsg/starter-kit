@@ -72,15 +72,8 @@ linkWorkspacePackages: true
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
-  - next
-  - '@next/env'
-  - '@next/eslint-plugin-next'
-  - react
-  - react-dom
+  # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
   - '@opengovsg/*'
-  - storybook
-  - '@storybook/*'
-  - eslint-plugin-storybook
 
 onlyBuiltDependencies:
   - '@prisma/client'
