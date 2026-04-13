@@ -7,7 +7,6 @@ await jiti.import('./src/env')
 
 /** @type {import("next").NextConfig} */
 const config = {
-  deploymentId: process.env.NEXT_PUBLIC_APP_VERSION,
   experimental: {
     // Limits body size in our endpoints.
     // Only affects route matches in proxy.ts, so you must be careful to not remove matches in that file
@@ -29,6 +28,8 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
 
+  // If deploying to AWS, set deploymentId to a unique value for each deployment, e.g. from git sha or CI build number
+  deploymentId: undefined,
   // If deploying to AWS, set output to 'standalone'
   output: undefined,
 }
