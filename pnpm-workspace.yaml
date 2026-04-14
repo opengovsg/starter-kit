@@ -58,9 +58,9 @@ catalogs:
     '@tailwindcss/postcss': ^4.2.2
     tailwindcss: ^4.2.2
   trpc:
-    '@trpc/client': ^11.8.1
-    '@trpc/server': ^11.8.1
-    '@trpc/tanstack-react-query': ^11.8.1
+    '@trpc/client': ^11.16.0
+    '@trpc/server': ^11.16.0
+    '@trpc/tanstack-react-query': ^11.16.0
   vitest:
     '@vitest/browser': 4.0.8
     '@vitest/browser-playwright': 4.0.8
