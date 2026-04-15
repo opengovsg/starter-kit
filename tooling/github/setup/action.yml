@@ -11,7 +11,7 @@ runs:
         cache: 'pnpm'
 
     - shell: bash
-      run: pnpm add -g turbo
+      run: pnpm add -g turbo@2.9.6
 
     - shell: bash
       run: pnpm install
