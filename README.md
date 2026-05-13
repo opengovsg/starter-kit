@@ -12,7 +12,7 @@ A technical kit to quickly build new products from
 - ⚡ Full-stack React with [Next.js v15](https://nextjs.org)
 - 🌈 Database with [Prisma](https://www.prisma.io/)
 - ⚙️ VSCode extensions
-- 🎨 ESLint + Oxfmt
+- 🎨 Oxlint + Oxfmt
 - 💚 CI setup using GitHub Actions:
   - ✅ E2E testing with [Playwright](https://playwright.dev/)
   - ✅ Unit testing with [Vitest](https://vitest.dev/)
@@ -43,8 +43,8 @@ packages
   └─ ui
       └─ Start of a UI package for the webapp using react-aria-components + @opengovsg/oui
 tooling
-  ├─ eslint
-  │   └─ shared, fine-grained, eslint presets
+  ├─ oxlint
+  │   └─ shared Oxlint configuration
   ├─ tailwind
   │   └─ shared tailwind theme and configuration
   └─ typescript

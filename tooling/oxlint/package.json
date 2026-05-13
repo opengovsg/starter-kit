@@ -1,0 +1,6 @@
+{
+  "name": "@acme/oxlint-config",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Shared Oxlint rules (JSON only; consumed via extends paths)."
+}

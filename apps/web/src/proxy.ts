@@ -67,10 +67,10 @@ const vercelLivePolicy = {
 }
 
 export function proxy(request: NextRequest) {
-  // eslint-disable-next-line no-restricted-properties
+  // oxlint-disable-next-line no-restricted-properties
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
   const isDev =
-    // eslint-disable-next-line no-restricted-properties
+    // oxlint-disable-next-line no-restricted-properties
     process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
   // Read more on how to use this nonce with custom scripts:

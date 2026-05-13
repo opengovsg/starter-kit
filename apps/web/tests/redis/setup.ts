@@ -1,5 +1,4 @@
-/* eslint-disable no-restricted-properties */
-/* eslint-disable turbo/no-undeclared-env-vars */
+/* oxlint-disable no-restricted-properties */
 /**
  * Test Redis Setup
  *
