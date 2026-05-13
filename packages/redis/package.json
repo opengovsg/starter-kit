@@ -16,24 +16,22 @@
     "build": "tsgo",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsgo",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
+    "lint": "oxlint .",
     "typecheck": "tsgo --noEmit"
   },
-  "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config",
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
     "ioredis": "^5.8.2",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "typescript": "catalog:"
   }
 }

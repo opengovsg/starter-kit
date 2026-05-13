@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import { LinkButton } from '@acme/ui/link-button'
-
 import { AUTHED_ROOT_ROUTE, LOGIN_ROUTE } from '~/constants'
 
 interface LandingPageHeaderProps {

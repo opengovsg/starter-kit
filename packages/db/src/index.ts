@@ -11,13 +11,13 @@ const globalForPrisma = global as unknown as {
 const createPrisma = () => {
   const pool = new PrismaPg({ connectionString: env.DATABASE_URL })
   const prisma = new PrismaClient({ adapter: pool }).$extends(
-    kyselyPrismaExtension,
+    kyselyPrismaExtension
   )
 
   return prisma
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+// oxlint-disable-next-line typescript/no-unnecessary-condition
 export const db = globalForPrisma.prisma || createPrisma()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db

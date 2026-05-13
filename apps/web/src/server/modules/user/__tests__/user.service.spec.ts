@@ -1,5 +1,5 @@
-import { resetTables } from '~tests/db/utils'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { resetTables } from '~tests/db/utils'
 
 import { db } from '@acme/db'
 
@@ -92,7 +92,7 @@ describe('user.service', () => {
       const invalidEmail = 'not-an-email'
 
       await expect(loginUserByEmail(invalidEmail)).rejects.toThrow(
-        'Invalid email address',
+        'Invalid email address'
       )
     })
 
@@ -100,7 +100,7 @@ describe('user.service', () => {
       const groupEmail = 'Group Name: user1@example.com, user2@example.com;'
 
       await expect(loginUserByEmail(groupEmail)).rejects.toThrow(
-        'Invalid email address',
+        'Invalid email address'
       )
     })
 
@@ -159,7 +159,7 @@ describe('user.service', () => {
       ]
 
       const users = await Promise.all(
-        emails.map((email) => loginUserByEmail(email)),
+        emails.map((email) => loginUserByEmail(email))
       )
 
       // All users should have unique IDs

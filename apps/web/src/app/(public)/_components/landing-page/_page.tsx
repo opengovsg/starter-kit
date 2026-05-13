@@ -1,16 +1,17 @@
 'use client'
 
 import Image from 'next/image'
+
 import { Link } from 'react-aria-components'
 import { BiRightArrowAlt } from 'react-icons/bi'
 
-import { LinkButton } from '@acme/ui/link-button'
-import { RestrictedFooter } from '@acme/ui/restricted-footer'
-
-import { AUTHED_ROOT_ROUTE, LOGIN_ROUTE } from '~/constants'
 import { FeatureItem } from './feature-item'
 import { LandingPageHeader } from './header'
 import { LandingSection, SectionBody, SectionHeader } from './section'
+
+import { LinkButton } from '@acme/ui/link-button'
+import { RestrictedFooter } from '@acme/ui/restricted-footer'
+import { AUTHED_ROOT_ROUTE, LOGIN_ROUTE } from '~/constants'
 
 interface LandingPageComponentProps {
   appName: string

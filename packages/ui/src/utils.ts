@@ -9,13 +9,13 @@
  * ```
  */
 export const mapPropsVariants = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   T extends Record<string, any>,
   K extends keyof T,
 >(
   props: T,
   variantKeys?: K[],
-  removeVariantProps = true,
+  removeVariantProps = true
 ): readonly [Omit<T, K> | T, Pick<T, K>] => {
   if (!variantKeys) {
     return [props, {} as Pick<T, K>]
@@ -28,7 +28,7 @@ export const mapPropsVariants = <
       }
       return acc
     },
-    {} as Pick<T, K>,
+    {} as Pick<T, K>
   )
 
   if (removeVariantProps) {

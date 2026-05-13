@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+
 import type { UnionToIntersection } from 'type-fest'
 
 export interface DynamicPageProps<
@@ -15,13 +16,14 @@ export interface DynamicPageProps<
       }[TParams]
     >
   >
-  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+  // oxlint-disable-next-line typescript/consistent-indexed-object-style
   searchParams: Promise<{ [K in TSearchParams]?: string | string[] }>
 }
 
 // No search params in layouts
-export interface DynamicLayoutProps<TParams extends string = never>
-  extends PropsWithChildren {
+export interface DynamicLayoutProps<
+  TParams extends string = never,
+> extends PropsWithChildren {
   params: Promise<
     UnionToIntersection<
       {

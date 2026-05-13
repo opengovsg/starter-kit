@@ -1,15 +1,15 @@
 {
   "typescript.experimental.useTsgo": true,
   "typescript.tsdk": "node_modules/@typescript/native-preview/lib",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.oxc": "always"
   },
-  "eslint.workingDirectories": [{ "mode": "auto" }],
-  "prettier.ignorePath": ".gitignore",
+  "oxc.typeAware": true,
   "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
   "tailwindCSS.experimental.classRegex": [
     ":\\s*?[\"'`]([^\"'`]*).*?,",

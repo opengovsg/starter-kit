@@ -56,7 +56,7 @@ export const createQueryClient = () =>
               const code = result.data.data.code
               if (code === 'FORBIDDEN') {
                 return toast.error(
-                  'You are not allowed to perform this action.',
+                  'You are not allowed to perform this action.'
                 )
               }
 

@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-properties */
+/* oxlint-disable no-restricted-properties */
 import { stringify } from 'superjson'
 
 import type { ContainerInformation } from './common'
@@ -16,7 +16,7 @@ export default async () => {
         const { container: _, ...rest } = container
         const result: ContainerInformation = rest
         return result
-      }),
+      })
     ),
     configurable: true,
     writable: true,
