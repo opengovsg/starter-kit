@@ -4,23 +4,23 @@
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
-    "vercel-build": "pnpm with-env next build",
+    "build-storybook": "SKIP_ENV_VALIDATION=1 storybook build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --turbopack",
     "dev-e2e": "pnpm with-e2e-env next dev --turbopack -p 3111",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
-    "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --",
-    "with-e2e-env": "dotenv -e ./.env.e2e --",
-    "test": "vitest",
-    "test:ci": "vitest run --coverage",
+    "docker": "docker-compose up",
     "e2e": "playwright test",
     "e2e:ui": "pnpm e2e -- --ui",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
+    "lint": "eslint",
+    "start": "next start",
     "storybook": "SKIP_ENV_VALIDATION=1 storybook dev -p 6006",
-    "docker": "docker-compose up",
-    "build-storybook": "SKIP_ENV_VALIDATION=1 storybook build"
+    "test": "vitest",
+    "test:ci": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "vercel-build": "pnpm with-env next build",
+    "with-e2e-env": "dotenv -e ./.env.e2e --",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@acme/common": "workspace:*",
@@ -59,7 +59,6 @@
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/storybook-config": "workspace:*",
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
@@ -84,8 +83,8 @@
     "msw": "^2.12.7",
     "msw-storybook-addon": "^2.0.6",
     "msw-trpc": "^2.0.1",
+    "oxfmt": "catalog:",
     "playwright": "catalog:playwright",
-    "prettier": "catalog:",
     "storybook": "catalog:storybook10",
     "storybook-addon-vite-mock": "catalog:storybook10",
     "tailwindcss": "catalog:tailwindcss4",
@@ -97,7 +96,6 @@
     "vitest": "catalog:vitest",
     "vitest-mock-extended": "^3.1.0"
   },
-  "prettier": "@acme/prettier-config",
   "msw": {
     "workerDirectory": [
       "public"

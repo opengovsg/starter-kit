@@ -13,7 +13,7 @@ type RedisContainer = Awaited<ReturnType<typeof startRedis>>
 
 export const getRedisUrl = (
   container: RedisContainer,
-  internalPort?: boolean,
+  internalPort?: boolean
 ) => {
   const { host, ports } = container
   const port = internalPort ? 6379 : (ports.get(6379) ?? 6379)

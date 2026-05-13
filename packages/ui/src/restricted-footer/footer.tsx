@@ -1,6 +1,7 @@
 'use client'
 
 import type { ComponentType } from 'react'
+
 import { Link } from 'react-aria-components'
 
 import { DEFAULT_SOCIAL_MEDIA_LINKS } from './constants'

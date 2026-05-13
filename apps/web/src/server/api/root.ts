@@ -1,7 +1,8 @@
-import { meRouter } from '~/server/api/routers/me.router'
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
 import { healthcheck } from '../modules/healthcheck/healthcheck.service'
 import { authRouter } from './routers/auth/auth.router'
+
+import { meRouter } from '~/server/api/routers/me.router'
+import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
 
 /**
  * This is the primary router for your server.

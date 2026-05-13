@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation'
 
+import { SignInPageComponent } from './_components/_page'
+
 import { AUTHED_ROOT_ROUTE } from '~/constants'
 import { getSession } from '~/server/session'
-import { SignInPageComponent } from './_components/_page'
 
 export default async function SignInPage() {
   const session = await getSession()

@@ -38,15 +38,15 @@
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
     "generate": "pnpm with-env prisma generate",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "push": "pnpm with-env prisma db push",
-    "studio": "pnpm with-env prisma studio --port 5556",
-    "migrate:dev": "pnpm with-env prisma migrate dev",
     "migrate:deploy": "pnpm with-env prisma migrate deploy",
+    "migrate:dev": "pnpm with-env prisma migrate dev",
+    "push": "pnpm with-env prisma db push",
     "reset": "pnpm with-env prisma migrate reset",
     "seed": "pnpm with-env prisma db seed",
+    "studio": "pnpm with-env prisma studio --port 5556",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -62,17 +62,15 @@
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
     "prisma": "catalog:prisma",
     "prisma-kysely": "catalog:",
     "prisma-zod-generator": "^2.1.2",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

@@ -122,10 +122,7 @@ const activeUsers = await db.$kysely
   .selectFrom('User')
   .select(['id', 'email'])
   .where(({ eb, or }) =>
-    or([
-      eb('email', 'like', '%@gmail.com'),
-      eb('email', 'like', '%@yahoo.com'),
-    ]),
+    or([eb('email', 'like', '%@gmail.com'), eb('email', 'like', '%@yahoo.com')])
   )
   .execute()
 ```

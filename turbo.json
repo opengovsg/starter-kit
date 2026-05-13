@@ -24,7 +24,7 @@
       "persistent": false
     },
     "format": {
-      "outputs": [".cache/.prettiercache"],
+      "outputs": [],
       "outputLogs": "new-only"
     },
     "lint": {

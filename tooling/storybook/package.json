@@ -7,17 +7,15 @@
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "eslint": "catalog:",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

@@ -9,12 +9,12 @@
 
 import { parse } from 'superjson'
 
-import { Redis } from '@acme/redis/testing'
-
 import { CONTAINER_INFORMATION_SCHEMA } from '../common'
 
+import { Redis } from '@acme/redis/testing'
+
 const parsed = CONTAINER_INFORMATION_SCHEMA.parse(
-  parse(process.env.testcontainers ?? ''),
+  parse(process.env.testcontainers ?? '')
 )
 const redisContainer = parsed.find((c) => c.configuration.name === 'redis')
 

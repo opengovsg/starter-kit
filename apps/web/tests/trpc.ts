@@ -2,9 +2,9 @@ import type { IronSession } from 'iron-session'
 
 import { createBaseLogger } from '@acme/logging'
 
-import type { SessionData } from '~/server/session'
 import { appRouter } from '~/server/api/root'
 import { createCallerFactory } from '~/server/api/trpc'
+import type { SessionData } from '~/server/session'
 
 const testLogger = createBaseLogger({
   path: 'tests',
@@ -15,7 +15,7 @@ const testLogger = createBaseLogger({
  * This avoids the need to call Next.js cookies() which requires a request context.
  */
 const createMockSession = (
-  sessionData?: SessionData,
+  sessionData?: SessionData
 ): IronSession<SessionData> => ({
   ...sessionData,
   // eslint-disable-next-line @typescript-eslint/no-empty-function

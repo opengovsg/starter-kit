@@ -1,40 +1,38 @@
 {
   "name": "@acme/monorepo",
   "private": true,
-  "engines": {
-    "node": ">=24.13.0",
-    "pnpm": ">=10.26.0"
-  },
   "scripts": {
     "build": "turbo run build",
-    "vercel-build": "turbo run vercel-build",
-    "test": "turbo run test",
-    "test:ci": "turbo run test:ci",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
+    "db:deploy": "turbo -F @acme/db migrate:deploy",
+    "db:migrate": "turbo -F @acme/db migrate:dev",
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
-    "db:migrate": "turbo -F @acme/db migrate:dev",
-    "db:deploy": "turbo -F @acme/db migrate:deploy",
     "dev": "turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/nextjs...",
-    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
-    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "format": "turbo run format --continue -- --check",
+    "format:fix": "turbo run format --continue -- --write",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
+    "postinstall": "pnpm lint:ws",
+    "test": "turbo run test",
+    "test:ci": "turbo run test:ci",
     "typecheck": "turbo run typecheck",
-    "postinstall": "pnpm lint:ws"
+    "vercel-build": "turbo run vercel-build"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
     "@turbo/gen": "^2.6.1",
     "@vitest/coverage-v8": "^4.0.8",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
     "turbo": "^2.6.1",
     "typescript": "catalog:",
     "vitest": "^4.0.8"
   },
-  "prettier": "@acme/prettier-config",
+  "engines": {
+    "node": ">=24.13.0",
+    "pnpm": ">=10.26.0"
+  },
   "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
 }

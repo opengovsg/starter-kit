@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+
 import { TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 
@@ -15,7 +16,7 @@ export async function createApiCaller(req: NextRequest, resHeaders?: Headers) {
     await createTRPCContext({
       headers: req.headers,
       resHeaders,
-    }),
+    })
   )
 }
 
@@ -25,18 +26,18 @@ export async function createApiCaller(req: NextRequest, resHeaders?: Headers) {
 export function handleTRPCError(
   e: unknown,
   fallbackMessage = 'Request failed',
-  headers?: HeadersInit,
+  headers?: HeadersInit
 ) {
   if (e instanceof TRPCError) {
     const statusCode = getHTTPStatusCodeFromError(e)
     return Response.json(
       { error: e.message || fallbackMessage },
-      { status: statusCode, headers },
+      { status: statusCode, headers }
     )
   }
 
   return Response.json(
     { error: 'Internal server error' },
-    { status: 500, headers },
+    { status: 500, headers }
   )
 }
