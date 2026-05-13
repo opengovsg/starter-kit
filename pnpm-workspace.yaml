@@ -43,11 +43,11 @@ catalogs:
     '@tanstack/react-query': ^5.100.9
     '@tanstack/react-query-devtools': ^5.100.9
   storybook10:
-    '@storybook/addon-a11y': 10.3.5
-    '@storybook/addon-docs': 10.3.5
-    '@storybook/addon-vitest': 10.3.5
-    '@storybook/nextjs-vite': 10.3.5
-    storybook: 10.3.5
+    '@storybook/addon-a11y': 10.3.6
+    '@storybook/addon-docs': 10.3.6
+    '@storybook/addon-vitest': 10.3.6
+    '@storybook/nextjs-vite': 10.3.6
+    storybook: 10.3.6
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
