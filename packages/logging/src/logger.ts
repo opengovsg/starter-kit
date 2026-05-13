@@ -8,7 +8,7 @@ import type { BasicLogger, LogInput } from './types'
 export class PinoLogger {
   private static instance: ReturnType<typeof this.createBaseLogger>
   private static getInstance() {
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
+    // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
     PinoLogger.instance ??= PinoLogger.createBaseLogger()
     return PinoLogger.instance
   }
@@ -27,7 +27,7 @@ export class PinoLogger {
     }
     return pino(
       {
-        // oxlint-disable-next-line typescript/no-unnecessary-condition
+        // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
         level: env.NODE_ENV === 'test' ? 'silent' : (env.LOG_LEVEL ?? 'info'),
         useOnlyCustomLevels: true,
         customLevels: {

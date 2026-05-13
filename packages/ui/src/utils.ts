@@ -9,7 +9,7 @@
  * ```
  */
 export const mapPropsVariants = <
-  // oxlint-disable-next-line typescript/no-explicit-any
+  // oxlint-disable-next-line typescript-eslint/no-explicit-any
   T extends Record<string, any>,
   K extends keyof T,
 >(
