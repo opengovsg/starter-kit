@@ -1,4 +1,4 @@
-// oxlint-disable-next-line typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export type As<Props = any> = React.ElementType<Props>
 
 /**
@@ -13,7 +13,7 @@ export type PropsOf<T extends As> = React.ComponentPropsWithoutRef<T> & {
  */
 export type HtmlUiProps<
   T extends As = 'div',
-  // oxlint-disable-next-line typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   OmitKeys extends keyof any = never,
 > = Omit<
   PropsOf<T>,

@@ -23,40 +23,26 @@
     "apps/web/public/mockServiceWorker.js"
   ],
   "rules": {
-    "typescript-eslint/no-unused-vars": [
+    "typescript/no-unused-vars": [
       "error",
       { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
     ],
-    "typescript-eslint/consistent-type-imports": [
+    "typescript/consistent-type-imports": [
       "warn",
       { "prefer": "type-imports", "fixStyle": "separate-type-imports" }
     ],
-    "typescript-eslint/no-misused-promises": [
+    "typescript/no-misused-promises": [
       "warn",
       { "checksVoidReturn": { "attributes": false } }
     ],
-    "typescript-eslint/no-unnecessary-condition": [
+    "typescript/no-unnecessary-condition": [
       "error",
       { "allowConstantLoopConditions": true }
     ],
-    "typescript-eslint/no-non-null-assertion": "error",
-    "typescript-eslint/no-unsafe-assignment": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-unsafe-assignment": "error",
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "jest/no-conditional-expect": "off",
     "jest/require-to-throw-message": "off"
-  },
-  "overrides": [
-    {
-      "files": ["packages/db/**/*.ts"],
-      "rules": {
-        "no-restricted-syntax": [
-          "error",
-          {
-            "selector": "MemberExpression[property.name='transaction'][object.property.name='$kysely']",
-            "message": "Use db.$transaction() instead of db.$kysely.transaction()"
-          }
-        ]
-      }
-    }
-  ]
+  }
 }

@@ -35,7 +35,7 @@ const createRedisClient = (): Redis | null => {
 }
 
 export const redis =
-  // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   globalForRedis.redis !== undefined
     ? globalForRedis.redis
     : createRedisClient()
