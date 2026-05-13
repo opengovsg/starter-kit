@@ -12,7 +12,12 @@ updates:
         applies-to: version-updates
         patterns:
           - 'prisma'
-          - '@prisma/client'
+          - '@prisma/*'
+      next:
+        applies-to: version-updates
+        patterns:
+          - '@next/*'
+          - 'next'
       react:
         applies-to: version-updates
         patterns:
@@ -28,10 +33,7 @@ updates:
       storybook:
         applies-to: version-updates
         patterns:
-          - '@storybook/addon-a11y'
-          - '@storybook/addon-docs'
-          - '@storybook/addon-vitest'
-          - '@storybook/nextjs-vite'
+          - '@storybook/*'
           - 'eslint-plugin-storybook'
           - 'storybook'
           - 'storybook-addon-vite-mock'
