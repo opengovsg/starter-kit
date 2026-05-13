@@ -23,7 +23,7 @@ export const EmptyPlaceholder = ({
     <div
       className={cn(
         `flex w-full flex-col items-center justify-center gap-2 py-12`,
-        className,
+        className
       )}
     >
       <p className={size === 'sm' ? 'prose-h5' : 'prose-h4'}>

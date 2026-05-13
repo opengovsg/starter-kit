@@ -88,7 +88,7 @@ describe('auth.utils', () => {
           createAuthToken({
             email: testEmail,
             codeChallenge: testCodeChallenge,
-          }).token,
+          }).token
       )
 
       expect(new Set(tokens).size).toBe(N)
@@ -155,7 +155,7 @@ describe('auth.utils', () => {
           createAuthToken({
             email: testEmail,
             codeChallenge: testCodeChallenge,
-          }).token,
+          }).token
       )
       const combinedString = tokens.join('')
 
@@ -401,7 +401,7 @@ describe('auth.utils', () => {
           email,
           codeChallenge: codeChallenge1,
           hash: hash1,
-        }),
+        })
       ).toBe(true)
       expect(
         isValidToken({
@@ -409,7 +409,7 @@ describe('auth.utils', () => {
           email,
           codeChallenge: codeChallenge2,
           hash: hash2,
-        }),
+        })
       ).toBe(true)
     })
   })

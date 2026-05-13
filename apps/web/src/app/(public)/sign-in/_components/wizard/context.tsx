@@ -1,7 +1,9 @@
 'use client'
 
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+
 import { createContext, useContext, useRef, useState } from 'react'
+
 import { useInterval } from 'usehooks-ts'
 
 import {
@@ -20,7 +22,7 @@ interface SignInState {
 }
 
 export const SignInWizardContext = createContext<SignInState | undefined>(
-  undefined,
+  undefined
 )
 
 export const useSignInWizard = () => {
@@ -28,7 +30,7 @@ export const useSignInWizard = () => {
 
   if (context === undefined) {
     throw new Error(
-      `useSignInWizard must be used within a SignInWizardProvider.`,
+      `useSignInWizard must be used within a SignInWizardProvider.`
     )
   }
 
@@ -81,7 +83,7 @@ export const SignInWizardProvider = ({
   useInterval(
     () => setTimer((prev) => prev - 1),
     // Stop interval if timer hits 0, else rerun every 1000ms.
-    !!vfnStepData && timer > 0 ? 1000 : null,
+    !!vfnStepData && timer > 0 ? 1000 : null
   )
 
   return (

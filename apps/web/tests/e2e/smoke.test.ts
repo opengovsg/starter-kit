@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test'
 
-import { env } from '~/env'
 import { test } from './app-fixture'
+
+import { env } from '~/env'
 
 test('go to /', async ({ page }) => {
   await page.goto('/')

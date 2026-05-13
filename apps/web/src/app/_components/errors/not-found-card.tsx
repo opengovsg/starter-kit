@@ -1,6 +1,6 @@
-import { NotFoundSvg } from '@acme/ui/svgs'
-
 import { ErrorCard } from './error-card'
+
+import { NotFoundSvg } from '@acme/ui/svgs'
 
 interface NotFoundCardProps {
   title?: string

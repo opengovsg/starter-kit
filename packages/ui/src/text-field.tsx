@@ -1,10 +1,10 @@
 'use client'
 
 import type { SlotsToClasses } from '@opengovsg/oui-theme'
-import type { TextFieldProps as BaseTextFieldProps } from '@opengovsg/oui/text-field'
 import { cn, composeTailwindRenderProps } from '@opengovsg/oui-theme'
 import { Description, FieldError, Label } from '@opengovsg/oui/field'
 import { Input } from '@opengovsg/oui/input'
+import type { TextFieldProps as BaseTextFieldProps } from '@opengovsg/oui/text-field'
 import { TextField as AriaTextField, Group } from 'react-aria-components'
 
 export interface TextFieldProps extends BaseTextFieldProps {
@@ -34,7 +34,7 @@ export function TextField({
       {...props}
       className={composeTailwindRenderProps(
         className ?? classNames?.base,
-        'flex flex-col gap-2',
+        'flex flex-col gap-2'
       )}
     >
       {label && (

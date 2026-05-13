@@ -1,7 +1,9 @@
 'use client'
 
 import type { PropsWithChildren } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { RouterProvider } from 'react-aria-components'
 
 import { TRPCReactProvider } from '~/trpc/react'

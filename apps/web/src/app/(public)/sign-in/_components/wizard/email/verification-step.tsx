@@ -1,5 +1,7 @@
 import { useState } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
@@ -9,12 +11,12 @@ import { useMutation } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { useInterval } from 'usehooks-ts'
 
+import { useSignInWizard } from '../context'
+
 import { Infobox } from '@acme/ui/infobox'
 import { TextField } from '@acme/ui/text-field'
-
 import { useTRPC } from '~/trpc/react'
 import { emailVerifyOtpSchema } from '~/validators/auth'
-import { useSignInWizard } from '../context'
 
 export const VerificationStep = () => {
   const router = useRouter()
@@ -36,7 +38,7 @@ export const VerificationStep = () => {
   useInterval(
     () => setShowOtpDelayMessage(true),
     // Show otp delay info message after 15 seconds.
-    showOtpDelayMessage ? null : 15000,
+    showOtpDelayMessage ? null : 15000
   )
 
   const { control, handleSubmit, resetField, setFocus, setError } = useForm({
@@ -56,7 +58,7 @@ export const VerificationStep = () => {
       onError: (error) => {
         setError('token', { message: error.message })
       },
-    }),
+    })
   )
 
   const resendOtpMutation = useMutation(
@@ -73,7 +75,7 @@ export const VerificationStep = () => {
         resetTimer()
       },
       onError: (error) => setError('token', { message: error.message }),
-    }),
+    })
   )
 
   const isResendPending = resendOtpMutation.isPending || newChallengePending
@@ -85,7 +87,7 @@ export const VerificationStep = () => {
       .then((codeChallenge) => {
         if (!codeChallenge) {
           toast.error(
-            'Something went wrong generating a sign-in challenge. Please try again.',
+            'Something went wrong generating a sign-in challenge. Please try again.'
           )
           return
         }
@@ -103,7 +105,7 @@ export const VerificationStep = () => {
     <form
       noValidate
       onSubmit={handleSubmit(({ email, token }) =>
-        verifyOtpMutation.mutate({ email, token, codeVerifier }),
+        verifyOtpMutation.mutate({ email, token, codeVerifier })
       )}
       className="flex flex-1 flex-col gap-4"
     >
@@ -151,7 +153,7 @@ export const VerificationStep = () => {
           variant="unstyled"
           disableRipple
           className={cn(
-            'prose-caption-2 disabled:text-interaction-support-disabled-content h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 whitespace-pre enabled:underline',
+            'prose-caption-2 disabled:text-interaction-support-disabled-content h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 whitespace-pre enabled:underline'
           )}
           size="xs"
           onPress={handleResendOtp}

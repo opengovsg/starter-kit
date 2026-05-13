@@ -1,5 +1,6 @@
-import type { Decorator } from '@storybook/nextjs-vite'
 import { useState } from 'react'
+
+import type { Decorator } from '@storybook/nextjs-vite'
 import {
   defaultShouldDehydrateQuery,
   QueryClient,
@@ -61,7 +62,7 @@ export const AppDecorator: Decorator = (Story, context) => {
           },
         }),
       ],
-    }),
+    })
   )
 
   return (

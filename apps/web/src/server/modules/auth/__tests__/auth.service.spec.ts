@@ -1,18 +1,18 @@
 import '../../mail/__mocks__/mail.service'
-
-import { resetTables } from '~tests/db/utils'
 import { add } from 'date-fns/add'
 import { mock } from 'vitest-mock-extended'
+import { resetTables } from '~tests/db/utils'
 
 import { db } from '@acme/db'
+
+import * as mailService from '../../mail/mail.service'
+import { emailLogin, emailVerifyOtp } from '../auth.service'
+import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
 import {
   ssCreatePkceChallenge,
   ssCreatePkceVerifier,
 } from '~/lib/pkce/server-pkce'
-import * as mailService from '../../mail/mail.service'
-import { emailLogin, emailVerifyOtp } from '../auth.service'
-import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
 const mockedMailService = mock(mailService)
 
@@ -54,7 +54,7 @@ describe('auth.service', () => {
       await emailLogin({ email, codeChallenge: codeChallenge })
 
       await expect(
-        emailLogin({ email, codeChallenge: codeChallenge }),
+        emailLogin({ email, codeChallenge: codeChallenge })
       ).rejects.toThrow('Please refresh and try again.')
     })
 
@@ -99,7 +99,7 @@ describe('auth.service', () => {
 
       // Should not throw
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).resolves.not.toThrow()
 
       // Token should be deleted after successful verification
@@ -121,7 +121,7 @@ describe('auth.service', () => {
 
       // Should throw
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier })
       ).rejects.toThrow()
     })
     it('should throw error for non-existent codeChallenge', async () => {
@@ -130,7 +130,7 @@ describe('auth.service', () => {
       const token = '123456'
 
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).rejects.toThrow()
     })
 
@@ -152,7 +152,7 @@ describe('auth.service', () => {
           email,
           token: wrongToken,
           codeVerifier: wrongVerifier,
-        }),
+        })
       ).rejects.toThrow()
     })
 
@@ -164,7 +164,7 @@ describe('auth.service', () => {
 
       await emailLogin({ email, codeChallenge: codeChallenge })
       await expect(
-        emailVerifyOtp({ email, token: wrongToken, codeVerifier }),
+        emailVerifyOtp({ email, token: wrongToken, codeVerifier })
       ).rejects.toThrow('Token is invalid or has expired')
     })
 
@@ -193,7 +193,7 @@ describe('auth.service', () => {
       })
 
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).rejects.toThrow('Token is invalid or has expired')
     })
 
@@ -208,7 +208,7 @@ describe('auth.service', () => {
       // Make 2 failed attempts
       for (let i = 1; i <= 2; i++) {
         await expect(
-          emailVerifyOtp({ email, token: wrongToken, codeVerifier }),
+          emailVerifyOtp({ email, token: wrongToken, codeVerifier })
         ).rejects.toThrow()
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
@@ -228,13 +228,13 @@ describe('auth.service', () => {
       // Make 5 failed attempts
       for (let i = 0; i < 5; i++) {
         await expect(
-          emailVerifyOtp({ email, token, codeVerifier }),
+          emailVerifyOtp({ email, token, codeVerifier })
         ).rejects.toThrow()
       }
 
       // 6th attempt should give TOO_MANY_REQUESTS
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).rejects.toThrow('Wrong OTP was entered too many times')
     })
 
@@ -265,12 +265,12 @@ describe('auth.service', () => {
 
       // First verification succeeds
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).resolves.toBeDefined()
 
       // Second verification with same token should fail
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier }),
+        emailVerifyOtp({ email, token, codeVerifier })
       ).rejects.toThrow()
     })
   })

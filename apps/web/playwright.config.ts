@@ -1,5 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
+
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
 

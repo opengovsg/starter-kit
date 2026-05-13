@@ -1,13 +1,14 @@
-import type { SlotsToClasses } from '@opengovsg/oui-theme'
 import { useMemo } from 'react'
+
+import type { SlotsToClasses } from '@opengovsg/oui-theme'
 import {
   BiSolidCheckCircle,
   BiSolidErrorCircle,
   BiSolidInfoCircle,
 } from 'react-icons/bi'
 
-import type { InfoboxSlots, InfoboxVariantProps } from './infobox.styles'
 import { mapPropsVariants } from '../utils'
+import type { InfoboxSlots, InfoboxVariantProps } from './infobox.styles'
 import { infoboxStyles } from './infobox.styles'
 
 interface InfoboxProps extends InfoboxVariantProps {
@@ -28,7 +29,7 @@ interface InfoboxProps extends InfoboxVariantProps {
 export const Infobox = (originalProps: InfoboxProps) => {
   const [props, variantProps] = mapPropsVariants(
     originalProps,
-    infoboxStyles.variantKeys,
+    infoboxStyles.variantKeys
   )
 
   const styles = infoboxStyles(variantProps)

@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+
 import { PrismaPg } from '@prisma/adapter-pg'
 import {
   CONTAINER_CONFIGURATIONS,
@@ -16,7 +17,7 @@ type DatabaseContainer = Awaited<ReturnType<typeof startDatabase>>
 
 export const getConnectionString = (
   container: DatabaseContainer,
-  internalPort?: boolean,
+  internalPort?: boolean
 ) => {
   const { host, ports, configuration } = container
   const port = internalPort ? 5432 : (ports.get(5432) ?? 5432)
@@ -60,7 +61,7 @@ export const applyMigrations = async (container: DatabaseContainer) => {
     'packages',
     'db',
     'prisma',
-    'migrations',
+    'migrations'
   )
 
   // Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs
@@ -90,16 +91,16 @@ export async function takeDbSnapshot(container: DatabaseContainer) {
       '-c',
       `pg_dump -d ${getConnectionString(
         container,
-        true,
+        true
       )} -Fc -f /tmp/snapshot.dump`,
     ],
-    { user: 'root' },
+    { user: 'root' }
   )
 
   if (snapshotResult.exitCode !== 0) {
     console.error(
       'Failed when trying to take a snapshot of the db',
-      snapshotResult,
+      snapshotResult
     )
   } else {
     console.log('Database snapshot taken')
@@ -112,7 +113,7 @@ export async function resetDbToSnapshot(container: DatabaseContainer) {
     '-c',
     `pg_restore --clean --if-exists -d ${getConnectionString(
       container,
-      true,
+      true
     )} /tmp/snapshot.dump`,
   ])
 
