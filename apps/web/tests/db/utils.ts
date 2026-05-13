@@ -1,5 +1,6 @@
-import type { Prisma } from '@acme/db/client'
 import { db } from '@acme/db'
+
+import type { Prisma } from '@acme/db/client'
 
 export const resetTables = async (tableNames: Prisma.ModelName[]) => {
   for (const tableName of tableNames) {

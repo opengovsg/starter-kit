@@ -3,11 +3,7 @@ import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
 
 import { db } from '@acme/db'
-import { Prisma } from '@acme/db/client'
 
-import { env } from '~/env'
-import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
-import { getBaseUrl } from '~/utils/get-base-url'
 import { sendMail } from '../mail/mail.service'
 import {
   createAuthToken,
@@ -15,6 +11,11 @@ import {
   createVfnPrefix,
   isValidToken,
 } from './auth.utils'
+
+import { Prisma } from '@acme/db/client'
+import { env } from '~/env'
+import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
+import { getBaseUrl } from '~/utils/get-base-url'
 
 export const emailLogin = async ({
   email,
@@ -60,7 +61,7 @@ export const emailLogin = async ({
     subject: `Sign in to ${url.host}`,
     body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${format(
       expiry,
-      'dd MMM yyyy, h:mmaaa',
+      'dd MMM yyyy, h:mmaaa'
     )}.
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
@@ -137,7 +138,7 @@ export const emailVerifyOtp = async ({
             code: 'BAD_REQUEST',
             message:
               'Token is invalid or has expired. Please request a new OTP.',
-          }),
+          })
       )
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025

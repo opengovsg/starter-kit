@@ -1,8 +1,9 @@
 import { forbidden, notFound, redirect } from 'next/navigation'
 
-import { SIGN_OUT_API_ROUTE } from '~/constants'
 import { callerFactory } from './caller'
 import { createContext } from './context'
+
+import { SIGN_OUT_API_ROUTE } from '~/constants'
 
 /**
  * Create a server-side caller for the tRPC API.

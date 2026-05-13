@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+
 import { NextResponse } from 'next/server'
 
 interface CspPolicy {
@@ -23,7 +24,7 @@ function generateCspHeader(policies: CspPolicy[]): string {
     Object.keys(policy).forEach((_directive) => {
       const directive = _directive as keyof CspPolicy
       const sources = Array.from(
-        new Set([...(combined[directive] ?? []), ...(policy[directive] ?? [])]),
+        new Set([...(combined[directive] ?? []), ...(policy[directive] ?? [])])
       )
       combined[directive] = sources
     })
@@ -33,7 +34,7 @@ function generateCspHeader(policies: CspPolicy[]): string {
 
   const baseDirectives = Object.entries(combined).map(
     ([directive, sources]) =>
-      `${directive} ${(sources as string[]).sort().join(' ')}`,
+      `${directive} ${(sources as string[]).sort().join(' ')}`
   )
 
   return [...baseDirectives, 'upgrade-insecure-requests'].join('; ')
@@ -94,7 +95,7 @@ export function proxy(request: NextRequest) {
 
   requestHeaders.set(
     'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue,
+    contentSecurityPolicyHeaderValue
   )
 
   const response = NextResponse.next({
@@ -104,7 +105,7 @@ export function proxy(request: NextRequest) {
   })
   response.headers.set(
     'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue,
+    contentSecurityPolicyHeaderValue
   )
 
   return response

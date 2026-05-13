@@ -16,7 +16,7 @@ export default async () => {
         const { container: _, ...rest } = container
         const result: ContainerInformation = rest
         return result
-      }),
+      })
     ),
     configurable: true,
     writable: true,

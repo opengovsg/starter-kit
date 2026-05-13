@@ -1,12 +1,13 @@
 'use client'
 
 import type { VariantProps } from '@opengovsg/oui-theme'
-import type { LinkProps } from 'react-aria-components'
 import { buttonStyles } from '@opengovsg/oui-theme'
+import type { LinkProps } from 'react-aria-components'
 import { Link } from 'react-aria-components'
 
 interface LinkButtonProps
-  extends Omit<LinkProps, 'className' | 'children'>,
+  extends
+    Omit<LinkProps, 'className' | 'children'>,
     VariantProps<typeof buttonStyles> {
   className?: string
   children: React.ReactNode

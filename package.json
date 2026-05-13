@@ -1,40 +1,38 @@
 {
   "name": "@acme/monorepo",
   "private": true,
-  "engines": {
-    "node": ">=24.13.0",
-    "pnpm": ">=10.17.1"
-  },
   "scripts": {
     "build": "turbo run build",
-    "vercel-build": "turbo run vercel-build",
-    "test": "turbo run test",
-    "test:ci": "turbo run test:ci",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
+    "db:deploy": "turbo -F @acme/db migrate:deploy",
+    "db:migrate": "turbo -F @acme/db migrate:dev",
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
-    "db:migrate": "turbo -F @acme/db migrate:dev",
-    "db:deploy": "turbo -F @acme/db migrate:deploy",
     "dev": "turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/nextjs...",
-    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
-    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "format": "turbo run format --continue -- --check",
+    "format:fix": "turbo run format --continue -- --write",
     "lint": "turbo run lint --continue",
     "lint:fix": "turbo run lint --continue -- --fix",
     "lint:ws": "pnpm dlx sherif@latest",
+    "postinstall": "pnpm lint:ws",
+    "test": "turbo run test",
+    "test:ci": "turbo run test:ci",
     "typecheck": "turbo run typecheck",
-    "postinstall": "pnpm lint:ws"
+    "vercel-build": "turbo run vercel-build"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
     "@turbo/gen": "^2.6.1",
     "@vitest/coverage-v8": "^4.0.8",
-    "prettier": "catalog:",
+    "oxfmt": "catalog:",
     "turbo": "^2.6.1",
     "typescript": "catalog:",
     "vitest": "^4.0.8"
   },
-  "prettier": "@acme/prettier-config",
+  "engines": {
+    "node": ">=24.13.0",
+    "pnpm": ">=10.17.1"
+  },
   "packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a"
 }

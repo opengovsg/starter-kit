@@ -2,8 +2,8 @@ import type { DestinationStream } from 'pino'
 import { destination, pino } from 'pino'
 import { PinoPretty } from 'pino-pretty'
 
-import type { BasicLogger, LogInput } from './types'
 import { env } from './env'
+import type { BasicLogger, LogInput } from './types'
 
 export class PinoLogger {
   private static instance: ReturnType<typeof this.createBaseLogger>
@@ -56,7 +56,7 @@ export class PinoLogger {
         errorKey: 'error',
         messageKey: 'message',
       },
-      transport,
+      transport
     )
   }
   /*
@@ -117,9 +117,9 @@ export interface LoggerInterface<T extends ScopedLogInput = LogInput> {
   critical(input: T): void
 }
 
-export class CustomLogger<T extends ScopedLogInput = LogInput>
-  implements LoggerInterface<T>
-{
+export class CustomLogger<
+  T extends ScopedLogInput = LogInput,
+> implements LoggerInterface<T> {
   private logger: ReturnType<typeof PinoLogger.logger>
   private context: NonNullable<LogInput['context']> | null
   private action: string[] | null
@@ -167,7 +167,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
     options?: {
       action: string[]
       context?: LogInput['context']
-    },
+    }
   ) {
     this.logger = logger
     if (options) {
@@ -185,7 +185,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
   }): LoggerInterface<ScopedLogInput> {
     const context = { ...this.context, ...options.context }
     const action = [...(this.action ?? [])].concat(
-      typeof options.action === 'string' ? [options.action] : options.action,
+      typeof options.action === 'string' ? [options.action] : options.action
     )
 
     return new CustomLogger<ScopedLogInput>(this.logger, { action, context })
@@ -220,7 +220,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
 
   private formatLogWithErrors(
     level: 'notice' | 'warn' | 'error' | 'alert' | 'critical' | 'fatal',
-    input: ScopedLogInput,
+    input: ScopedLogInput
   ) {
     const { message, context, error, merged, ...rest } = this.formatInput(input)
 
@@ -232,7 +232,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
           context,
           error: { ...error, stack: error.stack, cause: error.cause },
         },
-        message,
+        message
       )
     }
 
@@ -272,7 +272,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
               size: stringified.length,
             },
           },
-          'Log context is too large',
+          'Log context is too large'
         )
         for (let i = 0; i < stringified.length; i += 2e5) {
           this.logger.warn(
@@ -284,11 +284,11 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
                 chunks: Math.floor(stringified.length / 2e5) + 1,
                 data: stringified.slice(
                   i,
-                  Math.min(stringified.length, i + 2e5),
+                  Math.min(stringified.length, i + 2e5)
                 ),
               },
             },
-            `Removed context`,
+            `Removed context`
           )
         }
       }
@@ -299,7 +299,7 @@ export class CustomLogger<T extends ScopedLogInput = LogInput>
           action,
           history,
         },
-        'Failed to parse log context',
+        'Failed to parse log context'
       )
     }
 

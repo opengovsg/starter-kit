@@ -14,15 +14,16 @@ import z, { ZodError } from 'zod'
 
 import type { Logger, ScopedLogger } from '@acme/logging'
 
-import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { env } from '~/env'
-import { createLogger } from '~/lib/logger'
 import {
   checkRateLimit,
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
+import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
+
+import { env } from '~/env'
+import { createLogger } from '~/lib/logger'
 
 /**
  * 1. CONTEXT
@@ -184,16 +185,16 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
     if (error instanceof RateLimiterRes) {
       ctx.resHeaders?.set(
         'Retry-After',
-        String(Math.ceil(error.msBeforeNext / 1000)),
+        String(Math.ceil(error.msBeforeNext / 1000))
       )
       ctx.resHeaders?.set(
         'X-RateLimit-Reset',
-        String(Math.ceil((Date.now() + error.msBeforeNext) / 1000)),
+        String(Math.ceil((Date.now() + error.msBeforeNext) / 1000))
       )
       throw new TRPCError({
         code: 'TOO_MANY_REQUESTS',
         message: `Rate limit exceeded. Try again in ${Math.ceil(
-          error.msBeforeNext / 1000,
+          error.msBeforeNext / 1000
         )} seconds.`,
       })
     }

@@ -1,6 +1,7 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": false,
@@ -8,7 +9,6 @@
     "source.fixAll.oxc": "always"
   },
   "oxc.typeAware": true,
-  "prettier.ignorePath": ".gitignore",
   "tailwindCSS.classFunctions": ["cva", "cx", "cn"],
   "tailwindCSS.experimental.classRegex": [
     ":\\s*?[\"'`]([^\"'`]*).*?,",

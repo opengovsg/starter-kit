@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
 import { APP_VERSION_HEADER_KEY } from '~/constants'

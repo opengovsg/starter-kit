@@ -16,23 +16,21 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
-  "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "@types/node": "catalog:",
-    "oxlint": "catalog:",
-    "oxlint-tsgolint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config",
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
     "ioredis": "^5.8.2",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "typescript": "catalog:"
   }
 }

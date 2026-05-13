@@ -9,17 +9,18 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "sortPackageJson": {
+    "sortScripts": true
+  }
 }
