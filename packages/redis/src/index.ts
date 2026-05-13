@@ -3,7 +3,7 @@ import Redis from 'ioredis'
 import { env } from './env'
 
 const globalForRedis = global as unknown as {
-  redis: ReturnType<typeof createRedisClient>
+  redis: ReturnType<typeof createRedisClient> | undefined
 }
 
 const createRedisClient = (): Redis | null => {
@@ -35,7 +35,6 @@ const createRedisClient = (): Redis | null => {
 }
 
 export const redis =
-  // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
   globalForRedis.redis !== undefined
     ? globalForRedis.redis
     : createRedisClient()

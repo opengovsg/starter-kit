@@ -16,7 +16,7 @@ export interface DynamicPageProps<
       }[TParams]
     >
   >
-  // oxlint-disable-next-line typescript-eslint/consistent-indexed-object-style
+  // oxlint-disable-next-line typescript/consistent-indexed-object-style
   searchParams: Promise<{ [K in TSearchParams]?: string | string[] }>
 }
 

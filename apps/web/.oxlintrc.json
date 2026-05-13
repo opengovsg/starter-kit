@@ -4,6 +4,7 @@
     "typeAware": true,
     "reportUnusedDisableDirectives": "off"
   },
+  "ignorePatterns": ["*.config.*"],
   "overrides": [
     {
       "files": ["**/*.{js,ts,tsx}"],
@@ -36,7 +37,7 @@
     {
       "files": ["**/__tests__/**"],
       "rules": {
-        "typescript-eslint/no-unsafe-assignment": "off"
+        "typescript/no-unsafe-assignment": "off"
       }
     }
   ]
