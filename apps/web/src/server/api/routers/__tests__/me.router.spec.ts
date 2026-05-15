@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server'
 import { resetTables } from '~tests/db/utils'
 import { createTestCaller, createTestContext } from '~tests/trpc'
 
@@ -14,12 +13,10 @@ describe('meRouter', () => {
       const ctx = createTestContext(undefined)
       const caller = createTestCaller(ctx)
 
-      try {
-        await caller.me.get()
-      } catch (error) {
-        expect(error).toBeInstanceOf(TRPCError)
-        expect((error as TRPCError).code).toEqual('UNAUTHORIZED')
-      }
+      await expect(caller.me.get()).rejects.toMatchObject({
+        name: 'TRPCError',
+        code: 'UNAUTHORIZED',
+      })
     })
 
     it('should return user data when authenticated', async () => {
