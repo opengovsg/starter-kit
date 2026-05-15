@@ -24,11 +24,11 @@ export const ErrorCard = ({
 }: ErrorCardProps) => {
   const router = useRouter()
 
-  const canGoBack = typeof window !== 'undefined' && window.history.length > 0
   const handleBack = () => {
+    // Next.js pre-renders 'use client' components on the server, where `window` is undefined
     if (typeof window === 'undefined') return
-    // Check if there is a previous entry in the browser's history stack
-    if (canGoBack) {
+    // window.history.length is always >= 1 (current entry); > 1 means there's a previous entry
+    if (window.history.length > 1) {
       router.back()
     } else {
       router.push('/')
@@ -57,11 +57,9 @@ export const ErrorCard = ({
         } */}
       </div>
 
-      {canGoBack && (
-        <Button onPress={handleBack} color="neutral">
-          Go Back
-        </Button>
-      )}
+      <Button onPress={handleBack} color="neutral">
+        Go Back
+      </Button>
     </div>
   )
 }
