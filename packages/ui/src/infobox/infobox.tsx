@@ -35,8 +35,12 @@ export const Infobox = (originalProps: InfoboxProps) => {
   const styles = infoboxStyles(variantProps)
 
   const icon = useMemo(() => {
+    // `null` hides the icon; `undefined` falls through to the variant default.
+    if (props.icon === null) {
+      return null
+    }
     const iconClassName = styles.icon({ className: props.classNames?.icon })
-    if (props.icon) {
+    if (props.icon !== undefined) {
       return <div className={iconClassName}>{props.icon}</div>
     }
     switch (variantProps.variant) {
