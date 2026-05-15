@@ -11,7 +11,7 @@
     "dev": "tsc",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@date-fns/tz": "^1.4.1",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
+    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",

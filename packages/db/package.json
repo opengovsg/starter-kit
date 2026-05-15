@@ -47,7 +47,7 @@
     "reset": "pnpm with-env prisma migrate reset",
     "seed": "pnpm with-env prisma db seed",
     "studio": "pnpm with-env prisma studio --port 5556",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "typecheck": "tsgo --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
@@ -64,6 +64,7 @@
     "@acme/tsconfig": "workspace:*",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "dotenv-cli": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",

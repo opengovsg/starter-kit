@@ -6,6 +6,7 @@ packages:
 catalog:
   '@hookform/resolvers': ^5.2.2
   '@types/node': ^24.10.4
+  '@typescript/native-preview': 7.0.0-dev.20260320.1
   'oxlint': ^1.64.0
   'oxlint-tsgolint': ^0.22.1
   dd-trace: ^5.81.0
@@ -74,6 +75,7 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
   - '@opengovsg/*'
+  - '@typescript/native-preview*'
 
 onlyBuiltDependencies:
   - '@prisma/client'

@@ -17,7 +17,7 @@
     "storybook": "SKIP_ENV_VALIDATION=1 storybook dev -p 6006",
     "test": "vitest",
     "test:ci": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "vercel-build": "pnpm with-env next build",
     "with-e2e-env": "dotenv -e ./.env.e2e --",
     "with-env": "dotenv -e ../../.env --"
@@ -72,6 +72,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
+    "@typescript/native-preview": "catalog:",
     "@vitest/browser": "catalog:vitest",
     "@vitest/browser-playwright": "catalog:vitest",
     "@vitest/coverage-v8": "catalog:vitest",

@@ -18,7 +18,7 @@ A technical kit to quickly build new products from
   - ✅ Unit testing with [Vitest](https://vitest.dev/)
   - ✅ Visual regression testing with [Storybook](https://storybook.js.org/) + [Chromatic](https://www.chromatic.com/)
   - ✅ Linting
-  - ✅ Type checking
+  - ✅ Type checking with [`tsgo`](https://www.npmjs.com/package/@typescript/native-preview)
 - 🔐 Env var validation
 
 ## Project structure

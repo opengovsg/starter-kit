@@ -16,7 +16,7 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
@@ -32,6 +32,7 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
+    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
