@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "build": "tsgo",
+    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "generate": "pnpm with-env prisma generate",

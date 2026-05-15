@@ -10,9 +10,9 @@
     }
   },
   "scripts": {
-    "build": "tsgo",
+    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsgo",
+    "dev": "tsc",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "typecheck": "tsgo --noEmit"
