@@ -69,6 +69,11 @@ linkWorkspacePackages: true
 
 blockExoticSubdeps: true
 
+# We do not use a pnpmfile. Explicitly disable lookup so dd-trace's ESM loader
+# hook (injected via NODE_OPTIONS=--import in CI) does not turn the default
+# `.pnpmfile.mjs` lookup into a hard ERR_MODULE_NOT_FOUND failure.
+pnpmfile: []
+
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
