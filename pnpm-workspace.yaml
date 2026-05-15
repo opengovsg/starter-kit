@@ -69,17 +69,37 @@ linkWorkspacePackages: true
 
 blockExoticSubdeps: true
 
+# We do not use a pnpmfile. Explicitly disable lookup so dd-trace's ESM loader
+# hook (injected via NODE_OPTIONS=--import in CI) does not turn the default
+# `.pnpmfile.mjs` lookup into a hard ERR_MODULE_NOT_FOUND failure.
+pnpmfile: []
+
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
   - '@opengovsg/*'
 
-onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - esbuild
-  - prisma
+# Under pnpm v11, every package with a build script must be listed here as
+# true (run the script) or false (skip it). Leaving one unlisted throws
+# ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  '@datadog/native-appsec': false
+  '@datadog/native-iast-taint-tracking': false
+  '@datadog/native-metrics': false
+  '@datadog/pprof': false
+  core-js-pure: false
+  cpu-features: false
+  dd-trace: false
+  msw: false
+  prisma-zod-generator: false
+  protobufjs: false
+  sharp: false
+  ssh2: false
 
 overrides:
   '@types/minimatch': 5.1.2
