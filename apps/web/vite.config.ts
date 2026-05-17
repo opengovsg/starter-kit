@@ -18,7 +18,12 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
-    tanstackStart(),
+    tanstackStart({
+      server: {
+        // Cap request bodies to prevent spammy large requests from exhausting server memory.
+        maxRequestBodySize: 2 * 1024 * 1024, // 2 MB
+      },
+    }),
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
