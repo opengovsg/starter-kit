@@ -83,6 +83,18 @@ function buildCspValue(): string {
     .trim()
 }
 
+const MAX_REQUEST_BODY_SIZE = 2 * 1024 * 1024 // 2 MB
+
+const requestBodyLimitMiddleware = createMiddleware().server(
+  async ({ request, next }) => {
+    const contentLength = request.headers.get('content-length')
+    if (contentLength && parseInt(contentLength, 10) > MAX_REQUEST_BODY_SIZE) {
+      return new Response('Request Entity Too Large', { status: 413 })
+    }
+    return next()
+  }
+)
+
 const cspMiddleware = createMiddleware().server(async ({ next }) => {
   const result = await next()
   result.response.headers.set('Content-Security-Policy', buildCspValue())
@@ -90,5 +102,5 @@ const cspMiddleware = createMiddleware().server(async ({ next }) => {
 })
 
 export const startInstance = createStart(() => ({
-  requestMiddleware: [cspMiddleware],
+  requestMiddleware: [requestBodyLimitMiddleware, cspMiddleware],
 }))
