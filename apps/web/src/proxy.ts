@@ -62,7 +62,7 @@ const vercelLivePolicy = {
   'frame-src': ['https://vercel.live'],
 }
 
-export function generateCspHeaderValue(request: Request): string {
+export function generateCspHeaderValue(_request: Request): string {
   // oxlint-disable-next-line no-restricted-properties
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
   const isDev =
