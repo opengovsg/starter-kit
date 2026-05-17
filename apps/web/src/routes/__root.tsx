@@ -14,6 +14,7 @@ import { NuqsAdapter } from 'nuqs/adapters/react'
 
 import '~/app/globals.css'
 import { NotFoundCard } from '~/app/_components/errors/not-found-card'
+import { RouterProgressBar } from '~/app/_components/router-progress-bar'
 import { ClientProviders } from '~/app/provider'
 import { env } from '~/env'
 
@@ -63,6 +64,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       </head>
       <body className={cn('text-base-content-default font-sans antialiased')}>
         <ClientProviders>
+          <RouterProgressBar />
           <NuqsAdapter>{children}</NuqsAdapter>
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster />

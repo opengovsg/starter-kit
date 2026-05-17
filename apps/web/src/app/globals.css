@@ -12,3 +12,19 @@
   --font-inter: 'Inter Variable', sans-serif;
   --font-ibm-plex-mono: 'IBM Plex Mono', monospace;
 }
+
+@keyframes router-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  60% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@theme {
+  --animate-router-progress: router-progress 2s ease-out infinite;
+}
