@@ -1,57 +1,18 @@
-import { getCookie, setCookie } from '@tanstack/react-start/server'
-import { sealData, unsealData } from 'iron-session'
+import { createServerFn } from '@tanstack/react-start'
 
-import { env } from '~/env'
+import type { SessionData } from './session.server'
 
-export interface SessionData {
-  userId?: string
-  // Add other session data as needed
-}
+export type { SessionData }
 
-const SESSION_COOKIE_NAME = 'auth.session-token'
-const SESSION_TTL = 60 * 60 * 24 * 7 // 7 days
-// When you provide multiple passwords then all of them will be used to decrypt the cookie.
-// But only the most recent (= highest key, e.g. 2) password will be used to encrypt the cookie.
-// This allows password rotation.
-const SESSION_PASSWORD = { '1': env.SESSION_SECRET } as const
-
-type Session = SessionData & {
-  save(): Promise<void>
-  destroy(): void
-}
-
-export async function getSession(): Promise<Session> {
-  const sealed = getCookie(SESSION_COOKIE_NAME)
-  const data: SessionData = sealed
-    ? await unsealData<SessionData>(sealed, {
-        password: SESSION_PASSWORD,
-        ttl: SESSION_TTL,
-      })
-    : {}
-
-  const session: Session = Object.assign(data as Session, {
-    save: async () => {
-      const { save: _save, destroy: _destroy, ...sessionData } = session
-      const newSealed = await sealData(sessionData, {
-        password: SESSION_PASSWORD,
-        ttl: SESSION_TTL,
-      })
-      setCookie(SESSION_COOKIE_NAME, newSealed, {
-        httpOnly: true,
-        secure: env.NODE_ENV !== 'development' && env.NODE_ENV !== 'test',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: SESSION_TTL,
-      })
-    },
-    destroy: () => {
-      setCookie(SESSION_COOKIE_NAME, '', {
-        httpOnly: true,
-        path: '/',
-        maxAge: 0,
-      })
-    },
-  })
-
-  return session
-}
+// Route files (beforeLoad / loader) use this. It runs on the server and is
+// called via RPC when triggered from the client during client-side navigation.
+// Returns plain SessionData (no save/destroy methods) because those are not
+// JSON-serialisable. Server-only code (API routes, tRPC) should import
+// getSession directly from ./session.server instead.
+export const getSession = createServerFn().handler(
+  async (): Promise<SessionData> => {
+    const { getSession: getSessionServer } = await import('./session.server')
+    const { save: _save, destroy: _destroy, ...data } = await getSessionServer()
+    return data
+  },
+)

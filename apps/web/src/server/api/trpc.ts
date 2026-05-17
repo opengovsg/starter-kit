@@ -19,7 +19,7 @@ import {
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { getSession } from '../session'
+import { getSession } from '../session.server'
 import { extractIpAddress } from '../utils/request'
 
 import { env } from '~/env'

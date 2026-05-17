@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { LOGIN_ROUTE } from '~/constants'
-import { getSession } from '~/server/session'
+import { getSession } from '~/server/session.server'
 
 export const Route = createFileRoute('/api/auth/sign-out')({
   server: {

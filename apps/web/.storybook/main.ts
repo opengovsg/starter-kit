@@ -24,11 +24,22 @@ const config: StorybookConfig = {
     options: {},
   },
   async viteFinal(config) {
-    // TailwindCSS is not being imported properly within Storybook, so we add the
-    // TailwindCSS plugin to Vite directly here.
     const { default: tailwindcss } = await import('@tailwindcss/vite')
     const { mergeConfig } = await import('vite')
-    return mergeConfig(config, { plugins: [tailwindcss()] })
+    // TanStack Start plugins (pulled from vite.config.ts) conflict with
+    // Storybook's multi-entry build under Rolldown (Vite 8). Storybook stories
+    // only need React component context, not TanStack Start routing.
+    const filteredConfig = {
+      ...config,
+      plugins: (config.plugins ?? [])
+        .flat(Infinity as 1)
+        .filter(
+          (p: unknown) =>
+            !p ||
+            !(p as { name?: string }).name?.startsWith('tanstack'),
+        ),
+    }
+    return mergeConfig(filteredConfig, { plugins: [tailwindcss()] })
   },
   staticDirs: ['../public'],
 }
