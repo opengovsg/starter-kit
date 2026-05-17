@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, waitFor } from 'storybook/test'
 import { AppDecorator } from '~storybook/decorators'
 import { authHandlers } from '~tests/msw/handlers/auth'

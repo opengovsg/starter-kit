@@ -1,7 +1,4 @@
-'use client'
-
-import Image from 'next/image'
-
+import { Image } from '@unpic/react'
 import { Link } from 'react-aria-components'
 
 import { SignInWizard } from './wizard'
@@ -22,7 +19,7 @@ export const SignInPageComponent = () => {
           <div className="flex h-full w-full flex-col gap-4 max-lg:px-4 md:col-span-6 md:col-start-4">
             <h2 className="prose-h3 text-base-content-brand font-semibold">
               {/* Recommend max 2 lines of text here, or add logo */}
-              {env.NEXT_PUBLIC_APP_NAME}
+              {env.VITE_APP_NAME}
             </h2>
             <SignInWizard />
             <div className="prose-caption-3 my-12 flex items-center whitespace-pre">

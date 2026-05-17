@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-nextjs'
-import { vercel } from '@t3-oss/env-nextjs/presets-zod'
+import { createEnv } from '@t3-oss/env-core'
+import { vercel } from '@t3-oss/env-core/presets-zod'
 import z from 'zod'
 
 export const env = createEnv({
@@ -23,28 +23,34 @@ export const env = createEnv({
 
   /**
    * Specify your client-side environment variables schema here.
-   * For them to be exposed to the client, prefix them with `NEXT_PUBLIC_`.
+   * For them to be exposed to the client, prefix them with `VITE_`.
    */
   client: {
-    NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
-    NEXT_PUBLIC_APP_URL: z.url().optional(),
-    NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),
-    NEXT_PUBLIC_APP_ENV: z
+    VITE_APP_NAME: z.string().default('Starter Kit'),
+    VITE_APP_URL: z.url().optional(),
+    VITE_APP_VERSION: z.string().default('0.0.0'),
+    VITE_APP_ENV: z
       .enum(['uat', 'staging', 'vapt', 'development', 'production'])
       .default('development'),
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // VITE_CLIENTVAR: z.string(),
   },
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
    */
-  experimental__runtimeEnv: {
+  runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION,
-    NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
-    NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    PORT: process.env.PORT,
+    OTP_EXPIRY: process.env.OTP_EXPIRY,
+    DATABASE_URL: process.env.DATABASE_URL,
+    POSTMAN_API_KEY: process.env.POSTMAN_API_KEY,
+    SESSION_SECRET: process.env.SESSION_SECRET,
+    VITE_APP_VERSION: process.env.VITE_APP_VERSION,
+    VITE_APP_ENV: process.env.VITE_APP_ENV,
+    VITE_APP_NAME: process.env.VITE_APP_NAME,
+    VITE_APP_URL: process.env.VITE_APP_URL,
+    // VITE_CLIENTVAR: process.env.VITE_CLIENTVAR,
   },
+  clientPrefix: 'VITE_',
   skipValidation:
     !!process.env.SKIP_ENV_VALIDATION ||
     process.env.npm_lifecycle_event === 'lint',

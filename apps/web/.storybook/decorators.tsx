@@ -1,17 +1,28 @@
 import { useState } from 'react'
 
-import type { Decorator } from '@storybook/nextjs-vite'
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+
+import type { Decorator } from '@storybook/react-vite'
 import {
   defaultShouldDehydrateQuery,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'
 import { TRPCProvider } from '~/trpc/react'
+
+export const storybookRouter = createRouter({
+  routeTree: createRootRoute().addChildren([]),
+  history: createMemoryHistory({ initialEntries: ['/'] }),
+})
 
 /**
  * This decorator wraps stories with TRPC and React Query and the other app-level providers.

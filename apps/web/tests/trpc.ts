@@ -12,7 +12,7 @@ const testLogger = createBaseLogger({
 
 /**
  * Creates a mock session object for testing purposes.
- * This avoids the need to call Next.js cookies() which requires a request context.
+ * This avoids the need to call cookies() which requires a request context.
  */
 const createMockSession = (
   sessionData?: SessionData
@@ -28,7 +28,7 @@ const createMockSession = (
 
 /**
  * Creates a test context for tRPC callers.
- * This is a simplified version of createTRPCContext that doesn't require Next.js request context.
+ * This is a simplified version of createTRPCContext that doesn't require a real request context.
  *
  * Add more properties to the context as needed for testing.
  */

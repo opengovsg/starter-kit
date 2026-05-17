@@ -9,11 +9,6 @@ node_modules
 coverage
 **/test-results
 
-# next.js
-.next/
-out/
-next-env.d.ts
-
 # production
 build
 

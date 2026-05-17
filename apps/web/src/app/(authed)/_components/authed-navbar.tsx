@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Avatar,
   Button,
@@ -28,7 +26,7 @@ export const AuthedNavbar = () => {
     <Navbar>
       <NavbarContent justify="start">
         <NavbarBrand>
-          <p className="font-bold text-inherit">{env.NEXT_PUBLIC_APP_NAME}</p>
+          <p className="font-bold text-inherit">{env.VITE_APP_NAME}</p>
         </NavbarBrand>
       </NavbarContent>
 

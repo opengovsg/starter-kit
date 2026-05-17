@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 
 import type { QueryClient } from '@tanstack/react-query'
@@ -44,9 +42,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           url: getBaseUrl() + '/api/trpc',
           headers() {
             const headers = new Headers()
-            headers.set('x-trpc-source', 'nextjs-react')
-            if (env.NEXT_PUBLIC_APP_VERSION) {
-              headers.set(APP_VERSION_HEADER_KEY, env.NEXT_PUBLIC_APP_VERSION)
+            headers.set('x-trpc-source', 'react')
+            if (env.VITE_APP_VERSION) {
+              headers.set(APP_VERSION_HEADER_KEY, env.VITE_APP_VERSION)
             }
             return headers
           },
@@ -55,8 +53,8 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
               const serverVersion = response.headers.get(APP_VERSION_HEADER_KEY)
               if (
                 serverVersion &&
-                env.NEXT_PUBLIC_APP_VERSION &&
-                serverVersion !== env.NEXT_PUBLIC_APP_VERSION
+                env.VITE_APP_VERSION &&
+                serverVersion !== env.VITE_APP_VERSION
               ) {
                 window.dispatchEvent(new Event(REQUIRE_UPDATE_EVENT))
               }

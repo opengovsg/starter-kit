@@ -1,14 +1,13 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { useNavigate } from '@tanstack/react-router'
 
 import { toast } from '@opengovsg/oui'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
+import { LOGIN_ROUTE } from '~/constants'
 import { useTRPC } from '~/trpc/react'
 
 export const useAuth = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   const trpc = useTRPC()
 
   const { data: user } = useQuery(trpc.me.get.queryOptions())
@@ -17,7 +16,7 @@ export const useAuth = () => {
     trpc.auth.logout.mutationOptions({
       onSuccess: () => {
         toast.success('Successfully logged out.')
-        router.refresh()
+        void navigate({ to: LOGIN_ROUTE })
       },
     })
   )

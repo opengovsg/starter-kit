@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": ["turbo/generators/templates/**/*.hbs"],
+  "ignorePatterns": ["turbo/generators/templates/**/*.hbs", "apps/web/src/routeTree.gen.ts"],
   "printWidth": 80,
   "semi": false,
   "singleQuote": true,
@@ -38,13 +38,13 @@
         "modifiers": ["value"],
       },
       {
-        "elementNamePattern": ["next", "next/*"],
-        "groupName": "next-types",
+        "elementNamePattern": ["@tanstack/react-start", "@tanstack/react-start/*", "@tanstack/react-router", "@tanstack/react-router/*"],
+        "groupName": "tanstack-types",
         "selector": "type",
       },
       {
-        "elementNamePattern": ["next", "next/*"],
-        "groupName": "next-values",
+        "elementNamePattern": ["@tanstack/react-start", "@tanstack/react-start/*", "@tanstack/react-router", "@tanstack/react-router/*"],
+        "groupName": "tanstack-values",
         "selector": "external",
         "modifiers": ["value"],
       },
@@ -63,8 +63,8 @@
     "groups": [
       "react-types",
       "react-values",
-      "next-types",
-      "next-values",
+      "tanstack-types",
+      "tanstack-values",
       "builtin",
       "external",
       "acme-types",

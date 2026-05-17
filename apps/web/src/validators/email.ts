@@ -1,4 +1,5 @@
-import { parseOneAddress } from 'email-addresses'
+import pkg from 'email-addresses'
+const { parseOneAddress } = pkg
 import z from 'zod'
 
 export const emailSchema = z

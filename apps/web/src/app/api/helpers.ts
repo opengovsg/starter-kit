@@ -1,5 +1,3 @@
-import type { NextRequest } from 'next/server'
-
 import { TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 
@@ -8,10 +6,10 @@ import { callerFactory } from '~/trpc/caller'
 
 /**
  * Helper to create a tRPC caller for REST API endpoints
- * @param req - The Next.js request object
+ * @param req - The standard Web API Request object
  * @param resHeaders - Optional response headers object for rate limit headers
  */
-export async function createApiCaller(req: NextRequest, resHeaders?: Headers) {
+export async function createApiCaller(req: Request, resHeaders?: Headers) {
   return callerFactory(
     await createTRPCContext({
       headers: req.headers,

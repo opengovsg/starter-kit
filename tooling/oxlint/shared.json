@@ -1,14 +1,8 @@
 {
-  "settings": {
-    "next": {
-      "rootDir": "apps/web"
-    }
-  },
   "plugins": [
     "eslint",
     "typescript",
     "react",
-    "nextjs",
     "jsx-a11y",
     "import",
     "unicorn",
@@ -19,7 +13,7 @@
     "**/*.config.*",
     "dist/**",
     "src/generated/**",
-    ".next/**",
+    ".output/**",
     "apps/web/public/mockServiceWorker.js"
   ],
   "rules": {

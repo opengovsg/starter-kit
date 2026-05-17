@@ -7,7 +7,7 @@ import { env } from '~/env'
 test('go to /', async ({ page }) => {
   await page.goto('/')
 
-  await page.waitForSelector(`text=${env.NEXT_PUBLIC_APP_NAME}`)
+  await page.waitForSelector(`text=${env.VITE_APP_NAME}`)
 })
 
 test('test 404', async ({ page }) => {

@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback, useEffect, useState } from 'react'
 
 import { Banner } from '@opengovsg/oui/banner'

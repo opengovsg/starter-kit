@@ -21,9 +21,6 @@ catalog:
   zod: ^4.2.1
 
 catalogs:
-  next:
-    '@next/env': 16.2.6
-    next: 16.2.6
   oui:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
@@ -46,24 +43,27 @@ catalogs:
     '@storybook/addon-a11y': 10.3.6
     '@storybook/addon-docs': 10.3.6
     '@storybook/addon-vitest': 10.3.6
-    '@storybook/nextjs-vite': 10.3.6
+    '@storybook/react-vite': 10.3.6
     storybook: 10.3.6
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
-    '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
     '@tailwindcss/postcss': ^4.2.4
     tailwindcss: ^4.2.4
+  tanstack-start:
+    '@tanstack/react-router': ^1.170.1
+    '@tanstack/react-start': ^1.168.1
+    '@tanstack/router-plugin': ^1.168.1
   trpc:
     '@trpc/client': ^11.16.0
     '@trpc/server': ^11.16.0
     '@trpc/tanstack-react-query': ^11.16.0
   vitest:
-    '@vitest/browser': 4.0.8
-    '@vitest/browser-playwright': 4.0.8
-    '@vitest/coverage-v8': 4.0.8
-    vitest: 4.0.8
+    '@vitest/browser': 4.1.6
+    '@vitest/browser-playwright': 4.1.6
+    '@vitest/coverage-v8': 4.1.6
+    vitest: 4.1.6
 
 linkWorkspacePackages: true
 

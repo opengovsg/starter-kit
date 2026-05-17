@@ -19,7 +19,7 @@ import {
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { getSession } from '../session'
+import { getSession } from '../session.server'
 import { extractIpAddress } from '../utils/request'
 
 import { env } from '~/env'
@@ -32,8 +32,8 @@ import { createLogger } from '~/lib/logger'
  *
  * These allow you to access things when processing a request, like the session, etc.
  *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
+ * This helper generates the "internals" for a tRPC context. The API handler and server functions
+ * each wrap this and provide the required context.
  *
  * @see https://trpc.io/docs/server/context
  */
@@ -42,7 +42,7 @@ export const createTRPCContext = async ({
   resHeaders,
 }: {
   headers: Headers
-  // resHeaders may not exist if called directly from RSC without an active request
+  // resHeaders may not exist if called directly from a server caller or route loader without an active request
   resHeaders?: Headers
 }) => {
   // Pass in base context

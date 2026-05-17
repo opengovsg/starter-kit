@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useNavigate } from '@tanstack/react-router'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
@@ -15,11 +15,12 @@ import { useSignInWizard } from '../context'
 
 import { Infobox } from '@acme/ui/infobox'
 import { TextField } from '@acme/ui/text-field'
+import { AUTHED_ROOT_ROUTE } from '~/constants'
 import { useTRPC } from '~/trpc/react'
 import { emailVerifyOtpSchema } from '~/validators/auth'
 
 export const VerificationStep = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
@@ -53,7 +54,7 @@ export const VerificationStep = () => {
     trpc.auth.email.verifyOtp.mutationOptions({
       onSuccess: () => {
         clearVerifierMap()
-        router.refresh()
+        void navigate({ to: AUTHED_ROOT_ROUTE })
       },
       onError: (error) => {
         setError('token', { message: error.message })

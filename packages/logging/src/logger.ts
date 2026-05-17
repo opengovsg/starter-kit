@@ -44,8 +44,8 @@ export class PinoLogger {
         formatters: {
           bindings: (bindings) => {
             return {
-              env: env.NEXT_PUBLIC_APP_ENV,
-              version: env.NEXT_PUBLIC_APP_VERSION,
+              env: env.VITE_APP_ENV,
+              version: env.VITE_APP_VERSION,
               ...bindings,
             }
           },

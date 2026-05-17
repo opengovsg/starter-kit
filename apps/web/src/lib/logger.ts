@@ -18,6 +18,6 @@ export const createLogger = ({
     traceId: headers.get('x-datadog-trace-id') ?? undefined,
     cfConnectingIp: headers.get('cf-connecting-ip') ?? undefined,
     userAgent: headers.get('user-agent') ?? undefined,
-    serverVersion: env.NEXT_PUBLIC_APP_VERSION,
+    serverVersion: env.VITE_APP_VERSION,
     clientVersion: headers.get(APP_VERSION_HEADER_KEY) ?? undefined,
   })

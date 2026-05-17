@@ -1,30 +1,18 @@
-import { cookies } from 'next/headers'
+import { createServerFn } from '@tanstack/react-start'
 
-import type { SessionOptions } from 'iron-session'
-import { getIronSession } from 'iron-session'
+import type { SessionData } from './session.server'
 
-import { env } from '~/env'
+export type { SessionData }
 
-export interface SessionData {
-  userId?: string
-  // Add other session data as needed
-}
-
-export const sessionOptions: SessionOptions = {
-  password: {
-    '1': env.SESSION_SECRET,
-    // When you provide multiple passwords then all of them will be used to decrypt the cookie.
-    // But only the most recent (= highest key, e.g. 2) password will be used to encrypt the cookie.
-    // This allows password rotation.
-  },
-  cookieName: 'auth.session-token',
-  ttl: 60 * 60 * 24 * 7, // 7 days
-  cookieOptions: {
-    secure: env.NODE_ENV !== 'development' && env.NODE_ENV !== 'test',
-  },
-}
-
-export async function getSession() {
-  const cookieStore = await cookies()
-  return getIronSession<SessionData>(cookieStore, sessionOptions)
-}
+// Route files (beforeLoad / loader) use this. It runs on the server and is
+// called via RPC when triggered from the client during client-side navigation.
+// Returns plain SessionData (no save/destroy methods) because those are not
+// JSON-serialisable. Server-only code (API routes, tRPC) should import
+// getSession directly from ./session.server instead.
+export const getSession = createServerFn().handler(
+  async (): Promise<SessionData> => {
+    const { getSession: getSessionServer } = await import('./session.server')
+    const { save: _save, destroy: _destroy, ...data } = await getSessionServer()
+    return data
+  }
+)

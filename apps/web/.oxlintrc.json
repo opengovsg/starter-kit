@@ -4,7 +4,7 @@
     "typeAware": true,
     "reportUnusedDisableDirectives": "off"
   },
-  "ignorePatterns": ["*.config.*"],
+  "ignorePatterns": ["*.config.*", "src/routeTree.gen.ts"],
   "overrides": [
     {
       "files": ["**/*.{js,ts,tsx}"],

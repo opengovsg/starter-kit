@@ -1,5 +1,3 @@
-'use client'
-
 import type { VfnStepData } from '../context'
 import { useSignInWizard } from '../context'
 import { EmailStep } from './email-step'

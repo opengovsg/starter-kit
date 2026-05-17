@@ -1,5 +1,3 @@
-'use client'
-
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
 import { createContext, useContext, useRef, useState } from 'react'
@@ -21,9 +19,7 @@ interface SignInState {
   clearVerifierMap: () => void
 }
 
-export const SignInWizardContext = createContext<SignInState | undefined>(
-  undefined
-)
+const SignInWizardContext = createContext<SignInState | undefined>(undefined)
 
 export const useSignInWizard = () => {
   const context = useContext(SignInWizardContext)

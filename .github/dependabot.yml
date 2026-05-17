@@ -13,11 +13,6 @@ updates:
         patterns:
           - 'prisma'
           - '@prisma/*'
-      next:
-        applies-to: version-updates
-        patterns:
-          - '@next/*'
-          - 'next'
       react:
         applies-to: version-updates
         patterns:
