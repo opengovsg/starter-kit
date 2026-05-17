@@ -1,4 +1,5 @@
-const { parseOneAddress } = 'email-addresses'
+import pkg from 'email-addresses'
+const { parseOneAddress } = pkg
 
 import { db } from '@acme/db'
 
