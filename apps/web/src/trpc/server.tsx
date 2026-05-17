@@ -1,45 +1,34 @@
-import { cache } from 'react'
-
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
-import type { TRPCQueryOptions } from '@trpc/tanstack-react-query'
-import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import { createContext } from './context'
 import { createQueryClient } from './query-client'
 
-import type { AppRouter } from '~/server/api/root'
 import { appRouter } from '~/server/api/root'
+import { createCallerFactory } from '~/server/api/trpc'
+
+export { createQueryClient }
 
 /**
- * Only use this function if you really need to use the data both on the server as well as inside client components
- * and understand the tradeoffs explained in the [Advanced Server Rendering](https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr#data-ownership-and-revalidation) guide.
- * Always use a try-catch block if you use this function to fetch data on the server component and there are specific errors you want to handle.
+ * Create a server-side tRPC caller that can be used in route loaders.
+ * Data returned from loaders can be passed to client components or used
+ * to seed the React Query cache via HydrationBoundary.
  */
-export const getQueryClient = cache(createQueryClient)
+export function createServerCaller() {
+  return createCallerFactory(appRouter)
+}
 
-export const trpc = createTRPCOptionsProxy<AppRouter>({
-  router: appRouter,
-  ctx: createContext,
-  queryClient: getQueryClient,
-})
+export async function createContextualCaller() {
+  const ctx = await createContext()
+  return createCallerFactory(appRouter)(ctx)
+}
+
+export { HydrationBoundary }
 
 export function HydrateClient(props: { children: React.ReactNode }) {
-  const queryClient = getQueryClient()
+  const queryClient = createQueryClient()
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {props.children}
     </HydrationBoundary>
   )
-}
-// oxlint-disable-next-line typescript/no-explicit-any
-export async function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-  queryOptions: T
-) {
-  const queryClient = getQueryClient()
-  if (queryOptions.queryKey[1]?.type === 'infinite') {
-    // oxlint-disable-next-line typescript/no-unsafe-argument, typescript/no-explicit-any
-    await queryClient.prefetchInfiniteQuery(queryOptions as any)
-  } else {
-    await queryClient.prefetchQuery(queryOptions)
-  }
 }

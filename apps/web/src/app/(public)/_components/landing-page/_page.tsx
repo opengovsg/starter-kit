@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 import { Link } from 'react-aria-components'
 import { BiRightArrowAlt } from 'react-icons/bi'
 
@@ -52,7 +50,7 @@ export const LandingPageComponent = ({
               </div>
             </div>
             <div className="flex flex-1 justify-end" aria-hidden="true">
-              <Image
+              <img
                 src="/assets/landing-banner.svg"
                 alt="StarterApp hero"
                 width={480}
@@ -92,7 +90,7 @@ export const LandingPageComponent = ({
             </div>
           </div>
           <div className="flex-1" aria-hidden="true">
-            <Image
+            <img
               src="/assets/landing-banner.svg"
               alt="StarterApp hero"
               width={480}
@@ -126,7 +124,7 @@ export const LandingPageComponent = ({
           inner: 'items-center gap-8',
         }}
       >
-        <Image
+        <img
           alt="ogp brand logo"
           src="/assets/restricted-landing-ogp-logo.svg"
           aria-hidden

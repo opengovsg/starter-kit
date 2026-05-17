@@ -1,18 +1,12 @@
-import { cache } from 'react'
-
-import { headers } from 'next/headers'
+import { getRequest } from '@tanstack/react-start/server'
 
 import { createTRPCContext } from '~/server/api/trpc'
 
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-export const createContext = cache(async () => {
-  const heads = new Headers(await headers())
-  heads.set('x-trpc-source', 'rsc')
+export async function createContext() {
+  const heads = new Headers(getRequest().headers)
+  heads.set('x-trpc-source', 'server')
 
   return createTRPCContext({
     headers: heads,
   })
-})
+}

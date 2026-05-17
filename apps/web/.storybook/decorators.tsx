@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-import type { Decorator } from '@storybook/nextjs-vite'
+import type { Decorator } from '@storybook/react-vite'
 import {
   defaultShouldDehydrateQuery,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import SuperJSON from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'

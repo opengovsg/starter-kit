@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module'
 import { dirname, join } from 'path'
 
-import type { StorybookConfig } from '@storybook/nextjs-vite'
+import type { StorybookConfig } from '@storybook/react-vite'
 
 const require = createRequire(import.meta.url)
 
@@ -13,9 +13,6 @@ function getAbsolutePath(value: string): string {
   return dirname(require.resolve(join(value, 'package.json')))
 }
 const config: StorybookConfig = {
-  features: {
-    experimentalRSC: true,
-  },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     getAbsolutePath('@storybook/addon-docs'),
@@ -23,7 +20,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-vitest'),
   ],
   framework: {
-    name: getAbsolutePath('@storybook/nextjs-vite'),
+    name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
   async viteFinal(config) {

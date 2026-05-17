@@ -4,3 +4,11 @@
 @source '../../../../node_modules/@opengovsg/oui-theme';
 
 @import '@acme/tailwind-config/theme';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource/ibm-plex-mono';
+
+:root {
+  --font-inter: 'Inter Variable', sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', monospace;
+}

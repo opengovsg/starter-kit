@@ -1,9 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { Button } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
+import { useRouter } from '@tanstack/react-router'
 
 import { ErrorSvg } from '@acme/ui/svgs'
 
@@ -29,9 +28,9 @@ export const ErrorCard = ({
     if (typeof window === 'undefined') return
     // Check if there is a previous entry in the browser's history stack
     if (canGoBack) {
-      router.back()
+      router.history.back()
     } else {
-      router.push('/')
+      void router.navigate({ to: '/' })
     }
   }
 

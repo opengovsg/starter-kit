@@ -3,14 +3,13 @@
   "compilerOptions": {
     "types": ["vitest/globals"],
     "lib": ["ES2022", "dom", "dom.iterable"],
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "paths": {
       "~/*": ["./src/*"],
       "~storybook/*": ["./.storybook/*"],
       "~tests/*": ["./tests/*"]
-    },
-    "plugins": [{ "name": "next" }]
+    }
   },
-  "include": [".", ".next/types/**/*.ts", ".storybook/**/*"],
-  "exclude": ["node_modules", "public/mockServiceWorker.js", ".next"]
+  "include": [".", ".storybook/**/*"],
+  "exclude": ["node_modules", "public/mockServiceWorker.js", ".output"]
 }

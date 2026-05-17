@@ -1,9 +1,8 @@
-import type { Preview } from '@storybook/nextjs-vite'
+import type { Preview } from '@storybook/react-vite'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import { viewport } from '@acme/storybook-config'
 
-import { ibmPlexMono, inter } from '~/lib/fonts'
 import '../src/app/globals.css'
 
 // Initialize MSW
@@ -13,9 +12,6 @@ initialize({
 
 const preview: Preview = {
   parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
     layout: 'fullscreen',
     viewport,
     chromatic: {
@@ -32,8 +28,6 @@ const preview: Preview = {
     (Story) => {
       // Apply the same font classes as the main app
       document.documentElement.classList.add(
-        ibmPlexMono.variable,
-        inter.variable,
         'text-base-content-default',
         'font-sans',
         'antialiased'

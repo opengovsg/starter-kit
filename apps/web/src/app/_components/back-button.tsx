@@ -1,8 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { Button } from '@opengovsg/oui'
+import { useRouter } from '@tanstack/react-router'
 import { BiArrowBack } from 'react-icons/bi'
 
 export const BackButton = () => {
@@ -13,7 +12,7 @@ export const BackButton = () => {
       startContent={<BiArrowBack />}
       variant="clear"
       size="xs"
-      onPress={() => router.back()}
+      onPress={() => router.history.back()}
     >
       Back
     </Button>

@@ -8,7 +8,7 @@ export default defineConfig({
     retry: 0,
     globals: true,
     environment: 'node',
-    exclude: ['node_modules', 'dist', '.next', '.turbo', 'tests/e2e'],
+    exclude: ['node_modules', 'dist', '.output', '.turbo', 'tests/e2e'],
     coverage: {
       enabled: process.env.CI === 'true',
       reporter: ['text', 'json', 'html'],
