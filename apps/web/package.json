@@ -34,7 +34,7 @@
     "@hookform/resolvers": "catalog:",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
-    "@t3-oss/env-nextjs": "^0.13.10",
+    "@t3-oss/env-core": "catalog:t3-env",
     "@tanstack/react-query": "catalog:react-query5",
     "@tanstack/react-router": "catalog:tanstack-start",
     "@tanstack/react-start": "catalog:tanstack-start",

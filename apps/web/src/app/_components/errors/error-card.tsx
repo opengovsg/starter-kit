@@ -1,8 +1,9 @@
 'use client'
 
+import { useRouter } from '@tanstack/react-router'
+
 import { Button } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
-import { useRouter } from '@tanstack/react-router'
 
 import { ErrorSvg } from '@acme/ui/svgs'
 

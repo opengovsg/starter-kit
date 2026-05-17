@@ -1,14 +1,15 @@
 import type { ReactNode } from 'react'
 
-import { Toaster } from '@opengovsg/oui'
-import { cn } from '@opengovsg/oui-theme'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import {
   createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
+
+import { Toaster } from '@opengovsg/oui'
+import { cn } from '@opengovsg/oui-theme'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 
 import '~/app/globals.css'
@@ -21,18 +22,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: env.NEXT_PUBLIC_APP_NAME },
+      { title: env.VITE_APP_NAME },
       {
         name: 'description',
         content: 'Simple monorepo Starter Kit with for OGP projects',
       },
-      { property: 'og:title', content: env.NEXT_PUBLIC_APP_NAME },
+      { property: 'og:title', content: env.VITE_APP_NAME },
       {
         property: 'og:description',
         content: 'Simple monorepo Starter Kit with for OGP projects',
       },
       { property: 'og:url', content: 'https://start.open.gov.sg' },
-      { property: 'og:site_name', content: env.NEXT_PUBLIC_APP_NAME },
+      { property: 'og:site_name', content: env.VITE_APP_NAME },
     ],
   }),
   notFoundComponent: () => (

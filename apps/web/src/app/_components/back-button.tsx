@@ -1,7 +1,8 @@
 'use client'
 
-import { Button } from '@opengovsg/oui'
 import { useRouter } from '@tanstack/react-router'
+
+import { Button } from '@opengovsg/oui'
 import { BiArrowBack } from 'react-icons/bi'
 
 export const BackButton = () => {

@@ -8,8 +8,8 @@ export function initTracer({ service }: { service?: string } = {}) {
   }
   tracer.init({
     service: service,
-    env: env.NEXT_PUBLIC_APP_ENV,
-    version: env.NEXT_PUBLIC_APP_VERSION,
+    env: env.VITE_APP_ENV,
+    version: env.VITE_APP_VERSION,
     logInjection: true,
     runtimeMetrics: true,
     reportHostname: true,

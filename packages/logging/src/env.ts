@@ -8,12 +8,12 @@ export const env = createEnv({
       .default('development'),
   },
   client: {
-    NEXT_PUBLIC_APP_ENV: z
+    VITE_APP_ENV: z
       .enum(['development', 'staging', 'production', 'test', 'vapt'])
       .default('development'),
-    NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),
+    VITE_APP_VERSION: z.string().default('0.0.0'),
   },
-  clientPrefix: 'NEXT_PUBLIC_',
+  clientPrefix: 'VITE_',
   /**
    * Specify your server-side environment variables schema here.
    * This way you can ensure the app isn't built with invalid env vars.

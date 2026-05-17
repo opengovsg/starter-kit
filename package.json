@@ -10,7 +10,6 @@
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
     "dev": "turbo watch dev --continue",
-    "dev:next": "turbo watch dev -F @acme/nextjs...",
     "format": "turbo run format --continue -- --check",
     "format:fix": "turbo run format --continue -- --write",
     "lint": "turbo run lint --continue",

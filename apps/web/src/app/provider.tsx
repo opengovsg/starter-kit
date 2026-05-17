@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from 'react'
 
 import { useNavigate } from '@tanstack/react-router'
+
 import { RouterProvider } from 'react-aria-components'
 
 import { TRPCReactProvider } from '~/trpc/react'

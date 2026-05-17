@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
 import { APP_VERSION_HEADER_KEY } from '~/constants'
@@ -37,8 +38,8 @@ const trpcHandler = async (req: Request) => {
   })
 
   setCorsHeaders(response)
-  if (env.NEXT_PUBLIC_APP_VERSION) {
-    response.headers.set(APP_VERSION_HEADER_KEY, env.NEXT_PUBLIC_APP_VERSION)
+  if (env.VITE_APP_VERSION) {
+    response.headers.set(APP_VERSION_HEADER_KEY, env.VITE_APP_VERSION)
   }
   return response
 }

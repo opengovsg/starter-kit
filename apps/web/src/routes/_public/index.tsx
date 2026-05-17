@@ -18,9 +18,6 @@ function LandingPage() {
   const { isAuthed } = Route.useLoaderData()
 
   return (
-    <LandingPageComponent
-      appName={env.NEXT_PUBLIC_APP_NAME}
-      isAuthed={isAuthed}
-    />
+    <LandingPageComponent appName={env.VITE_APP_NAME} isAuthed={isAuthed} />
   )
 }

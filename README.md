@@ -9,7 +9,7 @@ A technical kit to quickly build new products from
 
 - 🗼 Monorepo setup with [Turborepo](https://turborepo.com)
 - 🧙‍♂️ E2E typesafety with [tRPC v11](https://trpc.io)
-- ⚡ Full-stack React with [Next.js v15](https://nextjs.org)
+- ⚡ Full-stack React with [TanStack Start](https://tanstack.com/start)
 - 🌈 Database with [Prisma](https://www.prisma.io/)
 - ⚙️ VSCode extensions
 - 🎨 Oxlint + Oxfmt
@@ -33,7 +33,7 @@ A technical kit to quickly build new products from
   └─ Oxfmt formatter configuration
 apps
   └─ web
-      ├─ Next.js 15
+      ├─ TanStack Start
       ├─ React 19
       ├─ Tailwind CSS v4
       └─ E2E Typesafe API Server & Client
@@ -112,9 +112,9 @@ If not set, OTP emails will be logged to the console instead.
 
 #### Retrieving client-side environment variables in code
 
-⚠️ When adding client-only environment variables in NextJS, you must prefix the variable with `NEXT_PUBLIC_` to ensure that the variable is exposed to the browser. For example, if you want to add a variable called `MY_ENV_VAR`, you should add it to your `.env` file as `NEXT_PUBLIC_MY_ENV_VAR`.
+⚠️ When adding client-only environment variables, you must prefix the variable with `VITE_` to ensure that the variable is exposed to the browser. For example, if you want to add a variable called `MY_ENV_VAR`, you should add it to your `.env` file as `VITE_MY_ENV_VAR`.
 
-You will also need to update the various environment files (like [apps/web/src/env.ts](apps/web/src/env.ts#L5) or [packages/db/src/env.ts](packages/db/src/env.ts#L6)) to explicitly reference the variable so NextJS will correctly bundle the environment variable into the client-side bundle.
+You will also need to update the various environment files (like [apps/web/src/env.ts](apps/web/src/env.ts) or [packages/db/src/env.ts](packages/db/src/env.ts)) to explicitly reference the variable so it is correctly bundled into the client-side bundle.
 
 ### 2. Adding a new package
 
@@ -141,9 +141,9 @@ and tutorials, can be found [here](https://start.open.gov.sg).
 
 ### Deploy to Vercel
 
-Let's deploy the Next.js application to [Vercel](https://vercel.com). If you've never deployed a Turborepo app there, don't worry, the steps are quite straightforward. You can also read [the official Turborepo guide](https://vercel.com/docs/concepts/monorepos/turborepo) on deploying to Vercel.
+Let's deploy the TanStack Start application to [Vercel](https://vercel.com). If you've never deployed a Turborepo app there, don't worry, the steps are quite straightforward. You can also read [the official Turborepo guide](https://vercel.com/docs/concepts/monorepos/turborepo) on deploying to Vercel.
 
-1. Create a new project on Vercel, select the `apps/web` folder as the root directory. Vercel's zero-config system should handle all configurations for you.
+1. Create a new project on Vercel, select the `apps/web` folder as the root directory. Set the build command to `pnpm vercel-build` and the output directory to `.output`.
 
 2. Add the prerequisite environment variables outlined in the [Prerequisites](#prerequisites) section.
 

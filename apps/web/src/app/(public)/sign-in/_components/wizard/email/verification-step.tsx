@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
+import { useNavigate } from '@tanstack/react-router'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
 import { Button } from '@opengovsg/oui/button'
 import { Spinner } from '@opengovsg/oui/spinner'
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { useInterval } from 'usehooks-ts'
 

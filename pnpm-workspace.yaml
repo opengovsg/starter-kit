@@ -21,9 +21,6 @@ catalog:
   zod: ^4.2.1
 
 catalogs:
-  next:
-    '@next/env': 16.2.6
-    next: 16.2.6
   oui:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
@@ -51,7 +48,6 @@ catalogs:
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
-    '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
     '@tailwindcss/postcss': ^4.2.4
     tailwindcss: ^4.2.4

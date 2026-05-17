@@ -1,5 +1,6 @@
-import { GovtBanner } from '@opengovsg/oui/govt-banner'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+
+import { GovtBanner } from '@opengovsg/oui/govt-banner'
 
 import { VersionCheckWrapper } from '~/app/_components/version-check-wrapper'
 

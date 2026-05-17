@@ -1,8 +1,9 @@
 'use client'
 
+import { useNavigate } from '@tanstack/react-router'
+
 import { toast } from '@opengovsg/oui'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 
 import { LOGIN_ROUTE } from '~/constants'
 import { useTRPC } from '~/trpc/react'
