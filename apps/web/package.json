@@ -41,6 +41,7 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "@unpic/react": "^1.0.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "date-fns": "^4.1.0",
     "email-addresses": "^5.0.0",

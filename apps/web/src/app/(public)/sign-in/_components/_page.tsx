@@ -1,5 +1,4 @@
-'use client'
-
+import { Image } from '@unpic/react'
 import { Link } from 'react-aria-components'
 
 import { SignInWizard } from './wizard'
@@ -30,7 +29,7 @@ export const SignInPageComponent = () => {
                 target="_blank"
                 className="inline-flex"
               >
-                <img
+                <Image
                   className="h-auto w-auto"
                   src="/assets/restricted-ogp-text-logo.svg"
                   height={12}
