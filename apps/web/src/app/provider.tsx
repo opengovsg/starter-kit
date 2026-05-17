@@ -8,6 +8,8 @@ import { TRPCReactProvider } from '~/trpc/react'
 
 declare module 'react-aria-components' {
   interface RouterConfig {
+    // TanStack Router's navigate takes a single options object rather than (href, options),
+    // so there is no second-argument slot to forward react-aria routerOptions into.
     routerOptions: never
   }
 }

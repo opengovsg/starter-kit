@@ -35,8 +35,12 @@ function generateCspHeader(policies: CspPolicy[]): string {
 
 const defaultPolicy: CspPolicy = {
   'default-src': ["'self'"],
-  // TanStack Start emits inline hydration scripts — nonce-based CSP would be
-  // stricter but requires threading the nonce through SSR rendering.
+  // 'unsafe-inline' is required because TanStack Start emits inline hydration
+  // scripts that cannot be attributed to an external src. The previous Next.js
+  // setup threaded a per-request nonce (crypto.randomUUID()) through the proxy
+  // and used 'nonce-${nonce}' here instead, which is stricter. Remove
+  // 'unsafe-inline' and restore nonce threading if TanStack Start gains a
+  // nonce injection API.
   'script-src': ["'self'", "'unsafe-inline'"],
   'connect-src': ["'self'"],
   'style-src': ["'self'", "'unsafe-inline'"],
