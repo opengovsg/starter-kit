@@ -38,7 +38,12 @@ const config: StorybookConfig = {
             !p || !(p as { name?: string }).name?.startsWith('tanstack')
         ),
     }
-    return mergeConfig(filteredConfig, { plugins: [tailwindcss()] })
+    return mergeConfig(filteredConfig, {
+      plugins: [tailwindcss()],
+      define: {
+        'process.env': {},
+      },
+    })
   },
   staticDirs: ['../public'],
 }

@@ -1,7 +1,11 @@
+import { RouterContextProvider } from '@tanstack/react-router'
+
 import type { Preview } from '@storybook/react-vite'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import { viewport } from '@acme/storybook-config'
+
+import { storybookRouter } from './decorators'
 
 import '../src/app/globals.css'
 
@@ -32,7 +36,11 @@ const preview: Preview = {
         'font-sans',
         'antialiased'
       )
-      return Story()
+      return (
+        <RouterContextProvider router={storybookRouter}>
+          <Story />
+        </RouterContextProvider>
+      )
     },
   ],
   loaders: [mswLoader],

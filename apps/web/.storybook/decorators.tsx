@@ -1,5 +1,11 @@
 import { useState } from 'react'
 
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+
 import type { Decorator } from '@storybook/react-vite'
 import {
   defaultShouldDehydrateQuery,
@@ -12,6 +18,11 @@ import SuperJSON from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'
 import { TRPCProvider } from '~/trpc/react'
+
+export const storybookRouter = createRouter({
+  routeTree: createRootRoute().addChildren([]),
+  history: createMemoryHistory({ initialEntries: ['/'] }),
+})
 
 /**
  * This decorator wraps stories with TRPC and React Query and the other app-level providers.
