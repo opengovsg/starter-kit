@@ -1,5 +1,3 @@
-'use client'
-
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
 import { createContext, useContext, useRef, useState } from 'react'

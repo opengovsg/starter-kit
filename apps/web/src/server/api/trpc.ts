@@ -42,7 +42,7 @@ export const createTRPCContext = async ({
   resHeaders,
 }: {
   headers: Headers
-  // resHeaders may not exist if called directly from RSC without an active request
+  // resHeaders may not exist if called directly from a server caller or route loader without an active request
   resHeaders?: Headers
 }) => {
   // Pass in base context
