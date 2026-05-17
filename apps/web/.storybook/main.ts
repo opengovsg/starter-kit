@@ -35,8 +35,7 @@ const config: StorybookConfig = {
         .flat(Infinity as 1)
         .filter(
           (p: unknown) =>
-            !p ||
-            !(p as { name?: string }).name?.startsWith('tanstack'),
+            !p || !(p as { name?: string }).name?.startsWith('tanstack')
         ),
     }
     return mergeConfig(filteredConfig, { plugins: [tailwindcss()] })

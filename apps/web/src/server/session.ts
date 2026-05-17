@@ -14,5 +14,5 @@ export const getSession = createServerFn().handler(
     const { getSession: getSessionServer } = await import('./session.server')
     const { save: _save, destroy: _destroy, ...data } = await getSessionServer()
     return data
-  },
+  }
 )
