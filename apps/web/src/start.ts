@@ -1,3 +1,5 @@
+import { createMiddleware, createStart } from '@tanstack/react-start'
+
 interface CspPolicy {
   'default-src'?: string[]
   'script-src'?: string[]
@@ -12,33 +14,30 @@ interface CspPolicy {
   'connect-src'?: string[]
 }
 
-/**
- * Merges multiple security policies into a single policy string.
- */
 function generateCspHeader(policies: CspPolicy[]): string {
-  const combined = policies.reduce((combined, policy) => {
-    Object.keys(policy).forEach((_directive) => {
+  const combined = policies.reduce<CspPolicy>((acc, policy) => {
+    for (const _directive of Object.keys(policy)) {
       const directive = _directive as keyof CspPolicy
-      const sources = Array.from(
-        new Set([...(combined[directive] ?? []), ...(policy[directive] ?? [])])
+      acc[directive] = Array.from(
+        new Set([...(acc[directive] ?? []), ...(policy[directive] ?? [])])
       )
-      combined[directive] = sources
-    })
-
-    return combined
+    }
+    return acc
   }, {})
 
-  const baseDirectives = Object.entries(combined).map(
+  const directives = Object.entries(combined).map(
     ([directive, sources]) =>
       `${directive} ${(sources as string[]).sort().join(' ')}`
   )
 
-  return [...baseDirectives, 'upgrade-insecure-requests'].join('; ')
+  return [...directives, 'upgrade-insecure-requests'].join('; ')
 }
 
 const defaultPolicy: CspPolicy = {
   'default-src': ["'self'"],
-  'script-src': ["'self'"],
+  // TanStack Start emits inline hydration scripts — nonce-based CSP would be
+  // stricter but requires threading the nonce through SSR rendering.
+  'script-src': ["'self'", "'unsafe-inline'"],
   'connect-src': ["'self'"],
   'style-src': ["'self'", "'unsafe-inline'"],
   'img-src': ["'self'", 'data:', 'blob:'],
@@ -49,7 +48,7 @@ const defaultPolicy: CspPolicy = {
   'frame-src': ["'self'"],
 }
 
-const vercelLivePolicy = {
+const vercelLivePolicy: CspPolicy = {
   'connect-src': [
     'https://vercel.live',
     'https://*.pusher.com',
@@ -62,23 +61,30 @@ const vercelLivePolicy = {
   'frame-src': ['https://vercel.live'],
 }
 
-export function generateCspHeaderValue(_request: Request): string {
+function buildCspValue(): string {
   // oxlint-disable-next-line no-restricted-properties
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
   const isDev =
     // oxlint-disable-next-line no-restricted-properties
-    process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+    process.env.NODE_ENV === 'development' ||
+    // oxlint-disable-next-line no-restricted-properties
+    process.env.NODE_ENV === 'test'
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-
-  // Update the headers as required, e.g. to allow Datadog RUM, Vercel Insights, Google Analytics, etc.
-  const cspHeader = generateCspHeader([
+  return generateCspHeader([
     defaultPolicy,
-    { 'script-src': [`'nonce-${nonce}'`] },
     isVercelPreview ? vercelLivePolicy : {},
     isDev ? { 'script-src': ["'unsafe-eval'"] } : {},
   ])
-
-  // Replace newline characters and spaces
-  return cspHeader.replace(/\s{2,}/g, ' ').trim()
+    .replace(/\s{2,}/g, ' ')
+    .trim()
 }
+
+const cspMiddleware = createMiddleware().server(async ({ next }) => {
+  const result = await next()
+  result.response.headers.set('Content-Security-Policy', buildCspValue())
+  return result
+})
+
+export const startInstance = createStart(() => ({
+  requestMiddleware: [cspMiddleware],
+}))

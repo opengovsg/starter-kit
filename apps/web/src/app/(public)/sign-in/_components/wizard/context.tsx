@@ -19,9 +19,7 @@ interface SignInState {
   clearVerifierMap: () => void
 }
 
-export const SignInWizardContext = createContext<SignInState | undefined>(
-  undefined
-)
+const SignInWizardContext = createContext<SignInState | undefined>(undefined)
 
 export const useSignInWizard = () => {
   const context = useContext(SignInWizardContext)
