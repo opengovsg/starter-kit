@@ -1,4 +1,4 @@
-import { parseOneAddress } from 'email-addresses'
+const { parseOneAddress } = 'email-addresses'
 import z from 'zod'
 
 export const emailSchema = z

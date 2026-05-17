@@ -39,6 +39,11 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT,
+    OTP_EXPIRY: process.env.OTP_EXPIRY,
+    DATABASE_URL: process.env.DATABASE_URL,
+    POSTMAN_API_KEY: process.env.POSTMAN_API_KEY,
+    SESSION_SECRET: process.env.SESSION_SECRET,
     VITE_APP_VERSION: process.env.VITE_APP_VERSION,
     VITE_APP_ENV: process.env.VITE_APP_ENV,
     VITE_APP_NAME: process.env.VITE_APP_NAME,
