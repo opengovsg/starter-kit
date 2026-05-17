@@ -11,5 +11,12 @@
     }
   },
   "include": [".", ".storybook/**/*"],
-  "exclude": ["node_modules", "public/mockServiceWorker.js", ".output"]
+  "exclude": [
+    "node_modules",
+    "public/mockServiceWorker.js",
+    ".output",
+    "coverage",
+    "dist",
+    "storybook-static"
+  ]
 }
