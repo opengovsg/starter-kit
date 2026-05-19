@@ -12,6 +12,8 @@
     "dev": "tsc",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
+    "test": "vitest",
+    "test:ci": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -27,6 +29,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
   }
 }
