@@ -177,9 +177,8 @@ const result = await db.$transaction(
   {
     maxWait: 5000, // 5 seconds
     timeout: 10000, // 10 seconds
-  },
+  }
 )
-
 ```
 
 > **Note:** Do not use `db.$kysely.transaction()` directly — it is not supported by the Prisma-Kysely extension. Use Prisma transactions as shown above instead.
