@@ -9,7 +9,7 @@ A technical kit to quickly build new products from
 
 - 🗼 Monorepo setup with [Turborepo](https://turborepo.com)
 - 🧙‍♂️ E2E typesafety with [tRPC v11](https://trpc.io)
-- ⚡ Full-stack React with [Next.js v15](https://nextjs.org)
+- ⚡ Full-stack React with [Next.js v16](https://nextjs.org)
 - 🌈 Database with [Prisma](https://www.prisma.io/)
 - ⚙️ VSCode extensions
 - 🎨 Oxlint + Oxfmt
@@ -33,18 +33,30 @@ A technical kit to quickly build new products from
   └─ Oxfmt formatter configuration
 apps
   └─ web
-      ├─ Next.js 15
+      ├─ Next.js 16
       ├─ React 19
       ├─ Tailwind CSS v4
       └─ E2E Typesafe API Server & Client
 packages
+  ├─ common
+  │   └─ Shared utilities and types
   ├─ db
-  │   └─ Typesafe db calls using Prisma
-  └─ ui
-      └─ Start of a UI package for the webapp using react-aria-components + @opengovsg/oui
+  │   └─ Typesafe db calls using Prisma + Kysely
+  ├─ logging
+  │   └─ Shared logging utilities
+  ├─ redis
+  │   └─ Redis client and utilities
+  ├─ ui
+  │   └─ UI component library using react-aria-components + @opengovsg/oui
+  └─ validators
+      └─ Shared Zod validation schemas
 tooling
+  ├─ github
+  │   └─ Shared GitHub Actions workflows
   ├─ oxlint
   │   └─ shared Oxlint configuration
+  ├─ storybook
+  │   └─ shared Storybook configuration
   ├─ tailwind
   │   └─ shared tailwind theme and configuration
   └─ typescript
@@ -73,7 +85,7 @@ grep -rl '@acme' --exclude='*.md' --exclude-dir='.git' --exclude-dir='node_modul
 grep -rl 'Starter Kit' --exclude='*.md' --exclude-dir='.git' --exclude-dir='node_modules' . | xargs sed -i '' 's/Starter Kit/<your_project_name>/g'
 ```
 
-Then, follow the instructions instructions to get started.
+Then, follow the instructions to get started.
 
 ### Using GitHub Codespaces
 

@@ -49,7 +49,7 @@ This generates:
 - Kysely types
 - Zod schemas
 
-This auto-runs before `npm run dev`
+This auto-runs before `pnpm dev`
 
 ### 3. Run Migrations
 
@@ -132,7 +132,7 @@ const activeUsers = await db.$kysely
 Generated Zod schemas are available for runtime validation:
 
 ```typescript
-import { UserCreateSchema } from '@acme/db/generated/zod'
+import { UserCreateSchema } from '@acme/db/validators'
 
 // Validate user input
 const result = UserCreateSchema.safeParse({
@@ -177,12 +177,11 @@ const result = await db.$transaction(
   {
     maxWait: 5000, // 5 seconds
     timeout: 10000, // 10 seconds
-  },
+  }
 )
-
-// Kysely transactions
-We are not supposed to use `db.$kysely.transaction()` directly as it is not supported by the extension. Instead, use Prisma transactions as shown above.
 ```
+
+> **Note:** Do not use `db.$kysely.transaction()` directly — it is not supported by the Prisma-Kysely extension. Use Prisma transactions as shown above instead.
 
 ### Raw SQL Queries
 
@@ -198,9 +197,9 @@ const users = await db.$queryRaw`
 await db.$executeRaw`
   UPDATE "User" SET name = ${newName} WHERE id = ${userId}
 `
-
-Prisma\'s `queryRaw` and `executeRaw` template strings automatically escapes to prevent SQL injection. To leverage on this feature, **DO NOT** build your queries up piece meal but pass the full query in here, with string parameters (`${your_parameter}`) as needed
 ```
+
+> **Note:** Prisma's `$queryRaw` and `$executeRaw` template strings automatically escape parameters to prevent SQL injection. Pass the full query as a single template literal with `${parameters}` inline — do **not** build queries piecemeal.
 
 ## Available Scripts
 
@@ -244,12 +243,13 @@ pnpm format
 ### Default Export (`@acme/db`)
 
 ```typescript
-import { db, Prisma, PrismaClient } from '@acme/db'
+import { db } from '@acme/db'
+import type { Prisma, PrismaClient } from '@acme/db'
 ```
 
 - `db` - Main database client (Prisma with Kysely extension)
-- `Prisma` - Prisma namespace for types
-- `PrismaClient` - Raw Prisma client type
+- `Prisma` - Prisma namespace for types (type-only export)
+- `PrismaClient` - Raw Prisma client type (type-only export)
 
 ### Client Export (`@acme/db/client`)
 
@@ -258,6 +258,14 @@ import { PrismaClient } from '@acme/db/client'
 ```
 
 Raw PrismaClient exports, mainly for testing purposes.
+
+### Extensions Export (`@acme/db/extensions`)
+
+```typescript
+import { kyselyPrismaExtension } from '@acme/db/extensions'
+```
+
+The Kysely Prisma extension — useful when you need to extend a test client with Kysely capabilities.
 
 ### Browser Export (`@acme/db/browser`)
 
@@ -274,6 +282,22 @@ import { QueryMode, SortOrder } from '@acme/db/enums'
 ```
 
 Prisma-generated enums for use in queries.
+
+### Validators Export (`@acme/db/validators`)
+
+```typescript
+import { UserCreateSchema } from '@acme/db/validators'
+```
+
+Auto-generated Zod schemas for all Prisma models.
+
+### Kysely Export (`@acme/db/kysely`)
+
+```typescript
+import type { DB } from '@acme/db/kysely'
+```
+
+Kysely database type definitions generated from the Prisma schema.
 
 ## Development Workflow
 
@@ -336,6 +360,7 @@ const result = await db.$kysely
 
 ## Best Practices
 
+1. **Use Prisma for Standard CRUD** - Prefer Prisma's fluent API for straightforward queries
 2. **Leverage Kysely for Complex Queries** - Use Kysely for queries that are difficult to express with Prisma
 3. **Use Generated Zod Schemas** - Validate external input before passing to database
 4. **Index Frequently Queried Fields** - Add indexes in your schema for better performance
