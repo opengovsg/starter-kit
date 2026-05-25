@@ -1,11 +1,14 @@
-'use client'
+import dynamic from 'next/dynamic'
 
-import { useRouter } from 'next/navigation'
-
-import { Button } from '@opengovsg/oui'
 import { cn } from '@opengovsg/oui-theme'
 
 import { ErrorSvg } from '@acme/ui/svgs'
+
+const GoBackButton = dynamic(
+  () =>
+    import('./go-back-button').then((mod) => ({ default: mod.GoBackButton })),
+  { ssr: false }
+)
 
 interface ErrorCardProps {
   fullscreen?: boolean
@@ -22,19 +25,6 @@ export const ErrorCard = ({
   message,
   svg = DEFAULT_ERROR_SVG,
 }: ErrorCardProps) => {
-  const router = useRouter()
-
-  const canGoBack = typeof window !== 'undefined' && window.history.length > 0
-  const handleBack = () => {
-    if (typeof window === 'undefined') return
-    // Check if there is a previous entry in the browser's history stack
-    if (canGoBack) {
-      router.back()
-    } else {
-      router.push('/')
-    }
-  }
-
   return (
     <div
       className={cn(
@@ -57,11 +47,7 @@ export const ErrorCard = ({
         } */}
       </div>
 
-      {canGoBack && (
-        <Button onPress={handleBack} color="neutral">
-          Go Back
-        </Button>
-      )}
+      <GoBackButton />
     </div>
   )
 }
