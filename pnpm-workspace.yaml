@@ -54,7 +54,7 @@ catalogs:
     '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
     '@tailwindcss/postcss': ^4.2.4
-    tailwindcss: ^4.2.4
+    tailwindcss: ^4.3.0
   trpc:
     '@trpc/client': ^11.16.0
     '@trpc/server': ^11.16.0
