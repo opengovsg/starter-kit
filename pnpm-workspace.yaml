@@ -63,7 +63,7 @@ catalogs:
     '@vitest/browser': 4.0.8
     '@vitest/browser-playwright': 4.0.8
     '@vitest/coverage-v8': 4.0.8
-    vitest: 4.0.8
+    vitest: 4.1.0
 
 linkWorkspacePackages: true
 
