@@ -60,10 +60,10 @@ catalogs:
     '@trpc/server': ^11.16.0
     '@trpc/tanstack-react-query': ^11.16.0
   vitest:
-    '@vitest/browser': 4.0.8
-    '@vitest/browser-playwright': 4.0.8
-    '@vitest/coverage-v8': 4.0.8
-    vitest: 4.0.8
+    '@vitest/browser': 4.1.8
+    '@vitest/browser-playwright': 4.1.8
+    '@vitest/coverage-v8': 4.1.8
+    vitest: 4.1.8
 
 linkWorkspacePackages: true
 
@@ -79,6 +79,8 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
   - '@opengovsg/*'
+  - 'vitest'
+  - '@vitest/*'
 
 # Under pnpm v11, every package with a build script must be listed here as
 # true (run the script) or false (skip it). Leaving one unlisted throws
@@ -105,6 +107,23 @@ overrides:
   '@types/minimatch': 5.1.2
   # Prevent inclusion of sharp-libvips-*, which uses a copyleft license
   '@img/sharp-libvips-darwin-arm64': '-'
+  # --- Security overrides for transitive dependencies (see `pnpm audit`).
+  # Each override forces a vulnerable transitive (pinned by a parent we
+  # don't control) onto a patched version while staying inside the
+  # parent's accepted major range. Re-evaluate when bumping the listed
+  # parent — many of these become redundant once the parent ships a
+  # newer dependency tree.
+  #
+  # Pinned by prisma@7.8.0 -> @prisma/dev / @prisma/config / @prisma/streams-local:
+  '@hono/node-server@1': '^1.19.13'
+  'ajv@8': '^8.18.0'
+  'defu@6': '^6.1.5'
+  'effect@3': '^3.20.0'
+  'hono@4': '^4.12.18'
+  # Pinned by chevrotain (prisma-kysely -> @mrleebo/prisma-ast) to lodash 4.17.21:
+  'lodash@4': '^4.17.24'
+  # Pinned by next@16.2.7 which still ships postcss 8.4.31:
+  'postcss@8': '^8.5.10'
 
 publicHoistPattern:
   - '*oxfmt*'
