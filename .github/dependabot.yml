@@ -49,7 +49,7 @@ updates:
         applies-to: version-updates
         patterns:
           - 'turbo'
-          - '@turbo/gen'
+          - '@turbo/*'
       oxlint:
         applies-to: version-updates
         patterns:
