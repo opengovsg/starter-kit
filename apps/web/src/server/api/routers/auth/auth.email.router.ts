@@ -2,7 +2,6 @@ import z from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../../trpc'
 
-import { createLogger } from '~/lib/logger'
 import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
 import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
@@ -43,18 +42,10 @@ export const emailAuthRouter = createTRPCRouter({
       ctx.session.sessionId = sessionId
       await ctx.session.save()
 
-      // ctx.logger was built from the pre-login session, so it lacks the
-      // user_id / correlation_id bindings. Rebuild it with the freshly
-      // created identity so the login audit lines carry the same correlation
-      // fields as the session's subsequent requests.
-      const logger = createLogger({
-        path: 'auth.email.verifyOtp',
-        headers: ctx.headers,
-        userId: user.id,
-        sessionId,
-      })
-      logger.audit.authn.sessionCreated({ sessionId })
-      logger.audit.authn.loginSucceeded({
+      // userId is payload-borne on these events, so ctx.logger (already carrying
+      // client_ip / user_agent from headers) is sufficient; no rebuild needed.
+      ctx.logger.audit.authn.sessionCreated({ sessionId, userId: user.id })
+      ctx.logger.audit.authn.loginSucceeded({
         userId: user.id,
         username: user.email,
         sessionId,
