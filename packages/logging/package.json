@@ -17,10 +17,9 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@opengovsg/starter-kitty-logging": "catalog:",
     "@t3-oss/env-core": "catalog:t3-env",
     "dd-trace": "catalog:",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

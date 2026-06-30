@@ -12,8 +12,6 @@ import { RateLimiterRes } from 'rate-limiter-flexible'
 import superjson from 'superjson'
 import z, { ZodError } from 'zod'
 
-import type { Logger, ScopedLogger } from '@acme/logging'
-
 import {
   checkRateLimit,
   createRateLimitFingerprint,
@@ -55,7 +53,7 @@ export const createTRPCContext = async ({
 
   const session = await getSession()
   return {
-    logger: logger as Logger | ScopedLogger,
+    logger,
     headers,
     session,
     resHeaders,
@@ -120,7 +118,14 @@ export const createTRPCRouter = t.router
 
 const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const start = performance.now()
-  const logger = ctx.logger.createScopedLogger({ action: path })
+  // Rebuild the logger so the procedure path lands in the root `path` field
+  // (not the action) and the session is surfaced as user_id / correlation_id.
+  const logger = createLogger({
+    path,
+    headers: ctx.headers,
+    userId: ctx.session.userId,
+    sessionId: ctx.session.sessionId,
+  }).scope({ action: 'request' })
 
   const result = await next({
     ctx: { logger },
@@ -131,8 +136,8 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const durationInMs = Math.round(end - start)
 
   if (result.ok) {
-    logger.debug({
-      message: `${path} took ${durationInMs}ms to execute`,
+    logger.info({
+      message: 'Request OK',
       merged: {
         durationInMs,
         statusCode: 200,
@@ -140,13 +145,15 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
     })
   } else {
     const statusCode = getHTTPStatusCodeFromError(result.error)
+    // Keep the message stable for aggregation; the error (and its message)
+    // travel in the `error` field.
     const logPayload = {
+      message: 'Request failed',
       merged: {
         durationInMs,
         statusCode,
       },
       error: result.error,
-      message: result.error.message,
     }
 
     if (statusCode >= 500) {

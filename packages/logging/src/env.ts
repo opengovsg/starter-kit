@@ -20,17 +20,7 @@ export const env = createEnv({
    */
   server: {
     LOG_LEVEL: z
-      .enum([
-        'silent',
-        'debug',
-        'info',
-        'notice',
-        'warning',
-        'error',
-        'critical',
-        'alert',
-        'emergency',
-      ])
+      .enum(['silent', 'debug', 'info', 'notice', 'warn', 'error'])
       .default('info'),
   },
   /**

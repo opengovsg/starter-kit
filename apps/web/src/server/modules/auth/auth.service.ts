@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
 
+import type { Logger } from '@acme/logging'
+
 import { db } from '@acme/db'
 
 import { sendMail } from '../mail/mail.service'
@@ -80,10 +82,12 @@ export const emailVerifyOtp = async ({
   email,
   token,
   codeVerifier,
+  logger,
 }: {
   email: string
   token: string
   codeVerifier: string
+  logger: Logger
 }) => {
   const codeChallenge = ssCreatePkceChallenge(codeVerifier)
   const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
@@ -102,6 +106,12 @@ export const emailVerifyOtp = async ({
     })
 
     if (hashedToken.attempts > 5) {
+      logger.audit.authn.loginFailed({
+        username: email,
+        privileged: true,
+        reason: 'too_many_attempts',
+        attemptCount: hashedToken.attempts,
+      })
       throw new TRPCError({
         code: 'TOO_MANY_REQUESTS',
         message:
@@ -116,6 +126,12 @@ export const emailVerifyOtp = async ({
       hasExpired ||
       !isValidToken({ token, email, codeChallenge, hash: hashedToken.token })
     ) {
+      logger.audit.authn.loginFailed({
+        username: email,
+        privileged: true,
+        reason: hasExpired ? 'otp_expired' : 'otp_invalid',
+        attemptCount: hashedToken.attempts,
+      })
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Token is invalid or has expired. Please request a new OTP.',
@@ -146,9 +162,12 @@ export const emailVerifyOtp = async ({
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2025'
     ) {
-      // TODO: Log error, this means the codeChallenge does not exist
-      // Likely the user used the OTP on a different session than the one it was generated for
-      // Or user is trying to reuse an OTP
+      // The codeChallenge does not exist: the OTP was used on a different
+      // session than it was generated for, or it is being replayed.
+      logger.audit.authn.tokenReused({
+        tokenId: codeChallenge,
+        context: { email },
+      })
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message:
