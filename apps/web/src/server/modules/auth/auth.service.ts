@@ -165,7 +165,7 @@ export const emailVerifyOtp = async ({
       // The codeChallenge does not exist: the OTP was used on a different
       // session than it was generated for, or it is being replayed.
       logger.audit.authn.tokenReused({
-        tokenId: vfnIdentifier,
+        tokenId: codeChallenge,
         context: { email },
       })
       throw new TRPCError({
