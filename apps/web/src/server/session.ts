@@ -7,6 +7,9 @@ import { env } from '~/env'
 
 export interface SessionData {
   userId?: string
+  // Opaque per-login id, surfaced as correlation_id in logs and required by
+  // the audit.authn.* events to group a session's activity.
+  sessionId?: string
   // Add other session data as needed
 }
 
