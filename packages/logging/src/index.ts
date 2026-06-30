@@ -3,21 +3,6 @@ import type { Logger } from '@opengovsg/starter-kitty-logging'
 
 import { env } from './env'
 
-// `createLogging`'s `level` enum is narrower than our (syslog-flavoured)
-// LOG_LEVEL: it has no `warning`/`critical`/`alert`/`emergency`. Map the
-// extras onto the closest supported level so the config typechecks.
-const LEVEL_MAP = {
-  silent: 'silent',
-  debug: 'debug',
-  info: 'info',
-  notice: 'notice',
-  warning: 'warn',
-  error: 'error',
-  critical: 'error',
-  alert: 'error',
-  emergency: 'error',
-} as const satisfies Record<typeof env.LOG_LEVEL, string>
-
 // Match dd-trace's service name when set, else fall back to the app name.
 const service =
   process.env.DD_SERVICE ??
@@ -32,7 +17,7 @@ export const createBaseLogger = createLogging({
   service,
   env: env.NEXT_PUBLIC_APP_ENV,
   version: env.NEXT_PUBLIC_APP_VERSION,
-  level: env.NODE_ENV === 'test' ? 'silent' : LEVEL_MAP[env.LOG_LEVEL],
+  level: env.NODE_ENV === 'test' ? 'silent' : env.LOG_LEVEL,
   pretty: env.NODE_ENV === 'development',
 })
 
