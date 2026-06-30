@@ -70,7 +70,7 @@
     "oxlint-tsgolint": "catalog:",
     "prisma": "catalog:prisma",
     "prisma-kysely": "catalog:",
-    "prisma-zod-generator": "^2.1.2",
+    "prisma-zod-generator": "^2.1.4",
     "typescript": "catalog:"
   }
 }
