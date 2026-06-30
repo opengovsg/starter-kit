@@ -108,7 +108,7 @@ export const emailVerifyOtp = async ({
     if (hashedToken.attempts > 5) {
       logger.audit.authn.loginFailed({
         username: email,
-        privileged: false,
+        privileged: true,
         reason: 'too_many_attempts',
         attemptCount: hashedToken.attempts,
       })
@@ -128,8 +128,8 @@ export const emailVerifyOtp = async ({
     ) {
       logger.audit.authn.loginFailed({
         username: email,
-        privileged: false,
-        reason: 'invalid_or_expired',
+        privileged: true,
+        reason: hasExpired ? 'otp_expired' : 'otp_invalid',
         attemptCount: hashedToken.attempts,
       })
       throw new TRPCError({
