@@ -6,7 +6,6 @@ packages:
 catalog:
   '@hookform/resolvers': ^5.2.2
   '@types/node': ^24.10.4
-  '@typescript/native-preview': 7.0.0-dev.20260320.1
   'oxlint': ^1.64.0
   'oxlint-tsgolint': ^0.22.1
   dd-trace: ^5.81.0
@@ -18,7 +17,7 @@ catalog:
   prisma-kysely: ^3.1.0
   react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
-  typescript: ^5.9.3
+  typescript: 7.0.1-rc
   zod: ^4.2.1
 
 catalogs:
@@ -36,55 +35,96 @@ catalogs:
     '@prisma/client': 7.8.0
     prisma: 7.8.0
   react:
-    '@types/react': ^19.2.14
+    '@types/react': ^19.2.15
     '@types/react-dom': ^19.2.3
-    react: ^19.2.5
-    react-dom: ^19.2.5
+    react: ^19.2.6
+    react-dom: ^19.2.6
   react-query5:
     '@tanstack/react-query': ^5.100.9
     '@tanstack/react-query-devtools': ^5.100.9
   storybook10:
-    '@storybook/addon-a11y': 10.3.5
-    '@storybook/addon-docs': 10.3.5
-    '@storybook/addon-vitest': 10.3.5
-    '@storybook/nextjs-vite': 10.3.5
-    storybook: 10.3.5
+    '@storybook/addon-a11y': 10.3.6
+    '@storybook/addon-docs': 10.3.6
+    '@storybook/addon-vitest': 10.3.6
+    '@storybook/nextjs-vite': 10.3.6
+    storybook: 10.3.6
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
     '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
-    '@tailwindcss/postcss': ^4.2.2
-    tailwindcss: ^4.2.2
+    '@tailwindcss/postcss': ^4.3.0
+    "@tailwindcss/vite": ^4.3.0
+    tailwindcss: ^4.3.0
   trpc:
     '@trpc/client': ^11.16.0
     '@trpc/server': ^11.16.0
     '@trpc/tanstack-react-query': ^11.16.0
   vitest:
-    '@vitest/browser': 4.0.8
-    '@vitest/browser-playwright': 4.0.8
-    '@vitest/coverage-v8': 4.0.8
-    vitest: 4.0.8
+    '@vitest/browser': 4.1.8
+    '@vitest/browser-playwright': 4.1.8
+    '@vitest/coverage-v8': 4.1.8
+    vitest: 4.1.8
 
 linkWorkspacePackages: true
+
+blockExoticSubdeps: true
+
+# We do not use a pnpmfile. Explicitly disable lookup so dd-trace's ESM loader
+# hook (injected via NODE_OPTIONS=--import in CI) does not turn the default
+# `.pnpmfile.mjs` lookup into a hard ERR_MODULE_NOT_FOUND failure.
+pnpmfile: []
 
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
   - '@opengovsg/*'
-  - '@typescript/native-preview*'
+  - 'vitest'
+  - '@vitest/*'
 
-onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - esbuild
-  - prisma
+# Under pnpm v11, every package with a build script must be listed here as
+# true (run the script) or false (skip it). Leaving one unlisted throws
+# ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  '@datadog/native-appsec': false
+  '@datadog/native-iast-taint-tracking': false
+  '@datadog/native-metrics': false
+  '@datadog/pprof': false
+  core-js-pure: false
+  cpu-features: false
+  dd-trace: false
+  msw: false
+  prisma-zod-generator: false
+  protobufjs: false
+  sharp: false
+  ssh2: false
 
 overrides:
   '@types/minimatch': 5.1.2
   # Prevent inclusion of sharp-libvips-*, which uses a copyleft license
   '@img/sharp-libvips-darwin-arm64': '-'
+  # --- Security overrides for transitive dependencies (see `pnpm audit`).
+  # Each override forces a vulnerable transitive (pinned by a parent we
+  # don't control) onto a patched version while staying inside the
+  # parent's accepted major range. Re-evaluate when bumping the listed
+  # parent — many of these become redundant once the parent ships a
+  # newer dependency tree.
+  #
+  # Pinned by prisma@7.8.0 -> @prisma/dev / @prisma/config / @prisma/streams-local:
+  '@hono/node-server@1': '^1.19.13'
+  'ajv@8': '^8.18.0'
+  'defu@6': '^6.1.5'
+  'effect@3': '^3.20.0'
+  'hono@4': '^4.12.18'
+  # Pinned by chevrotain (prisma-kysely -> @mrleebo/prisma-ast) to lodash 4.17.21:
+  'lodash@4': '^4.17.24'
+  # Pinned by next@16.2.7 which still ships postcss 8.4.31:
+  'postcss@8': '^8.5.10'
 
 publicHoistPattern:
   - '*oxfmt*'

@@ -18,7 +18,7 @@
     "dev": "tsc",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
@@ -28,7 +28,6 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",

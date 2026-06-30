@@ -40,7 +40,7 @@ updates:
         applies-to: version-updates
         patterns:
           - 'tailwindcss'
-          - '@tailwindcss/postcss'
+          - '@tailwindcss/*'
       trpc:
         applies-to: version-updates
         patterns:
@@ -49,12 +49,26 @@ updates:
         applies-to: version-updates
         patterns:
           - 'turbo'
-          - '@turbo/gen'
+          - '@turbo/*'
       oxlint:
         applies-to: version-updates
         patterns:
           - 'oxlint'
           - 'oxlint-tsgolint'
+      vitest:
+        applies-to: version-updates
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+      playwright:
+        applies-to: version-updates
+        patterns:
+          - 'playwright'
+          - '@playwright/*'
+      t3-env:
+        applies-to: version-updates
+        patterns:
+          - '@t3-oss/*'
       oui:
         applies-to: version-updates
         patterns:

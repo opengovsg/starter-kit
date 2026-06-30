@@ -1,6 +1,5 @@
 {
-  "typescript.experimental.useTsgo": true,
-  "typescript.tsdk": "node_modules/@typescript/native-preview/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "oxc.fmt.configPath": ".oxfmtrc.jsonc",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "javascript.validate.enable": true,

@@ -12,7 +12,9 @@
     "dev": "tsc",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsgo --noEmit"
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
@@ -24,10 +26,10 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
   }
 }

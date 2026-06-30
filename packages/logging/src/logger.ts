@@ -230,7 +230,15 @@ export class CustomLogger<
           ...rest,
           ...merged,
           context,
-          error: { ...error, stack: error.stack, cause: error.cause },
+          // `message`, `name`, and `stack` are non-enumerable on Error, so
+          // spreading alone drops them — copy them explicitly.
+          error: {
+            ...error,
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+            cause: error.cause,
+          },
         },
         message
       )
