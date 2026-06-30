@@ -5,7 +5,7 @@ packages:
 
 catalog:
   '@hookform/resolvers': ^5.2.2
-  '@opengovsg/starter-kitty-logging': ^0.1.1
+  '@opengovsg/starter-kitty-logging': ^0.2.0
   '@types/node': ^24.10.4
   'oxlint': ^1.64.0
   'oxlint-tsgolint': ^0.22.1
