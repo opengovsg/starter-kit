@@ -98,7 +98,6 @@ allowBuilds:
   cpu-features: false
   dd-trace: false
   msw: false
-  prisma-zod-generator: false
   protobufjs: false
   sharp: false
   ssh2: false
