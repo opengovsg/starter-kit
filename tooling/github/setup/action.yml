@@ -14,9 +14,9 @@ runs:
       uses: actions/cache@v6
       with:
         path: .turbo
-        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-turbo-
+          ${{ runner.os }}-turbo-${{ github.job }}-
 
     - shell: bash
       run: pnpm install
