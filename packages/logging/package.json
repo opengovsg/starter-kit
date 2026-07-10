@@ -13,7 +13,7 @@
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "test": "vitest",
-    "test:ci": "vitest run --coverage",
+    "test:ci": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {

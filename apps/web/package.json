@@ -16,7 +16,7 @@
     "start": "next start",
     "storybook": "SKIP_ENV_VALIDATION=1 storybook dev -p 6006",
     "test": "vitest",
-    "test:ci": "vitest run --coverage",
+    "test:ci": "vitest run",
     "typecheck": "tsc --noEmit",
     "vercel-build": "pnpm with-env next build",
     "with-e2e-env": "dotenv -e ./.env.e2e --",
