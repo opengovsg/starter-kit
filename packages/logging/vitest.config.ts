@@ -7,8 +7,9 @@ export default defineConfig({
     include: ['src/**/*.spec.ts'],
     coverage: {
       enabled: process.env.CI === 'true',
-      // lcov is what datadog-ci parses for the CI coverage upload
-      reporter: ['text', 'lcov'],
+      // projectRoot makes lcov paths repo-relative so a single Datadog
+      // coverage upload from the repo root maps files correctly.
+      reporter: ['text', ['lcovonly', { projectRoot: '../..' }]],
     },
   },
 })

@@ -65,7 +65,10 @@
       // env vars and NODE_OPTIONS preloads. Strict env mode strips them from
       // the task, leaving dd-trace half-initialized inside Vitest, which then
       // silently collects zero test files. Pass them through explicitly.
-      "passThroughEnv": ["DD_*", "NODE_OPTIONS"]
+      "passThroughEnv": ["DD_*", "NODE_OPTIONS"],
+      // Coverage reports must survive cache replays so the Datadog coverage
+      // upload step still finds them on cache-hit runs.
+      "outputs": ["coverage/**"]
     }
   },
   "globalEnv": [
