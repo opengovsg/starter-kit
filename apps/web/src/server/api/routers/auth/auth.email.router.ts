@@ -36,7 +36,7 @@ export const emailAuthRouter = createTRPCRouter({
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
       await emailVerifyOtp({ email, token, codeVerifier, logger: ctx.logger })
-      const user = await loginUserByEmail(email)
+      const user = await loginUserByEmail(email, ctx.logger)
       const sessionId = crypto.randomUUID()
       ctx.session.userId = user.id
       ctx.session.sessionId = sessionId

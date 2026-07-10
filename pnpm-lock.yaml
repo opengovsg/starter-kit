@@ -10,8 +10,8 @@ catalogs:
       specifier: ^5.2.2
       version: 5.2.2
     '@opengovsg/starter-kitty-logging':
-      specifier: ^0.2.0
-      version: 0.2.0
+      specifier: ^0.4.0
+      version: 0.4.0
     '@types/node':
       specifier: ^24.10.4
       version: 24.10.4
@@ -485,7 +485,7 @@ importers:
     dependencies:
       '@opengovsg/starter-kitty-logging':
         specifier: 'catalog:'
-        version: 0.2.0
+        version: 0.4.0
       '@t3-oss/env-core':
         specifier: catalog:t3-env
         version: 0.13.8(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.4.3)
@@ -1669,8 +1669,8 @@ packages:
       react: '>= 18'
       react-aria-components: ^1.14.0
 
-  '@opengovsg/starter-kitty-logging@0.2.0':
-    resolution: {integrity: sha512-tnDWAIQFy6ARwaqohqwAMXg1XUlw8t+Dk7ToNWhcQa5ckzFS6SCN4xiUnZZ2ttxNrIdZFEt+11b+fNZAOacC+A==}
+  '@opengovsg/starter-kitty-logging@0.4.0':
+    resolution: {integrity: sha512-/FH+vLV78LNgpdxfU3Jxb15cj3ZeNM2K6wfchprkMqEPJBqCmYTMjcE7fUfewY1z96UcwcTLQ8ak1KifD5cGEg==}
 
   '@opentelemetry/api-logs@0.208.0':
     resolution: {integrity: sha512-CjruKY9V6NMssL/T1kAFgzosF1v9o6oeN+aX5JB/C/xPNtmgIJqcXHG7fA82Ou1zCpWGl4lROQUKwUNE1pMCyg==}
@@ -7575,7 +7575,7 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@opengovsg/starter-kitty-logging@0.2.0':
+  '@opengovsg/starter-kitty-logging@0.4.0':
     dependencies:
       pino: 10.1.0
       pino-pretty: 13.1.3
