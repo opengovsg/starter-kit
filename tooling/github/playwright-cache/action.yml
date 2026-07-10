@@ -1,0 +1,52 @@
+name: 'Cache & install Playwright'
+description: 'Restore the Playwright Chromium browser from cache (or install it on a miss), keyed on the installed Playwright version.'
+inputs:
+  filter:
+    description: 'pnpm workspace filter for a package that depends on @playwright/test (e.g. @acme/web).'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # Playwright pins browser binaries to its own version, so key the cache on
+    # the installed version: a Playwright bump misses the cache and reinstalls,
+    # otherwise we restore the cached binaries and skip the (slow) download.
+    - name: Resolve Playwright version
+      id: version
+      shell: bash
+      env:
+        FILTER: ${{ inputs.filter }}
+      run: |
+        set -euo pipefail
+        version=$(pnpm --filter "$FILTER" exec playwright --version | awk '{ print $2 }')
+        # Fail loudly: an empty version would write a degenerate cache key that
+        # collides across jobs and restores the wrong (or no) browser binaries.
+        if [ -z "$version" ]; then
+          echo "::error::Could not resolve a Playwright version for filter '$FILTER'"
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      id: cache
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/ms-playwright
+        # Browser binaries are OS- and arch-specific, so both are in the key.
+        key: ${{ runner.os }}-${{ runner.arch }}-playwright-${{ steps.version.outputs.version }}
+
+    - name: Install Playwright browsers
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        FILTER: ${{ inputs.filter }}
+      run: pnpm --filter "$FILTER" exec playwright install --with-deps chromium
+
+    # On a cache hit the browser binaries are restored, but OS-level shared
+    # libraries aren't cached - install just those so a cached browser can run.
+    - name: Install Playwright OS dependencies
+      if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      env:
+        FILTER: ${{ inputs.filter }}
+      run: pnpm --filter "$FILTER" exec playwright install-deps chromium
