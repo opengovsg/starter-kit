@@ -74,15 +74,29 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        # datadog/test-visibility-github-action@v2.5.0, using commit hash to pin to silence codeQL
-        uses: datadog/test-visibility-github-action@f4b026bb8b8b53f323960cf86a849a0231ff93b9
+        # datadog/test-visibility-github-action@v2.10.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@4e7afb05b464fd349275e41e65a7f4de83e7f46b
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}
           api_key: ${{ secrets.DD_API_KEY }}
-          js-tracer-version: 5.88.0
+          # Keep in sync with the dd-trace version in pnpm-workspace.yaml catalog
+          js-tracer-version: 6.1.0
       - name: Run tests
         run: pnpm test:ci
         env:
           # Required to allow Datadog to trace Vitest tests
           NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0} --import {1}', env.DD_TRACE_PACKAGE, env.DD_TRACE_ESM_IMPORT) || '' }}
+          # Tag test runs so they group with the rest of our Datadog data
+          # (DD_SERVICE is exported by the Configure step's `service` input).
+          DD_ENV: ci
+
+      - name: Upload coverage to Datadog
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_API_KEY != ''
+        # DataDog/coverage-upload-github-action@v1.0.5, using commit hash to pin to silence codeQL
+        uses: DataDog/coverage-upload-github-action@d9548b1c3c4ab639d5d3ab29a1508af188975f77
+        with:
+          api_key: ${{ secrets.DD_API_KEY }}
+          files: apps/web/coverage packages/logging/coverage

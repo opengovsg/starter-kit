@@ -12,7 +12,9 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.next', '.turbo', 'tests/e2e'],
     coverage: {
       enabled: process.env.CI === 'true',
-      reporter: ['text', 'json', 'html'],
+      // projectRoot makes lcov paths repo-relative so a single Datadog
+      // coverage upload from the repo root maps files correctly.
+      reporter: ['text', ['lcovonly', { projectRoot: '../..' }]],
     },
     globalSetup: 'tests/global-setup.ts',
     setupFiles: ['tests/db/setup.ts', 'tests/redis/setup.ts'],
