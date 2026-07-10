@@ -12,7 +12,8 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.next', '.turbo', 'tests/e2e'],
     coverage: {
       enabled: process.env.CI === 'true',
-      reporter: ['text', 'json', 'html'],
+      // lcov is what datadog-ci parses for the CI coverage upload
+      reporter: ['text', 'json', 'html', 'lcov'],
     },
     globalSetup: 'tests/global-setup.ts',
     setupFiles: ['tests/db/setup.ts', 'tests/redis/setup.ts'],

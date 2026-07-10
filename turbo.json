@@ -60,7 +60,12 @@
       "interactive": true
     },
     "test:ci": {
-      "dependsOn": ["@acme/db#generate"]
+      "dependsOn": ["@acme/db#generate"],
+      // Datadog Test Visibility: the GH action configures dd-trace via DD_*
+      // env vars and NODE_OPTIONS preloads. Strict env mode strips them from
+      // the task, leaving dd-trace half-initialized inside Vitest, which then
+      // silently collects zero test files. Pass them through explicitly.
+      "passThroughEnv": ["DD_*", "NODE_OPTIONS"]
     }
   },
   "globalEnv": [

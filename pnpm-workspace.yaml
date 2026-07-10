@@ -9,7 +9,7 @@ catalog:
   '@types/node': ^24.10.4
   'oxlint': ^1.64.0
   'oxlint-tsgolint': ^0.22.1
-  dd-trace: ^5.81.0
+  dd-trace: ^6.1.0
   dotenv-cli: ^11.0.0
   oxfmt: ^0.41.0
   prisma-extension-kysely: ^4.0.0
