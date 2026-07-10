@@ -502,6 +502,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@vitest/coverage-v8':
+        specifier: catalog:vitest
+        version: 4.1.8(@vitest/browser@4.1.8)(vitest@4.1.8)
       oxfmt:
         specifier: 'catalog:'
         version: 0.41.0

@@ -13,7 +13,7 @@
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "test": "vitest",
-    "test:ci": "vitest run",
+    "test:ci": "vitest run --coverage",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",

@@ -96,4 +96,4 @@ jobs:
         uses: DataDog/coverage-upload-github-action@d9548b1c3c4ab639d5d3ab29a1508af188975f77
         with:
           api_key: ${{ secrets.DD_API_KEY }}
-          files: apps/web/coverage
+          files: apps/web/coverage packages/logging/coverage
