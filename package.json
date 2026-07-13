@@ -30,6 +30,13 @@
     "typescript": "catalog:",
     "vitest": "^4.1.8"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.13.0",
+      "onFail": "download"
+    }
+  },
   "engines": {
     "node": ">=24.13.0",
     "pnpm": ">=11.0.0"
