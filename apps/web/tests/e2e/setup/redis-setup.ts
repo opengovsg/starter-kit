@@ -4,31 +4,17 @@
  * This file sets up a Redis container for E2E tests using Testcontainers.
  * It provides utilities to start the container and flush data between tests.
  */
-import {
-  CONTAINER_CONFIGURATIONS,
-  setup as setupContainers,
-} from '~tests/common'
+import { redis, setup } from '@opengovsg/starter-kitty-testcontainers'
 
 type RedisContainer = Awaited<ReturnType<typeof startRedis>>
 
-export const getRedisUrl = (
-  container: RedisContainer,
-  internalPort?: boolean
-) => {
-  const { host, ports } = container
-  const port = internalPort ? 6379 : (ports.get(6379) ?? 6379)
-
-  return `redis://${host}:${port}`
-}
-
 export const startRedis = async () => {
-  const [redisContainer] = await setupContainers([
-    {
-      ...CONTAINER_CONFIGURATIONS.redis,
+  const [redisContainer] = await setup([
+    redis({
       reuse: true,
       // The host port must be the same as in .env.e2e.
       ports: [{ container: 6379, host: 63799 }],
-    },
+    }),
   ])
 
   if (!redisContainer) {

@@ -5,37 +5,24 @@ import { readdirSync, readFileSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-import { PrismaPg } from '@prisma/adapter-pg'
 import {
-  CONTAINER_CONFIGURATIONS,
-  setup as setupContainers,
-} from '~tests/common'
+  getPostgresConnectionString,
+  postgres,
+  setup,
+} from '@opengovsg/starter-kitty-testcontainers'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 import { PrismaClient } from '@acme/db/client'
 
 type DatabaseContainer = Awaited<ReturnType<typeof startDatabase>>
 
-export const getConnectionString = (
-  container: DatabaseContainer,
-  internalPort?: boolean
-) => {
-  const { host, ports, configuration } = container
-  const port = internalPort ? 5432 : (ports.get(5432) ?? 5432)
-  const username = configuration.environment?.POSTGRES_USER ?? 'root'
-  const password = configuration.environment?.POSTGRES_PASSWORD ?? 'root'
-  const databaseId = configuration.environment?.POSTGRES_DB ?? 'test'
-
-  return `postgresql://${username}:${password}@${host}:${port}/${databaseId}?sslmode=disable`
-}
-
 export const startDatabase = async () => {
-  const [dbContainer] = await setupContainers([
-    {
-      ...CONTAINER_CONFIGURATIONS.database,
+  const [dbContainer] = await setup([
+    postgres({
       reuse: true,
       // The host port must be the same as in .env.e2e.
       ports: [{ container: 5432, host: 64321 }],
-    },
+    }),
   ])
 
   if (!dbContainer) {
@@ -46,7 +33,7 @@ export const startDatabase = async () => {
 }
 
 export const applyMigrations = async (container: DatabaseContainer) => {
-  const connectionString = getConnectionString(container)
+  const connectionString = getPostgresConnectionString(container)
   const client = new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
   })
@@ -89,10 +76,9 @@ export async function takeDbSnapshot(container: DatabaseContainer) {
     [
       'sh',
       '-c',
-      `pg_dump -d ${getConnectionString(
-        container,
-        true
-      )} -Fc -f /tmp/snapshot.dump`,
+      `pg_dump -d ${getPostgresConnectionString(container, {
+        internal: true,
+      })} -Fc -f /tmp/snapshot.dump`,
     ],
     { user: 'root' }
   )
@@ -111,9 +97,9 @@ export async function resetDbToSnapshot(container: DatabaseContainer) {
   const resetResult = await container.container.exec([
     'sh',
     '-c',
-    `pg_restore --clean --if-exists -d ${getConnectionString(
+    `pg_restore --clean --if-exists -d ${getPostgresConnectionString(
       container,
-      true
+      { internal: true }
     )} /tmp/snapshot.dump`,
   ])
 
