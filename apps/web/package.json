@@ -61,6 +61,7 @@
     "@acme/storybook-config": "workspace:*",
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "@opengovsg/starter-kitty-testcontainers": "^0.1.0",
     "@playwright/test": "catalog:playwright",
     "@storybook/addon-a11y": "catalog:storybook10",
     "@storybook/addon-docs": "catalog:storybook10",
