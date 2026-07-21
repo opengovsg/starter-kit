@@ -21,7 +21,7 @@ jobs:
     outputs:
       web: ${{ steps.filter.outputs.web }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       # For pull requests it's not necessary to checkout the code
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         id: filter
@@ -37,7 +37,7 @@ jobs:
     env:
       CHROMATIC_WEB_PROJECT_TOKEN: ${{ secrets.CHROMATIC_WEB_PROJECT_TOKEN }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
         with:
           fetch-depth: 0 # Required for v5
