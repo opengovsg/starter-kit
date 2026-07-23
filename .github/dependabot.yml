@@ -4,6 +4,12 @@ updates:
     directory: '/'
     schedule:
       interval: monthly
+    groups:
+      codeql-action:
+        applies-to: version-updates
+        patterns:
+          - 'github/codeql-action/init'
+          - 'github/codeql-action/analyze'
 
   - package-ecosystem: npm
     directory: '/'
