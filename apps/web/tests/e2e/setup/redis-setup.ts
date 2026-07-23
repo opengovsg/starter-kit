@@ -4,7 +4,7 @@
  * This file sets up a Redis container for E2E tests using Testcontainers.
  * It provides utilities to start the container and flush data between tests.
  */
-import { redis, setup } from '@opengovsg/starter-kitty-testcontainers'
+import { redis, setup } from '@opengovsg/testcontainers'
 
 type RedisContainer = Awaited<ReturnType<typeof startRedis>>
 

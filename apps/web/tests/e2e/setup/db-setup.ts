@@ -9,7 +9,7 @@ import {
   getPostgresConnectionString,
   postgres,
   setup,
-} from '@opengovsg/starter-kitty-testcontainers'
+} from '@opengovsg/testcontainers'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 import { PrismaClient } from '@acme/db/client'

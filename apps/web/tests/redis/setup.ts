@@ -5,18 +5,20 @@
  * It mocks the Redis client to use the test Redis instance.
  */
 
-import {
-  getContainer,
-  getRedisUrl,
-} from '@opengovsg/starter-kitty-testcontainers'
-import { getWorkerDatabaseIndex } from '@opengovsg/starter-kitty-testcontainers/vitest'
+import { getRedisUrl } from '@opengovsg/testcontainers'
+import { getWorkerDatabaseIndex } from '@opengovsg/testcontainers/vitest'
+import { inject } from 'vitest'
 
 import { Redis } from '@acme/redis/testing'
 
 // Keep in sync with `redis({ databases })` in global-setup.ts.
 const REDIS_DATABASES = 256
 
-const redisUrl = getRedisUrl(getContainer('redis'))
+const { redis: redisContainer } = inject('testcontainers')
+if (!redisContainer) {
+  throw new Error('redis container not provided by global-setup.ts')
+}
+const redisUrl = getRedisUrl(redisContainer)
 
 export const redis = new Redis(redisUrl)
 
