@@ -23,10 +23,10 @@
     "vercel-build": "turbo run vercel-build"
   },
   "devDependencies": {
-    "@turbo/gen": "^2.9.16",
+    "@turbo/gen": "^2.10.5",
     "@vitest/coverage-v8": "^4.1.8",
     "oxfmt": "catalog:",
-    "turbo": "^2.9.16",
+    "turbo": "^2.10.5",
     "typescript": "catalog:",
     "vitest": "^4.1.8"
   },
