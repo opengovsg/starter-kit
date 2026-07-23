@@ -6,7 +6,6 @@ describe('createBaseLogger', () => {
   it('builds a request-scoped logger that logs, scopes, and audits', () => {
     const logger = createBaseLogger({
       path: 'test',
-      traceId: null,
       clientIp: null,
       userAgent: null,
     })

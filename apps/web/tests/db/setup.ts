@@ -21,7 +21,7 @@ import { fileURLToPath } from 'url'
 import {
   getContainer,
   getPostgresConnectionString,
-} from '@opengovsg/starter-kitty-testcontainers'
+} from '@opengovsg/testcontainers'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { vi } from 'vitest'
 

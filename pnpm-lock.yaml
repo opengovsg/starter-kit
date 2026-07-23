@@ -9,9 +9,9 @@ catalogs:
     '@hookform/resolvers':
       specifier: ^5.2.2
       version: 5.2.2
-    '@opengovsg/starter-kitty-logging':
-      specifier: ^0.4.0
-      version: 0.4.0
+    '@opengovsg/logging':
+      specifier: ^0.5.1
+      version: 0.5.1
     '@types/node':
       specifier: ^24.10.4
       version: 24.10.4
@@ -301,9 +301,9 @@ importers:
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
-      '@opengovsg/starter-kitty-testcontainers':
-        specifier: ^0.1.0
-        version: 0.1.0(testcontainers@12.0.1)(zod@4.4.3)
+      '@opengovsg/testcontainers':
+        specifier: ^0.2.0
+        version: 0.2.0(testcontainers@12.0.1)(vitest@4.1.8)(zod@4.4.3)
       '@playwright/test':
         specifier: catalog:playwright
         version: 1.57.0
@@ -489,9 +489,9 @@ importers:
 
   packages/logging:
     dependencies:
-      '@opengovsg/starter-kitty-logging':
+      '@opengovsg/logging':
         specifier: 'catalog:'
-        version: 0.4.0
+        version: 0.5.1
       '@t3-oss/env-core':
         specifier: catalog:t3-env
         version: 0.13.8(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.4.3)
@@ -1668,6 +1668,9 @@ packages:
     peerDependencies:
       '@openfeature/core': ^1.7.0
 
+  '@opengovsg/logging@0.5.1':
+    resolution: {integrity: sha512-Z1tdztNGBZy3yV49C613yhUwZMOunf+txrqozNKYyLqZRBQOphiPrZPJekrQ6I27j6Kvs+JuHjOiNDzxrcUSrw==}
+
   '@opengovsg/oui-theme@0.0.52':
     resolution: {integrity: sha512-F79f+uCbLZgnLuMphWpgVkrc49NTO8wKB7jk26vsx++3qCTXiI1ytVb/WdikKHIyhT39mFUB/NBd/zdmbXIe4w==}
     peerDependencies:
@@ -1683,14 +1686,15 @@ packages:
       react: '>= 18'
       react-aria-components: ^1.14.0
 
-  '@opengovsg/starter-kitty-logging@0.4.0':
-    resolution: {integrity: sha512-/FH+vLV78LNgpdxfU3Jxb15cj3ZeNM2K6wfchprkMqEPJBqCmYTMjcE7fUfewY1z96UcwcTLQ8ak1KifD5cGEg==}
-
-  '@opengovsg/starter-kitty-testcontainers@0.1.0':
-    resolution: {integrity: sha512-MHH97iw/bVqhfn11zRDDcU0AXHcAlqu5D+Hn1aE8v34cDlB+jTAz8Ke2EAk95QqzT4rTEO3RP1xy/Qi8XKFGlQ==}
+  '@opengovsg/testcontainers@0.2.0':
+    resolution: {integrity: sha512-FhX5CTZAACL8XDDJuvioPKBTgu/C+N7p9/a2wbztFT9QH9X05H6c82zi7NWoEibbVS0BD/lZMVRRCEZ1lzy5Pg==}
     peerDependencies:
       testcontainers: ^10.0.0 || ^11.0.0 || ^12.0.0
+      vitest: ^4.1.0
       zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      vitest:
+        optional: true
 
   '@opentelemetry/api-logs@0.208.0':
     resolution: {integrity: sha512-CjruKY9V6NMssL/T1kAFgzosF1v9o6oeN+aX5JB/C/xPNtmgIJqcXHG7fA82Ou1zCpWGl4lROQUKwUNE1pMCyg==}
@@ -7966,6 +7970,11 @@ snapshots:
       '@openfeature/core': 1.9.1
     optional: true
 
+  '@opengovsg/logging@0.5.1':
+    dependencies:
+      pino: 10.1.0
+      pino-pretty: 13.1.3
+
   '@opengovsg/oui-theme@0.0.52(react@19.2.7)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(tailwindcss@4.3.3)':
     dependencies:
       clsx: 2.1.1
@@ -8013,15 +8022,12 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@opengovsg/starter-kitty-logging@0.4.0':
-    dependencies:
-      pino: 10.1.0
-      pino-pretty: 13.1.3
-
-  '@opengovsg/starter-kitty-testcontainers@0.1.0(testcontainers@12.0.1)(zod@4.4.3)':
+  '@opengovsg/testcontainers@0.2.0(testcontainers@12.0.1)(vitest@4.1.8)(zod@4.4.3)':
     dependencies:
       testcontainers: 12.0.1
       zod: 4.4.3
+    optionalDependencies:
+      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(msw@2.12.7(@types/node@24.10.4)(typescript@5.9.3))(vite@8.1.3(@types/node@24.10.4)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.9.0))
 
   '@opentelemetry/api-logs@0.208.0':
     dependencies:

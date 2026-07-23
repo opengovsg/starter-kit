@@ -1,5 +1,5 @@
-import { postgres, redis } from '@opengovsg/starter-kitty-testcontainers'
-import { createGlobalSetup } from '@opengovsg/starter-kitty-testcontainers/vitest'
+import { postgres, redis } from '@opengovsg/testcontainers'
+import { createGlobalSetup } from '@opengovsg/testcontainers/vitest'
 
 // Redis is shared across parallel workers, so start it with more logical DBs
 // than any plausible worker count (default is 16); each worker selects its own

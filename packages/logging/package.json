@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@opengovsg/starter-kitty-logging": "catalog:",
+    "@opengovsg/logging": "catalog:",
     "@t3-oss/env-core": "catalog:t3-env",
     "dd-trace": "catalog:",
     "zod": "catalog:"

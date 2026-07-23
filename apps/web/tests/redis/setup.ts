@@ -5,11 +5,8 @@
  * It mocks the Redis client to use the test Redis instance.
  */
 
-import {
-  getContainer,
-  getRedisUrl,
-} from '@opengovsg/starter-kitty-testcontainers'
-import { getWorkerDatabaseIndex } from '@opengovsg/starter-kitty-testcontainers/vitest'
+import { getContainer, getRedisUrl } from '@opengovsg/testcontainers'
+import { getWorkerDatabaseIndex } from '@opengovsg/testcontainers/vitest'
 
 import { Redis } from '@acme/redis/testing'
 

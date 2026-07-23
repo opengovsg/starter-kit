@@ -1,5 +1,5 @@
-import { createLogging } from '@opengovsg/starter-kitty-logging'
-import type { Logger } from '@opengovsg/starter-kitty-logging'
+import { createLogging } from '@opengovsg/logging'
+import type { Logger } from '@opengovsg/logging'
 
 import { env } from './env'
 
