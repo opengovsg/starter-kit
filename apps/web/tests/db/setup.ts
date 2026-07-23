@@ -18,17 +18,17 @@ import { readdirSync, readFileSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-import {
-  getContainer,
-  getPostgresConnectionString,
-} from '@opengovsg/testcontainers'
+import { getPostgresConnectionString } from '@opengovsg/testcontainers'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { vi } from 'vitest'
+import { inject, vi } from 'vitest'
 
 import { PrismaClient } from '@acme/db/client'
 import { kyselyPrismaExtension } from '@acme/db/extensions'
 
-const container = getContainer('postgres')
+const { postgres: container } = inject('testcontainers')
+if (!container) {
+  throw new Error('postgres container not provided by global-setup.ts')
+}
 
 const originalConnectionString = getPostgresConnectionString(container)
 
