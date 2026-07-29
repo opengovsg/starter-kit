@@ -74,8 +74,8 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        # datadog/test-visibility-github-action@v2.10.0, using commit hash to pin to silence codeQL
-        uses: datadog/test-visibility-github-action@4e7afb05b464fd349275e41e65a7f4de83e7f46b
+        # datadog/test-visibility-github-action@v3.0.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@d6d648d87563e713b3d396bb3bfebb5e3cc93707
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}
