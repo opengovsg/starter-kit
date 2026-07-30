@@ -1,0 +1,179 @@
+name: E2E against Vercel preview
+
+on:
+  # Fired automatically by Vercel's GitHub integration whenever a deployment
+  # changes state - no extra setup needed beyond connecting the repo to Vercel.
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      preview-url:
+        description: 'Vercel preview URL to test against (e.g. https://my-app-foo.vercel.app)'
+        required: true
+        type: string
+      sha:
+        description: 'Commit SHA to check out (defaults to the workflow ref HEAD)'
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  statuses: write
+
+env:
+  FORCE_COLOR: 3
+
+jobs:
+  # Branch isn't needed to run the suite, but Datadog Test Optimization needs
+  # DD_GIT_BRANCH for PR attribution: deployment_status checks out a detached
+  # HEAD, so dd-trace can't infer the branch from git.
+  resolve-branch:
+    # Run for workflow_dispatch unconditionally. For deployment_status, only
+    # successful preview deployments - Vercel names the deployment environment
+    # 'Preview' (or 'Preview - <project>' on multi-project repos).
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       startsWith(github.event.deployment.environment, 'Preview'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      branch: ${{ steps.resolve.outputs.branch }}
+    steps:
+      - name: Resolve PR branch from commit SHA
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          branch=$(gh api "repos/${REPO}/commits/${HEAD_SHA}/pulls" \
+            --jq '.[0].head.ref // ""' 2>/dev/null || echo "")
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          if [ -n "$branch" ]; then
+            echo "Resolved branch: $branch"
+          else
+            echo "No PR branch found for $HEAD_SHA"
+          fi
+
+  e2e:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       startsWith(github.event.deployment.environment, 'Preview'))
+    needs: resolve-branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      # The workflow run itself doesn't show up as a required PR check for
+      # deployment_status events, so publish an explicit commit status that
+      # branch protection can require.
+      - name: Mark commit status pending
+        uses: actions/github-script@v8
+        env:
+          HEAD_SHA: ${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.HEAD_SHA,
+              state: 'pending',
+              context: 'E2E against Vercel preview',
+              description: 'Running Playwright suite…',
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            })
+
+      - name: Cache & install Playwright
+        uses: ./tooling/github/playwright-cache
+        with:
+          filter: '@acme/web'
+
+      # Skipped fixture-based tests are still *loaded* by the runner and
+      # import the Prisma client, so it must exist.
+      - name: Generate Prisma client
+        run: cp .env.example .env && pnpm --filter @acme/db generate
+
+      - name: Configure Datadog Test Optimization
+        env:
+          DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+        if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
+        # datadog/test-visibility-github-action@v2.10.0, using commit hash to pin to silence codeQL
+        uses: datadog/test-visibility-github-action@4e7afb05b464fd349275e41e65a7f4de83e7f46b
+        with:
+          languages: js
+          service: ${{ secrets.DD_SERVICE_NAME }}
+          api_key: ${{ secrets.DD_API_KEY }}
+          # Keep in sync with the dd-trace version in pnpm-workspace.yaml catalog
+          js-tracer-version: 6.1.0
+
+      - name: Run E2E suite against preview
+        id: e2e
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.environment_url || github.event.inputs.preview-url }}
+          # Bypass Vercel deployment protection if the preview is gated.
+          # Configured in Vercel: Settings -> Deployment Protection ->
+          # Protection Bypass for Automation. Empty is fine when the project
+          # has no deployment protection.
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          # Preload dd-trace so Playwright reports to Datadog Test
+          # Optimization. Playwright takes only `-r` (DD_TRACE_PACKAGE); the
+          # `--import` ESM loader is Vitest-only. Empty when Datadog is not
+          # configured.
+          NODE_OPTIONS: ${{ secrets.DD_API_KEY && secrets.DD_SERVICE_NAME && format('-r {0}', env.DD_TRACE_PACKAGE) || '' }}
+          # Match the vitest runs' `ci` env so unit + e2e group together.
+          DD_ENV: ci
+          # deployment_status checks out a detached HEAD, so pin git metadata
+          # explicitly for correct PR attribution / flaky-test grouping.
+          DD_GIT_COMMIT_SHA: ${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+          DD_GIT_BRANCH: ${{ needs.resolve-branch.outputs.branch }}
+        run: pnpm --filter @acme/web e2e
+
+      - name: Upload Playwright report
+        if: '!cancelled()'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+          # HTML report (always present on CI) + raw outputDir (traces /
+          # screenshots / videos, only populated on retries or failures).
+          path: |
+            apps/web/playwright-report
+            apps/web/tests/e2e/test-results
+          retention-days: 7
+
+      - name: Update commit status with result
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          HEAD_SHA: ${{ github.event.deployment.sha || github.event.inputs.sha || github.sha }}
+          E2E_OUTCOME: ${{ steps.e2e.outcome }}
+        with:
+          script: |
+            const state =
+              process.env.E2E_OUTCOME === 'success' ? 'success' : 'failure'
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.HEAD_SHA,
+              state,
+              context: 'E2E against Vercel preview',
+              description:
+                state === 'success'
+                  ? 'Playwright suite passed'
+                  : 'Playwright suite failed',
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            })
