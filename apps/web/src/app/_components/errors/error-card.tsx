@@ -1,8 +1,8 @@
 import { cn } from '@opengovsg/oui-theme'
 
-import { ErrorSvg } from '@acme/ui/svgs'
-
 import { GoBackButton } from './go-back-button'
+
+import { ErrorSvg } from '@acme/ui/svgs'
 
 interface ErrorCardProps {
   fullscreen?: boolean
