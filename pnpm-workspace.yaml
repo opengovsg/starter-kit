@@ -52,9 +52,9 @@ catalogs:
     '@t3-oss/env-core': ^0.13.8
     '@t3-oss/env-nextjs': ^0.13.8
   tailwindcss4:
-    '@tailwindcss/postcss': ^4.3.2
-    '@tailwindcss/vite': ^4.3.2
-    tailwindcss: ^4.3.2
+    '@tailwindcss/postcss': ^4.3.3
+    '@tailwindcss/vite': ^4.3.3
+    tailwindcss: ^4.3.3
   trpc:
     '@trpc/client': ^11.18.0
     '@trpc/server': ^11.18.0
@@ -121,8 +121,8 @@ overrides:
   'hono@4': '^4.12.18'
   # Pinned by chevrotain (prisma-kysely -> @mrleebo/prisma-ast) to lodash 4.17.21:
   'lodash@4': '^4.17.24'
-  # Pinned by next@16.2.7 which still ships postcss 8.4.31:
-  'postcss@8': '^8.5.10'
+  # Pinned by next@16.2.11 which still ships postcss 8.4.31:
+  'postcss@8': '^8.5.25'
 
 publicHoistPattern:
   - '*oxfmt*'
