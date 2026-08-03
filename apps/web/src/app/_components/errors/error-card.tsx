@@ -1,14 +1,8 @@
-import dynamic from 'next/dynamic'
-
 import { cn } from '@opengovsg/oui-theme'
 
 import { ErrorSvg } from '@acme/ui/svgs'
 
-const GoBackButton = dynamic(
-  () =>
-    import('./go-back-button').then((mod) => ({ default: mod.GoBackButton })),
-  { ssr: false }
-)
+import { GoBackButton } from './go-back-button'
 
 interface ErrorCardProps {
   fullscreen?: boolean
