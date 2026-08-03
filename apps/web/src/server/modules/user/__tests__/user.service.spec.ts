@@ -1,10 +1,23 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { resetTables } from '~tests/db/utils'
+
+import type { Logger } from '@acme/logging'
 
 import { db } from '@acme/db'
 
 import { AccountProvider } from '../../auth/auth.constants'
 import { getUserById, loginUserByEmail } from '../user.service'
+
+// Minimal Logger stub capturing the self-signup audit call.
+const makeAuditLoggerStub = () => {
+  const accountCreated = vi.fn<(input: { targetUserId: string }) => void>()
+  const logger = {
+    withBindings: () => ({
+      audit: { userManagement: { accountCreated } },
+    }),
+  } as unknown as Logger
+  return { logger, accountCreated }
+}
 
 describe('user.service', () => {
   beforeEach(async () => {
@@ -37,6 +50,19 @@ describe('user.service', () => {
       })
       expect(account).toBeDefined()
       expect(account?.providerAccountId).toBe(email)
+    })
+
+    it('should emit accountCreated audit only for a first-time (new) user', async () => {
+      const email = 'signup@example.com'
+      const { logger, accountCreated } = makeAuditLoggerStub()
+
+      const user = await loginUserByEmail(email, logger)
+      expect(accountCreated).toHaveBeenCalledTimes(1)
+      expect(accountCreated).toHaveBeenCalledWith({ targetUserId: user.id })
+
+      // A returning login must not re-emit the signup event.
+      await loginUserByEmail(email, logger)
+      expect(accountCreated).toHaveBeenCalledTimes(1)
     })
 
     it('should parse and store the name from email address', async () => {

@@ -8,6 +8,8 @@ import type { SessionData } from '~/server/session'
 
 const testLogger = createBaseLogger({
   path: 'tests',
+  clientIp: null,
+  userAgent: null,
 })
 
 /**

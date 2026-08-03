@@ -1,7 +1,9 @@
 import '../../mail/__mocks__/mail.service'
 import { add } from 'date-fns/add'
-import { mock } from 'vitest-mock-extended'
+import { mock, mockDeep } from 'vitest-mock-extended'
 import { resetTables } from '~tests/db/utils'
+
+import type { Logger } from '@acme/logging'
 
 import { db } from '@acme/db'
 
@@ -15,6 +17,7 @@ import {
 } from '~/lib/pkce/server-pkce'
 
 const mockedMailService = mock(mailService)
+const logger = mockDeep<Logger>()
 
 describe('auth.service', () => {
   beforeEach(async () => {
@@ -99,7 +102,7 @@ describe('auth.service', () => {
 
       // Should not throw
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).resolves.not.toThrow()
 
       // Token should be deleted after successful verification
@@ -121,7 +124,7 @@ describe('auth.service', () => {
 
       // Should throw
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier })
+        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier, logger })
       ).rejects.toThrow()
     })
     it('should throw error for non-existent codeChallenge', async () => {
@@ -130,7 +133,7 @@ describe('auth.service', () => {
       const token = '123456'
 
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).rejects.toThrow()
     })
 
@@ -152,6 +155,7 @@ describe('auth.service', () => {
           email,
           token: wrongToken,
           codeVerifier: wrongVerifier,
+          logger,
         })
       ).rejects.toThrow()
     })
@@ -164,7 +168,7 @@ describe('auth.service', () => {
 
       await emailLogin({ email, codeChallenge: codeChallenge })
       await expect(
-        emailVerifyOtp({ email, token: wrongToken, codeVerifier })
+        emailVerifyOtp({ email, token: wrongToken, codeVerifier, logger })
       ).rejects.toThrow('Token is invalid or has expired')
     })
 
@@ -193,7 +197,7 @@ describe('auth.service', () => {
       })
 
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).rejects.toThrow('Token is invalid or has expired')
     })
 
@@ -208,7 +212,7 @@ describe('auth.service', () => {
       // Make 2 failed attempts
       for (let i = 1; i <= 2; i++) {
         await expect(
-          emailVerifyOtp({ email, token: wrongToken, codeVerifier })
+          emailVerifyOtp({ email, token: wrongToken, codeVerifier, logger })
         ).rejects.toThrow()
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
@@ -228,13 +232,13 @@ describe('auth.service', () => {
       // Make 5 failed attempts
       for (let i = 0; i < 5; i++) {
         await expect(
-          emailVerifyOtp({ email, token, codeVerifier })
+          emailVerifyOtp({ email, token, codeVerifier, logger })
         ).rejects.toThrow()
       }
 
       // 6th attempt should give TOO_MANY_REQUESTS
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).rejects.toThrow('Wrong OTP was entered too many times')
     })
 
@@ -244,7 +248,7 @@ describe('auth.service', () => {
       const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ email, codeChallenge })
 
-      await emailVerifyOtp({ email, token, codeVerifier })
+      await emailVerifyOtp({ email, token, codeVerifier, logger })
 
       // Token should be deleted
       const vfnIdentifier = createVfnIdentifier({
@@ -265,12 +269,12 @@ describe('auth.service', () => {
 
       // First verification succeeds
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).resolves.toBeDefined()
 
       // Second verification with same token should fail
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier })
+        emailVerifyOtp({ email, token, codeVerifier, logger })
       ).rejects.toThrow()
     })
   })

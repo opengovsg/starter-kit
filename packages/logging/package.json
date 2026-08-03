@@ -17,15 +17,15 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@opengovsg/logging": "catalog:",
     "@t3-oss/env-core": "catalog:t3-env",
     "dd-trace": "catalog:",
-    "pino": "catalog:",
-    "pino-pretty": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",

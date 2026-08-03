@@ -35,10 +35,23 @@ export const emailAuthRouter = createTRPCRouter({
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
-      await emailVerifyOtp({ email, token, codeVerifier })
-      const user = await loginUserByEmail(email)
+      await emailVerifyOtp({ email, token, codeVerifier, logger: ctx.logger })
+      const user = await loginUserByEmail(email, ctx.logger)
+      const sessionId = crypto.randomUUID()
       ctx.session.userId = user.id
+      ctx.session.sessionId = sessionId
       await ctx.session.save()
+
+      // userId is payload-borne on these events, so ctx.logger (already carrying
+      // client_ip / user_agent from headers) is sufficient; no rebuild needed.
+      ctx.logger.audit.authn.sessionCreated({ sessionId, userId: user.id })
+      ctx.logger.audit.authn.loginSucceeded({
+        userId: user.id,
+        username: user.email,
+        sessionId,
+        role: 'user',
+        privileged: true,
+      })
       return user
     }),
 })

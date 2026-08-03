@@ -1,8 +1,9 @@
-import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     silent: true,
     retry: 0,
@@ -11,7 +12,9 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.next', '.turbo', 'tests/e2e'],
     coverage: {
       enabled: process.env.CI === 'true',
-      reporter: ['text', 'json', 'html'],
+      // projectRoot makes lcov paths repo-relative so a single Datadog
+      // coverage upload from the repo root maps files correctly.
+      reporter: ['text', ['lcovonly', { projectRoot: '../..' }]],
     },
     globalSetup: 'tests/global-setup.ts',
     setupFiles: ['tests/db/setup.ts', 'tests/redis/setup.ts'],

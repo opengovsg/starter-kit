@@ -9,10 +9,10 @@ import { Button } from '@opengovsg/oui'
 export const GoBackButton = () => {
   const router = useRouter()
 
-  // window.history.length is always >= 1 (current entry); > 1 means there's a previous entry
   const [canGoBack, setCanGoBack] = useState(false)
 
   useEffect(() => {
+    // window.history.length is always >= 1 (current entry); > 1 means there's a previous entry
     setCanGoBack(window.history.length > 1)
   }, [])
 

@@ -26,10 +26,6 @@
       "types": "./dist/src/enums.d.ts",
       "default": "./src/enums.ts"
     },
-    "./validators": {
-      "types": "./dist/src/generated/zod/schemas/index.d.ts",
-      "default": "./src/generated/zod/schemas/index.ts"
-    },
     "./kysely": {
       "types": "./dist/src/kysely.d.ts",
       "default": "./src/kysely.ts"
@@ -70,7 +66,6 @@
     "oxlint-tsgolint": "catalog:",
     "prisma": "catalog:prisma",
     "prisma-kysely": "catalog:",
-    "prisma-zod-generator": "^2.1.2",
     "typescript": "catalog:"
   }
 }
