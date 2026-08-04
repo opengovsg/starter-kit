@@ -12,6 +12,9 @@ const config = {
     // Only affects route matches in proxy.ts, so you must be careful to not remove matches in that file
     // or the limit can be bypassed and cause OOM server crashes.
     proxyClientMaxBodySize: '2mb',
+    // TypeScript 7 no longer ships the compiler API Next.js used internally;
+    // this runs the local `tsc` CLI instead. Requires Next.js >=16.2.12.
+    useTypeScriptCli: true,
   },
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
