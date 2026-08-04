@@ -158,12 +158,6 @@ trustPolicyIgnoreAfter: 525600
 registries:
   default: https://registry.npmjs.org/
 
-# Left unset on purpose. `supportedArchitectures` only adds platforms; it
-# cannot shrink the install. On this tree, listing linux/darwin + x64/arm64
-# pulled the same packages as leaving it alone (including sharp's
-# @img/sharp-libvips-* variants). Config that looks like a control and
-# changes nothing.
-
 # Anything listed here is importable from the repo root without a direct
 # dependency declaration. Keep the globs tight. `*oxfmt*` and
 # `*@opengovsg/oui*` each match a couple of packages; `*prisma*` used to
