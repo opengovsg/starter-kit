@@ -15,8 +15,7 @@
     "format:fix": "turbo run format --continue -- --write",
     "lint": "turbo run lint --continue",
     "lint:fix": "turbo run lint --continue -- --fix",
-    "lint:ws": "pnpm dlx sherif@latest",
-    "postinstall": "pnpm lint:ws",
+    "lint:ws": "pnpm exec sherif",
     "test": "turbo run test",
     "test:ci": "turbo run test:ci",
     "typecheck": "turbo run typecheck",
@@ -24,11 +23,12 @@
   },
   "devDependencies": {
     "@turbo/gen": "^2.10.5",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",
+    "sherif": "catalog:",
     "turbo": "^2.10.5",
     "typescript": "catalog:",
-    "vitest": "^4.1.8"
+    "vitest": "catalog:vitest"
   },
   "devEngines": {
     "runtime": {
@@ -41,5 +41,5 @@
     "node": ">=24.13.0",
     "pnpm": ">=11.0.0"
   },
-  "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499"
+  "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee"
 }

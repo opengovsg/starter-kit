@@ -63,6 +63,7 @@
     "@acme/tsconfig": "workspace:*",
     "@opengovsg/testcontainers": "^0.2.0",
     "@playwright/test": "catalog:playwright",
+    "@prisma/adapter-pg": "catalog:prisma",
     "@storybook/addon-a11y": "catalog:storybook10",
     "@storybook/addon-docs": "catalog:storybook10",
     "@storybook/addon-vitest": "catalog:storybook10",
