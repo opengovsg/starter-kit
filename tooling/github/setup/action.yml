@@ -20,8 +20,8 @@ runs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .turbo
-        # inputs.job-index disambiguates matrix legs sharing the same github.job (e.g. test-studio's
-        # shards), which would otherwise race to reserve the same cache key. Defaults to 0 on non-matrix
+        # inputs.job-index disambiguates matrix legs sharing the same github.job (e.g. concurrent vitest shards),
+        # which would otherwise race to reserve the same cache key. Defaults to 0 on non-matrix
         # jobs, so the key there is unaffected.
         key: ${{ runner.os }}-turbo-${{ github.job }}-${{ inputs.job-index }}-${{ github.sha }}
         restore-keys: |
