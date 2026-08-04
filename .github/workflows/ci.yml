@@ -69,24 +69,13 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
-      # Blocking. Verifies the ECDSA registry signature of every installed package
-      # against the keys the registry publishes, and fails if a package is unsigned
-      # while its registry advertises signing keys. Currently clean.
+      # Check ECDSA registry signatures on every installed package. Fails when a
+      # package is unsigned and its registry advertises signing keys. Clean today.
       - name: Verify registry signatures
         run: pnpm audit signatures
 
-      # Non-blocking for now: the tree carries 19 known advisories (1 critical,
-      # 18 high) that all have patched versions available, so gating here would
-      # red-flag every PR. Remediation is tracked separately; once the tree is
-      # clean, drop `continue-on-error` to turn this into a real gate. The
-      # threshold comes from `audit.level` in pnpm-workspace.yaml.
-      - name: Audit advisories (report only)
-        continue-on-error: true
-        run: pnpm audit
-
-      # An SBOM per run is an incident-response tool, not a preventive one: when
-      # the next registry compromise lands, this answers "were we exposed, and in
-      # which build?" in minutes rather than lockfile archaeology.
+      # Produce an SBOM each run so a registry compromise can be scoped later.
+      # Answers "were we exposed, and in which build?" without lockfile archaeology.
       - name: Generate SBOM
         run: pnpm sbom --sbom-format cyclonedx --prod --out sbom.cdx.json
 

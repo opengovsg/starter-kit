@@ -75,31 +75,30 @@ blockExoticSubdeps: true
 # `.pnpmfile.mjs` lookup into a hard ERR_MODULE_NOT_FOUND failure.
 pnpmfile: []
 
-# No version is installable until 24h after publication, transitive deps included.
-# Malicious releases are typically yanked well inside this window (~2.5h for the
+# Block any version published in the last 24h, including transitive deps.
+# Most malicious releases get yanked inside that window (~2.5h for the
 # September 2025 chalk/debug attack, ~12h for Shai-Hulud 2.0).
-# `minimumReleaseAgeStrict` defaults to true whenever this is set explicitly, so
-# resolution FAILS rather than silently falling back to a too-fresh version.
+# Setting this also turns on `minimumReleaseAgeStrict`, so install fails
+# instead of quietly picking a version that is still too new.
 minimumReleaseAge: 1440
 
-# Do not skip the cooldown check for packages whose registry metadata has no
-# `time` field. A no-op against registry.npmjs.org (which always supplies it),
-# but it stops the cooldown from silently disappearing if a private registry,
-# mirror or proxy is ever introduced.
+# Keep the cooldown even when registry metadata has no `time` field.
+# Harmless on registry.npmjs.org (it always has `time`). Matters if we
+# ever point at a private registry, mirror, or proxy that omits it.
 minimumReleaseAgeIgnoreMissingTime: false
 
 minimumReleaseAgeExclude:
-  # Exclusions match by PACKAGE NAME and apply to every version of that package,
-  # forever — so a bare name here is a permanent zero-cooldown hole, not a hotfix.
-  # For a CVE, add a VERSION-PINNED entry (e.g. `vitest@4.1.8`) and delete it once
-  # the cooldown has passed. `pnpm audit --fix` generates entries in this form.
+  # Matches the package name for every version, forever. A bare name is a
+  # permanent hole in the cooldown, not a one-off hotfix.
+  # For a CVE, pin a version (e.g. `vitest@4.1.8`) and remove it after the
+  # cooldown window. `pnpm audit --fix` writes entries that way.
   #
-  # Scope we publish ourselves, so the cooldown buys us nothing:
+  # We publish this scope ourselves, so the cooldown does nothing useful:
   - '@opengovsg/*'
   #
-  # Nothing else needs an exception today. Add a pinned entry only when a security
-  # fix is genuinely newer than `minimumReleaseAge`; if the patched version is
-  # already older than 24h, the cooldown admits it and no entry is needed.
+  # Leave empty otherwise. Only add a pinned entry when the security fix is
+  # newer than `minimumReleaseAge`. If the patched version is already >24h
+  # old, the cooldown lets it through on its own.
 
 # Under pnpm v11, every package with a build script must be listed here as
 # true (run the script) or false (skip it). Leaving one unlisted throws
@@ -115,9 +114,6 @@ allowBuilds:
   core-js-pure: false
   cpu-features: false
   dd-trace: false
-  # esbuild's install script only optimises CLI startup; the platform binary comes
-  # from the @esbuild/<platform> optional dep, and we only use the JS API via
-  # Vite/Vitest. Verified blocked: install, typecheck, build and test:ci all pass.
   esbuild: false
   msw: false
   protobufjs: false
@@ -145,42 +141,33 @@ overrides:
   'lodash@4': '^4.17.24'
   # Pinned by next@16.2.11 which still ships postcss 8.4.31:
   'postcss@8': '^8.5.25'
-  #
-  # NOTE: `pnpm audit` currently reports 19 unfixed advisories (1 critical, 18
-  # high), all of which have patched versions available. Remediating them is
-  # deliberately left out of this change — see the `audit` job in ci.yml, which
-  # reports advisories without gating until that work lands.
 
-# Fail the install when a package's publishing trust level DROPS relative to its
-# earlier releases (Trusted Publisher > provenance > no trust evidence). A stolen
-# maintainer credential almost always produces a downgrade, because the attacker
-# publishes from their own machine and cannot reach the victim's CI. This is the
-# control that would have caught the August 2025 s1ngularity attack.
+# Fail install if a package's publishing trust drops vs earlier releases
+# (Trusted Publisher > provenance > none). Stolen maintainer credentials
+# almost always downgrade trust, because the attacker publishes from their
+# own machine and cannot use the victim's CI. Would have caught the
+# August 2025 s1ngularity attack.
 trustPolicy: no-downgrade
 
-# Don't demand trust evidence from releases published before provenance was widely
-# available. 525600 minutes = 1 year.
+# Skip trust checks for releases older than this. 525600 minutes = 1 year,
+# roughly when provenance became common.
 trustPolicyIgnoreAfter: 525600
 
-# Declarative audit policy, consumed by `pnpm audit` in CI (pnpm >= 11.16).
-audit:
-  level: high
-
-# State the registry explicitly so a developer's global config or an inherited
-# `pnpm_config_*` env var cannot silently redirect resolution elsewhere.
+# Pin the registry so a global config or `pnpm_config_*` env var cannot
+# redirect resolution somewhere else.
 registries:
   default: https://registry.npmjs.org/
 
-# NOTE: deliberately no `supportedArchitectures`. It only ever ADDS architectures
-# beyond the current one, so it cannot shrink the install; and measured on this
-# tree, enumerating linux/darwin + x64/arm64 installed exactly the same set as
-# leaving it unset (sharp's @img/sharp-libvips-* variants arrive either way). It
-# would be config that reads like a control while doing nothing.
+# Left unset on purpose. `supportedArchitectures` only adds platforms; it
+# cannot shrink the install. On this tree, listing linux/darwin + x64/arm64
+# pulled the same packages as leaving it alone (including sharp's
+# @img/sharp-libvips-* variants). Config that looks like a control and
+# changes nothing.
 
-# Public hoisting makes a package importable from the repo root, so anything listed
-# here becomes a phantom dependency that app code can require without declaring.
-# Keep the entries as narrow as possible. '*oxfmt*' and '*@opengovsg/oui*' only
-# match 2-3 packages each, but '*prisma*' used to hoist all 21 @prisma/* internals.
+# Anything listed here is importable from the repo root without a direct
+# dependency declaration. Keep the globs tight. `*oxfmt*` and
+# `*@opengovsg/oui*` each match a couple of packages; `*prisma*` used to
+# hoist all 21 `@prisma/*` internals.
 publicHoistPattern:
   - '*oxfmt*'
   - '*@opengovsg/oui*'
@@ -189,12 +176,3 @@ publicHoistPattern:
   - prisma-extension-kysely
   - prisma-kysely
   - pg
-
-# Not a supply-chain control — pnpm frames this as stopping contributors from
-# adding dependencies incompatible with our Node. Included because it is free:
-# all 1534 currently-installed packages that declare `engines.node` accept
-# 24.13.0, so this only bites on a genuinely incompatible new dependency.
-# `nodeVersion` is what pnpm validates against, so the check is identical for
-# every developer regardless of the Node they happen to be running.
-engineStrict: true
-nodeVersion: 24.13.0
