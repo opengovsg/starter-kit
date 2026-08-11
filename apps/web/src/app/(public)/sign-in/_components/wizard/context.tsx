@@ -6,10 +6,7 @@ import { createContext, useContext, useRef, useState } from 'react'
 
 import { useInterval } from 'usehooks-ts'
 
-import {
-  browserCreatePkceChallenge,
-  browserCreatePkceVerifier,
-} from '~/lib/pkce/browser-pkce'
+import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 
 interface SignInState {
   timer: number
@@ -61,8 +58,8 @@ export const SignInWizardProvider = ({
   const challengeToVerifierMap = useRef(new Map<string, string>())
   const newChallenge = async () => {
     try {
-      const verifier = browserCreatePkceVerifier()
-      const challenge = await browserCreatePkceChallenge(verifier)
+      const verifier = createPkceVerifier()
+      const challenge = await createPkceChallenge(verifier)
       challengeToVerifierMap.current.set(challenge, verifier)
       return challenge
     } catch (error) {

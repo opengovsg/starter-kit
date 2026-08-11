@@ -219,6 +219,9 @@ importers:
       '@hookform/resolvers':
         specifier: 'catalog:'
         version: 5.2.2(react-hook-form@7.69.0(react@19.2.8))
+      '@opengovsg/auth':
+        specifier: 0.0.0-snapshot-20260811091307
+        version: 0.0.0-snapshot-20260811091307
       '@opengovsg/oui':
         specifier: catalog:oui
         version: 0.0.52(@opengovsg/oui-theme@0.0.52(react@19.2.8)(tailwind-variants@3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.3.3))(tailwindcss@4.3.3))(motion@12.23.22(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-aria-components@1.16.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -255,9 +258,6 @@ importers:
       lodash-es:
         specifier: ^4.18.1
         version: 4.18.1
-      nanoid:
-        specifier: ^5.1.16
-        version: 5.1.16
       next:
         specifier: catalog:next
         version: 16.2.12(@babel/core@7.28.5(supports-color@7.2.0))(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1667,6 +1667,10 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@openfeature/core': ^1.7.0
+
+  '@opengovsg/auth@0.0.0-snapshot-20260811091307':
+    resolution: {integrity: sha512-3j8rRTsJt9TkQB4InxWUZ300lxOdx5/gsCzo8n3Sswx70wVAA4Se669SsJICAiMNO+NpX+pdTvUWjDhWJaX7BA==}
+    engines: {node: '>=20.19.0'}
 
   '@opengovsg/logging@0.5.1':
     resolution: {integrity: sha512-Z1tdztNGBZy3yV49C613yhUwZMOunf+txrqozNKYyLqZRBQOphiPrZPJekrQ6I27j6Kvs+JuHjOiNDzxrcUSrw==}
@@ -8272,6 +8276,10 @@ snapshots:
     dependencies:
       '@openfeature/core': 1.9.1
     optional: true
+
+  '@opengovsg/auth@0.0.0-snapshot-20260811091307':
+    dependencies:
+      nanoid: 5.1.16
 
   '@opengovsg/logging@0.5.1':
     dependencies:
