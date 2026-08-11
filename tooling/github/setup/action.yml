@@ -1,6 +1,12 @@
 name: 'Setup and install'
 description: 'Common setup steps for Actions'
 
+inputs:
+  job-index:
+    description: "Index of the current job within its matrix, if any. Composite actions can't read the caller's strategy context directly, so matrixed callers must pass it in explicitly to disambiguate their turbo cache key."
+    required: false
+    default: "0"
+
 runs:
   using: composite
   steps:
@@ -14,10 +20,12 @@ runs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: .turbo
-        # strategy.job-index prevents matrix jobs (e.g. concurrent vitest shards) sharing the same job name from clashing over one cache entry
-        key: ${{ runner.os }}-turbo-${{ github.job }}-${{ strategy.job-index }}-${{ github.sha }}
+        # inputs.job-index disambiguates matrix legs sharing the same github.job (e.g. concurrent vitest shards),
+        # which would otherwise race to reserve the same cache key. Defaults to 0 on non-matrix
+        # jobs, so the key there is unaffected.
+        key: ${{ runner.os }}-turbo-${{ github.job }}-${{ inputs.job-index }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-turbo-${{ github.job }}-${{ strategy.job-index }}-
+          ${{ runner.os }}-turbo-${{ github.job }}-${{ inputs.job-index }}-
 
     # --frozen-lockfile is already implied on detected CI, but state it explicitly:
     # this composite action is reused from several workflows, and an install that
