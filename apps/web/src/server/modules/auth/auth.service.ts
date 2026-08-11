@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
+import type { OtpVerificationErrorCode } from '@opengovsg/auth/server/otp'
 import { createOtpAuth } from '@opengovsg/auth/server/otp'
 
 import type { Logger } from '@acme/logging'
@@ -10,6 +11,20 @@ import { verificationTokenStore } from './verification-token.store'
 
 import { env } from '~/env'
 import { getBaseUrl } from '~/utils/get-base-url'
+
+const VERIFY_OTP_ERROR_MESSAGES = {
+  too_many_attempts:
+    'Wrong OTP was entered too many times. Please request a new OTP.',
+  expired: 'Token is invalid or has expired. Please request a new OTP.',
+  invalid: 'Token is invalid or has expired. Please request a new OTP.',
+  not_found:
+    'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
+  token_reused:
+    'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
+} as const satisfies Record<
+  Exclude<OtpVerificationErrorCode, 'unexpected'>,
+  string
+>
 
 const otpAuth = createOtpAuth({
   store: verificationTokenStore,
@@ -93,8 +108,6 @@ export const emailVerifyOtp = async ({
       result.error.code === 'too_many_attempts'
         ? 'TOO_MANY_REQUESTS'
         : 'BAD_REQUEST',
-    // Same generic message for every failure mode — distinct copy per code
-    // lets an attacker enumerate emails / learn which verify step they passed.
-    message: result.error.message,
+    message: VERIFY_OTP_ERROR_MESSAGES[result.error.code],
   })
 }

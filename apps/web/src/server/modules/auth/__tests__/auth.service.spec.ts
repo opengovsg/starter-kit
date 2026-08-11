@@ -1,5 +1,4 @@
 import '../../mail/__mocks__/mail.service'
-import { OtpVerificationError } from '@opengovsg/auth/otp'
 import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 import { add } from 'date-fns/add'
 import { mock, mockDeep } from 'vitest-mock-extended'
@@ -14,7 +13,13 @@ import { emailLogin, emailVerifyOtp } from '../auth.service'
 
 const mockedMailService = mock(mailService)
 const logger = mockDeep<Logger>()
-const genericAuthErrorMessage = new OtpVerificationError('invalid').message
+
+const INVALID_OR_EXPIRED_MESSAGE =
+  'Token is invalid or has expired. Please request a new OTP.'
+const NOT_FOUND_OR_REUSED_MESSAGE =
+  'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
+const TOO_MANY_ATTEMPTS_MESSAGE =
+  'Wrong OTP was entered too many times. Please request a new OTP.'
 
 const getIssuedOtp = () => {
   const body = mockedMailService.sendMail.mock.calls.at(-1)?.[0]?.body
@@ -110,7 +115,7 @@ describe('auth.service', () => {
           codeVerifier: wrongVerifier,
           logger,
         })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
     })
 
     it('should throw error for non-existent codeChallenge', async () => {
@@ -120,7 +125,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
     })
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
@@ -139,7 +144,7 @@ describe('auth.service', () => {
           codeVerifier: wrongVerifier,
           logger,
         })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
     })
 
     it('should reject a wrong OTP with correct codeVerifier', async () => {
@@ -155,7 +160,7 @@ describe('auth.service', () => {
           codeVerifier,
           logger,
         })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject an expired OTP with correct codeVerifier', async () => {
@@ -177,7 +182,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should increment attempts on each verification try', async () => {
@@ -197,7 +202,7 @@ describe('auth.service', () => {
             codeVerifier,
             logger,
           })
-        ).rejects.toThrow(genericAuthErrorMessage)
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
         })
@@ -220,7 +225,7 @@ describe('auth.service', () => {
             codeVerifier,
             logger,
           })
-        ).rejects.toThrow(genericAuthErrorMessage)
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
       }
 
       await expect(
@@ -230,7 +235,7 @@ describe('auth.service', () => {
           codeVerifier,
           logger,
         })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(TOO_MANY_ATTEMPTS_MESSAGE)
     })
 
     it('should delete verification token after successful verification', async () => {
@@ -260,7 +265,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow(genericAuthErrorMessage)
+      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
     })
   })
 })
