@@ -30,7 +30,7 @@
     "@acme/ui": "workspace:*",
     "@acme/validators": "workspace:*",
     "@hookform/resolvers": "catalog:",
-    "@opengovsg/auth": "0.0.0-snapshot-20260811091307",
+    "@opengovsg/auth": "0.0.0-snapshot-20260811100400",
     "@opengovsg/oui": "catalog:oui",
     "@opengovsg/oui-theme": "catalog:oui",
     "@t3-oss/env-nextjs": "^0.13.10",

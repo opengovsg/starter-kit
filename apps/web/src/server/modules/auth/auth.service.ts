@@ -99,7 +99,7 @@ export const emailVerifyOtp = async ({
       username: email,
       privileged: true,
       reason: result.error.code,
-      attemptCount: 0,
+      attemptCount: result.error.attemptCount ?? 0,
     })
   }
 
