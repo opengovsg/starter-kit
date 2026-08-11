@@ -16,6 +16,7 @@ catalog:
   prisma-kysely: ^3.1.0
   react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
+  sherif: ^1.13.0
   typescript: ^7.0.2
   zod: ^4.2.1
 
@@ -74,13 +75,30 @@ blockExoticSubdeps: true
 # `.pnpmfile.mjs` lookup into a hard ERR_MODULE_NOT_FOUND failure.
 pnpmfile: []
 
+# Block any version published in the last 24h, including transitive deps.
+# Most malicious releases get yanked inside that window (~2.5h for the
+# September 2025 chalk/debug attack, ~12h for Shai-Hulud 2.0).
+# Setting this also turns on `minimumReleaseAgeStrict`, so install fails
+# instead of quietly picking a version that is still too new.
 minimumReleaseAge: 1440
 
+# Keep the cooldown even when registry metadata has no `time` field.
+# Harmless on registry.npmjs.org (it always has `time`). Matters if we
+# ever point at a private registry, mirror, or proxy that omits it.
+minimumReleaseAgeIgnoreMissingTime: false
+
 minimumReleaseAgeExclude:
-  # If there is a CVE, exclude it here so we can update it immediately without waiting for the minimum release age to pass.
+  # Matches the package name for every version, forever. A bare name is a
+  # permanent hole in the cooldown, not a one-off hotfix.
+  # For a CVE, pin a version (e.g. `vitest@4.1.8`) and remove it after the
+  # cooldown window. `pnpm audit --fix` writes entries that way.
+  #
+  # We publish this scope ourselves, so the cooldown does nothing useful:
   - '@opengovsg/*'
-  - 'vitest'
-  - '@vitest/*'
+  #
+  # Leave empty otherwise. Only add a pinned entry when the security fix is
+  # newer than `minimumReleaseAge`. If the patched version is already >24h
+  # old, the cooldown lets it through on its own.
 
 # Under pnpm v11, every package with a build script must be listed here as
 # true (run the script) or false (skip it). Leaving one unlisted throws
@@ -88,7 +106,6 @@ minimumReleaseAgeExclude:
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
-  esbuild: true
   prisma: true
   '@datadog/native-appsec': false
   '@datadog/native-iast-taint-tracking': false
@@ -97,6 +114,7 @@ allowBuilds:
   core-js-pure: false
   cpu-features: false
   dd-trace: false
+  esbuild: false
   msw: false
   protobufjs: false
   sharp: false
@@ -124,8 +142,31 @@ overrides:
   # Pinned by next@16.2.11 which still ships postcss 8.4.31:
   'postcss@8': '^8.5.25'
 
+# Fail install if a package's publishing trust drops vs earlier releases
+# (Trusted Publisher > provenance > none). Stolen maintainer credentials
+# almost always downgrade trust, because the attacker publishes from their
+# own machine and cannot use the victim's CI. Would have caught the
+# August 2025 s1ngularity attack.
+trustPolicy: no-downgrade
+
+# Skip trust checks for releases older than this. 525600 minutes = 1 year,
+# roughly when provenance became common.
+trustPolicyIgnoreAfter: 525600
+
+# Pin the registry so a global config or `pnpm_config_*` env var cannot
+# redirect resolution somewhere else.
+registries:
+  default: https://registry.npmjs.org/
+
+# Anything listed here is importable from the repo root without a direct
+# dependency declaration. Keep the globs tight. `*oxfmt*` and
+# `*@opengovsg/oui*` each match a couple of packages; `*prisma*` used to
+# hoist all 21 `@prisma/*` internals.
 publicHoistPattern:
   - '*oxfmt*'
   - '*@opengovsg/oui*'
-  - '*prisma*'
+  - prisma
+  - '@prisma/client'
+  - prisma-extension-kysely
+  - prisma-kysely
   - pg

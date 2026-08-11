@@ -19,5 +19,8 @@ runs:
         restore-keys: |
           ${{ runner.os }}-turbo-${{ github.job }}-${{ strategy.job-index }}-
 
+    # --frozen-lockfile is already implied on detected CI, but state it explicitly:
+    # this composite action is reused from several workflows, and an install that
+    # silently rewrites the lockfile would defeat the point of committing one.
     - shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
