@@ -4,9 +4,8 @@ import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
 import { createContext, useContext, useRef, useState } from 'react'
 
-import { useInterval } from 'usehooks-ts'
-
 import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
+import { useInterval } from 'usehooks-ts'
 
 interface SignInState {
   timer: number

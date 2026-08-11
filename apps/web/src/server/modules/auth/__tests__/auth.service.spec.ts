@@ -130,9 +130,8 @@ describe('auth.service', () => {
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const correctCodeChallenge = await createPkceChallenge(
-        createPkceVerifier()
-      )
+      const correctCodeChallenge =
+        await createPkceChallenge(createPkceVerifier())
       const wrongVerifier = createPkceVerifier()
 
       await emailLogin({ email, codeChallenge: correctCodeChallenge })

@@ -1,5 +1,5 @@
-import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 import { isValidCodeChallenge } from '@opengovsg/auth'
+import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 
 describe('auth', () => {
   describe('isValidCodeChallenge', () => {

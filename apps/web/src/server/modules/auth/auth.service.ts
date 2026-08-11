@@ -1,8 +1,8 @@
+import type { OtpVerificationErrorCode } from '@opengovsg/auth/server/otp'
+import { createOtpAuth } from '@opengovsg/auth/server/otp'
 import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
-import type { OtpVerificationErrorCode } from '@opengovsg/auth/server/otp'
-import { createOtpAuth } from '@opengovsg/auth/server/otp'
 
 import type { Logger } from '@acme/logging'
 
