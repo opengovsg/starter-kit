@@ -16,8 +16,6 @@ const logger = mockDeep<Logger>()
 
 const INVALID_OR_EXPIRED_MESSAGE =
   'Token is invalid or has expired. Please request a new OTP.'
-const NOT_FOUND_OR_REUSED_MESSAGE =
-  'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
 const TOO_MANY_ATTEMPTS_MESSAGE =
   'Wrong OTP was entered too many times. Please request a new OTP.'
 
@@ -115,7 +113,7 @@ describe('auth.service', () => {
           codeVerifier: wrongVerifier,
           logger,
         })
-      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should throw error for non-existent codeChallenge', async () => {
@@ -125,7 +123,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
@@ -143,7 +141,7 @@ describe('auth.service', () => {
           codeVerifier: wrongVerifier,
           logger,
         })
-      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject a wrong OTP with correct codeVerifier', async () => {
@@ -264,7 +262,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow(NOT_FOUND_OR_REUSED_MESSAGE)
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
   })
 })

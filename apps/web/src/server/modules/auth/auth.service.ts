@@ -1,3 +1,4 @@
+import { createPkceChallenge } from '@opengovsg/auth/pkce'
 import type { OtpVerificationErrorCode } from '@opengovsg/auth/server/otp'
 import { createOtpAuth } from '@opengovsg/auth/server/otp'
 import { TRPCError } from '@trpc/server'
@@ -12,15 +13,18 @@ import { verificationTokenStore } from './verification-token.store'
 import { env } from '~/env'
 import { getBaseUrl } from '~/utils/get-base-url'
 
+const INVALID_OR_EXPIRED_OTP_MESSAGE =
+  'Token is invalid or has expired. Please request a new OTP.'
+
 const VERIFY_OTP_ERROR_MESSAGES = {
   too_many_attempts:
     'Wrong OTP was entered too many times. Please request a new OTP.',
-  expired: 'Token is invalid or has expired. Please request a new OTP.',
-  invalid: 'Token is invalid or has expired. Please request a new OTP.',
-  not_found:
-    'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
-  token_reused:
-    'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
+  // Keep not_found / expired / invalid / token_reused on one message so the
+  // client cannot tell whether a record existed or which check failed.
+  expired: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  invalid: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  not_found: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  token_reused: INVALID_OR_EXPIRED_OTP_MESSAGE,
 } as const satisfies Record<
   Exclude<OtpVerificationErrorCode, 'unexpected'>,
   string
@@ -91,7 +95,8 @@ export const emailVerifyOtp = async ({
 
   if (result.error.code === 'token_reused') {
     logger.audit.authn.tokenReused({
-      tokenId: codeVerifier,
+      // Log the public challenge, never the secret verifier.
+      tokenId: await createPkceChallenge(codeVerifier),
       context: { email },
     })
   } else {
