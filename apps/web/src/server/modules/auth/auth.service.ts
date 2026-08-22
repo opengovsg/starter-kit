@@ -1,23 +1,53 @@
+import { createPkceChallenge } from '@opengovsg/auth/pkce'
+import type { OtpVerificationErrorCode } from '@opengovsg/auth/server/otp'
+import { createOtpAuth } from '@opengovsg/auth/server/otp'
 import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
 
 import type { Logger } from '@acme/logging'
 
-import { db } from '@acme/db'
-
 import { sendMail } from '../mail/mail.service'
-import {
-  createAuthToken,
-  createVfnIdentifier,
-  createVfnPrefix,
-  isValidToken,
-} from './auth.utils'
+import { verificationTokenStore } from './verification-token.store'
 
-import { Prisma } from '@acme/db/client'
 import { env } from '~/env'
-import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
+
+const INVALID_OR_EXPIRED_OTP_MESSAGE =
+  'Token is invalid or has expired. Please request a new OTP.'
+
+const VERIFY_OTP_ERROR_MESSAGES = {
+  too_many_attempts:
+    'Wrong OTP was entered too many times. Please request a new OTP.',
+  // Keep not_found / expired / invalid / token_reused on one message so the
+  // client cannot tell whether a record existed or which check failed.
+  expired: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  invalid: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  not_found: INVALID_OR_EXPIRED_OTP_MESSAGE,
+  token_reused: INVALID_OR_EXPIRED_OTP_MESSAGE,
+} as const satisfies Record<
+  Exclude<OtpVerificationErrorCode, 'unexpected'>,
+  string
+>
+
+const otpAuth = createOtpAuth({
+  store: verificationTokenStore,
+  otpExpirySeconds: env.OTP_EXPIRY,
+  sendOtp: async ({ email, otp, otpPrefix }) => {
+    const url = new URL(getBaseUrl())
+    const expiry = add(new Date(), { seconds: env.OTP_EXPIRY })
+    await sendMail({
+      subject: `Sign in to ${url.host}`,
+      body: `Your OTP is ${otpPrefix}-<b>${otp}</b>. It will expire on ${format(
+        expiry,
+        'dd MMM yyyy, h:mmaaa'
+      )}.
+      Please use this to login to your account.
+      <p>If your OTP does not work, please request for a new one.</p>`,
+      recipient: email,
+    })
+  },
+})
 
 export const emailLogin = async ({
   email,
@@ -26,55 +56,20 @@ export const emailLogin = async ({
   email: string
   codeChallenge: string
 }) => {
-  const identifier = createVfnIdentifier({ email, codeChallenge })
-  const { token, hashedToken } = createAuthToken({ email, codeChallenge })
-
-  let issuedAt: Date
-  try {
-    ;({ issuedAt } = await db.verificationToken.create({
-      data: {
-        identifier,
-        token: hashedToken,
-        issuedAt: new Date(),
-      },
-      select: {
-        issuedAt: true,
-      },
-    }))
-  } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
-      // P2025 cant happen currently because there is no relation on verificationToken table
-      // That means a duplicate code challenge was used with the same email
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Please refresh and try again.',
-      })
+  const result = await otpAuth.issueOtp({ email, codeChallenge })
+  if (!result.success) {
+    if (result.error.code === 'unexpected') {
+      throw result.error.cause ?? result.error
     }
-    throw error
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Please refresh and try again.',
+    })
   }
 
-  const url = new URL(getBaseUrl())
-  const otpPrefix = createVfnPrefix() // for frontend display purposes: helps user to match OTP to session
-  const expiry = add(issuedAt, { seconds: env.OTP_EXPIRY })
-  await sendMail({
-    subject: `Sign in to ${url.host}`,
-    body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${format(
-      expiry,
-      'dd MMM yyyy, h:mmaaa'
-    )}.
-      Please use this to login to your account.
-      <p>If your OTP does not work, please request for a new one.</p>`,
-    recipient: email,
-  })
-
-  // return email if you want to send the OTP to a different email
   return {
-    token,
     email,
-    otpPrefix,
+    otpPrefix: result.data.otpPrefix,
   }
 }
 
@@ -89,91 +84,35 @@ export const emailVerifyOtp = async ({
   codeVerifier: string
   logger: Logger
 }) => {
-  const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-  const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
-
-  try {
-    // Not in transaction, because we do not want it to rollback
-    const hashedToken = await db.verificationToken.update({
-      where: {
-        identifier: vfnIdentifier,
-      },
-      data: {
-        attempts: {
-          increment: 1,
-        },
-      },
-    })
-
-    if (hashedToken.attempts > 5) {
-      logger.audit.authn.loginFailed({
-        username: email,
-        privileged: true,
-        reason: 'too_many_attempts',
-        attemptCount: hashedToken.attempts,
-      })
-      throw new TRPCError({
-        code: 'TOO_MANY_REQUESTS',
-        message:
-          'Wrong OTP was entered too many times. Please request a new OTP.',
-      })
-    }
-
-    // Expired
-    const hasExpired =
-      add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
-    if (
-      hasExpired ||
-      !isValidToken({ token, email, codeChallenge, hash: hashedToken.token })
-    ) {
-      logger.audit.authn.loginFailed({
-        username: email,
-        privileged: true,
-        reason: hasExpired ? 'otp_expired' : 'otp_invalid',
-        attemptCount: hashedToken.attempts,
-      })
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Token is invalid or has expired. Please request a new OTP.',
-      })
-    }
-
-    // NOTE: You can also use `kysely` for your queries
-    // if you want more fine-grained control.
-    // Valid token, delete record to prevent reuse
-    return db.$kysely
-      .deleteFrom('VerificationToken')
-      .where('identifier', '=', vfnIdentifier)
-      .returningAll()
-      .executeTakeFirstOrThrow(
-        // NOTE: If we are unable to find the token,
-        // this means that it has been deleted between
-        // our initial query and the deletion here
-        () =>
-          new TRPCError({
-            code: 'BAD_REQUEST',
-            message:
-              'Token is invalid or has expired. Please request a new OTP.',
-          })
-      )
-  } catch (error) {
-    // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2025'
-    ) {
-      // The codeChallenge does not exist: the OTP was used on a different
-      // session than it was generated for, or it is being replayed.
-      logger.audit.authn.tokenReused({
-        tokenId: codeChallenge,
-        context: { email },
-      })
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message:
-          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
-      })
-    }
-    throw error
+  const result = await otpAuth.verifyOtp({ email, token, codeVerifier })
+  if (result.success) {
+    return result.data
   }
+
+  if (result.error.code === 'unexpected') {
+    throw result.error.cause ?? result.error
+  }
+
+  if (result.error.code === 'token_reused') {
+    logger.audit.authn.tokenReused({
+      // Log the public challenge, never the secret verifier.
+      tokenId: await createPkceChallenge(codeVerifier),
+      context: { email },
+    })
+  } else {
+    logger.audit.authn.loginFailed({
+      username: email,
+      privileged: true,
+      reason: result.error.code,
+      attemptCount: result.error.attemptCount ?? 0,
+    })
+  }
+
+  throw new TRPCError({
+    code:
+      result.error.code === 'too_many_attempts'
+        ? 'TOO_MANY_REQUESTS'
+        : 'BAD_REQUEST',
+    message: VERIFY_OTP_ERROR_MESSAGES[result.error.code],
+  })
 }
