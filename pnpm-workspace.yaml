@@ -22,8 +22,8 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.2.12
-    next: 16.2.12
+    '@next/env': 16.3.1
+    next: 16.3.1
   oui:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
