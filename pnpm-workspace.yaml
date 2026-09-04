@@ -18,6 +18,7 @@ catalog:
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
   typescript: ^7.0.2
+  ultracite: ^7.10.7
   zod: ^4.6.7
 
 catalogs:
