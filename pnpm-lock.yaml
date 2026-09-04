@@ -281,9 +281,6 @@ importers:
 
   .:
     devDependencies:
-      '@acme/oxfmt-config':
-        specifier: workspace:*
-        version: link:tooling/oxfmt
       '@turbo/gen':
         specifier: ^2.10.5
         version: 2.10.5(@types/node@25.0.3)
@@ -305,6 +302,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+      ultracite:
+        specifier: 'catalog:'
+        version: 7.12.4(oxfmt@0.74.0)(oxlint@1.89.0(oxlint-tsgolint@7.0.2005))
       vitest:
         specifier: catalog:vitest
         version: 5.0.3(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(@vitest/browser-playwright@5.0.3)(@vitest/coverage-v8@5.0.3)(@vitest/ui@5.0.3)(msw@2.12.7(@types/node@25.0.3)(typescript@7.0.2))(vite@8.3.5(@types/node@25.0.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -785,22 +785,6 @@ importers:
         version: 7.0.2
 
   tooling/github: {}
-
-  tooling/oxfmt:
-    dependencies:
-      ultracite:
-        specifier: 'catalog:'
-        version: 7.12.4(oxfmt@0.74.0)(oxlint@1.89.0(oxlint-tsgolint@7.0.2005))
-    devDependencies:
-      '@acme/oxlint-config':
-        specifier: workspace:*
-        version: link:../oxlint
-      oxfmt:
-        specifier: 'catalog:'
-        version: 0.74.0
-      oxlint:
-        specifier: 'catalog:'
-        version: 1.89.0(oxlint-tsgolint@7.0.2005)
 
   tooling/oxlint:
     dependencies:
