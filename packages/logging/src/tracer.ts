@@ -3,7 +3,7 @@ import type { IncomingMessage } from 'node:http'
 import type { Span } from 'dd-trace'
 import { tracer } from 'dd-trace'
 
-export function initTracer() {
+export const initTracer = () => {
   tracer.init()
 }
 
@@ -11,12 +11,15 @@ export function initTracer() {
  * Run `hook` on the root HTTP span and Next.js request span before they finish.
  * The APM trace list reads tags from the root HTTP span.
  */
-export function onHttpServerRequest(
+export const onHttpServerRequest = (
   hook: (span: Span, req: IncomingMessage) => void
-) {
+) => {
   const request = (span?: Span, req?: IncomingMessage) => {
-    if (span && req) hook(span, req)
+    if (span && req) {
+      hook(span, req)
+    }
   }
+
   tracer.use('http', {
     server: {
       hooks: { request },
