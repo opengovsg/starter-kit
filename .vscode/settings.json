@@ -1,6 +1,6 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  "oxc.fmt.configPath": "oxfmt.config.ts",
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "javascript.validate.enable": true,
   "editor.formatOnSave": true,
