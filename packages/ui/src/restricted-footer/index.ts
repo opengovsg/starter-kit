@@ -1,1 +1,1 @@
-export * from './footer'
+export { RestrictedFooter } from './footer'
