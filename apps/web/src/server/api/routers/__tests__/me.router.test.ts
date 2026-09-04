@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest'
 import { resetTables } from '~tests/db/utils'
 import { createTestCaller, createTestContext } from '~tests/trpc'
 

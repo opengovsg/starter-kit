@@ -103,7 +103,7 @@ const t = initTRPC
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
-export const {createCallerFactory} = t
+export const { createCallerFactory } = t
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)

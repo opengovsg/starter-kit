@@ -4,11 +4,9 @@ export const FeatureItem = ({
 }: {
   title: string
   description: string
-}) => 
-  (
-    <div className="flex flex-col gap-4">
-      <h3 className="prose-h4 text-base-content-strong">{title}</h3>
-      <p className="prose-body-1">{description}</p>
-    </div>
-  )
-
+}) => (
+  <div className="flex flex-col gap-4">
+    <h3 className="prose-h4 text-base-content-strong">{title}</h3>
+    <p className="prose-body-1">{description}</p>
+  </div>
+)

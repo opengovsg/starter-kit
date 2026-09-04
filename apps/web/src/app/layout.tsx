@@ -26,21 +26,21 @@ export const metadata: Metadata = {
 
 const RootLayout = (props: { children: React.ReactNode }) => (
   <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'text-base-content-default font-sans antialiased',
-          inter.variable,
-          ibmPlexMono.variable
-        )}
-      >
-        <NextTopLoader color="var(--color-interaction-main-default)" />
-        <ClientProviders>
-          <NuqsAdapter>{props.children}</NuqsAdapter>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Toaster />
-        </ClientProviders>
-      </body>
-    </html>
+    <body
+      className={cn(
+        'text-base-content-default font-sans antialiased',
+        inter.variable,
+        ibmPlexMono.variable
+      )}
+    >
+      <NextTopLoader color="var(--color-interaction-main-default)" />
+      <ClientProviders>
+        <NuqsAdapter>{props.children}</NuqsAdapter>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Toaster />
+      </ClientProviders>
+    </body>
+  </html>
 )
 
 export default RootLayout
