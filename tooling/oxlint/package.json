@@ -3,16 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Shared Oxlint rules (TypeScript; consumed via extends imports).",
+  "description": "Shared Oxlint and Oxfmt config (TypeScript; consumed via extends imports).",
   "exports": {
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
-    "./presets.ts": "./presets.ts"
+    "./presets.ts": "./presets.ts",
+    "./oxfmt.ts": "./oxfmt.ts"
   },
   "dependencies": {
     "ultracite": "catalog:"
   },
   "devDependencies": {
+    "oxfmt": "catalog:",
     "oxlint": "catalog:"
   }
 }
