@@ -44,6 +44,20 @@ export default defineConfig({
       },
     },
     {
+      files: ['src/proxy.ts', 'src/instrumentation.ts'],
+      rules: {
+        'no-restricted-properties': 'off',
+        'no-restricted-imports': 'off',
+      },
+    },
+    {
+      files: ['tests/e2e/**'],
+      rules: {
+        'no-empty-pattern': 'off',
+        'react-hooks/rules-of-hooks': 'off',
+      },
+    },
+    {
       files: ['**/__tests__/**', 'tests/**', '**/__mocks__/**'],
       rules: {
         'anti-slop/no-chained-type-assertions': 'off',
