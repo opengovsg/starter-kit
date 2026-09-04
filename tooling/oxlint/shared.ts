@@ -1,50 +1,20 @@
 import { defineConfig } from 'oxlint'
+import antiSlop from 'ultracite/oxlint/anti-slop'
+import core from 'ultracite/oxlint/core'
 
 export default defineConfig({
+  extends: [core, antiSlop],
   settings: {
     next: {
       rootDir: 'apps/web',
     },
   },
-  plugins: [
-    'eslint',
-    'typescript',
-    'react',
-    'nextjs',
-    'jsx-a11y',
-    'import',
-    'unicorn',
-    'vitest',
-    'oxc',
-  ],
   ignorePatterns: [
+    ...(core.ignorePatterns ?? []),
     '**/*.config.*',
     'dist/**',
     'src/generated/**',
     '.next/**',
     'apps/web/public/mockServiceWorker.js',
   ],
-  rules: {
-    'typescript/no-unused-vars': [
-      'error',
-      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-    ],
-    'typescript/consistent-type-imports': [
-      'warn',
-      { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
-    ],
-    'typescript/no-misused-promises': [
-      'warn',
-      { checksVoidReturn: { attributes: false } },
-    ],
-    'typescript/no-unnecessary-condition': [
-      'error',
-      { allowConstantLoopConditions: true },
-    ],
-    'typescript/no-non-null-assertion': 'error',
-    'typescript/no-unsafe-assignment': 'error',
-    'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-    'vitest/no-conditional-expect': 'off',
-    'vitest/require-to-throw-message': 'off',
-  },
 })
