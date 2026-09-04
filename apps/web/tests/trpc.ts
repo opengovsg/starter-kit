@@ -7,8 +7,8 @@ import { createCallerFactory } from '~/server/api/trpc'
 import type { SessionData } from '~/server/session'
 
 const testLogger = createBaseLogger({
-  path: 'tests',
   clientIp: null,
+  path: 'tests',
   userAgent: null,
 })
 
@@ -21,9 +21,9 @@ const createMockSession = (
 ): IronSession<SessionData> => ({
   ...sessionData,
   // oxlint-disable-next-line typescript/no-empty-function
-  save: async () => {},
-  // oxlint-disable-next-line typescript/no-empty-function
   destroy: () => {},
+  // oxlint-disable-next-line typescript/no-empty-function
+  save: async () => {},
   // oxlint-disable-next-line typescript/no-empty-function
   updateConfig: () => {},
 })
@@ -38,9 +38,9 @@ export const createTestContext = ({
   session,
 }: { session?: SessionData } = {}) => ({
   headers: new Headers(),
-  session: createMockSession(session),
-  resHeaders: new Headers(),
   logger: testLogger,
+  resHeaders: new Headers(),
+  session: createMockSession(session),
 })
 
 /**

@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 import { RateLimiterRes } from 'rate-limiter-flexible'
 import superjson from 'superjson'
-import z, { ZodError } from 'zod'
+import { z, ZodError } from 'zod'
 
 import {
   checkRateLimit,
@@ -49,14 +49,14 @@ export const createTRPCContext = async ({
   // the proper procedure path to the logs.
   // This is useful for functions such as a rate limiter middleware, which may
   // or may not have been chained with the logger middleware.
-  const logger = createLogger({ path: 'trpc', headers })
+  const logger = createLogger({ headers, path: 'trpc' })
 
   const session = await getSession()
   return {
-    logger,
     headers,
-    session,
+    logger,
     resHeaders,
+    session,
   }
 }
 
@@ -80,12 +80,14 @@ const t = initTRPC
     defaultMeta: {
       rateLimitOptions: {},
     },
-    transformer: superjson,
-    errorFormatter({ shape, error }) {
+    errorFormatter(opts) {
+      const { error } = opts
+      // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- tRPC error formatter API names this field `shape`.
+      const formattedError = opts.shape
       return {
-        ...shape,
+        ...formattedError,
         data: {
-          ...shape.data,
+          ...formattedError.data,
           zodError:
             error.cause instanceof ZodError
               ? z.flattenError(error.cause)
@@ -93,6 +95,7 @@ const t = initTRPC
         },
       }
     },
+    transformer: superjson,
   })
 
 /**
@@ -100,7 +103,7 @@ const t = initTRPC
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
-export const createCallerFactory = t.createCallerFactory
+export const {createCallerFactory} = t
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -118,42 +121,38 @@ export const createTRPCRouter = t.router
 
 const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const start = performance.now()
-  // Rebuild the logger so the procedure path lands in the root `path` field
-  // (not the action) and the session is surfaced as user_id / correlation_id.
   const logger = createLogger({
-    path,
     headers: ctx.headers,
-    userId: ctx.session.userId,
+    path,
     sessionId: ctx.session.sessionId,
+    userId: ctx.session.userId,
   }).scope({ action: 'request' })
 
+  // oxlint-disable-next-line node/callback-return -- tRPC middleware must await before logging the result.
   const result = await next({
     ctx: { logger },
   })
 
   const end = performance.now()
-
   const durationInMs = Math.round(end - start)
 
   if (result.ok) {
     logger.info({
-      message: 'Request OK',
       merged: {
         durationInMs,
         statusCode: 200,
       },
+      message: 'Request OK',
     })
   } else {
     const statusCode = getHTTPStatusCodeFromError(result.error)
-    // Keep the message stable for aggregation; the error (and its message)
-    // travel in the `error` field.
     const logPayload = {
-      message: 'Request failed',
+      error: result.error,
       merged: {
         durationInMs,
         statusCode,
       },
-      error: result.error,
+      message: 'Request failed',
     }
 
     if (statusCode >= 500) {
@@ -170,23 +169,23 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
   const rateLimitOptions =
     meta?.rateLimitOptions === undefined ? {} : meta.rateLimitOptions
   if (rateLimitOptions === null) {
-    return next()
+    return await next()
   }
 
   if (env.NODE_ENV === 'test') {
-    return next()
+    return await next()
   }
 
   try {
     await checkRateLimit({
       key: createRateLimitFingerprint({
         ipAddress: extractIpAddress(ctx.headers),
-        userId: ctx.session.userId,
         path,
+        userId: ctx.session.userId,
       }),
       options: rateLimitOptions,
     })
-    return next()
+    return await next()
   } catch (error) {
     // Handle rate limit error separately to add rate limit headers
     if (error instanceof RateLimiterRes) {
@@ -209,11 +208,11 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
   }
 })
 
-const authMiddleware = t.middleware(({ ctx, next }) => {
-  if (!ctx.session.userId) {
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (ctx.session.userId === undefined || ctx.session.userId === '') {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
-  return next({
+  return await next({
     ctx: {
       // infers the `session` as non-nullable
       session: { ...ctx.session, userId: ctx.session.userId },

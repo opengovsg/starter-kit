@@ -18,12 +18,12 @@ import { appRouter } from '~/server/api/root'
 export const getQueryClient = cache(createQueryClient)
 
 export const trpc = createTRPCOptionsProxy<AppRouter>({
-  router: appRouter,
   ctx: createContext,
   queryClient: getQueryClient,
+  router: appRouter,
 })
 
-export function HydrateClient(props: { children: React.ReactNode }) {
+export const HydrateClient = (props: { children: React.ReactNode }) => {
   const queryClient = getQueryClient()
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -31,15 +31,15 @@ export function HydrateClient(props: { children: React.ReactNode }) {
     </HydrationBoundary>
   )
 }
-// oxlint-disable-next-line typescript/no-explicit-any
-export async function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-  queryOptions: T
-) {
+
+export const prefetch = async (
+  queryOptions: ReturnType<TRPCQueryOptions<AppRouter>>
+) => {
   const queryClient = getQueryClient()
-  if (queryOptions.queryKey[1]?.type === 'infinite') {
-    // oxlint-disable-next-line typescript/no-unsafe-argument, typescript/no-explicit-any
-    await queryClient.prefetchInfiniteQuery(queryOptions as any)
-  } else {
-    await queryClient.prefetchQuery(queryOptions)
-  }
+  await (queryOptions.queryKey[1]?.type === 'infinite'
+    ? queryClient.prefetchInfiniteQuery(
+        // oxlint-disable-next-line typescript/no-unsafe-argument
+        queryOptions
+      )
+    : queryClient.prefetchQuery(queryOptions))
 }

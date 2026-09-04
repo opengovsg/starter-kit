@@ -16,7 +16,7 @@ declare module 'react-aria-components' {
   }
 }
 
-export function ClientProviders({ children }: PropsWithChildren) {
+export const ClientProviders = ({ children }: PropsWithChildren) => {
   const router = useRouter()
 
   return (

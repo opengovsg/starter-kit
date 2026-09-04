@@ -4,9 +4,9 @@ export const extractIpAddress = (headers: Headers): string | null => {
     headers.get('x-forwarded-for') ??
     headers.get('x-real-ip')
 
-  if (!forwarded) {
+  if (forwarded === null || forwarded === '') {
     return null
   }
 
-  return forwarded.split(/, /)[0] ?? null
+  return forwarded.split(/, /u)[0] ?? null
 }

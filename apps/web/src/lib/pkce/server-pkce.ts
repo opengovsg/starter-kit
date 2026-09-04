@@ -1,4 +1,4 @@
-import { createHash } from 'crypto'
+import { createHash } from 'node:crypto'
 
 import { pkceVerifierGenerator } from '~/lib/pkce/constants'
 
@@ -8,10 +8,7 @@ import { pkceVerifierGenerator } from '~/lib/pkce/constants'
 
 // We need to split up server and browser implementations due to using crypto APIs
 
-export function ssCreatePkceVerifier(): string {
-  return pkceVerifierGenerator()
-}
+export const ssCreatePkceVerifier = (): string => pkceVerifierGenerator()
 
-export function ssCreatePkceChallenge(codeVerifier: string): string {
-  return createHash('sha256').update(codeVerifier).digest('base64url')
-}
+export const ssCreatePkceChallenge = (codeVerifier: string): string =>
+  createHash('sha256').update(codeVerifier).digest('base64url')

@@ -14,19 +14,18 @@ import { env } from '~/env'
 import { ibmPlexMono, inter } from '~/lib/fonts'
 
 export const metadata: Metadata = {
-  title: env.NEXT_PUBLIC_APP_NAME,
   description: 'Simple monorepo Starter Kit with for OGP projects',
   openGraph: {
-    title: env.NEXT_PUBLIC_APP_NAME,
     description: 'Simple monorepo Starter Kit with for OGP projects',
-    url: 'https://start.open.gov.sg',
     siteName: env.NEXT_PUBLIC_APP_NAME,
+    title: env.NEXT_PUBLIC_APP_NAME,
+    url: 'https://start.open.gov.sg',
   },
+  title: env.NEXT_PUBLIC_APP_NAME,
 }
 
-export default function RootLayout(props: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
+const RootLayout = (props: { children: React.ReactNode }) => (
+  <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           'text-base-content-default font-sans antialiased',
@@ -42,5 +41,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         </ClientProviders>
       </body>
     </html>
-  )
-}
+)
+
+export default RootLayout

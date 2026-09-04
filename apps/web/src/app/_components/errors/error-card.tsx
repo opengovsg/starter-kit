@@ -18,8 +18,8 @@ export const ErrorCard = ({
   title,
   message,
   svg = DEFAULT_ERROR_SVG,
-}: ErrorCardProps) => {
-  return (
+}: ErrorCardProps) => 
+  (
     <div
       className={cn(
         'flex w-full flex-col items-center justify-center',
@@ -44,4 +44,4 @@ export const ErrorCard = ({
       <GoBackButton />
     </div>
   )
-}
+

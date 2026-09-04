@@ -3,7 +3,7 @@ import { LandingPageComponent } from './_components/landing-page/_page'
 import { env } from '~/env'
 import { getSession } from '~/server/session'
 
-export default async function LandingPage() {
+const LandingPage = async () => {
   // Might not be worth subscribing this page to be dynamically rendered just to
   // check for authentication. Remove this logic if you want to keep this as a static
   // page.
@@ -17,3 +17,5 @@ export default async function LandingPage() {
     />
   )
 }
+
+export default LandingPage
