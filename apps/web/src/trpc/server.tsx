@@ -32,14 +32,15 @@ export const HydrateClient = (props: { children: React.ReactNode }) => {
   )
 }
 
-export const prefetch = async (
-  queryOptions: ReturnType<TRPCQueryOptions<AppRouter>>
+/* oxlint-disable typescript/no-explicit-any, typescript/no-unsafe-type-assertion, typescript/no-unsafe-argument, typescript/no-unnecessary-type-parameters, anti-slop/require-safety-comment-for-type-assertion, unicorn/prefer-ternary -- tRPC prefetch needs `any` for infinite query options. */
+export const prefetch = async <T extends ReturnType<TRPCQueryOptions<any>>>(
+  queryOptions: T
 ) => {
   const queryClient = getQueryClient()
-  await (queryOptions.queryKey[1]?.type === 'infinite'
-    ? queryClient.prefetchInfiniteQuery(
-        // oxlint-disable-next-line typescript/no-unsafe-argument
-        queryOptions
-      )
-    : queryClient.prefetchQuery(queryOptions))
+  if (queryOptions.queryKey[1]?.type === 'infinite') {
+    await queryClient.prefetchInfiniteQuery(queryOptions as any)
+  } else {
+    await queryClient.prefetchQuery(queryOptions)
+  }
 }
+/* oxlint-enable typescript/no-explicit-any, typescript/no-unsafe-type-assertion, typescript/no-unsafe-argument, typescript/no-unnecessary-type-parameters, anti-slop/require-safety-comment-for-type-assertion, unicorn/prefer-ternary */
