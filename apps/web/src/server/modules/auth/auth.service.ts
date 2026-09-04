@@ -57,6 +57,7 @@ export const emailLogin = async ({
   }
 
   const url = new URL(getBaseUrl())
+  // for frontend display purposes: helps user to match OTP to session
   const otpPrefix = createVfnPrefix()
   const expiry = add(issuedAt, { seconds: env.OTP_EXPIRY })
   await sendMail({

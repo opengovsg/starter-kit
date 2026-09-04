@@ -122,6 +122,8 @@ export const createTRPCRouter = t.router
 
 const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const start = performance.now()
+  // Rebuild the logger so the procedure path lands in the root `path` field
+  // (not the action) and the session is surfaced as user_id / correlation_id.
   const logger = createLogger({
     headers: ctx.headers,
     path,
@@ -147,6 +149,8 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
     })
   } else {
     const statusCode = getHTTPStatusCodeFromError(result.error)
+    // Keep the message stable for aggregation; the error (and its message)
+    // travel in the `error` field.
     const logPayload = {
       error: result.error,
       merged: {

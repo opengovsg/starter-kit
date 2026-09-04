@@ -218,6 +218,7 @@ describe('auth.service', () => {
       await emailLogin({ codeChallenge, email })
       const identifier = createVfnIdentifier({ codeChallenge, email })
 
+      // Make 2 failed attempts
       const verifyAndAssertAttempts = async (attempt: number) => {
         await expect(
           emailVerifyOtp({ codeVerifier, email, logger, token: wrongToken })
@@ -240,6 +241,7 @@ describe('auth.service', () => {
 
       await emailLogin({ codeChallenge, email })
 
+      // Make 5 failed attempts
       const verifyWrongOtp = async () => {
         await expect(
           emailVerifyOtp({ codeVerifier, email, logger, token })

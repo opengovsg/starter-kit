@@ -84,6 +84,7 @@ export const SignInWizardProvider = ({
   }
 
   // Start the resend timer once in the vfn step.
+  // Stop interval if timer hits 0, else rerun every 1000ms.
   useInterval(
     () => {
       setTimer((prev) => prev - 1)

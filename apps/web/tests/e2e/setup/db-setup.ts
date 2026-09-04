@@ -19,6 +19,7 @@ type DatabaseContainer = Awaited<ReturnType<typeof startDatabase>>
 export const startDatabase = async () => {
   const [dbContainer] = await setup([
     postgres({
+      // The host port must be the same as in .env.e2e.
       ports: [{ container: 5432, host: 64_321 }],
       reuse: true,
     }),

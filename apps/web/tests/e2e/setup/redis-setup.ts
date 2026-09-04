@@ -11,6 +11,7 @@ type RedisContainer = Awaited<ReturnType<typeof startRedis>>
 export const startRedis = async () => {
   const [redisContainer] = await setup([
     redis({
+      // The host port must be the same as in .env.e2e.
       ports: [{ container: 6379, host: 63_799 }],
       reuse: true,
     }),

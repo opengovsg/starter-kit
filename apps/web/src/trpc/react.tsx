@@ -17,8 +17,10 @@ const hasWindow = () => 'window' in globalThis
 let clientQueryClientSingleton: ReturnType<typeof createQueryClient> | undefined
 const getQueryClient = () => {
   if (!hasWindow()) {
+    // Server: always make a new query client
     return createQueryClient()
   }
+  // Browser: use singleton pattern to keep the same query client
   clientQueryClientSingleton ??= createQueryClient()
   return clientQueryClientSingleton
 }
