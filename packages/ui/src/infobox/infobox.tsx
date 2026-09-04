@@ -7,7 +7,6 @@ import {
   BiSolidInfoCircle,
 } from 'react-icons/bi'
 
-import { mapPropsVariants } from '../utils'
 import type { InfoboxSlots, InfoboxVariantProps } from './infobox.styles'
 import { infoboxStyles } from './infobox.styles'
 
@@ -26,41 +25,51 @@ interface InfoboxProps extends InfoboxVariantProps {
   classNames?: SlotsToClasses<InfoboxSlots>
 }
 
-export const Infobox = (originalProps: InfoboxProps) => {
-  const [props, variantProps] = mapPropsVariants(
-    originalProps,
-    infoboxStyles.variantKeys
-  )
-
-  const styles = infoboxStyles(variantProps)
+export const Infobox = ({
+  variant,
+  size,
+  icon: iconProp,
+  className,
+  classNames,
+  children,
+}: InfoboxProps) => {
+  const styles = infoboxStyles({ size, variant })
 
   const icon = useMemo(() => {
     // `null` hides the icon; `undefined` falls through to the variant default.
-    if (props.icon === null) {
+    if (iconProp === null) {
       return null
     }
-    const iconClassName = styles.icon({ className: props.classNames?.icon })
-    if (props.icon !== undefined) {
-      return <div className={iconClassName}>{props.icon}</div>
+    const iconClassName = styles.icon({ className: classNames?.icon })
+    if (iconProp !== undefined) {
+      return <div className={iconClassName}>{iconProp}</div>
     }
-    switch (variantProps.variant) {
-      case 'error':
+    switch (variant) {
+      case 'error': {
         return <BiSolidErrorCircle className={iconClassName} />
-      case 'success':
+      }
+      case 'success': {
         return <BiSolidCheckCircle className={iconClassName} />
-      default:
+      }
+      case 'info':
+      case 'warning':
+      case undefined: {
         return <BiSolidInfoCircle className={iconClassName} />
+      }
+      default: {
+        return <BiSolidInfoCircle className={iconClassName} />
+      }
     }
-  }, [props.classNames?.icon, props.icon, styles, variantProps.variant])
+  }, [classNames?.icon, iconProp, styles, variant])
 
   return (
     <div
       className={styles.base({
-        className: props.className ?? props.classNames?.base,
+        className: className ?? classNames?.base,
       })}
     >
       {icon}
-      {props.children}
+      {children}
     </div>
   )
 }
