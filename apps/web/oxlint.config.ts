@@ -1,9 +1,10 @@
 import { defineConfig } from 'oxlint'
 
-import sharedConfig from '@acme/oxlint-config/shared'
+import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
+import sharedConfig from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig],
+  extends: [sharedConfig, react, next, vitest],
   options: {
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
