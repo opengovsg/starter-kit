@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import '../../mail/__mocks__/mail.service'
 import { add } from 'date-fns/add'
+
+import '../../mail/__mocks__/mail.service'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { mock, mockDeep } from 'vitest-mock-extended'
 import { resetTables } from '~tests/db/utils'
 
@@ -57,9 +58,9 @@ describe('auth.service', () => {
 
       await emailLogin({ codeChallenge, email })
 
-      await expect(
-        emailLogin({ codeChallenge, email })
-      ).rejects.toThrow('Please refresh and try again.')
+      await expect(emailLogin({ codeChallenge, email })).rejects.toThrow(
+        'Please refresh and try again.'
+      )
     })
 
     it('should allow different codeChallenges for same email', async () => {

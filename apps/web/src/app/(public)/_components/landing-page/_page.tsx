@@ -85,7 +85,8 @@ export const LandingPageComponent = ({
             <SectionHeader>Another call to action</SectionHeader>
             <SectionBody>
               Sign in with your email address, and start building your app
-              immediately. It&apos;s free, and requires no onboarding or approvals.
+              immediately. It&apos;s free, and requires no onboarding or
+              approvals.
             </SectionBody>
             <div className="mt-10">
               <LinkButton href={ctaLink}>Get started</LinkButton>

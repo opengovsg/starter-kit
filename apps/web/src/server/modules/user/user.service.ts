@@ -65,9 +65,8 @@ export const loginUserByEmail = async (email: string, logger?: Logger) => {
   return loggedInUser
 }
 
-export const getUserById = async (userId: string) => 
+export const getUserById = async (userId: string) =>
   await db.user.findUnique({
     select: defaultUserSelect,
     where: { id: userId },
   })
-

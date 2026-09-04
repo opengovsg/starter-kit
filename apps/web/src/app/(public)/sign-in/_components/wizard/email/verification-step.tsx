@@ -84,7 +84,11 @@ export const VerificationStep = () => {
 
   const isResendPending = resendOtpMutation.isPending || newChallengePending
   const handleResendOtp = async () => {
-    if (timer > 0 || vfnStepData?.email === undefined || vfnStepData.email === '') {
+    if (
+      timer > 0 ||
+      vfnStepData?.email === undefined ||
+      vfnStepData.email === ''
+    ) {
       return
     }
     if (isResendPending) {
