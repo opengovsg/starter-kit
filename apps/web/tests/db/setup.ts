@@ -13,10 +13,10 @@
  * See README.md for documentation on the schema export process.
  */
 
-import { randomUUID } from 'crypto'
-import { readdirSync, readFileSync, statSync } from 'fs'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import { randomUUID } from 'node:crypto'
+import { readdirSync, readFileSync, statSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { getPostgresConnectionString } from '@opengovsg/testcontainers'
 import { PrismaPg } from '@prisma/adapter-pg'
@@ -52,8 +52,8 @@ const setupTestClient = async () => {
   return client
 }
 
-const prismaMigrationDir = join(
-  fileURLToPath(dirname(import.meta.url)),
+const prismaMigrationDir = path.join(
+  fileURLToPath(path.dirname(import.meta.url)),
   '..',
   '..',
   '..',
@@ -66,11 +66,12 @@ const prismaMigrationDir = join(
 
 // Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs
 const applyMigrations = async (client: PrismaClient) => {
-  const directory = readdirSync(prismaMigrationDir).sort()
+  const directory = readdirSync(prismaMigrationDir).toSorted()
   for (const file of directory) {
     const name = `${prismaMigrationDir}/${file}`
     if (statSync(name).isDirectory()) {
-      const migration = readFileSync(`${name}/migration.sql`, 'utf8')
+      const migration = readFileSync(`${name}/migration.sql`, 'utf-8')
+      // oxlint-disable-next-line eslint/no-await-in-loop -- migrations must run sequentially
       await client.$executeRawUnsafe(migration)
     }
   }

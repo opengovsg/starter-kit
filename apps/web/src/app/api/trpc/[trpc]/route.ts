@@ -28,21 +28,21 @@ export const OPTIONS = () => {
 
 const handler = async (req: NextRequest) => {
   const response = await fetchRequestHandler({
-    endpoint: '/api/trpc',
-    router: appRouter,
-    req,
     allowBatching: false,
-    createContext: ({ resHeaders }) =>
-      createTRPCContext({
+    createContext: async ({ resHeaders }) =>
+      await createTRPCContext({
         headers: req.headers,
         resHeaders,
       }),
+    endpoint: '/api/trpc',
     onError({ error, path, ctx }) {
       if (error.code === 'UNAUTHORIZED') {
         ctx?.session.destroy()
       }
       console.error(`>>> tRPC Error on '${path}'`, error)
     },
+    req,
+    router: appRouter,
   })
 
   setCorsHeaders(response)

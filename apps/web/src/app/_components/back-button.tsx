@@ -13,7 +13,9 @@ export const BackButton = () => {
       startContent={<BiArrowBack />}
       variant="clear"
       size="xs"
-      onPress={() => router.back()}
+      onPress={() => {
+        router.back()
+      }}
     >
       Back
     </Button>

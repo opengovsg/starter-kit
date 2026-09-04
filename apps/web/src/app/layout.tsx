@@ -14,33 +14,33 @@ import { env } from '~/env'
 import { ibmPlexMono, inter } from '~/lib/fonts'
 
 export const metadata: Metadata = {
-  title: env.NEXT_PUBLIC_APP_NAME,
   description: 'Simple monorepo Starter Kit with for OGP projects',
   openGraph: {
-    title: env.NEXT_PUBLIC_APP_NAME,
     description: 'Simple monorepo Starter Kit with for OGP projects',
-    url: 'https://start.open.gov.sg',
     siteName: env.NEXT_PUBLIC_APP_NAME,
+    title: env.NEXT_PUBLIC_APP_NAME,
+    url: 'https://start.open.gov.sg',
   },
+  title: env.NEXT_PUBLIC_APP_NAME,
 }
 
-export default function RootLayout(props: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'text-base-content-default font-sans antialiased',
-          inter.variable,
-          ibmPlexMono.variable
-        )}
-      >
-        <NextTopLoader color="var(--color-interaction-main-default)" />
-        <ClientProviders>
-          <NuqsAdapter>{props.children}</NuqsAdapter>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Toaster />
-        </ClientProviders>
-      </body>
-    </html>
-  )
-}
+const RootLayout = (props: { children: React.ReactNode }) => (
+  <html lang="en" suppressHydrationWarning>
+    <body
+      className={cn(
+        'text-base-content-default font-sans antialiased',
+        inter.variable,
+        ibmPlexMono.variable
+      )}
+    >
+      <NextTopLoader color="var(--color-interaction-main-default)" />
+      <ClientProviders>
+        <NuqsAdapter>{props.children}</NuqsAdapter>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Toaster />
+      </ClientProviders>
+    </body>
+  </html>
+)
+
+export default RootLayout

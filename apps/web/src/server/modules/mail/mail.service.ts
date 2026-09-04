@@ -5,16 +5,16 @@ export const sendMail = async (params: {
   body: string
   subject: string
 }): Promise<void> => {
-  if (env.POSTMAN_API_KEY) {
+  if (env.POSTMAN_API_KEY !== undefined && env.POSTMAN_API_KEY !== '') {
     const response = await fetch(
       'https://api.postman.gov.sg/v1/transactional/email/send',
       {
-        method: 'POST',
+        body: JSON.stringify(params),
         headers: {
           Authorization: `Bearer ${env.POSTMAN_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        method: 'POST',
       }
     )
 
@@ -28,8 +28,7 @@ export const sendMail = async (params: {
   }
 
   console.warn(
-    '!!!! This should not be seen on prod !!!! POSTMAN_API_KEY missing. Logging the following mail: ',
+    '!!!! This should not be seen on prod !!!! POSTMAN_API_KEY missing. Logging the following mail:',
     params
   )
-  return
 }

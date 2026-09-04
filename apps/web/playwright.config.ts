@@ -28,6 +28,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   testDir: './tests/e2e',
+  testMatch: '**/*.e2e.ts',
   fullyParallel: false,
   outputDir: './tests/e2e/test-results',
   // 'github' for GitHub Actions CI to generate annotations, plus a concise 'dot'

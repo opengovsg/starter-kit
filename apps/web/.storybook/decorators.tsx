@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import type { Decorator } from '@storybook/nextjs-vite'
 import {
   defaultShouldDehydrateQuery,
@@ -8,10 +6,30 @@ import {
 } from '@tanstack/react-query'
 import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import SuperJSON from 'superjson'
+import { deserialize, serialize } from 'superjson'
 
 import type { AppRouter } from '~/server/api/root'
 import { TRPCProvider } from '~/trpc/react'
+
+const hasWindow = () => 'window' in globalThis
+
+const createStorybookTrpcClient = (baseUrl: string) =>
+  createTRPCClient<AppRouter>({
+    links: [
+      loggerLink({
+        enabled: () => true,
+      }),
+      httpLink({
+        headers() {
+          const headers = new Headers()
+          headers.set('x-trpc-source', 'storybook')
+          return headers
+        },
+        transformer: { deserialize, serialize },
+        url: `${baseUrl}/api/trpc`,
+      }),
+    ],
+  })
 
 /**
  * This decorator wraps stories with TRPC and React Query and the other app-level providers.
@@ -21,49 +39,29 @@ import { TRPCProvider } from '~/trpc/react'
 export const AppDecorator: Decorator = (Story, context) => {
   const queryClient = new QueryClient({
     defaultOptions: {
-      queries: {
-        staleTime: Infinity,
-        retry: false,
-        refetchOnWindowFocus: false,
-      },
       dehydrate: {
-        serializeData: SuperJSON.serialize,
+        serializeData: serialize,
         shouldDehydrateQuery: (query) =>
           defaultShouldDehydrateQuery(query) ||
           query.state.status === 'pending',
-        shouldRedactErrors: () => {
-          return false
-        },
+        shouldRedactErrors: () => false,
       },
       hydrate: {
-        deserializeData: SuperJSON.deserialize,
+        deserializeData: deserialize,
+      },
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+        staleTime: Infinity,
       },
     },
   })
 
-  const baseUrl =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : 'http://localhost:6006'
+  const baseUrl = hasWindow()
+    ? globalThis.window.location.origin
+    : 'http://localhost:6006'
 
-  const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({
-      links: [
-        loggerLink({
-          enabled: () => true,
-        }),
-        httpLink({
-          transformer: SuperJSON,
-          url: `${baseUrl}/api/trpc`,
-          headers() {
-            const headers = new Headers()
-            headers.set('x-trpc-source', 'storybook')
-            return headers
-          },
-        }),
-      ],
-    })
-  )
+  const trpcClient = createStorybookTrpcClient(baseUrl)
 
   return (
     <main className="flex min-h-dvh flex-col">

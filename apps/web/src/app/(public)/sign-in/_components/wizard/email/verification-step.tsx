@@ -36,77 +36,101 @@ export const VerificationStep = () => {
   const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
-    () => setShowOtpDelayMessage(true),
+    () => {
+      setShowOtpDelayMessage(true)
+    },
     // Show otp delay info message after 15 seconds.
-    showOtpDelayMessage ? null : 15000
+    showOtpDelayMessage ? null : 15_000
   )
 
   const { control, handleSubmit, resetField, setFocus, setError } = useForm({
-    resolver: zodResolver(emailVerifyOtpSchema.omit({ codeVerifier: true })),
     defaultValues: {
       email: vfnStepData?.email ?? '',
       token: '',
     },
+    resolver: zodResolver(emailVerifyOtpSchema.omit({ codeVerifier: true })),
   })
 
   const verifyOtpMutation = useMutation(
     trpc.auth.email.verifyOtp.mutationOptions({
+      onError: (error) => {
+        setError('token', { message: error.message })
+      },
       onSuccess: () => {
         clearVerifierMap()
         router.refresh()
-      },
-      onError: (error) => {
-        setError('token', { message: error.message })
       },
     })
   )
 
   const resendOtpMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
+      onError: (error) => {
+        setError('token', { message: error.message })
+      },
       onSuccess: (res, req) => {
         setVfnStepData({
+          codeChallenge: req.codeChallenge,
           email: res.email,
           otpPrefix: res.otpPrefix,
-          codeChallenge: req.codeChallenge,
         })
         resetField('token')
         setFocus('token')
         // On success, restart the timer before this can be called again.
         resetTimer()
       },
-      onError: (error) => setError('token', { message: error.message }),
     })
   )
 
   const isResendPending = resendOtpMutation.isPending || newChallengePending
-  const handleResendOtp = () => {
-    if (timer > 0 || !vfnStepData?.email) return
-    if (isResendPending) return
+  const handleResendOtp = async () => {
+    if (
+      timer > 0 ||
+      vfnStepData?.email === undefined ||
+      vfnStepData.email === ''
+    ) {
+      return
+    }
+    if (isResendPending) {
+      return
+    }
     setNewChallengePending(true)
-    newChallenge()
-      .then((codeChallenge) => {
-        if (!codeChallenge) {
-          toast.error(
-            'Something went wrong generating a sign-in challenge. Please try again.'
-          )
-          return
-        }
-        resendOtpMutation.mutate({ email: vfnStepData.email, codeChallenge })
-      })
-      .catch(console.error)
-      .finally(() => {
-        setNewChallengePending(false)
-      })
+    let codeChallenge: string | undefined
+    try {
+      codeChallenge = await newChallenge()
+    } catch (error) {
+      console.error(error)
+    }
+    setNewChallengePending(false)
+    if (codeChallenge === undefined) {
+      toast.error(
+        'Something went wrong generating a sign-in challenge. Please try again.'
+      )
+      return
+    }
+    resendOtpMutation.mutate({ codeChallenge, email: vfnStepData.email })
   }
 
-  if (!vfnStepData) return null
+  if (vfnStepData === undefined) {
+    return null
+  }
+
+  const handleFormSubmit = ({
+    email,
+    token,
+  }: {
+    email: string
+    token: string
+  }) => {
+    verifyOtpMutation.mutate({ codeVerifier, email, token })
+  }
 
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(({ email, token }) =>
-        verifyOtpMutation.mutate({ email, token, codeVerifier })
-      )}
+      onSubmit={(event) => {
+        void handleSubmit(handleFormSubmit)(event)
+      }}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller
@@ -116,8 +140,8 @@ export const VerificationStep = () => {
           <TextField
             size="xs"
             classNames={{
-              inputGroup: 'inline-flex',
               input: 'rounded-l-none',
+              inputGroup: 'inline-flex',
             }}
             inputProps={{
               placeholder: 'Enter your OTP here',
@@ -132,7 +156,7 @@ export const VerificationStep = () => {
             }
             errorMessage={error?.message}
             isRequired
-            isInvalid={!!error}
+            isInvalid={error !== undefined}
             {...field}
             label={`Enter the OTP sent to ${vfnStepData.email}`}
           />
@@ -156,7 +180,9 @@ export const VerificationStep = () => {
             'prose-caption-2 disabled:text-interaction-support-disabled-content h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 whitespace-pre enabled:underline'
           )}
           size="xs"
-          onPress={handleResendOtp}
+          onPress={() => {
+            void handleResendOtp()
+          }}
           isPending={isResendPending}
           isDisabled={timer > 0}
           spinner={
@@ -164,9 +190,9 @@ export const VerificationStep = () => {
               size="sm"
               classNames={{
                 base: 'size-4 min-h-[21px]',
-                wrapper: 'h-4 w-4',
                 circle1: 'border-2',
                 circle2: 'border-2',
+                wrapper: 'h-4 w-4',
               }}
             />
           }

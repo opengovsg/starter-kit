@@ -1,22 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@opengovsg/oui'
 
+const subscribe = () => () => {
+  // No external store subscription needed; history length is read on demand.
+}
+
+// window.history.length is always >= 1 (current entry); > 1 means there's a previous entry
+const getCanGoBack = () => globalThis.window.history.length > 1
+
+const getServerCanGoBack = () => false
+
 export const GoBackButton = () => {
   const router = useRouter()
 
-  const [canGoBack, setCanGoBack] = useState(false)
+  const canGoBack = useSyncExternalStore(
+    subscribe,
+    getCanGoBack,
+    getServerCanGoBack
+  )
 
-  useEffect(() => {
-    // window.history.length is always >= 1 (current entry); > 1 means there's a previous entry
-    setCanGoBack(window.history.length > 1)
-  }, [])
-
-  if (!canGoBack) return null
+  if (!canGoBack) {
+    return null
+  }
 
   const handleBack = () => {
     router.back()

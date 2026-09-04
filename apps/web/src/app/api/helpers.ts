@@ -11,33 +11,33 @@ import { callerFactory } from '~/trpc/caller'
  * @param req - The Next.js request object
  * @param resHeaders - Optional response headers object for rate limit headers
  */
-export async function createApiCaller(req: NextRequest, resHeaders?: Headers) {
-  return callerFactory(
+export const createApiCaller = async (req: NextRequest, resHeaders?: Headers) =>
+  callerFactory(
     await createTRPCContext({
       headers: req.headers,
       resHeaders,
     })
   )
-}
 
 /**
  * Helper to handle tRPC errors and convert them to REST responses
  */
-export function handleTRPCError(
-  e: unknown,
+export const handleTRPCError = (
+  // oxlint-disable-next-line anti-slop/no-unknown-parameters -- REST boundary accepts arbitrary thrown values before narrowing to TRPCError.
+  apiFailure: unknown,
   fallbackMessage = 'Request failed',
   headers?: HeadersInit
-) {
-  if (e instanceof TRPCError) {
-    const statusCode = getHTTPStatusCodeFromError(e)
+) => {
+  if (apiFailure instanceof TRPCError) {
+    const statusCode = getHTTPStatusCodeFromError(apiFailure)
     return Response.json(
-      { error: e.message || fallbackMessage },
-      { status: statusCode, headers }
+      { error: apiFailure.message || fallbackMessage },
+      { headers, status: statusCode }
     )
   }
 
   return Response.json(
     { error: 'Internal server error' },
-    { status: 500, headers }
+    { headers, status: 500 }
   )
 }
