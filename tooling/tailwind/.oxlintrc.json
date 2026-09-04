@@ -1,7 +1,0 @@
-{
-  "extends": ["../oxlint/shared.json"],
-  "options": {
-    "typeAware": true,
-    "reportUnusedDisableDirectives": "off"
-  }
-}
