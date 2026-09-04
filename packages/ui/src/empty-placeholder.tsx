@@ -11,31 +11,31 @@ export interface EmptyPlaceholderProps {
   className?: string
 }
 
+const renderDefaultEmptySvg = () => <EmptyResultsSvg />
+
 export const EmptyPlaceholder = ({
-  svg = <EmptyResultsSvg />,
+  svg,
   title,
   description,
   size = 'sm',
   children,
   className,
-}: EmptyPlaceholderProps) => {
-  return (
-    <div
-      className={cn(
-        `flex w-full flex-col items-center justify-center gap-2 py-12`,
-        className
-      )}
-    >
-      <p className={size === 'sm' ? 'prose-h5' : 'prose-h4'}>
-        {title ?? 'No Records'}
+}: EmptyPlaceholderProps) => (
+  <div
+    className={cn(
+      `flex w-full flex-col items-center justify-center gap-2 py-12`,
+      className
+    )}
+  >
+    <p className={size === 'sm' ? 'prose-h5' : 'prose-h4'}>
+      {title ?? 'No Records'}
+    </p>
+    {description !== undefined && description !== '' ? (
+      <p className={size === 'sm' ? 'prose-body-2' : 'prose-body-1'}>
+        {description}
       </p>
-      {description && (
-        <p className={size === 'sm' ? 'prose-body-2' : 'prose-body-1'}>
-          {description}
-        </p>
-      )}
-      {svg}
-      {children}
-    </div>
-  )
-}
+    ) : null}
+    {svg ?? renderDefaultEmptySvg()}
+    {children}
+  </div>
+)
