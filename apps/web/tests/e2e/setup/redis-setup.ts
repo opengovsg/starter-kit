@@ -11,9 +11,8 @@ type RedisContainer = Awaited<ReturnType<typeof startRedis>>
 export const startRedis = async () => {
   const [redisContainer] = await setup([
     redis({
+      ports: [{ container: 6379, host: 63_799 }],
       reuse: true,
-      // The host port must be the same as in .env.e2e.
-      ports: [{ container: 6379, host: 63799 }],
     }),
   ])
 
@@ -24,12 +23,12 @@ export const startRedis = async () => {
   return redisContainer
 }
 
-export async function flushRedis(container: RedisContainer) {
+export const flushRedis = async (container: RedisContainer) => {
   const flushResult = await container.container.exec(['redis-cli', 'FLUSHALL'])
 
-  if (flushResult.exitCode !== 0) {
-    console.error('Failed when trying to flush Redis', flushResult)
-  } else {
+  if (flushResult.exitCode === 0) {
     console.log('Redis flushed')
+  } else {
+    console.error('Failed when trying to flush Redis', flushResult)
   }
 }

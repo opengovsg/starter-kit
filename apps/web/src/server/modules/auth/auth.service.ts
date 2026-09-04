@@ -26,16 +26,16 @@ export const emailLogin = async ({
   email: string
   codeChallenge: string
 }) => {
-  const identifier = createVfnIdentifier({ email, codeChallenge })
-  const { token, hashedToken } = createAuthToken({ email, codeChallenge })
+  const identifier = createVfnIdentifier({ codeChallenge, email })
+  const { token, hashedToken } = createAuthToken({ codeChallenge, email })
 
   let issuedAt: Date
   try {
     ;({ issuedAt } = await db.verificationToken.create({
       data: {
         identifier,
-        token: hashedToken,
         issuedAt: new Date(),
+        token: hashedToken,
       },
       select: {
         issuedAt: true,
@@ -57,10 +57,9 @@ export const emailLogin = async ({
   }
 
   const url = new URL(getBaseUrl())
-  const otpPrefix = createVfnPrefix() // for frontend display purposes: helps user to match OTP to session
+  const otpPrefix = createVfnPrefix()
   const expiry = add(issuedAt, { seconds: env.OTP_EXPIRY })
   await sendMail({
-    subject: `Sign in to ${url.host}`,
     body: `Your OTP is ${otpPrefix}-<b>${token}</b>. It will expire on ${format(
       expiry,
       'dd MMM yyyy, h:mmaaa'
@@ -68,13 +67,14 @@ export const emailLogin = async ({
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
     recipient: email,
+    subject: `Sign in to ${url.host}`,
   })
 
   // return email if you want to send the OTP to a different email
   return {
-    token,
     email,
     otpPrefix,
+    token,
   }
 }
 
@@ -90,27 +90,27 @@ export const emailVerifyOtp = async ({
   logger: Logger
 }) => {
   const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-  const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
+  const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
 
   try {
     // Not in transaction, because we do not want it to rollback
     const hashedToken = await db.verificationToken.update({
-      where: {
-        identifier: vfnIdentifier,
-      },
       data: {
         attempts: {
           increment: 1,
         },
       },
+      where: {
+        identifier: vfnIdentifier,
+      },
     })
 
     if (hashedToken.attempts > 5) {
       logger.audit.authn.loginFailed({
-        username: email,
+        attemptCount: hashedToken.attempts,
         privileged: true,
         reason: 'too_many_attempts',
-        attemptCount: hashedToken.attempts,
+        username: email,
       })
       throw new TRPCError({
         code: 'TOO_MANY_REQUESTS',
@@ -124,13 +124,13 @@ export const emailVerifyOtp = async ({
       add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
     if (
       hasExpired ||
-      !isValidToken({ token, email, codeChallenge, hash: hashedToken.token })
+      !isValidToken({ codeChallenge, email, hash: hashedToken.token, token })
     ) {
       logger.audit.authn.loginFailed({
-        username: email,
+        attemptCount: hashedToken.attempts,
         privileged: true,
         reason: hasExpired ? 'otp_expired' : 'otp_invalid',
-        attemptCount: hashedToken.attempts,
+        username: email,
       })
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -141,7 +141,7 @@ export const emailVerifyOtp = async ({
     // NOTE: You can also use `kysely` for your queries
     // if you want more fine-grained control.
     // Valid token, delete record to prevent reuse
-    return db.$kysely
+    return await db.$kysely
       .deleteFrom('VerificationToken')
       .where('identifier', '=', vfnIdentifier)
       .returningAll()
@@ -165,8 +165,8 @@ export const emailVerifyOtp = async ({
       // The codeChallenge does not exist: the OTP was used on a different
       // session than it was generated for, or it is being replayed.
       logger.audit.authn.tokenReused({
-        tokenId: codeChallenge,
         context: { email },
+        tokenId: codeChallenge,
       })
       throw new TRPCError({
         code: 'BAD_REQUEST',

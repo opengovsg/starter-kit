@@ -6,19 +6,17 @@ import { pkceVerifierGenerator } from '~/lib/pkce/constants'
 
 // We need to split up server and browser implementations due to using crypto APIs
 
-export function browserCreatePkceVerifier(): string {
-  return pkceVerifierGenerator()
-}
+export const browserCreatePkceVerifier = (): string => pkceVerifierGenerator()
 
-export async function browserCreatePkceChallenge(
+export const browserCreatePkceChallenge = async (
   codeVerifier: string
-): Promise<string> {
+): Promise<string> => {
   const encoder = new TextEncoder()
   const data = encoder.encode(codeVerifier)
   const hashBuffer = await window.crypto.subtle.digest('SHA-256', data)
 
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const base64 = btoa(String.fromCharCode(...hashArray))
+  const hashArray = [...new Uint8Array(hashBuffer)]
+  const base64 = btoa(String.fromCodePoint(...hashArray))
 
-  return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+  return base64.replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_')
 }
