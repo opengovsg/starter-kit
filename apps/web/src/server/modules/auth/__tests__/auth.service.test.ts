@@ -21,6 +21,10 @@ import {
 const mockedMailService = mock(mailService)
 const logger = mockDeep<Logger>()
 
+const INVALID_OR_EXPIRED_MESSAGE = 'Token is invalid or has expired'
+const WRONG_OTP_OR_REUSED_MESSAGE =
+  'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
+
 describe('auth.service', () => {
   beforeEach(async () => {
     await resetTables(['VerificationToken', 'User', 'Account'])
@@ -127,7 +131,7 @@ describe('auth.service', () => {
       // Should throw
       await expect(
         emailVerifyOtp({ codeVerifier: wrongVerifier, email, logger, token })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)
     })
 
     it('should throw error for non-existent codeChallenge', async () => {
@@ -137,7 +141,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)
     })
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
@@ -160,7 +164,7 @@ describe('auth.service', () => {
           logger,
           token: wrongToken,
         })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)
     })
 
     it('should reject a wrong OTP with correct codeVerifier', async () => {
@@ -172,7 +176,7 @@ describe('auth.service', () => {
       await emailLogin({ codeChallenge, email })
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token: wrongToken })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject an expired OTP with correct codeVerifier', async () => {
@@ -202,7 +206,7 @@ describe('auth.service', () => {
 
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should increment attempts on each verification try', async () => {
@@ -217,7 +221,7 @@ describe('auth.service', () => {
       const verifyAndAssertAttempts = async (attempt: number) => {
         await expect(
           emailVerifyOtp({ codeVerifier, email, logger, token: wrongToken })
-        ).rejects.toThrow('Token is invalid or has expired')
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
         })
@@ -239,7 +243,7 @@ describe('auth.service', () => {
       const verifyWrongOtp = async () => {
         await expect(
           emailVerifyOtp({ codeVerifier, email, logger, token })
-        ).rejects.toThrow('Token is invalid or has expired')
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
       }
 
       await verifyWrongOtp()
@@ -287,7 +291,7 @@ describe('auth.service', () => {
       // Second verification with same token should fail
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)
     })
   })
 })
