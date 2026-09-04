@@ -1,4 +1,5 @@
 import '../../mail/__mocks__/mail.service'
+import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 import { add } from 'date-fns/add'
 import { mock, mockDeep } from 'vitest-mock-extended'
 import { resetTables } from '~tests/db/utils'
@@ -9,15 +10,23 @@ import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
-import { createAuthToken, createVfnIdentifier } from '../auth.utils'
-
-import {
-  ssCreatePkceChallenge,
-  ssCreatePkceVerifier,
-} from '~/lib/pkce/server-pkce'
 
 const mockedMailService = mock(mailService)
 const logger = mockDeep<Logger>()
+
+const INVALID_OR_EXPIRED_MESSAGE =
+  'Token is invalid or has expired. Please request a new OTP.'
+const TOO_MANY_ATTEMPTS_MESSAGE =
+  'Wrong OTP was entered too many times. Please request a new OTP.'
+
+const getIssuedOtp = () => {
+  const body = mockedMailService.sendMail.mock.calls.at(-1)?.[0]?.body
+  const match = body?.match(/<b>([^<]+)<\/b>/)
+  if (!match?.[1]) {
+    throw new Error('Expected sendMail to include an OTP in the body')
+  }
+  return match[1]
+}
 
 describe('auth.service', () => {
   beforeEach(async () => {
@@ -27,22 +36,18 @@ describe('auth.service', () => {
   describe('emailLogin', () => {
     it('should create a verification token and send OTP email', async () => {
       const email = 'test@example.com'
-      const codeChallenge = 'test-codeChallenge-123'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
       const result = await emailLogin({ email, codeChallenge })
 
       expect(result).toEqual({
         email,
-        token: expect.any(String),
         otpPrefix: expect.any(String),
       })
 
-      // Verify token was created in database with vfnIdentifier
-      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
-      const token = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(token).toBeDefined()
+      const tokens = await db.verificationToken.findMany()
+      expect(tokens).toHaveLength(1)
       expect(mockedMailService.sendMail).toHaveBeenCalledWith({
         body: expect.any(String),
         recipient: email,
@@ -52,168 +57,149 @@ describe('auth.service', () => {
 
     it('should throw when code challenge is reused', async () => {
       const email = 'test@example.com'
-      const codeChallenge = 'test-codeChallenge-123'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      await emailLogin({ email, codeChallenge: codeChallenge })
+      await emailLogin({ email, codeChallenge })
 
-      await expect(
-        emailLogin({ email, codeChallenge: codeChallenge })
-      ).rejects.toThrow('Please refresh and try again.')
+      await expect(emailLogin({ email, codeChallenge })).rejects.toThrow(
+        'Please refresh and try again.'
+      )
     })
 
     it('should allow different codeChallenges for same email', async () => {
       const email = 'test@example.com'
-      const codeChallenge1 = 'test-codeChallenge-1'
-      const codeChallenge2 = 'test-codeChallenge-2'
+      const codeChallenge1 = await createPkceChallenge(createPkceVerifier())
+      const codeChallenge2 = await createPkceChallenge(createPkceVerifier())
 
       await emailLogin({ email, codeChallenge: codeChallenge1 })
       await emailLogin({ email, codeChallenge: codeChallenge2 })
 
-      // Should have two records with different codeChallenges
-      const vfnIdentifier1 = createVfnIdentifier({
-        email,
-        codeChallenge: codeChallenge1,
-      })
-      const vfnIdentifier2 = createVfnIdentifier({
-        email,
-        codeChallenge: codeChallenge2,
-      })
-      const token1 = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier1 },
-      })
-      const token2 = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier2 },
-      })
-
-      expect(token1).toBeDefined()
-      expect(token2).toBeDefined()
-      expect(token1?.token).not.toBe(token2?.token)
+      const tokens = await db.verificationToken.findMany()
+      expect(tokens).toHaveLength(2)
+      expect(tokens[0]?.token).not.toBe(tokens[1]?.token)
     })
   })
 
   describe('emailVerifyOtp', () => {
     it('should successfully verify a valid OTP', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      // Create a verification token
-      const { token } = await emailLogin({ email, codeChallenge })
+      await emailLogin({ email, codeChallenge })
+      const token = getIssuedOtp()
 
-      // Should not throw
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).resolves.not.toThrow()
+      ).resolves.toEqual({ email })
 
-      // Token should be deleted after successful verification
-      const vfnIdentifier = createVfnIdentifier({ email, codeChallenge })
-      const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(verificationToken).toBeNull()
+      expect(await db.verificationToken.count()).toBe(0)
     })
 
     it('should reject a correct OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const correctVerifier = ssCreatePkceVerifier()
-      const wrongVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(correctVerifier)
+      const correctVerifier = createPkceVerifier()
+      const wrongVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(correctVerifier)
 
-      // Create a verification token
-      const { token } = await emailLogin({ email, codeChallenge })
+      await emailLogin({ email, codeChallenge })
+      const token = getIssuedOtp()
 
-      // Should throw
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier: wrongVerifier, logger })
-      ).rejects.toThrow()
+        emailVerifyOtp({
+          email,
+          token,
+          codeVerifier: wrongVerifier,
+          logger,
+        })
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
+
     it('should throw error for non-existent codeChallenge', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const token = '123456'
+      const codeVerifier = createPkceVerifier()
+      const token = '12345678'
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow()
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject a wrong OTP with wrong codeVerifier', async () => {
       const email = 'test@example.com'
-      const correctVerifier = ssCreatePkceVerifier()
-      const correctCodeChallenge = ssCreatePkceChallenge(correctVerifier)
+      const correctCodeChallenge =
+        await createPkceChallenge(createPkceVerifier())
+      const wrongVerifier = createPkceVerifier()
 
-      const wrongVerifier = ssCreatePkceVerifier()
-
-      // Create a verification token
       await emailLogin({ email, codeChallenge: correctCodeChallenge })
 
-      const wrongToken = 'WRONG6'
-
-      // Should throw
       await expect(
         emailVerifyOtp({
           email,
-          token: wrongToken,
+          token: 'WRONGOTP',
           codeVerifier: wrongVerifier,
           logger,
         })
-      ).rejects.toThrow()
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject a wrong OTP with correct codeVerifier', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-      const wrongToken = 'WRONG6'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      await emailLogin({ email, codeChallenge: codeChallenge })
+      await emailLogin({ email, codeChallenge })
       await expect(
-        emailVerifyOtp({ email, token: wrongToken, codeVerifier, logger })
-      ).rejects.toThrow('Token is invalid or has expired')
+        emailVerifyOtp({
+          email,
+          token: 'WRONGOTP',
+          codeVerifier,
+          logger,
+        })
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should reject an expired OTP with correct codeVerifier', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      const { token, hashedToken } = createAuthToken({
-        email,
-        codeChallenge: codeChallenge,
-      })
+      await emailLogin({ email, codeChallenge })
+      const token = getIssuedOtp()
 
-      const vfnIdentifier = createVfnIdentifier({
-        email,
-        codeChallenge: codeChallenge,
-      })
-      // Create a verification token with an old issuedAt date
-      const oldDate = add(new Date(), { seconds: -700 }) // 700 seconds ago (beyond 600s expiry)
-      await db.verificationToken.create({
+      const record = await db.verificationToken.findFirstOrThrow()
+      await db.verificationToken.update({
+        where: { identifier: record.identifier },
         data: {
-          identifier: vfnIdentifier,
-          token: hashedToken,
-          issuedAt: oldDate,
+          // Beyond the configured 600s OTP_EXPIRY
+          issuedAt: add(new Date(), { seconds: -700 }),
         },
       })
 
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow('Token is invalid or has expired')
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
 
     it('should increment attempts on each verification try', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-      const wrongToken = 'WRONG6'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      await emailLogin({ email, codeChallenge: codeChallenge })
-      const identifier = createVfnIdentifier({ email, codeChallenge })
-      // Make 2 failed attempts
+      await emailLogin({ email, codeChallenge })
+      const identifier = (await db.verificationToken.findFirstOrThrow())
+        .identifier
+
       for (let i = 1; i <= 2; i++) {
         await expect(
-          emailVerifyOtp({ email, token: wrongToken, codeVerifier, logger })
-        ).rejects.toThrow()
+          emailVerifyOtp({
+            email,
+            token: 'WRONGOTP',
+            codeVerifier,
+            logger,
+          })
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
         })
@@ -223,59 +209,60 @@ describe('auth.service', () => {
 
     it('should reject after too many failed attempts (>5)', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-      const token = 'WRONG6'
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      await emailLogin({ email, codeChallenge: codeChallenge })
+      await emailLogin({ email, codeChallenge })
 
-      // Make 5 failed attempts
       for (let i = 0; i < 5; i++) {
         await expect(
-          emailVerifyOtp({ email, token, codeVerifier, logger })
-        ).rejects.toThrow()
+          emailVerifyOtp({
+            email,
+            token: 'WRONGOTP',
+            codeVerifier,
+            logger,
+          })
+        ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
       }
 
-      // 6th attempt should give TOO_MANY_REQUESTS
       await expect(
-        emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow('Wrong OTP was entered too many times')
+        emailVerifyOtp({
+          email,
+          token: 'WRONGOTP',
+          codeVerifier,
+          logger,
+        })
+      ).rejects.toThrow(TOO_MANY_ATTEMPTS_MESSAGE)
     })
 
     it('should delete verification token after successful verification', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-      const { token } = await emailLogin({ email, codeChallenge })
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
+
+      await emailLogin({ email, codeChallenge })
+      const token = getIssuedOtp()
 
       await emailVerifyOtp({ email, token, codeVerifier, logger })
 
-      // Token should be deleted
-      const vfnIdentifier = createVfnIdentifier({
-        email,
-        codeChallenge: codeChallenge,
-      })
-      const verificationToken = await db.verificationToken.findUnique({
-        where: { identifier: vfnIdentifier },
-      })
-      expect(verificationToken).toBeNull()
+      expect(await db.verificationToken.count()).toBe(0)
     })
 
     it('should prevent token reuse after successful verification', async () => {
       const email = 'test@example.com'
-      const codeVerifier = ssCreatePkceVerifier()
-      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
-      const { token } = await emailLogin({ email, codeChallenge })
+      const codeVerifier = createPkceVerifier()
+      const codeChallenge = await createPkceChallenge(codeVerifier)
 
-      // First verification succeeds
+      await emailLogin({ email, codeChallenge })
+      const token = getIssuedOtp()
+
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).resolves.toBeDefined()
+      ).resolves.toEqual({ email })
 
-      // Second verification with same token should fail
       await expect(
         emailVerifyOtp({ email, token, codeVerifier, logger })
-      ).rejects.toThrow()
+      ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
     })
   })
 })
