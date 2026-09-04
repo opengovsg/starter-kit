@@ -1,1 +1,1 @@
-export { default } from '@acme/oxlint-config/oxfmt.ts'
+export { default } from '@acme/oxfmt-config'

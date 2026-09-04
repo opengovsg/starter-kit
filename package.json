@@ -23,7 +23,7 @@
     "vercel-build": "turbo run vercel-build"
   },
   "devDependencies": {
-    "@acme/oxlint-config": "workspace:*",
+    "@acme/oxfmt-config": "workspace:*",
     "@turbo/gen": "^2.10.5",
     "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",
