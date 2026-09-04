@@ -14,6 +14,8 @@ export default defineConfig({
     {
       files: ['**/*.{js,ts,tsx}'],
       rules: {
+        // React Compiler handles memoization; manual useMemo/useCallback is unnecessary.
+        'react/jsx-no-constructed-context-values': 'off',
         'no-restricted-properties': [
           'error',
           {

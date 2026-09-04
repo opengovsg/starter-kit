@@ -2,14 +2,7 @@
 
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { createContext, useContext, useRef, useState } from 'react'
 
 import { useInterval } from 'usehooks-ts'
 
@@ -67,7 +60,7 @@ export const SignInWizardProvider = ({
 
   const challengeToVerifierMap = useRef(new Map<string, string>())
 
-  const newChallenge = useCallback(async (): Promise<string | undefined> => {
+  const newChallenge = async (): Promise<string | undefined> => {
     try {
       const verifier = browserCreatePkceVerifier()
       const challenge = await browserCreatePkceChallenge(verifier)
@@ -77,20 +70,18 @@ export const SignInWizardProvider = ({
       console.error(error)
     }
     return undefined
-  }, [])
+  }
 
-  const getVerifier = useCallback(
-    (challenge: string) => challengeToVerifierMap.current.get(challenge),
-    []
-  )
+  const getVerifier = (challenge: string) =>
+    challengeToVerifierMap.current.get(challenge)
 
-  const clearVerifierMap = useCallback(() => {
+  const clearVerifierMap = () => {
     challengeToVerifierMap.current.clear()
-  }, [])
+  }
 
-  const resetTimer = useCallback(() => {
+  const resetTimer = () => {
     setTimer(delayForResendSeconds)
-  }, [delayForResendSeconds])
+  }
 
   // Start the resend timer once in the vfn step.
   useInterval(
@@ -100,28 +91,18 @@ export const SignInWizardProvider = ({
     vfnStepData !== undefined && timer > 0 ? 1000 : null
   )
 
-  const value = useMemo(
-    () => ({
-      clearVerifierMap,
-      getVerifier,
-      newChallenge,
-      resetTimer,
-      setVfnStepData,
-      timer,
-      vfnStepData,
-    }),
-    [
-      clearVerifierMap,
-      getVerifier,
-      newChallenge,
-      resetTimer,
-      timer,
-      vfnStepData,
-    ]
-  )
-
   return (
-    <SignInWizardContext.Provider value={value}>
+    <SignInWizardContext.Provider
+      value={{
+        clearVerifierMap,
+        getVerifier,
+        newChallenge,
+        resetTimer,
+        setVfnStepData,
+        timer,
+        vfnStepData,
+      }}
+    >
       {children}
     </SignInWizardContext.Provider>
   )

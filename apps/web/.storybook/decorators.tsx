@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import type { Decorator } from '@storybook/nextjs-vite'
 import {
   defaultShouldDehydrateQuery,
@@ -63,7 +61,7 @@ export const AppDecorator: Decorator = (Story, context) => {
     ? globalThis.window.location.origin
     : 'http://localhost:6006'
 
-  const trpcClient = useMemo(() => createStorybookTrpcClient(baseUrl), [baseUrl])
+  const trpcClient = createStorybookTrpcClient(baseUrl)
 
   return (
     <main className="flex min-h-dvh flex-col">

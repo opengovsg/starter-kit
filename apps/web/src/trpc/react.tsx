@@ -1,7 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
-
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCClient, httpLink, loggerLink } from '@trpc/client'
 import { createTRPCContext } from '@trpc/tanstack-react-query'
@@ -61,11 +59,21 @@ const createBrowserTrpcClient = () =>
     ],
   })
 
+let browserTrpcClient: ReturnType<typeof createBrowserTrpcClient> | undefined
+
+const getTrpcClient = () => {
+  if (!hasWindow()) {
+    return createBrowserTrpcClient()
+  }
+  browserTrpcClient ??= createBrowserTrpcClient()
+  return browserTrpcClient
+}
+
 export const { useTRPC, TRPCProvider } = createTRPCContext<AppRouter>()
 
 export const TRPCReactProvider = (props: { children: React.ReactNode }) => {
   const queryClient = getQueryClient()
-  const trpcClient = useMemo(() => createBrowserTrpcClient(), [])
+  const trpcClient = getTrpcClient()
 
   return (
     <QueryClientProvider client={queryClient}>
