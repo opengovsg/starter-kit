@@ -7,8 +7,8 @@ interface LandingPageHeaderProps {
   isAuthed: boolean
 }
 
-export const LandingPageHeader = ({ isAuthed }: LandingPageHeaderProps) => {
-  return (
+export const LandingPageHeader = ({ isAuthed }: LandingPageHeaderProps) => 
+  (
     <div className="col-span-full flex items-center justify-between py-2.5 md:col-span-10 md:col-start-2 md:py-18">
       <Link href="/">Starter Kit</Link>
       <div className="text-subhead-1 flex items-center gap-4 md:gap-8 xl:gap-10">
@@ -21,4 +21,4 @@ export const LandingPageHeader = ({ isAuthed }: LandingPageHeaderProps) => {
       </div>
     </div>
   )
-}
+

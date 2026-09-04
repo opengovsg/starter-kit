@@ -23,10 +23,10 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
   const [newChallengePending, setNewChallengePending] = useState(false)
 
   const { handleSubmit, setError, control } = useForm({
-    resolver: zodResolver(emailSignInSchema.omit({ codeChallenge: true })),
     defaultValues: {
       email: '',
     },
+    resolver: zodResolver(emailSignInSchema.omit({ codeChallenge: true })),
   })
 
   const [queryError, setQueryError] = useQueryState('error', {
@@ -37,43 +37,51 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
 
   const loginMutation = useMutation(
     trpc.auth.email.login.mutationOptions({
-      onMutate: () => {
-        return setQueryError('')
+      onError: (error) => {
+        setError('email', { message: error.message })
+      },
+      onMutate: async () => {
+        await setQueryError('')
       },
       onSuccess: (res, req) => {
-        return onNext({
+        onNext({
+          codeChallenge: req.codeChallenge,
           email: res.email,
           otpPrefix: res.otpPrefix,
-          codeChallenge: req.codeChallenge,
         })
       },
-      onError: (error) => setError('email', { message: error.message }),
     })
   )
 
   const isPending = loginMutation.isPending || newChallengePending
 
+  const handleFormSubmit = async ({ email }: { email: string }) => {
+    if (isPending) {
+      return
+    }
+    setNewChallengePending(true)
+    let codeChallenge: string | undefined
+    try {
+      codeChallenge = await newChallenge()
+    } catch (error) {
+      console.error(error)
+    }
+    setNewChallengePending(false)
+    if (codeChallenge === undefined) {
+      toast.error(
+        'Something went wrong generating a sign-in challenge. Please try again.'
+      )
+      return
+    }
+    loginMutation.mutate({ codeChallenge, email })
+  }
+
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(({ email }) => {
-        if (isPending) return
-        setNewChallengePending(true)
-        newChallenge()
-          .then((codeChallenge) => {
-            if (!codeChallenge) {
-              toast.error(
-                'Something went wrong generating a sign-in challenge. Please try again.'
-              )
-              return
-            }
-            loginMutation.mutate({ email, codeChallenge })
-          })
-          .catch(console.error)
-          .finally(() => {
-            setNewChallengePending(false)
-          })
-      })}
+      onSubmit={(event) => {
+        void handleSubmit(handleFormSubmit)(event)
+      }}
       className="flex flex-1 flex-col gap-4"
     >
       <Controller
@@ -87,7 +95,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
             }}
             errorMessage={error?.message ?? queryError}
             isRequired
-            isInvalid={!!error || !!queryError}
+            isInvalid={error !== undefined || queryError !== ''}
             {...field}
             label="Log in with a .gov.sg or whitelisted email address"
           />

@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../../trpc'
 
@@ -11,7 +11,7 @@ import {
 } from '~/validators/auth'
 
 export const emailAuthRouter = createTRPCRouter({
-  // TODO: Implement rate limiting for auth endpoints
+  // Rate limiting for auth endpoints is handled by the default rate limit middleware.
   login: publicProcedure
     .input(emailSignInSchema)
     .output(
@@ -23,8 +23,8 @@ export const emailAuthRouter = createTRPCRouter({
     .mutation(async ({ input: { email, codeChallenge } }) => {
       // returnedEmail may differ from input email
       const { email: returnedEmail, otpPrefix } = await emailLogin({
-        email,
         codeChallenge,
+        email,
       })
 
       return {
@@ -35,7 +35,7 @@ export const emailAuthRouter = createTRPCRouter({
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
-      await emailVerifyOtp({ email, token, codeVerifier, logger: ctx.logger })
+      await emailVerifyOtp({ codeVerifier, email, logger: ctx.logger, token })
       const user = await loginUserByEmail(email, ctx.logger)
       const sessionId = crypto.randomUUID()
       ctx.session.userId = user.id
@@ -46,11 +46,11 @@ export const emailAuthRouter = createTRPCRouter({
       // client_ip / user_agent from headers) is sufficient; no rebuild needed.
       ctx.logger.audit.authn.sessionCreated({ sessionId, userId: user.id })
       ctx.logger.audit.authn.loginSucceeded({
+        privileged: true,
+        role: 'user',
+        sessionId,
         userId: user.id,
         username: user.email,
-        sessionId,
-        role: 'user',
-        privileged: true,
       })
       return user
     }),

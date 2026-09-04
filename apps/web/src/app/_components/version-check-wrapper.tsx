@@ -15,8 +15,8 @@ import {
 
 import { REQUIRE_UPDATE_EVENT } from '~/constants'
 
-const VersionModal = (props: ModalProps) => {
-  return (
+const VersionModal = (props: ModalProps) => 
+  (
     <Modal {...props}>
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
@@ -41,7 +41,7 @@ const VersionModal = (props: ModalProps) => {
       </ModalContent>
     </Modal>
   )
-}
+
 
 /**
  * Contains the version check banner and modal that will be shown when the

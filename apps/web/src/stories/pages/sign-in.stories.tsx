@@ -8,7 +8,6 @@ import { withChromaticModes } from '@acme/storybook-config'
 import { SignInPageComponent } from '~/app/(public)/sign-in/_components/_page'
 
 const meta: Meta<typeof SignInPageComponent> = {
-  title: 'Pages/SignInPage',
   component: SignInPageComponent,
   decorators: [AppDecorator],
   parameters: {
@@ -18,6 +17,7 @@ const meta: Meta<typeof SignInPageComponent> = {
       handlers: [authHandlers.signIn.success()],
     },
   },
+  title: 'Pages/SignInPage',
 }
 
 export default meta
@@ -43,7 +43,7 @@ export const LoginStepLoading: Story = {
     },
   },
   play: async ({ canvas, userEvent }) => {
-    const emailInput = canvas.getByLabelText(/log in/i)
+    const emailInput = canvas.getByLabelText(/log in/iu)
     const submitButton = canvas.getByRole('button', { name: 'Get OTP' })
 
     await userEvent.type(emailInput, 'example@gov.sg')
@@ -53,7 +53,7 @@ export const LoginStepLoading: Story = {
 
 export const VerifyOtpStep: Story = {
   play: async ({ canvas, userEvent }) => {
-    const emailInput = canvas.getByLabelText(/log in/i)
+    const emailInput = canvas.getByLabelText(/log in/iu)
     const submitButton = canvas.getByRole('button', { name: 'Get OTP' })
 
     await userEvent.type(emailInput, 'example@gov.sg')
@@ -64,9 +64,9 @@ export const VerifyOtpStep: Story = {
 export const VerifyOtpStepError: Story = {
   play: async ({ canvas, context, userEvent }) => {
     await VerifyOtpStep.play?.(context)
-    await waitFor(() => {
+    await waitFor(async () => {
       const submitButton = canvas.getByRole('button', { name: 'Log in' })
-      return userEvent.click(submitButton)
+      await userEvent.click(submitButton)
     })
   },
 }

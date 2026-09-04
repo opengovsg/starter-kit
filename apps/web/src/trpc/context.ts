@@ -12,7 +12,7 @@ export const createContext = cache(async () => {
   const heads = new Headers(await headers())
   heads.set('x-trpc-source', 'rsc')
 
-  return createTRPCContext({
+  return await createTRPCContext({
     headers: heads,
   })
 })

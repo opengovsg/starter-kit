@@ -15,14 +15,14 @@ export const createLogger = ({
   sessionId?: string
 }) =>
   createBaseLogger({
-    path,
-    userId,
+    clientIp: headers.get('cf-connecting-ip'),
+    clientVersion: headers.get(APP_VERSION_HEADER_KEY) ?? undefined,
     // Iron-session id, bound as correlation_id so every line of a session's
     // activity can be grouped back to the session that produced it.
     correlationId: sessionId,
-    source: headers.get('x-trpc-source') ?? 'unknown',
-    clientIp: headers.get('cf-connecting-ip'),
-    userAgent: headers.get('user-agent'),
+    path,
     serverVersion: env.NEXT_PUBLIC_APP_VERSION,
-    clientVersion: headers.get(APP_VERSION_HEADER_KEY) ?? undefined,
+    source: headers.get('x-trpc-source') ?? 'unknown',
+    userAgent: headers.get('user-agent'),
+    userId,
   })
