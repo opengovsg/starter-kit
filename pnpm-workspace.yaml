@@ -100,7 +100,7 @@ minimumReleaseAgeExclude:
   # newer than `minimumReleaseAge`. If the patched version is already >24h
   # old, the cooldown lets it through on its own.
 
-# Under pnpm v11, every package with a build script must be listed here as
+# Under pnpm v12, every package with a build script must be listed here as
 # true (run the script) or false (skip it). Leaving one unlisted throws
 # ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
 allowBuilds:
