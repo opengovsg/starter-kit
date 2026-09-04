@@ -10,8 +10,8 @@ export const LandingSection = ({
 }: PropsWithChildren<{
   className?: string
   classNames?: SlotsToClasses<'section' | 'inner'>
-}>) => {
-  return (
+}>) => 
+  (
     <section className={className ?? classNames?.section}>
       <div
         className={cn(
@@ -23,13 +23,13 @@ export const LandingSection = ({
       </div>
     </section>
   )
-}
+
 
 export const SectionHeader = ({
   children,
   className,
-}: PropsWithChildren<{ className?: string }>) => {
-  return (
+}: PropsWithChildren<{ className?: string }>) => 
+  (
     <h2
       className={cn(
         'md:prose-responsive-heading-heavy-480 prose-responsive-heading-heavy text-base-content-strong',
@@ -39,8 +39,8 @@ export const SectionHeader = ({
       {children}
     </h2>
   )
-}
 
-export const SectionBody = ({ children }: PropsWithChildren) => {
-  return <p className="prose-body-1 text-base-content-default">{children}</p>
-}
+
+export const SectionBody = ({ children }: PropsWithChildren) => 
+  <p className="prose-body-1 text-base-content-default">{children}</p>
+

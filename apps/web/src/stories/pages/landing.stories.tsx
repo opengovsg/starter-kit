@@ -5,16 +5,16 @@ import { withChromaticModes } from '@acme/storybook-config'
 import { LandingPageComponent } from '~/app/(public)/_components/landing-page/_page'
 
 const meta: Meta<typeof LandingPageComponent> = {
-  title: 'Pages/LandingPage',
+  args: {
+    appName: 'Acme',
+    isAuthed: false,
+  },
   component: LandingPageComponent,
   decorators: [],
   parameters: {
     ...withChromaticModes(['desktop', 'tablet', 'mobile']),
   },
-  args: {
-    appName: 'Acme',
-    isAuthed: false,
-  },
+  title: 'Pages/LandingPage',
 }
 
 export default meta

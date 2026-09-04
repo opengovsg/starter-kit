@@ -11,9 +11,9 @@ export const healthcheck = async () => {
     }
   } catch (error) {
     throw new TRPCError({
+      cause: error,
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Healthcheck failed',
-      cause: error,
     })
   }
 }

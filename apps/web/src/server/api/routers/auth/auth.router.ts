@@ -6,13 +6,17 @@ export const authRouter = createTRPCRouter({
   logout: publicProcedure.mutation(({ ctx }) => {
     const { sessionId, userId } = ctx.session
     ctx.session.destroy()
-    if (sessionId && userId) {
+    if (
+      sessionId !== undefined &&
+      sessionId !== '' &&
+      userId !== undefined &&
+      userId !== ''
+    ) {
       ctx.logger.audit.authn.sessionTerminated({
+        reason: 'logout',
         sessionId,
         userId,
-        reason: 'logout',
       })
     }
-    return
   }),
 })

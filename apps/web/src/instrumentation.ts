@@ -1,12 +1,10 @@
-export async function register() {
-  // oxlint-disable-next-line no-restricted-properties
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    // oxlint-disable-next-line no-restricted-properties
-    if (process.env.DD_SERVICE !== undefined) {
-      // setup datadog tracing
-      const { initTracer } = await import('@acme/logging/tracer')
-      // oxlint-disable-next-line no-restricted-properties
-      initTracer({ service: process.env.DD_SERVICE })
-    }
+/* oxlint-disable no-restricted-properties -- Next.js bootstrap/runtime variables are not part of app env schema. */
+export const register = async () => {
+  if (
+    process.env.NEXT_RUNTIME === 'nodejs' &&
+    process.env.DD_SERVICE !== undefined
+  ) {
+    const { initTracer } = await import('@acme/logging/tracer')
+    initTracer({ service: process.env.DD_SERVICE })
   }
 }

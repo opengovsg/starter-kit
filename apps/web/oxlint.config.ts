@@ -9,7 +9,7 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  ignorePatterns: ['*.config.*'],
+  ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {
       files: ['**/*.{js,ts,tsx}'],
@@ -42,9 +42,22 @@ export default defineConfig({
       },
     },
     {
-      files: ['**/__tests__/**'],
+      files: ['**/__tests__/**', 'tests/**', '**/__mocks__/**'],
       rules: {
+        'anti-slop/no-chained-type-assertions': 'off',
+        'anti-slop/no-module-mocking': 'off',
+        'anti-slop/require-safety-comment-for-type-assertion': 'off',
         'typescript/no-unsafe-assignment': 'off',
+        'typescript/no-unsafe-type-assertion': 'off',
+        'vitest/prefer-describe-function-title': 'off',
+      },
+    },
+    {
+      files: ['tests/e2e/**'],
+      rules: {
+        'typescript/no-unsafe-call': 'off',
+        'typescript/no-unsafe-member-access': 'off',
+        'vitest/prefer-importing-vitest-globals': 'off',
       },
     },
   ],

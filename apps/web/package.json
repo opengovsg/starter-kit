@@ -61,6 +61,7 @@
     "@acme/oxlint-config": "workspace:*",
     "@acme/storybook-config": "workspace:*",
     "@acme/tailwind-config": "workspace:*",
+    "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@opengovsg/testcontainers": "^0.2.0",
     "@playwright/test": "catalog:playwright",
