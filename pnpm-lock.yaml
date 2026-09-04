@@ -298,6 +298,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/storybook-config':
         specifier: workspace:*
         version: link:../../tooling/storybook
@@ -422,6 +425,9 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -465,6 +471,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -511,6 +520,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -548,6 +560,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -597,6 +612,9 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1(tailwind-merge@3.4.0)(tailwindcss@4.3.3)
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -628,6 +646,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../../tooling/oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -654,6 +675,9 @@ importers:
 
   tooling/storybook:
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../typescript
@@ -682,6 +706,9 @@ importers:
         specifier: catalog:tailwindcss4
         version: 4.3.3
     devDependencies:
+      '@acme/oxlint-config':
+        specifier: workspace:*
+        version: link:../oxlint
       '@acme/tsconfig':
         specifier: workspace:*
         version: link:../typescript

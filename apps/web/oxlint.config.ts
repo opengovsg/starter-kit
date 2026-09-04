@@ -1,6 +1,6 @@
 import { defineConfig } from 'oxlint'
 
-import sharedConfig from '../../tooling/oxlint/shared.ts'
+import sharedConfig from '@acme/oxlint-config/shared'
 
 export default defineConfig({
   extends: [sharedConfig],
