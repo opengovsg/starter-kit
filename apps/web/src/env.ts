@@ -34,6 +34,7 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.url(),
+    // OTP expiry time in seconds
     OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
     PORT: z.coerce.number().default(3000),
     POSTMAN_API_KEY: z.string().optional(),

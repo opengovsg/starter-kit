@@ -204,6 +204,7 @@ describe('user.service', () => {
 
       await Promise.all(
         users.map(async (user) => {
+          // Each user should have one account
           const accounts = await db.account.findMany({
             where: {
               provider: AccountProvider.Email,
