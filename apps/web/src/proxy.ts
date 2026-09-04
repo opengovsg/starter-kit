@@ -30,12 +30,7 @@ const cspPolicyKeys = [
   'style-src',
 ] as const satisfies readonly (keyof CspPolicy)[]
 
-const sortSources = (sources: string[]): string[] => {
-  const copy = [...sources]
-  // oxlint-disable-next-line unicorn/no-array-sort -- sorting a local copy for CSP header output.
-  copy.sort()
-  return copy
-}
+const sortSources = (sources: string[]): string[] => [...sources].toSorted()
 
 /**
  * Merges multiple security policies into a single policy string.
@@ -91,10 +86,8 @@ const vercelLivePolicy = {
 }
 
 export const proxy = (request: NextRequest) => {
-  // oxlint-disable-next-line no-restricted-properties
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
   const isDev =
-    // oxlint-disable-next-line no-restricted-properties
     process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
   // Read more on how to use this nonce with custom scripts:

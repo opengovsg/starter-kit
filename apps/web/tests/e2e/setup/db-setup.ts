@@ -51,9 +51,7 @@ export const applyMigrations = async (container: DatabaseContainer) => {
   )
 
   // Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs
-  const directory = readdirSync(prismaMigrationDir)
-  // oxlint-disable-next-line unicorn/no-array-sort -- migration filenames must be applied in order.
-  directory.sort()
+  const directory = readdirSync(prismaMigrationDir).toSorted()
   for (const file of directory) {
     const name = `${prismaMigrationDir}/${file}`
     if (statSync(name).isDirectory()) {

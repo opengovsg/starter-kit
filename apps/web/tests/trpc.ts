@@ -1,4 +1,5 @@
 import type { IronSession } from 'iron-session'
+import { vi } from 'vitest'
 
 import { createBaseLogger } from '@acme/logging'
 
@@ -20,12 +21,9 @@ const createMockSession = (
   sessionData?: SessionData
 ): IronSession<SessionData> => ({
   ...sessionData,
-  // oxlint-disable-next-line typescript/no-empty-function
-  destroy: () => {},
-  // oxlint-disable-next-line typescript/no-empty-function
-  save: async () => {},
-  // oxlint-disable-next-line typescript/no-empty-function
-  updateConfig: () => {},
+  destroy: vi.fn<() => void>(),
+  save: vi.fn<() => Promise<void>>(),
+  updateConfig: vi.fn<() => void>(),
 })
 
 /**
