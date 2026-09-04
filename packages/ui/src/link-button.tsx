@@ -26,23 +26,21 @@ export const LinkButton = ({
   endContent,
   radius,
   ...props
-}: LinkButtonProps) => {
-  return (
-    <Link
-      {...props}
-      className={buttonStyles({
-        isAttached,
-        isIconOnly,
-        size,
-        variant,
-        color,
-        className,
-        radius,
-      })}
-    >
-      {startContent}
-      {props.children}
-      {endContent}
-    </Link>
-  )
-}
+}: LinkButtonProps) => (
+  <Link
+    {...props}
+    className={buttonStyles({
+      className,
+      color,
+      isAttached,
+      isIconOnly,
+      radius,
+      size,
+      variant,
+    })}
+  >
+    {startContent}
+    {props.children}
+    {endContent}
+  </Link>
+)

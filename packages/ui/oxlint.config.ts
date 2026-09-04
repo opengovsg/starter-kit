@@ -6,7 +6,7 @@ import { react } from '@acme/oxlint-config/presets.ts'
 export default defineConfig({
   extends: [sharedConfig, react],
   options: {
-    typeAware: true,
     reportUnusedDisableDirectives: 'off',
+    typeAware: true,
   },
 })
