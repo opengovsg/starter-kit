@@ -20,11 +20,11 @@ interface FooterProps {
   }[]
 }
 
-export function RestrictedFooter({
+export const RestrictedFooter = ({
   appName,
   navLinks = EMPTY_NAV_LINKS,
   socialMediaLinks = DEFAULT_SOCIAL_MEDIA_LINKS,
-}: FooterProps) {
+}: FooterProps) => {
   const currentYear = new Date().getFullYear()
 
   return (
