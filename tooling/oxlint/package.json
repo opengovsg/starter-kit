@@ -6,7 +6,11 @@
   "description": "Shared Oxlint rules (TypeScript; consumed via extends imports).",
   "exports": {
     ".": "./package.ts",
-    "./shared": "./shared.ts"
+    "./shared.ts": "./shared.ts",
+    "./presets.ts": "./presets.ts"
+  },
+  "dependencies": {
+    "ultracite": "catalog:"
   },
   "devDependencies": {
     "oxlint": "catalog:"
