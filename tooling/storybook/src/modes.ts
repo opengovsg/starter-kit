@@ -8,15 +8,15 @@ import type { ViewportKey } from './viewports'
 
 export type ChromaticModeKey = 'mobile' | 'tablet' | 'desktop'
 
-export const modes: Record<ChromaticModeKey, { viewport: ViewportKey }> = {
+export const modes = {
+  desktop: {
+    viewport: 'xl',
+  },
   mobile: {
     viewport: 'sm',
   },
   tablet: {
     viewport: 'md',
-  },
-  desktop: {
-    viewport: 'xl',
   },
   // You can also combine modes by passing in the appropriate parameters
   // "dark desktop": {
@@ -24,9 +24,8 @@ export const modes: Record<ChromaticModeKey, { viewport: ViewportKey }> = {
   //   theme: "dark",
   //   viewport: "lg",
   // },
-}
+} as const satisfies Record<ChromaticModeKey, { viewport: ViewportKey }>
 
 // Mainly for typing available viewports for use in storybook
-export const getViewportByMode = (viewport: ChromaticModeKey) => {
-  return modes[viewport].viewport
-}
+export const getViewportByMode = (viewport: ChromaticModeKey) =>
+  modes[viewport].viewport

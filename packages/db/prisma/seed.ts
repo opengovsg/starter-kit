@@ -1,20 +1,19 @@
 /**
  * Adds seed data to your db
  *
- * @link https://www.prisma.io/docs/guides/database/seed-database
+ * @see https://www.prisma.io/docs/guides/database/seed-database
  */
 import { db } from '../src/index'
 
-async function main() {
+const main = async () => {
   // Add seed data here
 }
 
-main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-
-  .finally(async () => {
-    await db.$disconnect()
-  })
+try {
+  await main()
+} catch (error: unknown) {
+  console.error(error)
+  process.exit(1)
+} finally {
+  await db.$disconnect()
+}
