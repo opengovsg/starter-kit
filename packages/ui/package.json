@@ -30,6 +30,7 @@
     "tailwind-variants": "^3.1.1"
   },
   "devDependencies": {
+    "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "oxfmt": "catalog:",
