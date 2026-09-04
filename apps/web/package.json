@@ -58,6 +58,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@acme/oxlint-config": "workspace:*",
     "@acme/storybook-config": "workspace:*",
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",

@@ -18,6 +18,7 @@
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
+    "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
