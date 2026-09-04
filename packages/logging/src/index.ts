@@ -8,20 +8,20 @@ const service =
   process.env.DD_SERVICE ??
   (process.env.NEXT_PUBLIC_APP_NAME ?? 'starter-kit')
     .toLowerCase()
-    .replace(/\s+/g, '-')
+    .replaceAll(/\s+/gu, '-')
 
 // Instantiate once per process. `createBaseLogger(scope)` builds a
 // request-scoped logger; `createBaseLogger.system(scope)` for request-less
 // contexts (cron, boot, scripts).
 export const createBaseLogger = createLogging({
-  service,
   env: env.NEXT_PUBLIC_APP_ENV,
-  version: env.NEXT_PUBLIC_APP_VERSION,
   level: env.NODE_ENV === 'test' ? 'silent' : env.LOG_LEVEL,
   pretty: env.NODE_ENV === 'development',
+  service,
+  version: env.NEXT_PUBLIC_APP_VERSION,
 })
 
-export type { Logger }
+export type { Logger } from '@opengovsg/logging'
 export type ScopedLogger = Logger
 
 export interface WithLogger {
