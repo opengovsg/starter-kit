@@ -1,4 +1,3 @@
-/* oxlint-disable vitest/prefer-importing-vitest-globals -- Playwright tests use @playwright/test expect, not Vitest. */
 import { expect } from '@playwright/test'
 
 import { test as e2eTest } from './app-fixture'
