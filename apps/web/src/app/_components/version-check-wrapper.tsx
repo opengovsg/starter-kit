@@ -15,33 +15,31 @@ import {
 
 import { REQUIRE_UPDATE_EVENT } from '~/constants'
 
-const VersionModal = (props: ModalProps) => 
-  (
-    <Modal {...props}>
-      <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
-          Update available
-        </ModalHeader>
-        <ModalBody>
-          A new version of this app is available. Please refresh the page to get
-          the latest version.
-        </ModalBody>
-        <ModalFooter>
-          <Button slot="close" color="neutral" variant="clear">
-            Cancel
-          </Button>
-          <Button
-            onPress={() => {
-              window.location.reload()
-            }}
-          >
-            Refresh
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  )
-
+const VersionModal = (props: ModalProps) => (
+  <Modal {...props}>
+    <ModalContent>
+      <ModalHeader className="flex flex-col gap-1">
+        Update available
+      </ModalHeader>
+      <ModalBody>
+        A new version of this app is available. Please refresh the page to get
+        the latest version.
+      </ModalBody>
+      <ModalFooter>
+        <Button slot="close" color="neutral" variant="clear">
+          Cancel
+        </Button>
+        <Button
+          onPress={() => {
+            window.location.reload()
+          }}
+        >
+          Refresh
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
+)
 
 /**
  * Contains the version check banner and modal that will be shown when the

@@ -17,7 +17,9 @@ export const govEmailSchema = emailSchema.refine(
   (email) => {
     const parsedEmail = parseOneAddress(email)
     // Should not happen due to emailSchema validation
-    if (!parsedEmail || parsedEmail.type === 'group') {return false}
+    if (!parsedEmail || parsedEmail.type === 'group') {
+      return false
+    }
     return (
       parsedEmail.domain === 'gov.sg' || parsedEmail.domain.endsWith('.gov.sg')
     )

@@ -11,10 +11,7 @@ import { callerFactory } from '~/trpc/caller'
  * @param req - The Next.js request object
  * @param resHeaders - Optional response headers object for rate limit headers
  */
-export const createApiCaller = async (
-  req: NextRequest,
-  resHeaders?: Headers
-) =>
+export const createApiCaller = async (req: NextRequest, resHeaders?: Headers) =>
   callerFactory(
     await createTRPCContext({
       headers: req.headers,

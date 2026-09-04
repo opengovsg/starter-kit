@@ -13,11 +13,9 @@ export const authHandlers = {
         }
       }),
     success: () =>
-      trpcMsw.auth.email.login.mutation(() => (
-        {
-          email: 'test@example.com',
-          otpPrefix: 'TST',
-        }
-      )),
+      trpcMsw.auth.email.login.mutation(() => ({
+        email: 'test@example.com',
+        otpPrefix: 'TST',
+      })),
   },
 }

@@ -29,7 +29,7 @@ export const OPTIONS = () => {
 const handler = async (req: NextRequest) => {
   const response = await fetchRequestHandler({
     allowBatching: false,
-    createContext:  async ({ resHeaders }) =>
+    createContext: async ({ resHeaders }) =>
       await createTRPCContext({
         headers: req.headers,
         resHeaders,

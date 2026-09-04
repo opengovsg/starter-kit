@@ -21,10 +21,9 @@ export const createVfnIdentifier = ({
 }: {
   email: string
   codeChallenge: string
-}) => 
+}) =>
   // Use a JSON stringified array to avoid ambiguity, avoids string concatenation issues
   JSON.stringify([email, codeChallenge])
-
 
 const createTokenHash = ({
   token,

@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest'
+
 import {
   createAuthToken,
   createVfnIdentifier,
@@ -246,7 +247,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
-      const tamperedHash = `${hashedToken.slice(0, -1)  }X`
+      const tamperedHash = `${hashedToken.slice(0, -1)}X`
 
       const isValid = isValidToken({
         codeChallenge: testCodeChallenge,
