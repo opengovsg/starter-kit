@@ -9,7 +9,9 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
+  // Playwright e2e tests live under tests/e2e and use @playwright/test, not Vitest.
+  // Excluding them avoids vitest/* rules firing on *.test.ts filenames.
+  ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js', 'tests/e2e/**'],
   overrides: [
     {
       files: ['**/*.{js,ts,tsx}'],
@@ -52,14 +54,6 @@ export default defineConfig({
         'typescript/no-unsafe-assignment': 'off',
         'typescript/no-unsafe-type-assertion': 'off',
         'vitest/prefer-describe-function-title': 'off',
-      },
-    },
-    {
-      files: ['tests/e2e/**'],
-      rules: {
-        'typescript/no-unsafe-call': 'off',
-        'typescript/no-unsafe-member-access': 'off',
-        'vitest/prefer-importing-vitest-globals': 'off',
       },
     },
   ],
