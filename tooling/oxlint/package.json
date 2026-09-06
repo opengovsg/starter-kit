@@ -7,12 +7,15 @@
   "exports": {
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
-    "./presets.ts": "./presets.ts"
+    "./presets.ts": "./presets.ts",
+    "./react-doctor.ts": "./react-doctor.ts",
+    "./next-react-doctor.ts": "./next-react-doctor.ts"
   },
   "dependencies": {
     "ultracite": "catalog:"
   },
   "devDependencies": {
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "oxlint-plugin-react-doctor": "catalog:"
   }
 }

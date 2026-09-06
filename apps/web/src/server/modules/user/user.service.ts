@@ -14,23 +14,24 @@ export const loginUserByEmail = async (email: string, logger?: Logger) => {
   }
 
   const { loggedInUser, isNewUser } = await db.$transaction(async (tx) => {
-    const existing = await tx.user.findUnique({
-      select: { id: true },
-      where: { email },
-    })
-
-    const transactionUser = await tx.user.upsert({
-      create: {
-        email,
-        lastLogin: new Date(),
-        name: parsedEmail.name,
-      },
-      select: defaultUserSelect,
-      update: {
-        lastLogin: new Date(),
-      },
-      where: { email },
-    })
+    const [existing, transactionUser] = await Promise.all([
+      tx.user.findUnique({
+        select: { id: true },
+        where: { email },
+      }),
+      tx.user.upsert({
+        create: {
+          email,
+          lastLogin: new Date(),
+          name: parsedEmail.name,
+        },
+        select: defaultUserSelect,
+        update: {
+          lastLogin: new Date(),
+        },
+        where: { email },
+      }),
+    ])
 
     await tx.account.upsert({
       create: {
