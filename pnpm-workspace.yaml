@@ -8,6 +8,7 @@ catalog:
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
   'oxlint': ^1.90.0
+  'oxlint-plugin-react-doctor': ^0.9.18
   'oxlint-tsgolint': ^7.0.2005
   dd-trace: ^6.21.0
   dotenv-cli: ^11.0.0

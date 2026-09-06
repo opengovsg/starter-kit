@@ -1,14 +1,21 @@
 import { defineConfig } from 'oxlint'
 
+import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
+import {
+  reactDoctor,
+  reactDoctorSettings,
+} from '@acme/oxlint-config/react-doctor.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, react, next, vitest],
+  extends: [sharedConfig, react, next, vitest, reactDoctor, nextReactDoctor],
+  jsPlugins: reactDoctor.jsPlugins,
   options: {
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
+  settings: reactDoctorSettings,
   ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {
