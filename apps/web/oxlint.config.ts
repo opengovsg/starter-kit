@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint'
 
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
-import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
+import { jsxA11y, next, react, vitest } from '@acme/oxlint-config/presets.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
@@ -9,7 +9,15 @@ import {
 import sharedConfig from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, react, next, vitest, reactDoctor, nextReactDoctor],
+  extends: [
+    sharedConfig,
+    react,
+    jsxA11y,
+    next,
+    vitest,
+    reactDoctor,
+    nextReactDoctor,
+  ],
   jsPlugins: reactDoctor.jsPlugins,
   options: {
     typeAware: true,

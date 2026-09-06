@@ -8,6 +8,7 @@
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
     "./presets.ts": "./presets.ts",
+    "./jsx-a11y.ts": "./jsx-a11y.ts",
     "./react-doctor.ts": "./react-doctor.ts",
     "./next-react-doctor.ts": "./next-react-doctor.ts"
   },
