@@ -86,6 +86,7 @@
     "msw-trpc": "^2.0.1",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
+    "oxlint-plugin-react-doctor": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "playwright": "catalog:playwright",
     "storybook": "catalog:storybook10",

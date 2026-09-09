@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import type { SlotsToClasses } from '@opengovsg/oui-theme'
 import {
   BiSolidCheckCircle,
@@ -35,7 +33,7 @@ export const Infobox = ({
 }: InfoboxProps) => {
   const styles = infoboxStyles({ size, variant })
 
-  const icon = useMemo(() => {
+  const icon = (() => {
     // `null` hides the icon; `undefined` falls through to the variant default.
     if (iconProp === null) {
       return null
@@ -60,7 +58,7 @@ export const Infobox = ({
         return <BiSolidInfoCircle className={iconClassName} />
       }
     }
-  }, [classNames?.icon, iconProp, styles, variant])
+  })()
 
   return (
     <div

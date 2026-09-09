@@ -3,7 +3,7 @@ import { forbidden, notFound, redirect } from 'next/navigation'
 import { callerFactory } from './caller'
 import { createContext } from './context'
 
-import { SIGN_OUT_API_ROUTE } from '~/constants'
+import { LOGIN_ROUTE } from '~/constants'
 
 const handleCallerError = (error: { code: string }) => {
   if (error.code === 'NOT_FOUND') {
@@ -11,7 +11,7 @@ const handleCallerError = (error: { code: string }) => {
     return
   }
   if (error.code === 'UNAUTHORIZED') {
-    redirect(SIGN_OUT_API_ROUTE)
+    redirect(LOGIN_ROUTE)
     return
   }
   if (error.code === 'FORBIDDEN') {
