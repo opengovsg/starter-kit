@@ -29,7 +29,7 @@ A technical kit to quickly build new products from
         └─ CI with pnpm cache setup
 .vscode
   └─ Recommended extensions and settings for VSCode users
-.oxfmtrc.jsonc
+oxfmt.config.ts
   └─ Oxfmt formatter configuration
 apps
   └─ web
