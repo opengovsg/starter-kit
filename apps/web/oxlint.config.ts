@@ -9,11 +9,13 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  ignorePatterns: ['*.config.*'],
+  ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {
       files: ['**/*.{js,ts,tsx}'],
       rules: {
+        // React Compiler handles memoization; manual useMemo/useCallback is unnecessary.
+        'react/jsx-no-constructed-context-values': 'off',
         'no-restricted-properties': [
           'error',
           {
@@ -42,9 +44,28 @@ export default defineConfig({
       },
     },
     {
-      files: ['**/__tests__/**'],
+      files: ['src/proxy.ts', 'src/instrumentation.ts'],
       rules: {
+        'no-restricted-properties': 'off',
+        'no-restricted-imports': 'off',
+      },
+    },
+    {
+      files: ['tests/e2e/**'],
+      rules: {
+        'no-empty-pattern': 'off',
+        'react-hooks/rules-of-hooks': 'off',
+      },
+    },
+    {
+      files: ['**/__tests__/**', 'tests/**', '**/__mocks__/**'],
+      rules: {
+        'anti-slop/no-chained-type-assertions': 'off',
+        'anti-slop/no-module-mocking': 'off',
+        'anti-slop/require-safety-comment-for-type-assertion': 'off',
         'typescript/no-unsafe-assignment': 'off',
+        'typescript/no-unsafe-type-assertion': 'off',
+        'vitest/prefer-describe-function-title': 'off',
       },
     },
   ],

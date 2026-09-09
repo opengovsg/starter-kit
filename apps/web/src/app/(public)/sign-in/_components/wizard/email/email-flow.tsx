@@ -13,10 +13,10 @@ export const EmailFlow = () => {
     otpPrefix,
     codeChallenge,
   }: VfnStepData) => {
-    setVfnStepData({ email, otpPrefix, codeChallenge })
+    setVfnStepData({ codeChallenge, email, otpPrefix })
   }
 
-  if (vfnStepData?.email) {
+  if (vfnStepData?.email !== undefined && vfnStepData.email !== '') {
     return <VerificationStep />
   }
 

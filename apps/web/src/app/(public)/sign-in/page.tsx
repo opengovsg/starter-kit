@@ -5,12 +5,14 @@ import { SignInPageComponent } from './_components/_page'
 import { AUTHED_ROOT_ROUTE } from '~/constants'
 import { getSession } from '~/server/session'
 
-export default async function SignInPage() {
+const SignInPage = async () => {
   const session = await getSession()
 
-  if (session.userId) {
+  if (session.userId !== undefined && session.userId !== '') {
     redirect(AUTHED_ROOT_ROUTE)
   }
 
   return <SignInPageComponent />
 }
+
+export default SignInPage

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest'
 import { resetTables } from '~tests/db/utils'
 import { createTestCaller, createTestContext } from '~tests/trpc'
 
@@ -10,12 +11,12 @@ describe('meRouter', () => {
 
   describe('get', () => {
     it('should throw UNAUTHORIZED error when user is not authenticated', async () => {
-      const ctx = createTestContext(undefined)
+      const ctx = createTestContext()
       const caller = createTestCaller(ctx)
 
       await expect(caller.me.get()).rejects.toMatchObject({
-        name: 'TRPCError',
         code: 'UNAUTHORIZED',
+        name: 'TRPCError',
       })
     })
 
@@ -32,11 +33,11 @@ describe('meRouter', () => {
       const caller = createTestCaller(ctx)
       const result = await caller.me.get()
 
-      expect(result).toEqual({
-        id: testUser.id,
+      expect(result).toStrictEqual({
         email: 'test@example.com',
-        name: 'Test User',
+        id: testUser.id,
         image: null,
+        name: 'Test User',
       })
     })
 
@@ -70,11 +71,11 @@ describe('meRouter', () => {
       const caller = createTestCaller(ctx)
       const result = await caller.me.get()
 
-      expect(result).toEqual({
-        id: user2.id,
+      expect(result).toStrictEqual({
         email: 'user2@example.com',
-        name: 'User Two',
+        id: user2.id,
         image: null,
+        name: 'User Two',
       })
       expect(result?.id).not.toBe(user1.id)
     })

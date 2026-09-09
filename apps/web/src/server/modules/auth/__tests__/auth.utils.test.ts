@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import {
   createAuthToken,
   createVfnIdentifier,
@@ -6,19 +8,19 @@ import {
 } from '../auth.utils'
 
 describe('auth.utils', () => {
-  describe('createVfnIdentifier', () => {
+  describe(createVfnIdentifier, () => {
     it('should create different identifiers for different codeChallenges with same email', () => {
       const email = 'test@example.com'
       const codeChallenge1 = 'codeChallenge-1'
       const codeChallenge2 = 'codeChallenge-2'
 
       const identifier1 = createVfnIdentifier({
-        email,
         codeChallenge: codeChallenge1,
+        email,
       })
       const identifier2 = createVfnIdentifier({
-        email,
         codeChallenge: codeChallenge2,
+        email,
       })
 
       expect(identifier1).not.toBe(identifier2)
@@ -29,16 +31,16 @@ describe('auth.utils', () => {
       const codeChallenge = 'test-codeChallenge'
 
       const identifier1 = createVfnIdentifier({
+        codeChallenge,
         email,
-        codeChallenge: codeChallenge,
       })
       const identifier2 = createVfnIdentifier({
+        codeChallenge,
         email,
-        codeChallenge: codeChallenge,
       })
       const identifier3 = createVfnIdentifier({
+        codeChallenge,
         email,
-        codeChallenge: codeChallenge,
       })
 
       expect(identifier1).toBe(identifier2)
@@ -46,10 +48,10 @@ describe('auth.utils', () => {
     })
   })
 
-  describe('createVfnPrefix', () => {
+  describe(createVfnPrefix, () => {
     it('should only contain uppercase letters from the allowed alphabet', () => {
       const prefix = createVfnPrefix()
-      const allowedChars = /^[ABCDEFGHJKLMNPQRSTUVWXYZ]+$/
+      const allowedChars = /^[ABCDEFGHJKLMNPQRSTUVWXYZ]+$/u
       expect(prefix).toMatch(allowedChars)
     })
 
@@ -77,7 +79,7 @@ describe('auth.utils', () => {
     })
   })
 
-  describe('createAuthToken', () => {
+  describe(createAuthToken, () => {
     const testEmail = 'test@example.com'
     const testCodeChallenge = 'test-codeChallenge-123'
 
@@ -86,8 +88,8 @@ describe('auth.utils', () => {
       const tokens = Array.from({ length: N }).map(
         () =>
           createAuthToken({
-            email: testEmail,
             codeChallenge: testCodeChallenge,
+            email: testEmail,
           }).token
       )
 
@@ -96,16 +98,16 @@ describe('auth.utils', () => {
 
     it('should generate different tokens for the same email and codeChallenge on multiple calls', () => {
       const result1 = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
       const result2 = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
       const result3 = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
 
       expect(result1.token).not.toBe(result2.token)
@@ -118,12 +120,12 @@ describe('auth.utils', () => {
       const email2 = 'user2@example.com'
 
       const result1 = createAuthToken({
-        email: email1,
         codeChallenge: testCodeChallenge,
+        email: email1,
       })
       const result2 = createAuthToken({
-        email: email2,
         codeChallenge: testCodeChallenge,
+        email: email2,
       })
 
       // Hashes should be different due to email being used as salt
@@ -135,12 +137,12 @@ describe('auth.utils', () => {
       const codeChallenge2 = 'codeChallenge-2'
 
       const result1 = createAuthToken({
-        email: testEmail,
         codeChallenge: codeChallenge1,
+        email: testEmail,
       })
       const result2 = createAuthToken({
-        email: testEmail,
         codeChallenge: codeChallenge2,
+        email: testEmail,
       })
 
       // Hashes should be different due to codeChallenge being part of the hash input
@@ -153,8 +155,8 @@ describe('auth.utils', () => {
         { length: 50 },
         () =>
           createAuthToken({
-            email: testEmail,
             codeChallenge: testCodeChallenge,
+            email: testEmail,
           }).token
       )
       const combinedString = tokens.join('')
@@ -166,144 +168,144 @@ describe('auth.utils', () => {
     })
   })
 
-  describe('isValidToken', () => {
+  describe(isValidToken, () => {
     const testEmail = 'test@example.com'
     const testCodeChallenge = 'test-codeChallenge-123'
 
     it('should return true for a valid token and hash combination', () => {
       const { token, hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
 
       const isValid = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token,
       })
 
-      expect(isValid).toBe(true)
+      expect(isValid).toBeTruthy()
     })
 
     it('should return false for an invalid token', () => {
       const { hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
       const { token: invalidToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
 
       const isValid = isValidToken({
-        token: invalidToken,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token: invalidToken,
       })
 
-      expect(isValid).toBe(false)
+      expect(isValid).toBeFalsy()
     })
 
     it('should return false for a different email', () => {
       const { token, hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
       const differentEmail = 'different@example.com'
 
       const isValid = isValidToken({
-        token,
-        email: differentEmail,
         codeChallenge: testCodeChallenge,
+        email: differentEmail,
         hash: hashedToken,
+        token,
       })
 
-      expect(isValid).toBe(false)
+      expect(isValid).toBeFalsy()
     })
 
     it('should return false for a different codeChallenge', () => {
       const { token, hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
       const differentCodeChallenge = 'different-codeChallenge'
 
       const isValid = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: differentCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token,
       })
 
-      expect(isValid).toBe(false)
+      expect(isValid).toBeFalsy()
     })
 
     it('should return false for a tampered hash', () => {
       const { token, hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
-      const tamperedHash = hashedToken.slice(0, -1) + 'X'
+      const tamperedHash = `${hashedToken.slice(0, -1)}X`
 
       const isValid = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: tamperedHash,
+        token,
       })
 
-      expect(isValid).toBe(false)
+      expect(isValid).toBeFalsy()
     })
 
     it('should handle multiple validation attempts consistently', () => {
       const { token, hashedToken } = createAuthToken({
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
       })
 
       const result1 = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token,
       })
 
       const result2 = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token,
       })
 
       const result3 = isValidToken({
-        token,
-        email: testEmail,
         codeChallenge: testCodeChallenge,
+        email: testEmail,
         hash: hashedToken,
+        token,
       })
 
-      expect(result1).toBe(true)
-      expect(result2).toBe(true)
-      expect(result3).toBe(true)
+      expect(result1).toBeTruthy()
+      expect(result2).toBeTruthy()
+      expect(result3).toBeTruthy()
     })
 
     it('should validate tokens with special characters in email', () => {
       const specialEmail = 'user+tag@example.com'
       const { token, hashedToken } = createAuthToken({
-        email: specialEmail,
         codeChallenge: testCodeChallenge,
+        email: specialEmail,
       })
 
       const isValid = isValidToken({
-        token,
-        email: specialEmail,
         codeChallenge: testCodeChallenge,
+        email: specialEmail,
         hash: hashedToken,
+        token,
       })
 
-      expect(isValid).toBe(true)
+      expect(isValid).toBeTruthy()
     })
   })
 
@@ -313,45 +315,45 @@ describe('auth.utils', () => {
       const codeChallenge = 'session-codeChallenge-123'
 
       // Create token
-      const { token, hashedToken } = createAuthToken({ email, codeChallenge })
+      const { token, hashedToken } = createAuthToken({ codeChallenge, email })
 
       // Validate token
       const isValid = isValidToken({
-        token,
-        email,
         codeChallenge,
+        email,
         hash: hashedToken,
+        token,
       })
 
       expect(hashedToken).toBeTruthy()
-      expect(isValid).toBe(true)
+      expect(isValid).toBeTruthy()
     })
 
     it('should create unique tokens for multiple users with different codeChallenges', () => {
       const users = [
-        { email: 'user1@example.com', codeChallenge: 'codeChallenge-1' },
-        { email: 'user2@example.com', codeChallenge: 'codeChallenge-2' },
-        { email: 'user3@example.com', codeChallenge: 'codeChallenge-3' },
+        { codeChallenge: 'codeChallenge-1', email: 'user1@example.com' },
+        { codeChallenge: 'codeChallenge-2', email: 'user2@example.com' },
+        { codeChallenge: 'codeChallenge-3', email: 'user3@example.com' },
       ]
 
       const tokens = users.map(({ email, codeChallenge }) => {
         const { token, hashedToken } = createAuthToken({
+          codeChallenge,
           email,
-          codeChallenge: codeChallenge,
         })
-        return { email, codeChallenge, token, hashedToken }
+        return { codeChallenge, email, hashedToken, token }
       })
 
       // Verify each token is valid for its own email and codeChallenge
-      tokens.forEach(({ email, codeChallenge, token, hashedToken }) => {
+      for (const { email, codeChallenge, token, hashedToken } of tokens) {
         const isValid = isValidToken({
-          token,
+          codeChallenge,
           email,
-          codeChallenge: codeChallenge,
           hash: hashedToken,
+          token,
         })
-        expect(isValid).toBe(true)
-      })
+        expect(isValid).toBeTruthy()
+      }
 
       // Verify tokens are unique
       const tokenStrings = tokens.map((t) => t.token)
@@ -366,51 +368,51 @@ describe('auth.utils', () => {
 
       // Create token for session 1
       const { token: token1, hashedToken: hash1 } = createAuthToken({
-        email,
         codeChallenge: codeChallenge1,
+        email,
       })
 
       // Create token for session 2
       const { token: token2, hashedToken: hash2 } = createAuthToken({
-        email,
         codeChallenge: codeChallenge2,
+        email,
       })
 
       // Token from session 1 should not validate with codeChallenge from session 2
       const crossValidation1 = isValidToken({
-        token: token1,
-        email,
         codeChallenge: codeChallenge2,
+        email,
         hash: hash1,
+        token: token1,
       })
-      expect(crossValidation1).toBe(false)
+      expect(crossValidation1).toBeFalsy()
 
       // Token from session 2 should not validate with codeChallenge from session 1
       const crossValidation2 = isValidToken({
-        token: token2,
-        email,
         codeChallenge: codeChallenge1,
+        email,
         hash: hash2,
+        token: token2,
       })
-      expect(crossValidation2).toBe(false)
+      expect(crossValidation2).toBeFalsy()
 
       // But each token should still work with its own codeChallenge
       expect(
         isValidToken({
-          token: token1,
-          email,
           codeChallenge: codeChallenge1,
+          email,
           hash: hash1,
+          token: token1,
         })
-      ).toBe(true)
+      ).toBeTruthy()
       expect(
         isValidToken({
-          token: token2,
-          email,
           codeChallenge: codeChallenge2,
+          email,
           hash: hash2,
+          token: token2,
         })
-      ).toBe(true)
+      ).toBeTruthy()
     })
   })
 })

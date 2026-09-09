@@ -22,5 +22,5 @@ export const useAuth = () => {
     })
   )
 
-  return { user, logout: logoutMutation.mutate }
+  return { logout: logoutMutation.mutate, user }
 }

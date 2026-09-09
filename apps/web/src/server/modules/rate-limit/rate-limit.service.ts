@@ -21,11 +21,11 @@ export const RATE_LIMIT_BURST_NAMESPACE_KEY = 'rate-limit-burst:'
  * you foresee usage in a shared network environment.
  */
 const defaultConfig: Required<RateLimiterConfig> = {
-  points: 2,
-  duration: 1,
-  burstPoints: 5,
   burstDuration: 10,
+  burstPoints: 5,
+  duration: 1,
   keyPrefix: 'app',
+  points: 2,
 }
 
 // Cache for rate limiters by config
@@ -42,15 +42,15 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
 
   // In-memory fallback limiter
   const memoryLimiter = new RateLimiterMemory({
-    points: mergedConfig.points,
     duration: mergedConfig.duration,
+    points: mergedConfig.points,
   })
 
   // If no Redis, use memory-only limiter
   if (!redis) {
     const memoryBurstLimiter = new RateLimiterMemory({
-      points: mergedConfig.burstPoints,
       duration: mergedConfig.burstDuration,
+      points: mergedConfig.burstPoints,
     })
 
     const limiter = new BurstyRateLimiter(memoryLimiter, memoryBurstLimiter)
@@ -60,23 +60,23 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
 
   const limiter = new BurstyRateLimiter(
     new RateLimiterRedis({
-      storeClient: redis,
-      rejectIfRedisNotReady: true,
-      points: mergedConfig.points,
       duration: mergedConfig.duration,
-      keyPrefix: `${RATE_LIMIT_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
       insuranceLimiter: memoryLimiter,
+      keyPrefix: `${RATE_LIMIT_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
+      points: mergedConfig.points,
+      rejectIfRedisNotReady: true,
+      storeClient: redis,
     }),
     new RateLimiterRedis({
-      storeClient: redis,
-      rejectIfRedisNotReady: true,
-      points: mergedConfig.burstPoints,
       duration: mergedConfig.burstDuration,
-      keyPrefix: `${RATE_LIMIT_BURST_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
       insuranceLimiter: new RateLimiterMemory({
-        points: mergedConfig.burstPoints,
         duration: mergedConfig.burstDuration,
+        points: mergedConfig.burstPoints,
       }),
+      keyPrefix: `${RATE_LIMIT_BURST_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
+      points: mergedConfig.burstPoints,
+      rejectIfRedisNotReady: true,
+      storeClient: redis,
     })
   )
 
@@ -104,7 +104,7 @@ export const checkRateLimit = async ({
   pointsToConsume?: number
 }): Promise<RateLimiterRes> => {
   const limiter = createRateLimiter(options)
-  return limiter.consume(key, pointsToConsume)
+  return await limiter.consume(key, pointsToConsume)
 }
 
 export const createRateLimitFingerprint = ({
@@ -116,7 +116,7 @@ export const createRateLimitFingerprint = ({
   ipAddress: string | null
   path: string
 }) => {
-  if (userId) {
+  if (userId !== undefined && userId !== '') {
     return `userId:${userId}:${path}`
   }
   // Process IP address and replace colons so Redis keys stay compatible with the common

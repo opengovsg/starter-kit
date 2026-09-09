@@ -13,37 +13,37 @@ export const loginUserByEmail = async (email: string, logger?: Logger) => {
     throw new Error('Invalid email address')
   }
 
-  const { user, isNewUser } = await db.$transaction(async (tx) => {
+  const { loggedInUser, isNewUser } = await db.$transaction(async (tx) => {
     const existing = await tx.user.findUnique({
-      where: { email },
       select: { id: true },
+      where: { email },
     })
 
-    const user = await tx.user.upsert({
-      where: { email },
+    const transactionUser = await tx.user.upsert({
+      create: {
+        email,
+        lastLogin: new Date(),
+        name: parsedEmail.name,
+      },
+      select: defaultUserSelect,
       update: {
         lastLogin: new Date(),
       },
-      create: {
-        email,
-        name: parsedEmail.name,
-        lastLogin: new Date(),
-      },
-      select: defaultUserSelect,
+      where: { email },
     })
 
     await tx.account.upsert({
+      create: {
+        provider: AccountProvider.Email,
+        providerAccountId: parsedEmail.address,
+        userId: transactionUser.id,
+      },
+      update: {},
       where: {
         provider_providerAccountId: {
           provider: AccountProvider.Email,
           providerAccountId: parsedEmail.address,
         },
-      },
-      update: {},
-      create: {
-        provider: AccountProvider.Email,
-        providerAccountId: parsedEmail.address,
-        userId: user.id,
       },
     })
     // isNewUser is read at READ COMMITTED, so two concurrent first-ever logins
@@ -51,23 +51,22 @@ export const loginUserByEmail = async (email: string, logger?: Logger) => {
     // once. Unreachable in the OTP flow (needs two valid OTPs submitted in the
     // same instant) and a duplicate audit line dedupes at the sink. If a flow
     // makes this reachable, take a pg advisory lock or use SERIALIZABLE + retry.
-    return { user, isNewUser: !existing }
+    return { isNewUser: !existing, loggedInUser: transactionUser }
   })
 
   // A first email login is a self-signup: the acting user is the account just
   // created, so bind user_id before emitting to attribute the actor (== target).
   if (isNewUser) {
     logger
-      ?.withBindings({ userId: user.id })
-      .audit.userManagement.accountCreated({ targetUserId: user.id })
+      ?.withBindings({ userId: loggedInUser.id })
+      .audit.userManagement.accountCreated({ targetUserId: loggedInUser.id })
   }
 
-  return user
+  return loggedInUser
 }
 
-export const getUserById = async (userId: string) => {
-  return await db.user.findUnique({
-    where: { id: userId },
+export const getUserById = async (userId: string) =>
+  await db.user.findUnique({
     select: defaultUserSelect,
+    where: { id: userId },
   })
-}

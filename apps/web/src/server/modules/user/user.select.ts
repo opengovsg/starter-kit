@@ -6,8 +6,8 @@ import type { Prisma } from '@acme/db/client'
  * @see https://github.com/prisma/prisma/issues/9353
  */
 export const defaultUserSelect = {
-  id: true,
   email: true,
+  id: true,
   image: true,
   name: true,
 } satisfies Prisma.UserSelect

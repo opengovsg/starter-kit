@@ -16,41 +16,60 @@ interface CspPolicy {
   'connect-src'?: string[]
 }
 
+const cspPolicyKeys = [
+  'base-uri',
+  'connect-src',
+  'default-src',
+  'font-src',
+  'form-action',
+  'frame-ancestors',
+  'frame-src',
+  'img-src',
+  'object-src',
+  'script-src',
+  'style-src',
+] as const satisfies readonly (keyof CspPolicy)[]
+
+const sortSources = (sources: string[]): string[] => [...sources].toSorted()
+
 /**
  * Merges multiple security policies into a single policy string.
  */
-function generateCspHeader(policies: CspPolicy[]): string {
-  const combined = policies.reduce((combined, policy) => {
-    Object.keys(policy).forEach((_directive) => {
-      const directive = _directive as keyof CspPolicy
-      const sources = Array.from(
-        new Set([...(combined[directive] ?? []), ...(policy[directive] ?? [])])
-      )
-      combined[directive] = sources
+const generateCspHeader = (policies: CspPolicy[]): string => {
+  const merged: CspPolicy = {}
+
+  for (const policy of policies) {
+    for (const key of cspPolicyKeys) {
+      const sources = policy[key]
+      if (sources === undefined) {
+        continue
+      }
+      merged[key] = [...new Set([...(merged[key] ?? []), ...sources])]
+    }
+  }
+
+  const baseDirectives = cspPolicyKeys
+    .filter((key) => merged[key] !== undefined)
+    .map((key) => {
+      const sources: string[] = merged[key] ?? []
+      const sortedSources = sortSources(sources)
+      return `${key} ${sortedSources.join(' ')}`
     })
-
-    return combined
-  }, {})
-
-  const baseDirectives = Object.entries(combined).map(
-    ([directive, sources]) =>
-      `${directive} ${(sources as string[]).sort().join(' ')}`
-  )
 
   return [...baseDirectives, 'upgrade-insecure-requests'].join('; ')
 }
 
 const defaultPolicy: CspPolicy = {
-  'default-src': ["'self'"],
-  'script-src': ["'self'"],
-  'connect-src': ["'self'"],
-  'style-src': ["'self'", "'unsafe-inline'"],
-  'img-src': ["'self'", 'data:', 'blob:'],
-  'font-src': ["'self'"],
   'base-uri': ["'self'"],
+  'connect-src': ["'self'"],
+  'default-src': ["'self'"],
+  'font-src': ["'self'"],
   'form-action': ["'self'"],
   'frame-ancestors': ["'none'"],
   'frame-src': ["'self'"],
+  'img-src': ["'self'", 'data:', 'blob:'],
+  'script-src': ["'self'"],
+  'style-src': ["'self'", "'unsafe-inline'"],
 }
 
 const vercelLivePolicy = {
@@ -59,18 +78,16 @@ const vercelLivePolicy = {
     'https://*.pusher.com',
     'wss://*.pusher.com',
   ],
+  'font-src': ['https://vercel.live'],
+  'frame-src': ['https://vercel.live'],
   'img-src': ['https://vercel.com'],
   'script-src': ['https://vercel.live'],
   'style-src': ['https://vercel.live'],
-  'font-src': ['https://vercel.live'],
-  'frame-src': ['https://vercel.live'],
 }
 
-export function proxy(request: NextRequest) {
-  // oxlint-disable-next-line no-restricted-properties
+export const proxy = (request: NextRequest) => {
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
   const isDev =
-    // oxlint-disable-next-line no-restricted-properties
     process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
   // Read more on how to use this nonce with custom scripts:
@@ -87,7 +104,7 @@ export function proxy(request: NextRequest) {
 
   // Replace newline characters and spaces
   const contentSecurityPolicyHeaderValue = cspHeader
-    .replace(/\s{2,}/g, ' ')
+    .replaceAll(/\s{2,}/gu, ' ')
     .trim()
 
   const requestHeaders = new Headers(request.headers)
@@ -123,11 +140,11 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!_next/static|_next/image|favicon.ico).*)',
       missing: [
-        { type: 'header', key: 'next-router-prefetch' },
-        { type: 'header', key: 'purpose', value: 'prefetch' },
+        { key: 'next-router-prefetch', type: 'header' },
+        { key: 'purpose', type: 'header', value: 'prefetch' },
       ],
+      source: '/((?!_next/static|_next/image|favicon.ico).*)',
     },
     // Not combined with the above rule to avoid proxy bypassing for API requests with specific headers
     '/(api)(.*)',

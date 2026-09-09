@@ -16,7 +16,7 @@ const makeAuditLoggerStub = () => {
       audit: { userManagement: { accountCreated } },
     }),
   } as unknown as Logger
-  return { logger, accountCreated }
+  return { accountCreated, logger }
 }
 
 describe('user.service', () => {
@@ -24,15 +24,16 @@ describe('user.service', () => {
     await resetTables(['VerificationToken', 'User', 'Account'])
   })
 
-  describe('loginUserByEmail', () => {
+  describe(loginUserByEmail, () => {
     it('should create a new user and account for a new email', async () => {
       const email = 'newuser@example.com'
 
       const user = await loginUserByEmail(email)
 
-      expect(user).toBeDefined()
-      expect(user.email).toBe(email)
-      expect(user.id).toBeTruthy()
+      expect(user).toMatchObject({
+        email,
+        id: expect.any(String),
+      })
 
       // Verify user was created in database
       const dbUser = await db.user.findUnique({
@@ -44,12 +45,15 @@ describe('user.service', () => {
       // Verify account was created
       const account = await db.account.findFirst({
         where: {
-          userId: user.id,
           provider: AccountProvider.Email,
+          userId: user.id,
         },
       })
-      expect(account).toBeDefined()
-      expect(account?.providerAccountId).toBe(email)
+      expect(account).toStrictEqual(
+        expect.objectContaining({
+          providerAccountId: email,
+        })
+      )
     })
 
     it('should emit accountCreated audit only for a first-time (new) user', async () => {
@@ -57,12 +61,12 @@ describe('user.service', () => {
       const { logger, accountCreated } = makeAuditLoggerStub()
 
       const user = await loginUserByEmail(email, logger)
-      expect(accountCreated).toHaveBeenCalledTimes(1)
+      expect(accountCreated).toHaveBeenCalledOnce()
       expect(accountCreated).toHaveBeenCalledWith({ targetUserId: user.id })
 
       // A returning login must not re-emit the signup event.
       await loginUserByEmail(email, logger)
-      expect(accountCreated).toHaveBeenCalledTimes(1)
+      expect(accountCreated).toHaveBeenCalledOnce()
     })
 
     it('should parse and store the name from email address', async () => {
@@ -107,8 +111,8 @@ describe('user.service', () => {
       // Should only have one account in database
       const accounts = await db.account.findMany({
         where: {
-          userId: user1.id,
           provider: AccountProvider.Email,
+          userId: user1.id,
         },
       })
       expect(accounts).toHaveLength(1)
@@ -149,8 +153,8 @@ describe('user.service', () => {
 
       const account = await db.account.findFirst({
         where: {
-          userId: user.id,
           provider: AccountProvider.Email,
+          userId: user.id,
         },
       })
       expect(account?.providerAccountId).toBe(email)
@@ -167,8 +171,8 @@ describe('user.service', () => {
       })
       const account = await db.account.findFirst({
         where: {
-          userId: user.id,
           provider: AccountProvider.Email,
+          userId: user.id,
         },
       })
 
@@ -185,7 +189,7 @@ describe('user.service', () => {
       ]
 
       const users = await Promise.all(
-        emails.map((email) => loginUserByEmail(email))
+        emails.map(async (email) => await loginUserByEmail(email))
       )
 
       // All users should have unique IDs
@@ -194,20 +198,22 @@ describe('user.service', () => {
       expect(uniqueIds.size).toBe(emails.length)
 
       // All users should have correct emails
-      users.forEach((user, index) => {
+      for (const [index, user] of users.entries()) {
         expect(user.email).toBe(emails[index])
-      })
-
-      // Each user should have one account
-      for (const user of users) {
-        const accounts = await db.account.findMany({
-          where: {
-            userId: user.id,
-            provider: AccountProvider.Email,
-          },
-        })
-        expect(accounts).toHaveLength(1)
       }
+
+      await Promise.all(
+        users.map(async (user) => {
+          // Each user should have one account
+          const accounts = await db.account.findMany({
+            where: {
+              provider: AccountProvider.Email,
+              userId: user.id,
+            },
+          })
+          expect(accounts).toHaveLength(1)
+        })
+      )
     })
 
     it('should preserve user data on subsequent upserts', async () => {
@@ -218,8 +224,8 @@ describe('user.service', () => {
 
       // Manually update user data
       await db.user.update({
-        where: { id: user1.id },
         data: { image: 'https://example.com/avatar.jpg' },
+        where: { id: user1.id },
       })
 
       // Second upsert
@@ -246,7 +252,7 @@ describe('user.service', () => {
     })
   })
 
-  describe('getUserById', () => {
+  describe(getUserById, () => {
     it('should return user when user exists', async () => {
       const email = 'getuser@example.com'
       const createdUser = await db.user.create({
@@ -256,8 +262,8 @@ describe('user.service', () => {
       const user = await getUserById(createdUser.id)
 
       expect(user).toStrictEqual({
-        id: createdUser.id,
         email,
+        id: createdUser.id,
         image: null,
         name: 'Test user',
       })

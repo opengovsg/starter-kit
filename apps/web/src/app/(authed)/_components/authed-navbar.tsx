@@ -50,7 +50,12 @@ export const AuthedNavbar = () => {
             </Button>
             <Menu>
               <MenuSection title={user.email}>
-                <MenuItem startContent={<BiLogOut />} onPress={() => logout()}>
+                <MenuItem
+                  startContent={<BiLogOut />}
+                  onPress={() => {
+                    logout()
+                  }}
+                >
                   Logout
                 </MenuItem>
               </MenuSection>
