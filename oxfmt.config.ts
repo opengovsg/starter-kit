@@ -1,11 +1,14 @@
 import { defineConfig } from 'oxfmt'
+import ultracite from 'ultracite/oxfmt'
 
 export default defineConfig({
-  ignorePatterns: ['turbo/generators/templates/**/*.hbs'],
-  printWidth: 80,
+  ...ultracite,
+  ignorePatterns: [
+    ...(ultracite.ignorePatterns ?? []),
+    'turbo/generators/templates/**/*.hbs',
+  ],
   semi: false,
   singleQuote: true,
-  trailingComma: 'es5',
   sortTailwindcss: {
     functions: ['cn', 'cva'],
   },

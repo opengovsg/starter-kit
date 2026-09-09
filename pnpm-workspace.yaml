@@ -7,7 +7,7 @@ catalog:
   '@hookform/resolvers': ^5.2.2
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
-  'oxlint': ^1.64.0
+  'oxlint': ^1.79.0
   'oxlint-tsgolint': ^0.22.1
   dd-trace: ^6.1.0
   dotenv-cli: ^11.0.0
@@ -18,6 +18,7 @@ catalog:
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
   typescript: ^7.0.2
+  ultracite: ^7.10.7
   zod: ^4.2.1
 
 catalogs:
