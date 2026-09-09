@@ -15,8 +15,8 @@ export interface TextFieldProps extends BaseTextFieldProps {
   >
 }
 
-// TODO: Upstream TextField changes into @opengovsg/oui
-export function TextField({
+// Upstream TextField changes into @opengovsg/oui when ready.
+export const TextField = ({
   label,
   description,
   errorMessage,
@@ -28,44 +28,42 @@ export function TextField({
   startContent,
   endContent,
   ...props
-}: TextFieldProps) {
-  return (
-    <AriaTextField
-      {...props}
-      className={composeTailwindRenderProps(
-        className ?? classNames?.base,
-        'flex flex-col gap-2'
-      )}
-    >
-      {label && (
-        <Label size={size} className={classNames?.label}>
-          {label}
-        </Label>
-      )}
-      <Group className={classNames?.inputGroup}>
-        {startContent}
-        <Input
-          size={size}
-          variant={variant}
-          className={classNames?.input}
-          {...inputProps}
-        />
-        {endContent}
-      </Group>
-      {description && (
-        <Description size={size} className={classNames?.description}>
-          {description}
-        </Description>
-      )}
-      <FieldError
+}: TextFieldProps) => (
+  <AriaTextField
+    {...props}
+    className={composeTailwindRenderProps(
+      className ?? classNames?.base,
+      'flex flex-col gap-2'
+    )}
+  >
+    {label !== undefined && label !== null ? (
+      <Label size={size} className={classNames?.label}>
+        {label}
+      </Label>
+    ) : null}
+    <Group className={classNames?.inputGroup}>
+      {startContent}
+      <Input
         size={size}
-        classNames={{
-          icon: 'shrink-0 h-5',
-          text: cn('flex-nowrap items-start', classNames?.error),
-        }}
-      >
-        {errorMessage}
-      </FieldError>
-    </AriaTextField>
-  )
-}
+        variant={variant}
+        className={classNames?.input}
+        {...inputProps}
+      />
+      {endContent}
+    </Group>
+    {description !== undefined && description !== null ? (
+      <Description size={size} className={classNames?.description}>
+        {description}
+      </Description>
+    ) : null}
+    <FieldError
+      size={size}
+      classNames={{
+        icon: 'shrink-0 h-5',
+        text: cn('flex-nowrap items-start', classNames?.error),
+      }}
+    >
+      {errorMessage}
+    </FieldError>
+  </AriaTextField>
+)
