@@ -4,8 +4,8 @@ import { env } from './env'
 import { kyselyPrismaExtension } from './extensions'
 import { PrismaClient } from './generated/prisma/client'
 
-const globalForPrisma = global as unknown as {
-  prisma: ReturnType<typeof createPrisma>
+declare global {
+  var prisma: ReturnType<typeof createPrisma> | undefined
 }
 
 const createPrisma = () => {
@@ -17,10 +17,11 @@ const createPrisma = () => {
   return prisma
 }
 
-// oxlint-disable-next-line typescript/no-unnecessary-condition
-export const db = globalForPrisma.prisma || createPrisma()
+export const db = globalThis.prisma ?? createPrisma()
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.prisma = db
+}
 
 // This export is needed to avoid the TypeScript error:
 // The inferred type of 'prisma' cannot be named without a reference to '../node_modules/@repo/database/src/generated/prisma'.

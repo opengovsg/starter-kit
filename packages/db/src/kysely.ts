@@ -1,3 +1,8 @@
-export * from './generated/kysely/types'
-
-export { sql } from 'kysely'
+export type {
+  Account,
+  DB,
+  Generated,
+  Timestamp,
+  User,
+  VerificationToken,
+} from './generated/kysely/types'
