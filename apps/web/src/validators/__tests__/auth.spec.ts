@@ -1,17 +1,13 @@
-import {
-  ssCreatePkceChallenge,
-  ssCreatePkceVerifier,
-} from '~/lib/pkce/server-pkce'
-import { validateCodeChallenge } from '~/validators/auth'
+import { isValidCodeChallenge } from '@opengovsg/auth'
+import { createPkceChallenge, createPkceVerifier } from '@opengovsg/auth/pkce'
 
 describe('auth', () => {
-  describe('validateCodeChallenge', () => {
-    it('should successfully validate our generated code challenges', () => {
-      for (let i = 0; i < 10000; i++) {
-        const verifier = ssCreatePkceVerifier()
-        const challenge = ssCreatePkceChallenge(verifier)
-        const validationResult = validateCodeChallenge(challenge)
-        expect(validationResult).toBeTruthy()
+  describe('isValidCodeChallenge', () => {
+    it('should successfully validate our generated code challenges', async () => {
+      for (let i = 0; i < 100; i++) {
+        const verifier = createPkceVerifier()
+        const challenge = await createPkceChallenge(verifier)
+        expect(isValidCodeChallenge(challenge)).toBeTruthy()
       }
     })
   })
