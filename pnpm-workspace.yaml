@@ -9,7 +9,7 @@ catalog:
   '@types/node': ^24.10.4
   'oxlint': ^1.64.0
   'oxlint-tsgolint': ^0.22.1
-  dd-trace: ^6.1.0
+  dd-trace: ^6.16.0
   dotenv-cli: ^11.0.0
   oxfmt: ^0.41.0
   prisma-extension-kysely: ^4.0.0
@@ -22,8 +22,8 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.2.12
-    next: 16.2.12
+    '@next/env': 16.3.6
+    next: 16.3.6
   oui:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
@@ -43,11 +43,11 @@ catalogs:
     '@tanstack/react-query': ^5.101.4
     '@tanstack/react-query-devtools': ^5.101.4
   storybook10:
-    '@storybook/addon-a11y': 10.5.9
-    '@storybook/addon-docs': 10.5.9
-    '@storybook/addon-vitest': 10.5.9
-    '@storybook/nextjs-vite': 10.5.9
-    storybook: 10.5.9
+    '@storybook/addon-a11y': 10.6.0
+    '@storybook/addon-docs': 10.6.0
+    '@storybook/addon-vitest': 10.6.0
+    '@storybook/nextjs-vite': 10.6.0
+    storybook: 10.6.0
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
@@ -61,10 +61,10 @@ catalogs:
     '@trpc/server': ^11.18.0
     '@trpc/tanstack-react-query': ^11.18.0
   vitest:
-    '@vitest/browser': 4.1.8
-    '@vitest/browser-playwright': 4.1.8
-    '@vitest/coverage-v8': 4.1.8
-    vitest: 4.1.8
+    '@vitest/browser': 4.1.11
+    '@vitest/browser-playwright': 4.1.11
+    '@vitest/coverage-v8': 4.1.11
+    vitest: 4.1.11
 
 linkWorkspacePackages: true
 
@@ -95,14 +95,16 @@ minimumReleaseAgeExclude:
   #
   # We publish this scope ourselves, so the cooldown does nothing useful:
   - '@opengovsg/*'
+  # CVE fix, still <24h old when pinned (see pnpm-workspace.yaml catalogs.next):
+  - next@16.3.6
   #
   # Leave empty otherwise. Only add a pinned entry when the security fix is
   # newer than `minimumReleaseAge`. If the patched version is already >24h
   # old, the cooldown lets it through on its own.
 
-# Under pnpm v11, every package with a build script must be listed here as
-# true (run the script) or false (skip it). Leaving one unlisted throws
-# ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
+  # Under pnpm v11, every package with a build script must be listed here as
+  # true (run the script) or false (skip it). Leaving one unlisted throws
+  # ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
@@ -141,6 +143,11 @@ overrides:
   'lodash@4': '^4.17.24'
   # Pinned by next@16.2.11 which still ships postcss 8.4.31:
   'postcss@8': '^8.5.25'
+  # Pinned by prisma@7.9.1 -> @prisma/config / @prisma/internals / prisma-kysely
+  # (deepmerge-ts, fast-uri) and prisma@7.9.1's mysql2 driver dep directly:
+  deepmerge-ts@<8.0.0: ^8.0.0
+  fast-uri@>=3.0.0 <3.1.6: ^3.1.6
+  mysql2@<3.22.0: ^3.22.0
 
 # Fail install if a package's publishing trust drops vs earlier releases
 # (Trusted Publisher > provenance > none). Stolen maintainer credentials
