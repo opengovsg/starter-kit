@@ -46,7 +46,7 @@ jobs:
         uses: ./tooling/github/setup
       - name: Publish to Chromatic
         if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
-        uses: chromaui/action@6b3c2820222d23bad770d57a4ad5e2d1c91f92e9 # v18.9.5
+        uses: chromaui/action@db3ceb5efb0cd7447d63c2d8cce7da732ce89322 # v18.10.1
         with:
           workingDir: apps/web
           storybookBaseDir: apps/web
