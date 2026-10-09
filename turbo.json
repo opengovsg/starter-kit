@@ -79,6 +79,7 @@
     "DD_SERVICE"
   ],
   "globalPassThroughEnv": [
+    "DD_*",
     "NODE_ENV",
     "CI",
     "SKIP_ENV_VALIDATION",

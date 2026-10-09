@@ -249,6 +249,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      dd-trace:
+        specifier: 'catalog:'
+        version: 6.1.0(@openfeature/server-sdk@1.18.0(@openfeature/core@1.9.1))
       email-addresses:
         specifier: ^5.0.0
         version: 5.0.0

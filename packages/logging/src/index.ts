@@ -15,8 +15,8 @@ const service =
 // contexts (cron, boot, scripts).
 export const createBaseLogger = createLogging({
   service,
-  env: env.NEXT_PUBLIC_APP_ENV,
-  version: env.NEXT_PUBLIC_APP_VERSION,
+  env: env.DD_ENV ?? env.NEXT_PUBLIC_APP_ENV,
+  version: env.DD_VERSION ?? env.NEXT_PUBLIC_APP_VERSION,
   level: env.NODE_ENV === 'test' ? 'silent' : env.LOG_LEVEL,
   pretty: env.NODE_ENV === 'development',
 })
