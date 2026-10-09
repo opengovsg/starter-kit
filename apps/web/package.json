@@ -66,6 +66,7 @@
     "@prisma/adapter-pg": "catalog:prisma",
     "@storybook/addon-a11y": "catalog:storybook10",
     "@storybook/addon-docs": "catalog:storybook10",
+    "@storybook/addon-mcp": "catalog:storybook10",
     "@storybook/addon-vitest": "catalog:storybook10",
     "@storybook/nextjs-vite": "catalog:storybook10",
     "@tailwindcss/vite": "catalog:tailwindcss4",
