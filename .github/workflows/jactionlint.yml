@@ -1,3 +1,4 @@
+# Lint GitHub Actions workflows with jactionlint: https://github.com/jdx/jactionlint
 name: jactionlint
 
 on:
