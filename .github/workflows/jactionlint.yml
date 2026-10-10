@@ -25,5 +25,3 @@ jobs:
         with:
           persist-credentials: false
       - uses: jdx/jactionlint@2462f925040c2aa1c88714dc85bc12d869cc4998 # v2.0.2
-        with:
-          profile: correctness
