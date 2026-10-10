@@ -16,7 +16,6 @@
     "lint": "turbo run lint --continue",
     "lint:fix": "turbo run lint --continue -- --fix",
     "lint:ws": "pnpm exec sherif",
-    "jactionlint": "jactionlint",
     "test": "turbo run test",
     "test:ci": "turbo run test:ci",
     "typecheck": "turbo run typecheck",
