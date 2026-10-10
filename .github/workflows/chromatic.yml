@@ -21,7 +21,7 @@ jobs:
   # JOB to run change detection and run specific chromatic jobs only on changes
   changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     # Set job outputs to values from filter step
     outputs:
       web: ${{ steps.filter.outputs.web }}
