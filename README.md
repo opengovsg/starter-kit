@@ -18,6 +18,7 @@ A technical kit to quickly build new products from
   - ✅ Unit testing with [Vitest](https://vitest.dev/)
   - ✅ Visual regression testing with [Storybook](https://storybook.js.org/) + [Chromatic](https://www.chromatic.com/)
   - ✅ Linting
+  - ✅ GitHub Actions workflow linting with [jactionlint](https://github.com/jdx/jactionlint)
   - ✅ Type checking
 - 🔐 Env var validation
 

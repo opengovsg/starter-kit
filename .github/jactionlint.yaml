@@ -1,0 +1,4 @@
+# https://jactionlint.jdx.dev/config
+rules:
+  missing-timeout:
+    default-minutes: 15
