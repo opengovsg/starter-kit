@@ -19,6 +19,8 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
+    DD_ENV: z.string().min(1).optional(),
+    DD_VERSION: z.string().min(1).optional(),
     LOG_LEVEL: z
       .enum(['silent', 'debug', 'info', 'notice', 'warn', 'error'])
       .default('info'),

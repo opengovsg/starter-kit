@@ -19,6 +19,7 @@ import {
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
+import { tracingMiddleware } from './tracing'
 
 import { env } from '~/env'
 import { createLogger } from '~/lib/logger'
@@ -222,6 +223,7 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
 })
 
 const defaultProcedure = t.procedure
+  .use(tracingMiddleware)
   .use(loggerMiddleware)
   .use(rateLimitMiddleware)
 
