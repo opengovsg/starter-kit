@@ -2,7 +2,7 @@ export async function register() {
   // oxlint-disable-next-line no-restricted-properties
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     // oxlint-disable-next-line no-restricted-properties
-    if (process.env.DD_SERVICE !== undefined) {
+    if (process.env.DD_SERVICE) {
       // setup datadog tracing
       const { initTracer, onHttpServerRequest } =
         await import('@acme/logging/tracer')
