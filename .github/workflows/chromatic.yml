@@ -8,6 +8,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 permissions:
   contents: read
   pull-requests: read
@@ -17,11 +21,14 @@ jobs:
   # JOB to run change detection and run specific chromatic jobs only on changes
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # Set job outputs to values from filter step
     outputs:
       web: ${{ steps.filter.outputs.web }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # For pull requests it's not necessary to checkout the code
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: filter
@@ -30,6 +37,7 @@ jobs:
             web:
               - 'apps/web/**'
   web:
+    timeout-minutes: 30
     needs: [changes]
     # Only run if the user is not a bot and has changes
     if: ${{ !endsWith(github.actor , 'bot') && !endsWith(github.actor, '[bot]') && needs.changes.outputs.web == 'true' }}
@@ -40,6 +48,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
         with:
+          persist-credentials: false
           fetch-depth: 0 # Required for v5
       - name: Setup
         if: env.CHROMATIC_WEB_PROJECT_TOKEN != ''
