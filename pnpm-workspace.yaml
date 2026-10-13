@@ -43,12 +43,12 @@ catalogs:
     '@tanstack/react-query': ^5.101.4
     '@tanstack/react-query-devtools': ^5.101.4
   storybook10:
-    '@storybook/addon-a11y': 10.6.0
-    '@storybook/addon-docs': 10.6.0
-    '@storybook/addon-mcp': 10.6.0
-    '@storybook/addon-vitest': 10.6.0
-    '@storybook/nextjs-vite': 10.6.0
-    storybook: 10.6.0
+    '@storybook/addon-a11y': ^10.6.1
+    '@storybook/addon-docs': ^10.6.1
+    '@storybook/addon-mcp': ^10.6.1
+    '@storybook/addon-vitest': ^10.6.1
+    '@storybook/nextjs-vite': ^10.6.1
+    storybook: ^10.6.1
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
@@ -62,10 +62,10 @@ catalogs:
     '@trpc/server': ^11.18.0
     '@trpc/tanstack-react-query': ^11.18.0
   vitest:
-    '@vitest/browser': 4.1.11
-    '@vitest/browser-playwright': 4.1.11
-    '@vitest/coverage-v8': 4.1.11
-    vitest: 4.1.11
+    '@vitest/browser': ^5.0.3
+    '@vitest/browser-playwright': ^5.0.3
+    '@vitest/coverage-v8': ^5.0.3
+    vitest: ^5.0.3
 
 linkWorkspacePackages: true
 
