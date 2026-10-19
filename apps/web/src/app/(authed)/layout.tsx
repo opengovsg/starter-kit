@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { EnvBanner } from '../_components/env-banner'
+import { JavaScriptRequiredNotice } from '../_components/javascript-required-notice'
 import { VersionCheckWrapper } from '../_components/version-check-wrapper'
 import { AuthedNavbar } from './_components/authed-navbar'
 
@@ -25,6 +26,7 @@ export default async function AuthedLayout({ children }: DynamicLayoutProps) {
       <main className="flex min-h-dvh flex-col">
         <EnvBanner />
         <VersionCheckWrapper />
+        <JavaScriptRequiredNotice />
         <AuthedNavbar />
         <div className="container mx-auto flex flex-col gap-4 p-4">
           {children}
