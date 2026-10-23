@@ -1,0 +1,12 @@
+{
+  "name": "OGP Starter Kit",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "web-dev",
+      "command": "bash .cursor/dev.sh"
+    }
+  ],
+  "ports": [3000]
+}
