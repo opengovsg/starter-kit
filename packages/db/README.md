@@ -221,8 +221,9 @@ pnpm format
 ### Default Export (`@acme/db`)
 
 ```typescript
-import { db } from '@acme/db'
 import type { Prisma, PrismaClient } from '@acme/db'
+
+import { db } from '@acme/db'
 ```
 
 - `db` - Main database client (Prisma with Kysely extension)
