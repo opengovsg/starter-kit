@@ -22,7 +22,7 @@ catalog:
 
 catalogs:
   next:
-    '@next/env': 16.4.0
+    '@next/env': 16.4.3
     next: 16.4.3
   oui:
     '@opengovsg/oui': 0.0.52
