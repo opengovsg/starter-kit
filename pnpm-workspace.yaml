@@ -96,8 +96,6 @@ minimumReleaseAgeExclude:
   #
   # We publish this scope ourselves, so the cooldown does nothing useful:
   - '@opengovsg/*'
-  # CVE fix, still <24h old when pinned (see pnpm-workspace.yaml catalogs.next):
-  - next@16.3.6
   #
   # Leave empty otherwise. Only add a pinned entry when the security fix is
   # newer than `minimumReleaseAge`. If the patched version is already >24h
