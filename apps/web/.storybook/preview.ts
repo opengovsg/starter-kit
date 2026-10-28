@@ -12,6 +12,7 @@ initialize({
 })
 
 const preview: Preview = {
+  tags: ['autodocs'],
   parameters: {
     nextjs: {
       appDirectory: true,

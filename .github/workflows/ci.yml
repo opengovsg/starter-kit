@@ -17,13 +17,15 @@ env:
 
 permissions:
   contents: read
-  checks: write
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -37,8 +39,11 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -48,8 +53,11 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -63,8 +71,11 @@ jobs:
 
   supply-chain:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -79,15 +90,21 @@ jobs:
       - name: Generate SBOM
         run: pnpm sbom --sbom-format cyclonedx --prod --out sbom.cdx.json
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: sbom
           path: sbom.cdx.json
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      checks: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -97,8 +114,7 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        # datadog/test-visibility-github-action@v3.0.0, using commit hash to pin to silence codeQL
-        uses: datadog/test-visibility-github-action@d6d648d87563e713b3d396bb3bfebb5e3cc93707
+        uses: datadog/test-visibility-github-action@d7e3562370d3742851764531da3cb54a743ebd63
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}

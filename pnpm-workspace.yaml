@@ -7,23 +7,23 @@ catalog:
   '@hookform/resolvers': ^5.2.2
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
-  'oxlint': ^1.64.0
-  'oxlint-tsgolint': ^0.22.1
-  dd-trace: ^6.1.0
+  'oxlint': ^1.89.0
+  'oxlint-tsgolint': ^7.0.2005
+  dd-trace: ^6.21.0
   dotenv-cli: ^11.0.0
-  oxfmt: ^0.41.0
+  oxfmt: ^0.74.0
   prisma-extension-kysely: ^4.0.0
   prisma-kysely: ^3.1.0
   react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
   typescript: ^7.0.2
-  zod: ^4.2.1
+  zod: ^4.6.7
 
 catalogs:
   next:
-    '@next/env': 16.2.12
-    next: 16.2.12
+    '@next/env': 16.4.3
+    next: 16.4.3
   oui:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
@@ -35,19 +35,20 @@ catalogs:
     '@prisma/client': 7.9.1
     prisma: 7.9.1
   react:
-    '@types/react': ^19.2.18
-    '@types/react-dom': ^19.2.4
-    react: ^19.2.8
-    react-dom: ^19.2.8
+    '@types/react': ^19.3.0
+    '@types/react-dom': ^19.3.0
+    react: ^19.3.1
+    react-dom: ^19.3.1
   react-query5:
-    '@tanstack/react-query': ^5.101.4
-    '@tanstack/react-query-devtools': ^5.101.4
+    '@tanstack/react-query': ^5.104.2
+    '@tanstack/react-query-devtools': ^5.104.2
   storybook10:
-    '@storybook/addon-a11y': 10.5.9
-    '@storybook/addon-docs': 10.5.9
-    '@storybook/addon-vitest': 10.5.9
-    '@storybook/nextjs-vite': 10.5.9
-    storybook: 10.5.9
+    '@storybook/addon-a11y': ^10.6.3
+    '@storybook/addon-docs': ^10.6.3
+    '@storybook/addon-mcp': ^10.6.3
+    '@storybook/addon-vitest': ^10.6.3
+    '@storybook/nextjs-vite': ^10.6.3
+    storybook: ^10.6.3
     storybook-addon-vite-mock: ^1.1.1
   t3-env:
     '@t3-oss/env-core': ^0.13.8
@@ -61,10 +62,10 @@ catalogs:
     '@trpc/server': ^11.18.0
     '@trpc/tanstack-react-query': ^11.18.0
   vitest:
-    '@vitest/browser': 4.1.8
-    '@vitest/browser-playwright': 4.1.8
-    '@vitest/coverage-v8': 4.1.8
-    vitest: 4.1.8
+    '@vitest/browser': ^5.0.3
+    '@vitest/browser-playwright': ^5.0.3
+    '@vitest/coverage-v8': ^5.0.3
+    vitest: ^5.0.3
 
 linkWorkspacePackages: true
 
@@ -100,9 +101,9 @@ minimumReleaseAgeExclude:
   # newer than `minimumReleaseAge`. If the patched version is already >24h
   # old, the cooldown lets it through on its own.
 
-# Under pnpm v12, every package with a build script must be listed here as
-# true (run the script) or false (skip it). Leaving one unlisted throws
-# ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
+  # Under pnpm v12, every package with a build script must be listed here as
+  # true (run the script) or false (skip it). Leaving one unlisted throws
+  # ERR_PNPM_IGNORED_BUILDS and fails install (e.g. in CI).
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
@@ -121,6 +122,8 @@ allowBuilds:
   ssh2: false
 
 overrides:
+  # @storybook/addon-mcp → @tmcp/adapter-valibot → @valibot/to-json-schema@1.8.0 requires valibot ^1.5.0
+  valibot: ^1.5.0
   '@types/minimatch': 5.1.2
   # Prevent inclusion of sharp-libvips-*, which uses a copyleft license
   '@img/sharp-libvips-darwin-arm64': '-'
@@ -139,8 +142,11 @@ overrides:
   'hono@4': '^4.12.18'
   # Pinned by chevrotain (prisma-kysely -> @mrleebo/prisma-ast) to lodash 4.17.21:
   'lodash@4': '^4.17.24'
-  # Pinned by next@16.2.11 which still ships postcss 8.4.31:
-  'postcss@8': '^8.5.25'
+  # Pinned by prisma@7.9.1 -> @prisma/config / @prisma/internals / prisma-kysely
+  # (deepmerge-ts, fast-uri) and prisma@7.9.1's mysql2 driver dep directly:
+  deepmerge-ts@<8.0.0: ^8.0.0
+  fast-uri@>=3.0.0 <3.1.6: ^3.1.6
+  mysql2@<3.22.0: ^3.22.0
 
 # Fail install if a package's publishing trust drops vs earlier releases
 # (Trusted Publisher > provenance > none). Stolen maintainer credentials

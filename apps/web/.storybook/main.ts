@@ -15,16 +15,28 @@ function getAbsolutePath(value: string): string {
 const config: StorybookConfig = {
   features: {
     experimentalRSC: true,
+    componentsManifest: true,
+    experimentalDocgenServer: true,
   },
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     getAbsolutePath('@storybook/addon-docs'),
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-vitest'),
+    getAbsolutePath('@storybook/addon-mcp'),
   ],
   framework: {
     name: getAbsolutePath('@storybook/nextjs-vite'),
     options: {},
+  },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
+      propFilter: (prop) =>
+        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
+    },
   },
   async viteFinal(config) {
     // TailwindCSS is not being imported properly within Storybook, so we add the

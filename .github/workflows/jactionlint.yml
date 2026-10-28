@@ -1,0 +1,28 @@
+# Lint GitHub Actions workflows with jactionlint: https://github.com/jdx/jactionlint
+name: jactionlint
+
+on:
+  pull_request:
+    branches: ['*']
+    types: [opened, reopened, synchronize]
+  push:
+    branches: ['main']
+  merge_group:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  jactionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/jactionlint@a0bb9f012b6b5760c17c9ccd040001d08002a10e # v2.1.0
