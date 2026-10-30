@@ -9,7 +9,7 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
     "@acme/oxlint-config": "workspace:*",
@@ -17,6 +17,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:"
   }
 }

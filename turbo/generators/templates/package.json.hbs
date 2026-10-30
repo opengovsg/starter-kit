@@ -6,12 +6,12 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsrs",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
+    "dev": "tsrs",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
     "@acme/oxlint-config": "workspace:*",
@@ -19,6 +19,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:"
   },
   "sortPackageJson": {
