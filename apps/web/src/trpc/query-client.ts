@@ -11,6 +11,14 @@ import { deserialize, serialize } from 'superjson'
 import { LOGIN_ROUTE, SIGN_OUT_API_ROUTE } from '~/constants'
 import { trpcHandleableErrorCodeSchema } from '~/validators/trpc'
 
+const signOut = async () => {
+  try {
+    await fetch(SIGN_OUT_API_ROUTE, { method: 'POST' })
+  } finally {
+    window.location.assign(LOGIN_ROUTE)
+  }
+}
+
 const handleTRPCError = (error: Error): boolean => {
   if (!isTRPCClientError(error)) {
     return false
@@ -25,9 +33,7 @@ const handleTRPCError = (error: Error): boolean => {
   const { code } = result.data.data
 
   if (code === 'UNAUTHORIZED') {
-    void fetch(SIGN_OUT_API_ROUTE, { method: 'POST' }).finally(() => {
-      window.location.assign(LOGIN_ROUTE)
-    })
+    void signOut()
 
     return true
   }
