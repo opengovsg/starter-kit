@@ -29,6 +29,7 @@
     "sherif": "catalog:",
     "turbo": "^2.10.5",
     "typescript": "catalog:",
+    "ultracite": "catalog:",
     "vitest": "catalog:vitest"
   },
   "devEngines": {
