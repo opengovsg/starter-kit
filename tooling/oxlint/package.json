@@ -2,14 +2,15 @@
   "name": "@acme/oxlint-config",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "description": "Shared Oxlint rules (TypeScript; consumed via extends imports).",
+  "type": "module",
   "exports": {
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
     "./presets.ts": "./presets.ts",
     "./react-doctor.ts": "./react-doctor.ts",
-    "./next-react-doctor.ts": "./next-react-doctor.ts"
+    "./next-react-doctor.ts": "./next-react-doctor.ts",
+    "./react-query.ts": "./react-query.ts"
   },
   "dependencies": {
     "ultracite": "catalog:"
