@@ -7,18 +7,18 @@ catalog:
   '@hookform/resolvers': ^5.2.2
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
-  'oxlint': ^1.89.0
+  'oxlint': ^1.90.0
   'oxlint-tsgolint': ^7.0.2005
   dd-trace: ^6.21.0
   dotenv-cli: ^11.0.0
-  oxfmt: ^0.74.0
+  oxfmt: ^0.75.0
   prisma-extension-kysely: ^4.0.0
   prisma-kysely: ^3.1.0
   react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
   typescript: ^7.0.2
-  ultracite: ^7.10.7
+  ultracite: ^8.1.0
   zod: ^4.6.7
 
 catalogs:
