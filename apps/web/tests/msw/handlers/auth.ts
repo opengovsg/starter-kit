@@ -7,6 +7,7 @@ export const authHandlers = {
     loading: () =>
       trpcMsw.auth.email.login.mutation(async () => {
         await delay('infinite')
+
         return {
           email: 'never',
           otpPrefix: 'TST',

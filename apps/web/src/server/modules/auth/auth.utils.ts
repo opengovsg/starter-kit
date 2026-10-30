@@ -36,6 +36,7 @@ const createTokenHash = ({
 }) => {
   // email and codeChallenge are not private values, so we use them as a salt
   const identifier = createVfnIdentifier({ codeChallenge, email })
+
   // in theory we should generate a unique salt per entry, but this is sufficient for OTPs
   return scryptSync(token, identifier, 64).toString('base64')
 }
@@ -54,6 +55,7 @@ export const isValidToken = ({
 }) => {
   try {
     const storedBuffer = Buffer.from(hash)
+
     const submittedBuffer = Buffer.from(
       createTokenHash({ codeChallenge, email, token })
     )
@@ -61,6 +63,7 @@ export const isValidToken = ({
     if (storedBuffer.length !== submittedBuffer.length) {
       // Don't throw error on length mismatch to prevent timing attacks
       timingSafeEqual(submittedBuffer, submittedBuffer)
+
       return false
     }
 

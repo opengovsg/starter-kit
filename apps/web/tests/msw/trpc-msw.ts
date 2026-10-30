@@ -9,6 +9,7 @@ const getBaseUrl = () => {
   if (hasWindow()) {
     return globalThis.window.location.origin
   }
+
   return 'http://localhost:6006'
 }
 

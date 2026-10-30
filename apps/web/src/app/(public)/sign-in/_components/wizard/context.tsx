@@ -65,10 +65,12 @@ export const SignInWizardProvider = ({
       const verifier = browserCreatePkceVerifier()
       const challenge = await browserCreatePkceChallenge(verifier)
       challengeToVerifierMap.current.set(challenge, verifier)
+
       return challenge
     } catch (error) {
       console.error(error)
     }
+
     return undefined
   }
 

@@ -30,6 +30,7 @@ export const handleTRPCError = (
 ) => {
   if (apiFailure instanceof TRPCError) {
     const statusCode = getHTTPStatusCodeFromError(apiFailure)
+
     return Response.json(
       { error: apiFailure.message || fallbackMessage },
       { headers, status: statusCode }

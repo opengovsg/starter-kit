@@ -22,6 +22,7 @@ const preview: Preview = {
         'font-sans',
         'antialiased'
       )
+
       return Story()
     },
   ],

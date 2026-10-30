@@ -44,7 +44,9 @@ const config: StorybookConfig = {
     // TailwindCSS plugin to Vite directly here.
     const { default: tailwindcss } = await import('@tailwindcss/vite')
     const { mergeConfig } = await import('vite')
+
     return mergeConfig(viteConfig, { plugins: [tailwindcss()] })
   },
 }
+
 export default config

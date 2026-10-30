@@ -45,6 +45,7 @@ describe('meRouter', () => {
       const ctx = createTestContext({
         session: { userId: 'non-existent-user-id' },
       })
+
       const caller = createTestCaller(ctx)
       const result = await caller.me.get()
 
@@ -59,6 +60,7 @@ describe('meRouter', () => {
           name: 'User One',
         },
       })
+
       const user2 = await db.user.create({
         data: {
           email: 'user2@example.com',

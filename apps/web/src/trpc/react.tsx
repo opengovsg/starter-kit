@@ -15,13 +15,16 @@ import { getBaseUrl } from '~/utils/get-base-url'
 const hasWindow = () => 'window' in globalThis
 
 let clientQueryClientSingleton: ReturnType<typeof createQueryClient> | undefined
+
 const getQueryClient = () => {
   if (!hasWindow()) {
     // Server: always make a new query client
     return createQueryClient()
   }
+
   // Browser: use singleton pattern to keep the same query client
   clientQueryClientSingleton ??= createQueryClient()
+
   return clientQueryClientSingleton
 }
 
@@ -37,6 +40,7 @@ const createBrowserTrpcClient = () =>
         async fetch(url, options) {
           const response = await fetch(url, options)
           const serverVersion = response.headers.get(APP_VERSION_HEADER_KEY)
+
           if (
             serverVersion !== null &&
             serverVersion !== '' &&
@@ -45,14 +49,17 @@ const createBrowserTrpcClient = () =>
           ) {
             globalThis.window.dispatchEvent(new Event(REQUIRE_UPDATE_EVENT))
           }
+
           return response
         },
         headers() {
           const headers = new Headers()
           headers.set('x-trpc-source', 'nextjs-react')
+
           if (env.NEXT_PUBLIC_APP_VERSION !== '') {
             headers.set(APP_VERSION_HEADER_KEY, env.NEXT_PUBLIC_APP_VERSION)
           }
+
           return headers
         },
         transformer: superjson,
@@ -67,7 +74,9 @@ const getTrpcClient = () => {
   if (!hasWindow()) {
     return createBrowserTrpcClient()
   }
+
   browserTrpcClient ??= createBrowserTrpcClient()
+
   return browserTrpcClient
 }
 

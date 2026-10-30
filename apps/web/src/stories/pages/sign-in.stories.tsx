@@ -21,6 +21,7 @@ const meta: Meta<typeof SignInPageComponent> = {
 }
 
 export default meta
+
 type Story = StoryObj<typeof meta>
 
 export const LoginStep: Story = {}

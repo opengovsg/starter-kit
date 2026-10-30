@@ -18,6 +18,7 @@ describe('auth.utils', () => {
         codeChallenge: codeChallenge1,
         email,
       })
+
       const identifier2 = createVfnIdentifier({
         codeChallenge: codeChallenge2,
         email,
@@ -34,10 +35,12 @@ describe('auth.utils', () => {
         codeChallenge,
         email,
       })
+
       const identifier2 = createVfnIdentifier({
         codeChallenge,
         email,
       })
+
       const identifier3 = createVfnIdentifier({
         codeChallenge,
         email,
@@ -85,6 +88,7 @@ describe('auth.utils', () => {
 
     it('should generate tokens of sufficient entropy', () => {
       const N = 50
+
       const tokens = Array.from({ length: N }).map(
         () =>
           createAuthToken({
@@ -101,10 +105,12 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const result2 = createAuthToken({
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const result3 = createAuthToken({
         codeChallenge: testCodeChallenge,
         email: testEmail,
@@ -123,6 +129,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: email1,
       })
+
       const result2 = createAuthToken({
         codeChallenge: testCodeChallenge,
         email: email2,
@@ -140,6 +147,7 @@ describe('auth.utils', () => {
         codeChallenge: codeChallenge1,
         email: testEmail,
       })
+
       const result2 = createAuthToken({
         codeChallenge: codeChallenge2,
         email: testEmail,
@@ -159,6 +167,7 @@ describe('auth.utils', () => {
             email: testEmail,
           }).token
       )
+
       const combinedString = tokens.join('')
 
       expect(combinedString).not.toContain('I')
@@ -193,6 +202,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const { token: invalidToken } = createAuthToken({
         codeChallenge: testCodeChallenge,
         email: testEmail,
@@ -213,6 +223,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const differentEmail = 'different@example.com'
 
       const isValid = isValidToken({
@@ -230,6 +241,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const differentCodeChallenge = 'different-codeChallenge'
 
       const isValid = isValidToken({
@@ -247,6 +259,7 @@ describe('auth.utils', () => {
         codeChallenge: testCodeChallenge,
         email: testEmail,
       })
+
       const tamperedHash = `${hashedToken.slice(0, -1)}X`
 
       const isValid = isValidToken({
@@ -293,6 +306,7 @@ describe('auth.utils', () => {
 
     it('should validate tokens with special characters in email', () => {
       const specialEmail = 'user+tag@example.com'
+
       const { token, hashedToken } = createAuthToken({
         codeChallenge: testCodeChallenge,
         email: specialEmail,
@@ -341,6 +355,7 @@ describe('auth.utils', () => {
           codeChallenge,
           email,
         })
+
         return { codeChallenge, email, hashedToken, token }
       })
 
@@ -352,6 +367,7 @@ describe('auth.utils', () => {
           hash: hashedToken,
           token,
         })
+
         expect(isValid).toBeTruthy()
       }
 
@@ -385,6 +401,7 @@ describe('auth.utils', () => {
         hash: hash1,
         token: token1,
       })
+
       expect(crossValidation1).toBeFalsy()
 
       // Token from session 2 should not validate with codeChallenge from session 1
@@ -394,6 +411,7 @@ describe('auth.utils', () => {
         hash: hash2,
         token: token2,
       })
+
       expect(crossValidation2).toBeFalsy()
 
       // But each token should still work with its own codeChallenge

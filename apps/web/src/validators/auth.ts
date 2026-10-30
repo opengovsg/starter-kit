@@ -4,8 +4,10 @@ import { govEmailSchema } from './email'
 
 export const OTP_LENGTH = 8
 export const OTP_PREFIX_LENGTH = 3
+
 // max length as per RFC 7636
 export const PKCE_LENGTH = 128
+
 export const PKCE_VERIFIER_ALPHABET =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
 
@@ -14,6 +16,7 @@ export const validateCodeChallenge = (val: string) => {
     let base64 = val.replaceAll('-', '+').replaceAll('_', '/')
 
     const padding = base64.length % 4
+
     if (padding) {
       base64 += '='.repeat(4 - (base64.length % 4))
     }

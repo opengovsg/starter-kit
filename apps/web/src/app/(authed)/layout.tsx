@@ -16,9 +16,11 @@ const AuthedLayout = async ({ children }: DynamicLayoutProps) => {
   // Always put your auth call as close to the actual data call as possible, ideally right before access.
 
   const session = await getSession()
+
   if (session.userId === undefined || session.userId === '') {
     redirect(LOGIN_ROUTE)
   }
+
   await prefetch(trpc.me.get.queryOptions())
 
   return (

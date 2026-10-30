@@ -9,6 +9,7 @@ import { defaultUserSelect } from './user.select'
 
 export const loginUserByEmail = async (email: string, logger?: Logger) => {
   const parsedEmail = parseOneAddress(email)
+
   if (!parsedEmail || parsedEmail.type === 'group') {
     throw new Error('Invalid email address')
   }
@@ -46,6 +47,7 @@ export const loginUserByEmail = async (email: string, logger?: Logger) => {
         },
       },
     })
+
     // isNewUser is read at READ COMMITTED, so two concurrent first-ever logins
     // for the same email can both see "no user" and each emit accountCreated
     // once. Unreachable in the OTP flow (needs two valid OTPs submitted in the

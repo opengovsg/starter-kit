@@ -11,11 +11,13 @@ import { getUserById, loginUserByEmail } from '../user.service'
 // Minimal Logger stub capturing the self-signup audit call.
 const makeAuditLoggerStub = () => {
   const accountCreated = vi.fn<(input: { targetUserId: string }) => void>()
+
   const logger = {
     withBindings: () => ({
       audit: { userManagement: { accountCreated } },
     }),
   } as unknown as Logger
+
   return { accountCreated, logger }
 }
 
@@ -39,6 +41,7 @@ describe('user.service', () => {
       const dbUser = await db.user.findUnique({
         where: { email },
       })
+
       expect(dbUser).toBeDefined()
       expect(dbUser?.email).toBe(email)
 
@@ -49,6 +52,7 @@ describe('user.service', () => {
           userId: user.id,
         },
       })
+
       expect(account).toStrictEqual(
         expect.objectContaining({
           providerAccountId: email,
@@ -96,6 +100,7 @@ describe('user.service', () => {
       const users = await db.user.findMany({
         where: { email },
       })
+
       expect(users).toHaveLength(1)
     })
 
@@ -115,6 +120,7 @@ describe('user.service', () => {
           userId: user1.id,
         },
       })
+
       expect(accounts).toHaveLength(1)
     })
 
@@ -157,6 +163,7 @@ describe('user.service', () => {
           userId: user.id,
         },
       })
+
       expect(account?.providerAccountId).toBe(email)
     })
 
@@ -169,6 +176,7 @@ describe('user.service', () => {
       const dbUser = await db.user.findUnique({
         where: { email },
       })
+
       const account = await db.account.findFirst({
         where: {
           provider: AccountProvider.Email,
@@ -211,6 +219,7 @@ describe('user.service', () => {
               userId: user.id,
             },
           })
+
           expect(accounts).toHaveLength(1)
         })
       )
@@ -255,6 +264,7 @@ describe('user.service', () => {
   describe(getUserById, () => {
     it('should return user when user exists', async () => {
       const email = 'getuser@example.com'
+
       const createdUser = await db.user.create({
         data: { email, name: 'Test user' },
       })

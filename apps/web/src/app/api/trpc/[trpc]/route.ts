@@ -22,7 +22,9 @@ export const OPTIONS = () => {
   const response = new Response(null, {
     status: 204,
   })
+
   setCorsHeaders(response)
+
   return response
 }
 
@@ -39,6 +41,7 @@ const handler = async (req: NextRequest) => {
       if (error.code === 'UNAUTHORIZED') {
         ctx?.session.destroy()
       }
+
       console.error(`>>> tRPC Error on '${path}'`, error)
     },
     req,
@@ -46,9 +49,11 @@ const handler = async (req: NextRequest) => {
   })
 
   setCorsHeaders(response)
+
   if (env.NEXT_PUBLIC_APP_VERSION) {
     response.headers.set(APP_VERSION_HEADER_KEY, env.NEXT_PUBLIC_APP_VERSION)
   }
+
   return response
 }
 

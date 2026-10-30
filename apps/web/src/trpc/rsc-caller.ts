@@ -8,16 +8,22 @@ import { SIGN_OUT_API_ROUTE } from '~/constants'
 const handleCallerError = (error: { code: string }) => {
   if (error.code === 'NOT_FOUND') {
     notFound()
+
     return
   }
+
   if (error.code === 'UNAUTHORIZED') {
     redirect(SIGN_OUT_API_ROUTE)
+
     return
   }
+
   if (error.code === 'FORBIDDEN') {
     forbidden()
+
     return
   }
+
   console.error('>>> tRPC Error in RSC caller', error)
 }
 

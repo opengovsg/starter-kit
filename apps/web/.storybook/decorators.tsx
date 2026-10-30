@@ -23,6 +23,7 @@ const createStorybookTrpcClient = (baseUrl: string) =>
         headers() {
           const headers = new Headers()
           headers.set('x-trpc-source', 'storybook')
+
           return headers
         },
         transformer: { deserialize, serialize },

@@ -30,6 +30,7 @@ export const emailLogin = async ({
   const { token, hashedToken } = createAuthToken({ codeChallenge, email })
 
   let issuedAt: Date
+
   try {
     ;({ issuedAt } = await db.verificationToken.create({
       data: {
@@ -53,6 +54,7 @@ export const emailLogin = async ({
         message: 'Please refresh and try again.',
       })
     }
+
     throw error
   }
 
@@ -123,6 +125,7 @@ export const emailVerifyOtp = async ({
     // Expired
     const hasExpired =
       add(hashedToken.issuedAt, { seconds: env.OTP_EXPIRY }) < new Date()
+
     if (
       hasExpired ||
       !isValidToken({ codeChallenge, email, hash: hashedToken.token, token })
@@ -175,6 +178,7 @@ export const emailVerifyOtp = async ({
           'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
       })
     }
+
     throw error
   }
 }

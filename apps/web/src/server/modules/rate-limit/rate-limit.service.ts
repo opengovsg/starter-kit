@@ -36,6 +36,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
   const cacheKey = JSON.stringify(mergedConfig)
 
   const cached = rateLimiterCache.get(cacheKey)
+
   if (cached) {
     return cached
   }
@@ -55,6 +56,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
 
     const limiter = new BurstyRateLimiter(memoryLimiter, memoryBurstLimiter)
     rateLimiterCache.set(cacheKey, limiter)
+
     return limiter
   }
 
@@ -81,6 +83,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
   )
 
   rateLimiterCache.set(cacheKey, limiter)
+
   return limiter
 }
 
@@ -104,6 +107,7 @@ export const checkRateLimit = async ({
   pointsToConsume?: number
 }): Promise<RateLimiterRes> => {
   const limiter = createRateLimiter(options)
+
   return await limiter.consume(key, pointsToConsume)
 }
 
@@ -119,6 +123,7 @@ export const createRateLimitFingerprint = ({
   if (userId !== undefined && userId !== '') {
     return `userId:${userId}:${path}`
   }
+
   // Process IP address and replace colons so Redis keys stay compatible with the common
   // "namespace:subkey" convention and any tooling that treats ":" as a key separator.
   return `ip:${ipAddress?.replaceAll(':', '_') ?? 'unknown'}:${path}`

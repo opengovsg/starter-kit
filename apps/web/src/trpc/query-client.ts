@@ -15,16 +15,21 @@ const handleTRPCError = (error: Error): boolean => {
   if (!isTRPCClientError(error)) {
     return false
   }
+
   const result = trpcHandleableErrorCodeSchema.safeParse(error)
+
   if (!result.success) {
     return false
   }
 
   const { code } = result.data.data
+
   if (code === 'UNAUTHORIZED') {
     window.location.href = SIGN_OUT_API_ROUTE
+
     return true
   }
+
   return false
 }
 
@@ -53,21 +58,28 @@ export const createQueryClient = () =>
           if (handleTRPCError(error)) {
             return
           }
+
           // Log the error to an error reporting service
           console.error('>>> Error in mutation', error)
+
           if (isTRPCClientError(error)) {
             const result = trpcHandleableErrorCodeSchema.safeParse(error)
+
             if (result.success) {
               const { code } = result.data.data
+
               if (code === 'FORBIDDEN') {
                 toast.error('You are not allowed to perform this action.')
+
                 return
               }
 
               toast.error('The requested resource was not found.')
+
               return
             }
           }
+
           // Default toast
           toast.error('An unexpected error occurred. Please try again later.')
         },

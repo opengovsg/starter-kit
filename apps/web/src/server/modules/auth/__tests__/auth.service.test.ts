@@ -22,6 +22,7 @@ const mockedMailService = mock(mailService)
 const logger = mockDeep<Logger>()
 
 const INVALID_OR_EXPIRED_MESSAGE = 'Token is invalid or has expired'
+
 const WRONG_OTP_OR_REUSED_MESSAGE =
   'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
 
@@ -45,9 +46,11 @@ describe('auth.service', () => {
 
       // Verify token was created in database with vfnIdentifier
       const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
+
       const token = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
+
       expect(token).toBeDefined()
       expect(mockedMailService.sendMail).toHaveBeenCalledWith({
         body: expect.any(String),
@@ -80,13 +83,16 @@ describe('auth.service', () => {
         codeChallenge: codeChallenge1,
         email,
       })
+
       const vfnIdentifier2 = createVfnIdentifier({
         codeChallenge: codeChallenge2,
         email,
       })
+
       const token1 = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier1 },
       })
+
       const token2 = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier2 },
       })
@@ -113,9 +119,11 @@ describe('auth.service', () => {
 
       // Token should be deleted after successful verification
       const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
+
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
+
       expect(verificationToken).toBeNull()
     })
 
@@ -193,6 +201,7 @@ describe('auth.service', () => {
         codeChallenge,
         email,
       })
+
       // Create a verification token with an old issuedAt date
       // 700 seconds ago (beyond 600s expiry)
       const oldDate = add(new Date(), { seconds: -700 })
@@ -223,9 +232,11 @@ describe('auth.service', () => {
         await expect(
           emailVerifyOtp({ codeVerifier, email, logger, token: wrongToken })
         ).rejects.toThrow(INVALID_OR_EXPIRED_MESSAGE)
+
         const verificationToken = await db.verificationToken.findUnique({
           where: { identifier },
         })
+
         expect(verificationToken?.attempts).toBe(attempt)
       }
 
@@ -273,9 +284,11 @@ describe('auth.service', () => {
         codeChallenge,
         email,
       })
+
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
+
       expect(verificationToken).toBeNull()
     })
 

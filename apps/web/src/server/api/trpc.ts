@@ -53,6 +53,7 @@ export const createTRPCContext = async ({
   const logger = createLogger({ headers, path: 'trpc' })
 
   const session = await getSession()
+
   return {
     headers,
     logger,
@@ -85,6 +86,7 @@ const t = initTRPC
       const { error } = opts
       // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- tRPC error formatter API names this field `shape`.
       const formattedError = opts.shape
+
       return {
         ...formattedError,
         data: {
@@ -122,6 +124,7 @@ export const createTRPCRouter = t.router
 
 const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const start = performance.now()
+
   // Rebuild the logger so the procedure path lands in the root `path` field
   // (not the action) and the session is surfaced as user_id / correlation_id.
   const logger = createLogger({
@@ -149,6 +152,7 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
     })
   } else {
     const statusCode = getHTTPStatusCodeFromError(result.error)
+
     // Keep the message stable for aggregation; the error (and its message)
     // travel in the `error` field.
     const logPayload = {
@@ -173,6 +177,7 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
 const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
   const rateLimitOptions =
     meta?.rateLimitOptions === undefined ? {} : meta.rateLimitOptions
+
   if (rateLimitOptions === null) {
     return await next()
   }
@@ -190,6 +195,7 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
       }),
       options: rateLimitOptions,
     })
+
     return await next()
   } catch (error) {
     // Handle rate limit error separately to add rate limit headers
@@ -209,6 +215,7 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
         )} seconds.`,
       })
     }
+
     throw error
   }
 })
@@ -217,6 +224,7 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
   if (ctx.session.userId === undefined || ctx.session.userId === '') {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
+
   return await next({
     ctx: {
       // infers the `session` as non-nullable

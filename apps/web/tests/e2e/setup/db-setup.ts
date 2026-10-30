@@ -34,6 +34,7 @@ export const startDatabase = async () => {
 
 export const applyMigrations = async (container: DatabaseContainer) => {
   const connectionString = getPostgresConnectionString(container)
+
   const client = new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
   })
@@ -53,8 +54,10 @@ export const applyMigrations = async (container: DatabaseContainer) => {
 
   // Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs
   const directory = readdirSync(prismaMigrationDir).toSorted()
+
   for (const file of directory) {
     const name = `${prismaMigrationDir}/${file}`
+
     if (statSync(name).isDirectory()) {
       const migration = readFileSync(`${name}/migration.sql`, 'utf-8')
       // oxlint-disable-next-line eslint/no-await-in-loop -- migrations must run sequentially
@@ -68,6 +71,7 @@ export const setupTestClient = (connectionString: string) => {
   const client = new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
   })
+
   return client
 }
 

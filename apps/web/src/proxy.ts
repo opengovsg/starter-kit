@@ -41,20 +41,24 @@ const generateCspHeader = (policies: CspPolicy[]): string => {
   for (const policy of policies) {
     for (const key of cspPolicyKeys) {
       const sources = policy[key]
+
       if (sources === undefined) {
         continue
       }
+
       merged[key] = [...new Set([...(merged[key] ?? []), ...sources])]
     }
   }
 
-  const baseDirectives = cspPolicyKeys
-    .filter((key) => merged[key] !== undefined)
-    .map((key) => {
-      const sources: string[] = merged[key] ?? []
-      const sortedSources = sortSources(sources)
-      return `${key} ${sortedSources.join(' ')}`
-    })
+  const baseDirectives = cspPolicyKeys.flatMap((key) => {
+    const sources = merged[key]
+
+    if (sources === undefined) {
+      return []
+    }
+
+    return [`${key} ${sortSources(sources).join(' ')}`]
+  })
 
   return [...baseDirectives, 'upgrade-insecure-requests'].join('; ')
 }
@@ -87,6 +91,7 @@ const vercelLivePolicy = {
 
 export const proxy = (request: NextRequest) => {
   const isVercelPreview = process.env.VERCEL_ENV === 'preview'
+
   const isDev =
     process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
@@ -120,6 +125,7 @@ export const proxy = (request: NextRequest) => {
       headers: requestHeaders,
     },
   })
+
   response.headers.set(
     'Content-Security-Policy',
     contentSecurityPolicyHeaderValue

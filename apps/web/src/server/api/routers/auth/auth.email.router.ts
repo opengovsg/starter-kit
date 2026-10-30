@@ -52,6 +52,7 @@ export const emailAuthRouter = createTRPCRouter({
         userId: user.id,
         username: user.email,
       })
+
       return user
     }),
 })

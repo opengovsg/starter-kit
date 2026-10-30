@@ -59,20 +59,26 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     if (isPending) {
       return
     }
+
     setNewChallengePending(true)
     let codeChallenge: string | undefined
+
     try {
       codeChallenge = await newChallenge()
     } catch (error) {
       console.error(error)
     }
+
     setNewChallengePending(false)
+
     if (codeChallenge === undefined) {
       toast.error(
         'Something went wrong generating a sign-in challenge. Please try again.'
       )
+
       return
     }
+
     loginMutation.mutate({ codeChallenge, email })
   }
 

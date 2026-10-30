@@ -32,6 +32,7 @@ export const VerificationStep = () => {
     getVerifier,
     clearVerifierMap,
   } = useSignInWizard()
+
   const [newChallengePending, setNewChallengePending] = useState(false)
   const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
@@ -83,6 +84,7 @@ export const VerificationStep = () => {
   )
 
   const isResendPending = resendOtpMutation.isPending || newChallengePending
+
   const handleResendOtp = async () => {
     if (
       timer > 0 ||
@@ -91,23 +93,30 @@ export const VerificationStep = () => {
     ) {
       return
     }
+
     if (isResendPending) {
       return
     }
+
     setNewChallengePending(true)
     let codeChallenge: string | undefined
+
     try {
       codeChallenge = await newChallenge()
     } catch (error) {
       console.error(error)
     }
+
     setNewChallengePending(false)
+
     if (codeChallenge === undefined) {
       toast.error(
         'Something went wrong generating a sign-in challenge. Please try again.'
       )
+
       return
     }
+
     resendOtpMutation.mutate({ codeChallenge, email: vfnStepData.email })
   }
 
