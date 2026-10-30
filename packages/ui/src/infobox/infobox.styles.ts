@@ -43,4 +43,5 @@ export const infoboxStyles = tv({
 })
 
 export type InfoboxVariantProps = VariantProps<typeof infoboxStyles>
+
 export type InfoboxSlots = keyof ReturnType<typeof infoboxStyles>

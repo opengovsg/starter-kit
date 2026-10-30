@@ -25,6 +25,7 @@ export const RestrictedFooter = ({
   navLinks = EMPTY_NAV_LINKS,
   socialMediaLinks = DEFAULT_SOCIAL_MEDIA_LINKS,
 }: FooterProps) => {
+  // oxlint-disable-next-line react/purity -- copyright year only; render-time drift is harmless.
   const currentYear = new Date().getFullYear()
 
   return (

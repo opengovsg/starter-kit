@@ -40,22 +40,28 @@ export const Infobox = ({
     if (iconProp === null) {
       return null
     }
+
     const iconClassName = styles.icon({ className: classNames?.icon })
+
     if (iconProp !== undefined) {
       return <div className={iconClassName}>{iconProp}</div>
     }
+
     switch (variant) {
       case 'error': {
         return <BiSolidErrorCircle className={iconClassName} />
       }
+
       case 'success': {
         return <BiSolidCheckCircle className={iconClassName} />
       }
+
       case 'info':
       case 'warning':
       case undefined: {
         return <BiSolidInfoCircle className={iconClassName} />
       }
+
       default: {
         return <BiSolidInfoCircle className={iconClassName} />
       }
