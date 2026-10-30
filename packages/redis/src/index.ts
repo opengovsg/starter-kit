@@ -2,29 +2,28 @@ import Redis from 'ioredis'
 
 import { env } from './env'
 
-const globalForRedis = global as unknown as {
-  redis: ReturnType<typeof createRedisClient> | undefined
+declare global {
+  var redis: ReturnType<typeof createRedisClient> | undefined
 }
 
 const createRedisClient = (): Redis | null => {
-  if (!env.CACHE_HOSTNAME) {
+  if (env.CACHE_HOSTNAME === undefined || env.CACHE_HOSTNAME === '') {
     console.warn(
       '!!!! CACHE_HOSTNAME is not set, Redis client will not be created. !!!!'
     )
+
     return null
   }
 
   const redisClient = new Redis({
     host: env.CACHE_HOSTNAME,
-    port: env.CACHE_PORT,
-    username: env.CACHE_USERNAME,
     password: env.CACHE_PASSWORD,
-    retryStrategy: (attempt) => {
-      return Math.min(attempt * 100, 5000)
-    },
+    port: env.CACHE_PORT,
     // Only reconnect when the error contains "READONLY"
     // during node failover, this is thrown: 149: -READONLY You can't write against a read only replica.
     reconnectOnError: (error) => error.message.includes('READONLY'),
+    retryStrategy: (attempt) => Math.min(attempt * 100, 5000),
+    username: env.CACHE_USERNAME,
   })
 
   redisClient.on('error', (err) => {
@@ -35,6 +34,8 @@ const createRedisClient = (): Redis | null => {
 }
 
 export const redis =
-  globalForRedis.redis !== undefined
-    ? globalForRedis.redis
-    : createRedisClient()
+  globalThis.redis === undefined ? createRedisClient() : globalThis.redis
+
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.redis = redis
+}
