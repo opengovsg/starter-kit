@@ -4,6 +4,7 @@ import type { ViewportKey } from './viewports'
 
 export const withChromaticModes = (args: ChromaticModeKey[]) => {
   const modesArr = [...new Set(args)]
+
   const result: Partial<Record<ChromaticModeKey, { viewport: ViewportKey }>> =
     {}
 

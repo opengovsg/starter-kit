@@ -10,6 +10,7 @@ declare global {
 
 const createPrisma = () => {
   const pool = new PrismaPg({ connectionString: env.DATABASE_URL })
+
   const prisma = new PrismaClient({ adapter: pool }).$extends(
     kyselyPrismaExtension
   )

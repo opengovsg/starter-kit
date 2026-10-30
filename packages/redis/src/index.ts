@@ -11,6 +11,7 @@ const createRedisClient = (): Redis | null => {
     console.warn(
       '!!!! CACHE_HOSTNAME is not set, Redis client will not be created. !!!!'
     )
+
     return null
   }
 
