@@ -19,11 +19,11 @@ const createRedisClient = (): Redis | null => {
     host: env.CACHE_HOSTNAME,
     password: env.CACHE_PASSWORD,
     port: env.CACHE_PORT,
+    // Only reconnect when the error contains "READONLY"
+    // during node failover, this is thrown: 149: -READONLY You can't write against a read only replica.
     reconnectOnError: (error) => error.message.includes('READONLY'),
     retryStrategy: (attempt) => Math.min(attempt * 100, 5000),
     username: env.CACHE_USERNAME,
-    // Only reconnect when the error contains "READONLY"
-    // during node failover, this is thrown: 149: -READONLY You can't write against a read only replica.
   })
 
   redisClient.on('error', (err) => {
@@ -35,3 +35,7 @@ const createRedisClient = (): Redis | null => {
 
 export const redis =
   globalThis.redis === undefined ? createRedisClient() : globalThis.redis
+
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.redis = redis
+}
