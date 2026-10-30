@@ -32,6 +32,13 @@ const createStorybookTrpcClient = (baseUrl: string) =>
     ],
   })
 
+const baseUrl = hasWindow()
+  ? globalThis.window.location.origin
+  : 'http://localhost:6006'
+
+// Created once so re-renders (e.g. controls changes) reuse the same client
+const trpcClient = createStorybookTrpcClient(baseUrl)
+
 /**
  * This decorator wraps stories with TRPC and React Query and the other app-level providers.
  * It mimics the setup in `apps/web/src/app/provider.tsx` and `apps/web/src/app/layout.tsx`.
@@ -57,12 +64,6 @@ export const AppDecorator: Decorator = (Story, context) => {
       },
     },
   })
-
-  const baseUrl = hasWindow()
-    ? globalThis.window.location.origin
-    : 'http://localhost:6006'
-
-  const trpcClient = createStorybookTrpcClient(baseUrl)
 
   return (
     <main className="flex min-h-dvh flex-col">

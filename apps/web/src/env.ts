@@ -46,6 +46,6 @@ export const env = createEnv({
       .default('development'),
   },
   skipValidation:
-    process.env.SKIP_ENV_VALIDATION !== undefined ||
+    (process.env.SKIP_ENV_VALIDATION ?? '') !== '' ||
     process.env.npm_lifecycle_event === 'lint',
 })
