@@ -6,10 +6,19 @@ import {
   reactDoctor,
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
+import reactQuery from '@acme/oxlint-config/react-query.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, react, next, vitest, reactDoctor, nextReactDoctor],
+  extends: [
+    sharedConfig,
+    react,
+    next,
+    vitest,
+    reactDoctor,
+    nextReactDoctor,
+    reactQuery,
+  ],
   jsPlugins: reactDoctor.jsPlugins,
   options: {
     typeAware: true,
