@@ -11,6 +11,7 @@ export const FooterLink = ({
   className?: string
 }) => {
   const isExternal = href.startsWith('http')
+
   return (
     <Link
       href={href}
