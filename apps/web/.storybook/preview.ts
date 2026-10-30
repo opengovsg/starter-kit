@@ -12,23 +12,6 @@ initialize({
 })
 
 const preview: Preview = {
-  tags: ['autodocs'],
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-    layout: 'fullscreen',
-    viewport,
-    chromatic: {
-      prefersReducedMotion: 'reduce',
-    },
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
   decorators: [
     (Story) => {
       // Apply the same font classes as the main app
@@ -39,10 +22,28 @@ const preview: Preview = {
         'font-sans',
         'antialiased'
       )
+
       return Story()
     },
   ],
   loaders: [mswLoader],
+  parameters: {
+    chromatic: {
+      prefersReducedMotion: 'reduce',
+    },
+    controls: {
+      matchers: {
+        color: /(?<prop>background|color)$/iu,
+        date: /Date$/iu,
+      },
+    },
+    layout: 'fullscreen',
+    nextjs: {
+      appDirectory: true,
+    },
+    viewport,
+  },
+  tags: ['autodocs'],
 }
 
 export default preview

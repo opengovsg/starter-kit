@@ -1,5 +1,3 @@
-/* oxlint-disable react-hooks/rules-of-hooks */
-/* oxlint-disable no-empty-pattern */
 import { test as baseTest } from '@playwright/test'
 
 import {
@@ -27,9 +25,9 @@ const test = baseTest.extend<DatabaseFixture & RedisFixture>({
     await use(container)
   },
 
-  resetDatabase: async ({ databaseContainer }, use) => {
+  flushRedis: async ({ redisContainer }, use) => {
     await use(async () => {
-      await resetDbToSnapshot(databaseContainer)
+      await flushRedisFn(redisContainer)
     })
   },
 
@@ -39,9 +37,9 @@ const test = baseTest.extend<DatabaseFixture & RedisFixture>({
     await use(container)
   },
 
-  flushRedis: async ({ redisContainer }, use) => {
+  resetDatabase: async ({ databaseContainer }, use) => {
     await use(async () => {
-      await flushRedisFn(redisContainer)
+      await resetDbToSnapshot(databaseContainer)
     })
   },
 })

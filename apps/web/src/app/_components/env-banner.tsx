@@ -2,7 +2,7 @@ import { Banner } from '@opengovsg/oui/banner'
 
 import { env } from '~/env'
 
-export function EnvBanner() {
+export const EnvBanner = () => {
   if (env.NEXT_PUBLIC_APP_ENV === 'production') {
     return null
   }

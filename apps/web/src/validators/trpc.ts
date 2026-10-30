@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const trpcHandleableErrorCodeSchema = z.object({
   data: z.object({

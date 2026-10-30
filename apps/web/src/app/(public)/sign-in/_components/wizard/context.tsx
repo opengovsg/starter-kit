@@ -59,43 +59,51 @@ export const SignInWizardProvider = ({
   const [timer, setTimer] = useState(delayForResendSeconds)
 
   const challengeToVerifierMap = useRef(new Map<string, string>())
-  const newChallenge = async () => {
+
+  const newChallenge = async (): Promise<string | undefined> => {
     try {
       const verifier = browserCreatePkceVerifier()
       const challenge = await browserCreatePkceChallenge(verifier)
       challengeToVerifierMap.current.set(challenge, verifier)
+
       return challenge
     } catch (error) {
       console.error(error)
-      return undefined
     }
+
+    return undefined
   }
-  const getVerifier = (challenge: string) => {
-    return challengeToVerifierMap.current.get(challenge)
-  }
+
+  const getVerifier = (challenge: string) =>
+    challengeToVerifierMap.current.get(challenge)
+
   const clearVerifierMap = () => {
     challengeToVerifierMap.current.clear()
   }
 
-  const resetTimer = () => setTimer(delayForResendSeconds)
+  const resetTimer = () => {
+    setTimer(delayForResendSeconds)
+  }
 
   // Start the resend timer once in the vfn step.
+  // Stop interval if timer hits 0, else rerun every 1000ms.
   useInterval(
-    () => setTimer((prev) => prev - 1),
-    // Stop interval if timer hits 0, else rerun every 1000ms.
-    !!vfnStepData && timer > 0 ? 1000 : null
+    () => {
+      setTimer((prev) => prev - 1)
+    },
+    vfnStepData !== undefined && timer > 0 ? 1000 : null
   )
 
   return (
     <SignInWizardContext.Provider
       value={{
-        vfnStepData,
+        clearVerifierMap,
+        getVerifier,
+        newChallenge,
+        resetTimer,
         setVfnStepData,
         timer,
-        resetTimer,
-        newChallenge,
-        getVerifier,
-        clearVerifierMap,
+        vfnStepData,
       }}
     >
       {children}

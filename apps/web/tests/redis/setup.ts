@@ -15,9 +15,11 @@ import { Redis } from '@acme/redis/testing'
 const REDIS_DATABASES = 256
 
 const { redis: redisContainer } = inject('testcontainers')
+
 if (!redisContainer) {
   throw new Error('redis container not provided by global-setup.ts')
 }
+
 const redisUrl = getRedisUrl(redisContainer)
 
 export const redis = new Redis(redisUrl)

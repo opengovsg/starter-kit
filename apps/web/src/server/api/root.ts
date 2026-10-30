@@ -10,17 +10,17 @@ import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  auth: authRouter,
   healthcheck: publicProcedure
     .meta({
       // Allow higher rate limit for healthchecks
       rateLimitOptions: {
-        points: 10,
         duration: 1,
+        points: 10,
       },
     })
-    .query(() => healthcheck()),
+    .query(async () => await healthcheck()),
   me: meRouter,
-  auth: authRouter,
 })
 
 // export type definition of API

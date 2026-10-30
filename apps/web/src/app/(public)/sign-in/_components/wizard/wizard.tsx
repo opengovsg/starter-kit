@@ -1,10 +1,8 @@
 import { SignInWizardProvider } from './context'
-import { EmailFlow } from './email'
+import { EmailFlow } from './email/email-flow'
 
-export const SignInWizard = () => {
-  return (
-    <SignInWizardProvider>
-      <EmailFlow />
-    </SignInWizardProvider>
-  )
-}
+export const SignInWizard = () => (
+  <SignInWizardProvider>
+    <EmailFlow />
+  </SignInWizardProvider>
+)
