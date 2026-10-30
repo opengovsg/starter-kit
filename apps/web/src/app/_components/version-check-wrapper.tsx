@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Banner } from '@opengovsg/oui/banner'
 import { Button } from '@opengovsg/oui/button'
@@ -49,18 +49,18 @@ export const VersionCheckWrapper = () => {
   const [requireUpdate, setRequireUpdate] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleRequireUpdateEvent = useCallback(() => {
-    setRequireUpdate(true)
-    setIsOpen(true)
-  }, [])
-
   useEffect(() => {
+    const handleRequireUpdateEvent = () => {
+      setRequireUpdate(true)
+      setIsOpen(true)
+    }
+
     window.addEventListener(REQUIRE_UPDATE_EVENT, handleRequireUpdateEvent)
 
     return () => {
       window.removeEventListener(REQUIRE_UPDATE_EVENT, handleRequireUpdateEvent)
     }
-  }, [handleRequireUpdateEvent])
+  }, [])
 
   return (
     <>
