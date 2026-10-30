@@ -57,6 +57,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
