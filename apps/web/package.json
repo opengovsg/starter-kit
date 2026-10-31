@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
+    "build-e2e": "pnpm with-e2e-env next build",
     "build-storybook": "SKIP_ENV_VALIDATION=1 storybook build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm with-env next dev --turbopack",
@@ -14,6 +15,7 @@
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
     "start": "next start",
+    "start-e2e": "pnpm with-e2e-env next start -p 3111",
     "storybook": "SKIP_ENV_VALIDATION=1 storybook dev -p 6006",
     "test": "vitest",
     "test:ci": "vitest run",
