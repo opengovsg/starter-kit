@@ -1,6 +1,4 @@
-import { expect } from '@playwright/test'
-
-import { test } from './app-fixture'
+import { expect, test } from '@playwright/test'
 
 import { env } from '~/env'
 

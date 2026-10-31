@@ -23,17 +23,23 @@ export default defineConfig({
     url: baseUrl,
     reuseExistingServer: !process.env.CI, // Reuses the server locally, but starts a new one in CI
   },
+  globalSetup: './tests/e2e/global-setup.ts',
   use: {
     baseURL: baseUrl,
-    trace: 'on-first-retry',
+    // No retries are configured, so keep traces/videos of failures instead of
+    // 'on-first-retry' (which would never record anything).
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
   },
   testDir: './tests/e2e',
   testMatch: '**/*.e2e.ts',
-  fullyParallel: false,
+  // Tests create their own uniquely named data, so they can run in parallel.
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  workers: process.env.CI ? 2 : undefined,
   outputDir: './tests/e2e/test-results',
-  // 'github' for GitHub Actions CI to generate annotations, plus a concise 'dot'
-  // default 'list' when running locally
-  reporter: process.env.CI ? 'github' : 'list',
+  // 'github' alone only emits failure annotations; 'list' adds a line per test.
+  reporter: process.env.CI ? [['github'], ['list']] : 'list',
   projects: [
     {
       name: 'chromium',
