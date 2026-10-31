@@ -48,3 +48,4 @@ packages/db/src/generated
 
 *storybook.log
 storybook-static
+apps/web/tests/e2e/.auth
