@@ -160,7 +160,7 @@ jobs:
             ${{ runner.os }}-nextjs-e2e-
 
       - name: Install Playwright (Chromium)
-        run: pnpm --filter @acme/web exec playwright install chromium
+        run: pnpm --filter @acme/web exec playwright install --with-deps chromium
 
       # Playwright serves this build via `next start` when CI is set
       # (see webServer in apps/web/playwright.config.ts).
