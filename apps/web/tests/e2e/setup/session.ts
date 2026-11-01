@@ -15,7 +15,7 @@ import { sessionOptions } from '~/server/session-options'
 /**
  * Writes a Playwright storage state holding a signed-in session cookie for
  * the role's user, sealed the same way `ctx.session.save()` does after OTP
- * login. Skips the OTP UI for every test; login-flow.e2e.ts covers that UI.
+ * login. Skips the OTP UI for every test; auth/sign-in.e2e.ts covers that UI.
  */
 export const mintStorageState = async ({
   role,
