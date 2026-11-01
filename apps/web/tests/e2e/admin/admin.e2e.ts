@@ -1,20 +1,31 @@
 import { expect, test } from '@playwright/test'
 
-import { ROLES, roleTag, TEST_EMAILS } from './fixtures/auth'
+import { ROLES, roleTag, TEST_EMAILS } from '../fixtures/auth'
+import { AdminPO } from './admin.po'
 
 // Untagged tests run signed out (`unauthenticated` project).
 test('redirects signed-out visitors to sign-in', async ({ page }) => {
-  await page.goto('/admin')
+  // Arrange
+  const admin = new AdminPO(page)
 
+  // Act
+  await admin.goto()
+
+  // Assert
   await expect(page).toHaveURL(/\/sign-in/u)
 })
 
 // Tagged tests run with that role's minted session; no login steps needed.
 test.describe('user', { tag: roleTag('user') }, () => {
   test('shows the admin page', async ({ page }) => {
-    await page.goto('/admin')
+    // Arrange
+    const admin = new AdminPO(page)
 
-    await expect(page.getByText('This is the root admin page')).toBeVisible()
+    // Act
+    await admin.goto()
+
+    // Assert
+    await admin.expectLoaded()
   })
 })
 
@@ -22,10 +33,15 @@ test.describe('user', { tag: roleTag('user') }, () => {
 for (const role of ROLES) {
   test.describe(role, { tag: roleTag(role) }, () => {
     test('shows the signed-in email in the account menu', async ({ page }) => {
-      await page.goto('/admin')
-      await page.getByRole('navigation').getByRole('button').click()
+      // Arrange
+      const admin = new AdminPO(page)
+      await admin.goto()
 
-      await expect(page.getByText(TEST_EMAILS[role])).toBeVisible()
+      // Act
+      await admin.openAccountMenu()
+
+      // Assert
+      await admin.expectSignedInAs(TEST_EMAILS[role])
     })
   })
 }

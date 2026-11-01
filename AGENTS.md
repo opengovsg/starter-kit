@@ -17,3 +17,7 @@ When working on UI components or stories in this repo, use the **acme-web-storyb
 - Add JSDoc on exported components and non-obvious props so manifests stay accurate (`react-docgen-typescript` is enabled in `.storybook/main.ts`).
 - Prefer focused stories that explain **why** a variant exists, not only **what** it renders.
 - Keep autodocs enabled via the global `autodocs` tag in `.storybook/preview.ts`; extend with MDX where prose guidance helps agents and humans.
+
+## E2E tests (Playwright)
+
+Before adding or changing tests in `apps/web/tests/e2e`, read [its README](apps/web/tests/e2e/README.md) for the layout (feature folders, `.po.ts`, `.db.ts`, `-expect.ts`, `network.ts`) and the rules on data, auth and coverage.
