@@ -141,7 +141,7 @@ jobs:
           files: apps/web/coverage packages/logging/coverage
 
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # ponytail: Playwright 1.57 has no deps for 26.04; back to latest after bumping Playwright
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
