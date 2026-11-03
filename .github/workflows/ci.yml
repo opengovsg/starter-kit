@@ -114,7 +114,7 @@ jobs:
           DD_SERVICE_NAME: ${{ secrets.DD_SERVICE_NAME }}
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
         if: env.DD_SERVICE_NAME != '' && env.DD_API_KEY != ''
-        uses: datadog/test-visibility-github-action@d7e3562370d3742851764531da3cb54a743ebd63
+        uses: datadog/test-visibility-github-action@7ce545f228901e4ac4ef0b45d946120f1c4124e0
         with:
           languages: js
           service: ${{ secrets.DD_SERVICE_NAME }}
