@@ -64,7 +64,7 @@ catalogs:
     '@trpc/server': ^11.18.0
     '@trpc/tanstack-react-query': ^11.18.0
   vitest:
-    '@vitest/browser': ^5.0.3
+    '@vitest/browser': ^5.0.5
     '@vitest/browser-playwright': ^5.0.3
     '@vitest/coverage-v8': ^5.0.3
     vitest: ^5.0.3
