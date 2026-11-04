@@ -1,16 +1,14 @@
-import { expect } from '@playwright/test'
-
-import { test as e2eTest } from './app-fixture'
+import { expect, test } from '@playwright/test'
 
 import { env } from '~/env'
 
-e2eTest('go to /', async ({ page }) => {
+test('go to /', async ({ page }) => {
   await page.goto('/')
 
   await page.waitForSelector(`text=${env.NEXT_PUBLIC_APP_NAME}`)
 })
 
-e2eTest('test 404', async ({ page }) => {
+test('test 404', async ({ page }) => {
   const res = await page.goto('/not-found')
 
   if (res === null) {
