@@ -19,7 +19,8 @@ const opts = {
 
 export default defineConfig({
   webServer: {
-    command: 'pnpm dev-e2e',
+    // CI tests the production build (built by `pnpm build-e2e` in ci.yml).
+    command: process.env.CI ? 'pnpm start-e2e' : 'pnpm dev-e2e',
     url: baseUrl,
     reuseExistingServer: !process.env.CI, // Reuses the server locally, but starts a new one in CI
   },
