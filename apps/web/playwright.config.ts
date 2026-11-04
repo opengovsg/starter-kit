@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url'
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
 
+import { ROLES, storageStateFor } from './tests/e2e/fixtures/auth'
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 dotenv.config({ path: path.resolve(__dirname, '.env.e2e'), quiet: true })
@@ -15,6 +17,12 @@ const opts = {
   // launch headless on CI, in browser locally
   headless: !!process.env.CI || !!process.env.PLAYWRIGHT_HEADLESS,
   // collectCoverage: !!process.env.PLAYWRIGHT_HEADLESS,
+}
+
+const baseUse = {
+  ...devices['Desktop Chrome'],
+  baseURL: baseUrl,
+  headless: opts.headless,
 }
 
 export default defineConfig({
@@ -42,13 +50,28 @@ export default defineConfig({
   // 'github' alone only emits failure annotations; 'list' adds a line per test.
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
   projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: baseUrl,
-        headless: opts.headless,
-      },
-    },
+    // Signed-out tests: anything without a `@role:` tag.
+    { name: 'unauthenticated', grepInvert: /@role:/u, use: baseUse },
+    // `\b` stops `@role:user` from also matching e.g. `@role:username`.
+    ...ROLES.flatMap((role) => {
+      const grep = new RegExp(`@role:${role}\\b`, 'u')
+
+      return [
+        // Mints this role's cookie jar. Playwright runs it only when a
+        // selected test depends on it, so a run without `role` tests skips it.
+        {
+          name: `setup:${role}`,
+          testMatch: /auth\.setup\.ts$/u,
+          grep,
+          use: baseUse,
+        },
+        {
+          name: role,
+          grep,
+          dependencies: [`setup:${role}`],
+          use: { ...baseUse, storageState: storageStateFor(role) },
+        },
+      ]
+    }),
   ],
 })
