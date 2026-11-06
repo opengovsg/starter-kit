@@ -32,7 +32,7 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsrs",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "generate": "pnpm with-env prisma generate",
@@ -43,7 +43,7 @@
     "reset": "pnpm with-env prisma migrate reset",
     "seed": "pnpm with-env prisma db seed",
     "studio": "pnpm with-env prisma studio --port 5556",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
@@ -67,6 +67,7 @@
     "oxlint-tsgolint": "catalog:",
     "prisma": "catalog:prisma",
     "prisma-kysely": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -11,7 +11,7 @@
     "clean": "git clean -xdf .cache .turbo node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsrs --noEmit"
   },
   "dependencies": {
     "@tailwindcss/postcss": "catalog:tailwindcss4",
@@ -25,6 +25,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:"
   }
 }
