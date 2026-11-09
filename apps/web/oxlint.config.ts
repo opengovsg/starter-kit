@@ -50,6 +50,12 @@ export default defineConfig({
             message:
               "Use `import { env } from '~/env'` instead to ensure validated types.",
           },
+          {
+            property: 'transaction',
+            allowObjects: ['db'],
+            message:
+              'Use db.$transaction(). The Prisma-Kysely extension does not support $kysely.transaction().',
+          },
         ],
         'no-restricted-imports': [
           'error',

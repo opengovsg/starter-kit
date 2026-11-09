@@ -159,7 +159,7 @@ const result = await db.$transaction(
 )
 ```
 
-> **Note:** Do not use `db.$kysely.transaction()` directly — it is not supported by the Prisma-Kysely extension. Use Prisma transactions as shown above instead.
+> **Note:** Do not use `db.$kysely.transaction()` directly — it is not supported by the Prisma-Kysely extension. Use Prisma transactions as shown above instead. `no-restricted-properties` in `apps/web/oxlint.config.ts` enforces this.
 
 ### Raw SQL Queries
 
