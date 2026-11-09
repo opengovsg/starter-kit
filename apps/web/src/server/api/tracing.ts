@@ -4,6 +4,8 @@ import { initTRPC } from '@trpc/server'
 import type { Span } from 'dd-trace'
 import { tracer } from 'dd-trace'
 
+const TRAILING_SLASH = /\/$/u
+
 export const tracingMiddleware = initTRPC.create().middleware(
   async ({ path, type, next }) =>
     await tracer.trace(
@@ -38,7 +40,7 @@ export const tagSpanTrpcProcedure = (
     return
   }
 
-  const path = pathname.slice('/api/trpc/'.length).replace(/\/$/u, '')
+  const path = pathname.slice('/api/trpc/'.length).replace(TRAILING_SLASH, '')
 
   // Only registered procedures become resources, keeping unknown URLs bounded.
   if (!procedureNames.has(path)) {

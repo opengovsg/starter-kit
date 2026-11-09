@@ -7,6 +7,8 @@ import {
   isValidToken,
 } from '../auth.utils'
 
+const VFN_PREFIX_ALLOWED = /^[ABCDEFGHJKLMNPQRSTUVWXYZ]+$/u
+
 describe('auth.utils', () => {
   describe(createVfnIdentifier, () => {
     it('should create different identifiers for different codeChallenges with same email', () => {
@@ -54,8 +56,7 @@ describe('auth.utils', () => {
   describe(createVfnPrefix, () => {
     it('should only contain uppercase letters from the allowed alphabet', () => {
       const prefix = createVfnPrefix()
-      const allowedChars = /^[ABCDEFGHJKLMNPQRSTUVWXYZ]+$/u
-      expect(prefix).toMatch(allowedChars)
+      expect(prefix).toMatch(VFN_PREFIX_ALLOWED)
     })
 
     it('should generate different prefixes on multiple calls', () => {
