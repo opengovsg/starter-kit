@@ -12,15 +12,32 @@
     "./next-react-doctor.ts": "./next-react-doctor.ts",
     "./react-query.ts": "./react-query.ts",
     "./e18e.ts": "./e18e.ts",
-    "./tailwindcss.ts": "./tailwindcss.ts"
+    "./tailwindcss.ts": "./tailwindcss.ts",
+    "./acme.ts": "./acme.ts",
+    "./plugin": "./plugin/index.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "format": "oxfmt --ignore-path ../../.gitignore .",
+    "lint": "oxlint plugin",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@oxlint/plugins": "catalog:",
     "ultracite": "catalog:"
   },
   "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
     "@e18e/eslint-plugin": "catalog:",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-plugin-react-doctor": "catalog:",
-    "oxlint-tailwindcss": "catalog:"
+    "oxlint-tailwindcss": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
   }
 }

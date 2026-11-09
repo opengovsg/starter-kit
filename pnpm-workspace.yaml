@@ -8,6 +8,7 @@ catalog:
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
   'oxlint': ^1.90.0
+  '@oxlint/plugins': ^1.90.0
   'oxlint-tailwindcss': ^1.17.1
   'oxlint-plugin-react-doctor': ^0.9.18
   '@e18e/eslint-plugin': ^0.8.1
