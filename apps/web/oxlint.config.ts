@@ -2,7 +2,7 @@ import { defineConfig } from 'oxlint'
 
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
-import { e18e, e18eJsPlugins, e18eSettings } from '@acme/oxlint-config/e18e.ts'
+import { e18e, e18eJsPlugins } from '@acme/oxlint-config/e18e.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
@@ -26,7 +26,7 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  settings: { ...reactDoctorSettings, ...e18eSettings },
+  settings: reactDoctorSettings,
   ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {

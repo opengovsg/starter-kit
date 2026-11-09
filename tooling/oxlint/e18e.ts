@@ -13,5 +13,3 @@ export const e18eJsPlugins = [
 export const e18e = defineConfig({
   jsPlugins: [...e18eJsPlugins],
 })
-
-export const e18eSettings = {}
