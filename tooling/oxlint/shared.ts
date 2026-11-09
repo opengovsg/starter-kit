@@ -39,9 +39,9 @@ export default defineConfig({
     'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     'vitest/no-conditional-expect': 'off',
     'vitest/require-to-throw-message': 'off',
-    'e18e/no-spread-in-reduce': 'warn',
-    'e18e/prefer-includes': 'warn',
-    'e18e/prefer-array-fill': 'warn',
-    'e18e/prefer-static-regex': 'warn',
+    'e18e/no-spread-in-reduce': 'error',
+    'e18e/prefer-includes': 'error',
+    'e18e/prefer-array-fill': 'error',
+    'e18e/prefer-static-regex': 'error',
   },
 })
