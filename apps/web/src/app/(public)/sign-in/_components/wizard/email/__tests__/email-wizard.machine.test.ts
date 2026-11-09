@@ -1,73 +1,78 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createActor } from 'xstate'
 
 import { emailWizardMachine } from '../email-wizard.machine'
 
+import { PKCE_LENGTH } from '~/validators/auth'
+
 const sampleVfnData = {
-  codeChallenge: 'challenge',
+  codeVerifier: 'v'.repeat(PKCE_LENGTH),
   email: 'user@gov.sg',
   otpPrefix: 'ABCD',
 }
 
-describe('signInEmailWizard machine', () => {
-  it('starts on email and advances to verify', () => {
-    const actor = createActor(emailWizardMachine, {
-      input: { delayForResendSeconds: 60 },
-    })
+const startActor = (delayForResendSeconds = 3) =>
+  createActor(emailWizardMachine, {
+    input: { delayForResendSeconds },
+  }).start()
 
-    actor.start()
+describe('signInEmailWizard machine', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('advances to verify on OTP_SENT', () => {
+    const actor = startActor()
 
     expect(actor.getSnapshot().matches('email')).toBeTruthy()
 
-    actor.send({ data: sampleVfnData, type: 'ADVANCE_TO_VERIFY' })
+    actor.send({ data: sampleVfnData, type: 'OTP_SENT' })
 
     const snapshot = actor.getSnapshot()
 
     expect(snapshot.matches('verify')).toBeTruthy()
     expect(snapshot.context.vfnStepData).toStrictEqual(sampleVfnData)
-    expect(snapshot.context.resendTimer).toBe(60)
   })
 
-  it('blocks duplicate BEGIN_VERIFY while in flight', () => {
-    const actor = createActor(emailWizardMachine, {
-      input: { delayForResendSeconds: 60 },
-    })
+  it('counts down the resend timer, then allows resend', () => {
+    const actor = startActor(3)
 
-    actor.start()
+    actor.send({ data: sampleVfnData, type: 'OTP_SENT' })
+    vi.advanceTimersByTime(2000)
 
-    actor.send({ data: sampleVfnData, type: 'ADVANCE_TO_VERIFY' })
-    actor.send({ type: 'BEGIN_VERIFY' })
+    expect(actor.getSnapshot().context.resendTimer).toBe(1)
+    expect(actor.getSnapshot().matches({ verify: 'cooldown' })).toBeTruthy()
 
-    expect(actor.getSnapshot().context.verifyInFlight).toBeTruthy()
+    vi.advanceTimersByTime(1000)
 
-    actor.send({ type: 'BEGIN_VERIFY' })
-
-    expect(actor.getSnapshot().context.verifyInFlight).toBeTruthy()
+    expect(actor.getSnapshot().context.resendTimer).toBe(0)
+    expect(actor.getSnapshot().matches({ verify: 'canResend' })).toBeTruthy()
   })
 
-  it('clears verify in flight on END_VERIFY', () => {
-    const actor = createActor(emailWizardMachine, {
-      input: { delayForResendSeconds: 60 },
-    })
+  it('restarts the timer and updates step data on OTP_RESENT', () => {
+    const actor = startActor(3)
+    const resent = { ...sampleVfnData, otpPrefix: 'WXYZ' }
 
-    actor.start()
+    actor.send({ data: sampleVfnData, type: 'OTP_SENT' })
+    vi.advanceTimersByTime(3000)
+    actor.send({ data: resent, type: 'OTP_RESENT' })
 
-    actor.send({ data: sampleVfnData, type: 'ADVANCE_TO_VERIFY' })
-    actor.send({ type: 'BEGIN_VERIFY' })
-    actor.send({ type: 'END_VERIFY' })
+    const snapshot = actor.getSnapshot()
 
-    expect(actor.getSnapshot().context.verifyInFlight).toBeFalsy()
+    expect(snapshot.matches({ verify: 'cooldown' })).toBeTruthy()
+    expect(snapshot.context.resendTimer).toBe(3)
+    expect(snapshot.context.vfnStepData).toStrictEqual(resent)
   })
 
-  it('returns to email on VERIFY_COMPLETE', () => {
-    const actor = createActor(emailWizardMachine, {
-      input: { delayForResendSeconds: 60 },
-    })
+  it('returns to email and clears step data on VERIFIED', () => {
+    const actor = startActor()
 
-    actor.start()
-
-    actor.send({ data: sampleVfnData, type: 'ADVANCE_TO_VERIFY' })
-    actor.send({ type: 'VERIFY_COMPLETE' })
+    actor.send({ data: sampleVfnData, type: 'OTP_SENT' })
+    actor.send({ type: 'VERIFIED' })
 
     const snapshot = actor.getSnapshot()
 

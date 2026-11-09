@@ -11,10 +11,14 @@ import { useMutation } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { useInterval } from 'usehooks-ts'
 
-import { useSignInWizard } from '../context'
+import { EmailWizard } from './email-wizard.context'
 
 import { Infobox } from '@acme/ui/infobox'
 import { TextField } from '@acme/ui/text-field'
+import {
+  browserCreatePkceChallenge,
+  browserCreatePkceVerifier,
+} from '~/lib/pkce/browser-pkce'
 import { useTRPC } from '~/trpc/react'
 import { emailVerifyOtpSchema } from '~/validators/auth'
 
@@ -23,22 +27,15 @@ export const VerificationStep = () => {
   const [showOtpDelayMessage, setShowOtpDelayMessage] = useState(false)
   const trpc = useTRPC()
 
-  const {
-    vfnStepData,
-    timer,
-    verifyInFlight,
-    setVfnStepData,
-    beginVerifySubmit,
-    endVerifySubmit,
-    completeVerify,
-    resetTimer,
-    newChallenge,
-    getVerifier,
-    clearVerifierMap,
-  } = useSignInWizard()
+  const actorRef = EmailWizard.useActorRef()
+
+  const vfnStepData = EmailWizard.useSelector(
+    (state) => state.context.vfnStepData
+  )
+
+  const timer = EmailWizard.useSelector((state) => state.context.resendTimer)
 
   const [newChallengePending, setNewChallengePending] = useState(false)
-  const codeVerifier = getVerifier(vfnStepData?.codeChallenge ?? '') ?? ''
 
   useInterval(
     () => {
@@ -61,12 +58,8 @@ export const VerificationStep = () => {
       onError: (error) => {
         setError('token', { message: error.message })
       },
-      onSettled: () => {
-        endVerifySubmit()
-      },
       onSuccess: () => {
-        clearVerifierMap()
-        completeVerify()
+        actorRef.send({ type: 'VERIFIED' })
         router.refresh()
       },
     })
@@ -76,17 +69,6 @@ export const VerificationStep = () => {
     trpc.auth.email.login.mutationOptions({
       onError: (error) => {
         setError('token', { message: error.message })
-      },
-      onSuccess: (res, req) => {
-        setVfnStepData({
-          codeChallenge: req.codeChallenge,
-          email: res.email,
-          otpPrefix: res.otpPrefix,
-        })
-        resetField('token')
-        setFocus('token')
-        // On success, restart the timer before this can be called again.
-        resetTimer()
       },
     })
   )
@@ -107,10 +89,11 @@ export const VerificationStep = () => {
     }
 
     setNewChallengePending(true)
+    const codeVerifier = browserCreatePkceVerifier()
     let codeChallenge: string | undefined
 
     try {
-      codeChallenge = await newChallenge(vfnStepData.codeChallenge)
+      codeChallenge = await browserCreatePkceChallenge(codeVerifier)
     } catch (error) {
       console.error(error)
     }
@@ -125,14 +108,27 @@ export const VerificationStep = () => {
       return
     }
 
-    resendOtpMutation.mutate({ codeChallenge, email: vfnStepData.email })
+    resendOtpMutation.mutate(
+      { codeChallenge, email: vfnStepData.email },
+      {
+        onSuccess: (res) => {
+          // Re-entering verify restarts the resend timer.
+          actorRef.send({
+            data: { codeVerifier, email: res.email, otpPrefix: res.otpPrefix },
+            type: 'OTP_RESENT',
+          })
+          resetField('token')
+          setFocus('token')
+        },
+      }
+    )
   }
 
   if (vfnStepData === undefined) {
     return null
   }
 
-  const isVerifyPending = verifyOtpMutation.isPending || verifyInFlight
+  const isVerifyPending = verifyOtpMutation.isPending
 
   const handleFormSubmit = ({
     email,
@@ -145,11 +141,11 @@ export const VerificationStep = () => {
       return
     }
 
-    if (!beginVerifySubmit()) {
-      return
-    }
-
-    verifyOtpMutation.mutate({ codeVerifier, email, token })
+    verifyOtpMutation.mutate({
+      codeVerifier: vfnStepData.codeVerifier,
+      email,
+      token,
+    })
   }
 
   return (
