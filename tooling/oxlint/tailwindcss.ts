@@ -6,7 +6,22 @@ import tailwindcss from 'oxlint-tailwindcss/config'
  *
  * @see https://oxlint-tailwindcss.pages.dev/setup
  */
-export const tailwindcssOxlint = tailwindcss()
+const tailwindcssRecommended = tailwindcss()
+
+/**
+ * Recommended rules, plus design-system guards the preset leaves off.
+ * Severity is `error` so violations fail lint while we see what they catch.
+ * `no-default-palette` has no `allow` list yet — `white` will report.
+ */
+export const tailwindcssOxlint = {
+  ...tailwindcssRecommended,
+  rules: {
+    ...tailwindcssRecommended.rules,
+    'tailwindcss/no-default-palette': 'error',
+    'tailwindcss/prefer-theme-tokens': 'error',
+    'tailwindcss/prefer-scale-token': 'error',
+  },
+}
 
 /** Design-system entry for `apps/web` (paths relative to that oxlint config). */
 export const tailwindcssWebSettings = {

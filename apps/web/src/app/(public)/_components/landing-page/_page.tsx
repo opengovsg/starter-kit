@@ -134,7 +134,7 @@ export const LandingPageComponent = ({
           width={56}
           height={56}
         />
-        <SectionHeader className="text-white">
+        <SectionHeader className="text-base-content-inverse">
           Start building your app now
         </SectionHeader>
         <LinkButton href={ctaLink}>Get started</LinkButton>

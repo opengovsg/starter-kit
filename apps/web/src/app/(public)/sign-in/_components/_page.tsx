@@ -12,7 +12,7 @@ import { env } from '~/env'
  * Exported for testing.
  */
 export const SignInPageComponent = () => (
-  <div className="flex flex-1 lg:bg-linear-to-r lg:from-interaction-main-subtle-default lg:from-50% lg:to-white lg:to-50%">
+  <div className="flex flex-1 lg:bg-linear-to-r lg:from-interaction-main-subtle-default lg:from-50% lg:to-base-canvas-default lg:to-50%">
     <div className="mx-auto flex flex-1 flex-col gap-2 lg:container lg:grid lg:grid-cols-12 lg:gap-4">
       <div className="col-span-4 min-h-55 bg-interaction-main-subtle-default max-sm:hidden lg:col-span-7 lg:h-full">
         {/* Insert relevant image here */}
