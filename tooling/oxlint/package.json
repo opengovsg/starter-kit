@@ -10,13 +10,15 @@
     "./presets.ts": "./presets.ts",
     "./react-doctor.ts": "./react-doctor.ts",
     "./next-react-doctor.ts": "./next-react-doctor.ts",
-    "./react-query.ts": "./react-query.ts"
+    "./react-query.ts": "./react-query.ts",
+    "./tailwindcss.ts": "./tailwindcss.ts"
   },
   "dependencies": {
     "ultracite": "catalog:"
   },
   "devDependencies": {
     "oxlint": "catalog:",
-    "oxlint-plugin-react-doctor": "catalog:"
+    "oxlint-plugin-react-doctor": "catalog:",
+    "oxlint-tailwindcss": "catalog:"
   }
 }
