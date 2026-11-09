@@ -7,7 +7,9 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
-import sharedConfig from '@acme/oxlint-config/shared.ts'
+import sharedConfig, {
+  kyselyTransactionRestriction,
+} from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
   extends: [
@@ -40,6 +42,7 @@ export default defineConfig({
             message:
               "Use `import { env } from '~/env'` instead to ensure validated types.",
           },
+          kyselyTransactionRestriction,
         ],
         'no-restricted-imports': [
           'error',
