@@ -17,8 +17,8 @@
     "ultracite": "catalog:"
   },
   "devDependencies": {
+    "@e18e/eslint-plugin": "catalog:",
     "oxlint": "catalog:",
-    "oxlint-plugin-react-doctor": "catalog:",
-    "@e18e/eslint-plugin": "catalog:"
+    "oxlint-plugin-react-doctor": "catalog:"
   }
 }
