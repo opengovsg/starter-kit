@@ -34,9 +34,16 @@ export const tagSpanTrpcProcedure = (
     return
   }
 
-  const pathname = req.url?.split('?')[0]
+  const { url } = req
 
-  if (pathname?.startsWith('/api/trpc/') !== true) {
+  if (url === undefined) {
+    return
+  }
+
+  const queryIndex = url.indexOf('?')
+  const pathname = queryIndex === -1 ? url : url.slice(0, queryIndex)
+
+  if (!pathname.startsWith('/api/trpc/')) {
     return
   }
 
