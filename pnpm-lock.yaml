@@ -116,6 +116,9 @@ catalogs:
     '@opengovsg/logging':
       specifier: ^0.5.1
       version: 0.5.1
+    '@oxlint/plugins':
+      specifier: ^1.90.0
+      version: 1.92.0
     '@types/node':
       specifier: ^24.10.4
       version: 24.10.4
@@ -791,13 +794,25 @@ importers:
 
   tooling/oxlint:
     dependencies:
+      '@oxlint/plugins':
+        specifier: 'catalog:'
+        version: 1.92.0
       ultracite:
         specifier: 'catalog:'
         version: 8.1.0(oxfmt@0.75.0)(oxlint@1.90.0(oxlint-tsgolint@7.0.2005))
     devDependencies:
+      '@acme/tsconfig':
+        specifier: workspace:*
+        version: link:../typescript
       '@e18e/eslint-plugin':
         specifier: 'catalog:'
         version: 0.8.1(oxlint@1.90.0(oxlint-tsgolint@7.0.2005))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.10.4
+      oxfmt:
+        specifier: 'catalog:'
+        version: 0.75.0
       oxlint:
         specifier: 'catalog:'
         version: 1.90.0(oxlint-tsgolint@7.0.2005)
@@ -807,6 +822,15 @@ importers:
       oxlint-tailwindcss:
         specifier: 'catalog:'
         version: 1.17.1
+      oxlint-tsgolint:
+        specifier: 'catalog:'
+        version: 7.0.2005
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: catalog:vitest
+        version: 5.0.3(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(@vitest/browser-playwright@5.0.3)(@vitest/coverage-v8@5.0.3)(@vitest/ui@5.0.3)(msw@2.12.7(@types/node@24.10.4)(typescript@7.0.2))(vite@8.3.5(@types/node@24.10.4)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
 
   tooling/storybook:
     devDependencies:
@@ -2652,6 +2676,10 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
+
+  '@oxlint/plugins@1.92.0':
+    resolution: {integrity: sha512-+8wfampUIDYgvWX+QOd4RFk0fTLCquBnkCSdb9MiK+H0BaFQtgq445s+yJnb5/qjjyaWGfX4j7yJOdijXv79qg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
@@ -6521,6 +6549,28 @@ packages:
           targets:
             - cpu: x64
               os: win32
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-glQSWCWj5eg0vYomDatMgwP3IEZKdBUG7CeYm5uhdps=
+            type: binary
+            url: https://unofficial-builds.nodejs.org/download/release/v24.22.1/node-v24.22.1-linux-arm64-musl.tar.gz
+          targets:
+            - cpu: arm64
+              os: linux
+              libc: musl
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-Cp7dzi0ujzrdvpT6RtdRMlstdPf9HOYylhZNNrbfxuU=
+            type: binary
+            url: https://unofficial-builds.nodejs.org/download/release/v24.22.1/node-v24.22.1-linux-x64-musl.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+              libc: musl
     version: 24.22.1
     hasBin: true
 
@@ -9232,6 +9282,8 @@ snapshots:
 
   '@oxlint/binding-win32-x64-msvc@1.90.0':
     optional: true
+
+  '@oxlint/plugins@1.92.0': {}
 
   '@pinojs/redact@0.4.0': {}
 

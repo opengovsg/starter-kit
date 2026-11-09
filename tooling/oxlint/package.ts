@@ -1,13 +1,13 @@
 import { defineConfig } from 'oxlint'
 
-import { e18e, e18eJsPlugins } from '@acme/oxlint-config/e18e.ts'
-import sharedConfig from '@acme/oxlint-config/shared.ts'
+import { acme } from './acme.ts'
+import { e18e } from './e18e.ts'
+import sharedConfig from './shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, e18e],
-  jsPlugins: [...e18eJsPlugins],
+  extends: [sharedConfig, e18e, acme],
   options: {
-    typeAware: true,
     reportUnusedDisableDirectives: 'off',
+    typeAware: true,
   },
 })
