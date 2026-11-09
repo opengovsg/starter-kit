@@ -1,6 +1,6 @@
 import { defineConfig } from 'oxlint'
 
-import { e18e, e18eJsPlugins } from '@acme/oxlint-config/e18e.ts'
+import { e18e } from '@acme/oxlint-config/e18e.ts'
 import { react } from '@acme/oxlint-config/presets.ts'
 import {
   reactDoctor,
@@ -14,7 +14,7 @@ import {
 
 export default defineConfig({
   extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e],
-  jsPlugins: [...reactDoctor.jsPlugins, ...e18eJsPlugins],
+  jsPlugins: [...reactDoctor.jsPlugins],
   options: {
     reportUnusedDisableDirectives: 'off',
     typeAware: true,

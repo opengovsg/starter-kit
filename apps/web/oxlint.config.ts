@@ -1,6 +1,7 @@
 import { defineConfig } from 'oxlint'
 
-import { e18e, e18eJsPlugins } from '@acme/oxlint-config/e18e.ts'
+import { acme } from '@acme/oxlint-config/acme.ts'
+import { e18e } from '@acme/oxlint-config/e18e.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
 import {
@@ -25,8 +26,9 @@ export default defineConfig({
     reactQuery,
     tailwindcssOxlint,
     e18e,
+    acme,
   ],
-  jsPlugins: [...reactDoctor.jsPlugins, ...e18eJsPlugins],
+  jsPlugins: [...reactDoctor.jsPlugins],
   options: {
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
