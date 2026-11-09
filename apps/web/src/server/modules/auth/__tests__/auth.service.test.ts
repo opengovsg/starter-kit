@@ -10,7 +10,11 @@ import type { Logger } from '@acme/logging'
 import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
-import { emailLogin, emailVerifyOtp } from '../auth.service'
+import {
+  consumeVerificationToken,
+  emailLogin,
+  emailVerifyOtp,
+} from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
 import {
@@ -25,6 +29,25 @@ const INVALID_OR_EXPIRED_MESSAGE = 'Token is invalid or has expired'
 
 const WRONG_OTP_OR_REUSED_MESSAGE =
   'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
+
+const verifyAndConsumeOtp = async ({
+  codeVerifier,
+  email,
+  token,
+}: {
+  codeVerifier: string
+  email: string
+  token: string
+}) => {
+  const { vfnIdentifier } = await emailVerifyOtp({
+    codeVerifier,
+    email,
+    logger,
+    token,
+  })
+
+  await consumeVerificationToken({ vfnIdentifier })
+}
 
 describe('auth.service', () => {
   beforeEach(async () => {
@@ -70,7 +93,7 @@ describe('auth.service', () => {
       )
     })
 
-    it('should allow different codeChallenges for same email', async () => {
+    it('should invalidate prior verification tokens when requesting a new login for the same email', async () => {
       const email = 'test@example.com'
       const codeChallenge1 = 'test-codeChallenge-1'
       const codeChallenge2 = 'test-codeChallenge-2'
@@ -78,7 +101,6 @@ describe('auth.service', () => {
       await emailLogin({ codeChallenge: codeChallenge1, email })
       await emailLogin({ codeChallenge: codeChallenge2, email })
 
-      // Should have two records with different codeChallenges
       const vfnIdentifier1 = createVfnIdentifier({
         codeChallenge: codeChallenge1,
         email,
@@ -97,9 +119,8 @@ describe('auth.service', () => {
         where: { identifier: vfnIdentifier2 },
       })
 
-      expect(token1).toBeDefined()
+      expect(token1).toBeNull()
       expect(token2).toBeDefined()
-      expect(token1?.token).not.toBe(token2?.token)
     })
   })
 
@@ -114,7 +135,7 @@ describe('auth.service', () => {
 
       // Should not throw
       await expect(
-        emailVerifyOtp({ codeVerifier, email, logger, token })
+        verifyAndConsumeOtp({ codeVerifier, email, token })
       ).resolves.not.toThrow()
 
       // Token should be deleted after successful verification
@@ -277,7 +298,7 @@ describe('auth.service', () => {
       const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ codeChallenge, email })
 
-      await emailVerifyOtp({ codeVerifier, email, logger, token })
+      await verifyAndConsumeOtp({ codeVerifier, email, token })
 
       // Token should be deleted
       const vfnIdentifier = createVfnIdentifier({
@@ -300,13 +321,40 @@ describe('auth.service', () => {
 
       // First verification succeeds
       await expect(
-        emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).resolves.toBeDefined()
+        verifyAndConsumeOtp({ codeVerifier, email, token })
+      ).resolves.not.toThrow()
 
       // Second verification with same token should fail
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token })
       ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)
+    })
+
+    it('should allow only one concurrent verify to consume the same OTP', async () => {
+      const email = 'test@example.com'
+      const codeVerifier = ssCreatePkceVerifier()
+      const codeChallenge = ssCreatePkceChallenge(codeVerifier)
+      const { token } = await emailLogin({ codeChallenge, email })
+
+      const attemptVerifyAndConsume = async () => {
+        const { vfnIdentifier } = await emailVerifyOtp({
+          codeVerifier,
+          email,
+          logger,
+          token,
+        })
+
+        await consumeVerificationToken({ vfnIdentifier })
+      }
+
+      const [first, second] = await Promise.allSettled([
+        attemptVerifyAndConsume(),
+        attemptVerifyAndConsume(),
+      ])
+
+      const outcomes = [first?.status, second?.status].sort()
+
+      expect(outcomes).toStrictEqual(['fulfilled', 'rejected'])
     })
   })
 })

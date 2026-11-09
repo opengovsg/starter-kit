@@ -25,6 +25,10 @@ export const createVfnIdentifier = ({
   // Use a JSON stringified array to avoid ambiguity, avoids string concatenation issues
   JSON.stringify([email, codeChallenge])
 
+/** Prefix shared by every verification identifier for one email (for delete-by-email). */
+export const createVfnIdentifierEmailPrefix = (email: string) =>
+  `${JSON.stringify([email]).slice(0, -1)},`
+
 const createTokenHash = ({
   token,
   email,

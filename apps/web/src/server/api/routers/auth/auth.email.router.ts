@@ -2,7 +2,11 @@ import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../../trpc'
 
-import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
+import {
+  consumeVerificationToken,
+  emailLogin,
+  emailVerifyOtp,
+} from '~/server/modules/auth/auth.service'
 import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
   emailSignInSchema,
@@ -35,8 +39,18 @@ export const emailAuthRouter = createTRPCRouter({
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
-      await emailVerifyOtp({ codeVerifier, email, logger: ctx.logger, token })
+      // Order: validate OTP → upsert user → consume token → persist session.
+      // User upsert runs before token delete so a DB failure does not strand users
+      // without a consumable OTP. Session save (iron-session) cannot join a Prisma
+      // transaction; if save fails after consume, the user must request a new OTP.
+      const { vfnIdentifier } = await emailVerifyOtp({
+        codeVerifier,
+        email,
+        logger: ctx.logger,
+        token,
+      })
       const user = await loginUserByEmail(email, ctx.logger)
+      await consumeVerificationToken({ vfnIdentifier })
       const sessionId = crypto.randomUUID()
       ctx.session.userId = user.id
       ctx.session.sessionId = sessionId

@@ -10,6 +10,7 @@ import { sendMail } from '../mail/mail.service'
 import {
   createAuthToken,
   createVfnIdentifier,
+  createVfnIdentifierEmailPrefix,
   createVfnPrefix,
   isValidToken,
 } from './auth.utils'
@@ -18,6 +19,15 @@ import { Prisma } from '@acme/db/client'
 import { env } from '~/env'
 import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
+
+const deleteVerificationTokensForEmail = async (email: string) => {
+  const identifierPrefix = createVfnIdentifierEmailPrefix(email)
+
+  await db.$kysely
+    .deleteFrom('VerificationToken')
+    .where('identifier', 'like', `${identifierPrefix}%`)
+    .execute()
+}
 
 export const emailLogin = async ({
   email,
@@ -32,6 +42,8 @@ export const emailLogin = async ({
   let issuedAt: Date
 
   try {
+    await deleteVerificationTokensForEmail(email)
+
     ;({ issuedAt } = await db.verificationToken.create({
       data: {
         identifier,
@@ -81,6 +93,39 @@ export const emailLogin = async ({
   }
 }
 
+/**
+ * Deletes a validated verification token so it cannot be reused.
+ * Call only after OTP validation succeeds and ideally after the user record is ready.
+ */
+export const consumeVerificationToken = async ({
+  vfnIdentifier,
+}: {
+  vfnIdentifier: string
+}) => {
+  // NOTE: You can also use `kysely` for your queries
+  // if you want more fine-grained control.
+  // Valid token, delete record to prevent reuse
+  return await db.$kysely
+    .deleteFrom('VerificationToken')
+    .where('identifier', '=', vfnIdentifier)
+    .returningAll()
+    .executeTakeFirstOrThrow(
+      // NOTE: If we are unable to find the token,
+      // this means that it has been deleted between
+      // validation and consumption (e.g. concurrent verify)
+      () =>
+        new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            'Token is invalid or has expired. Please request a new OTP.',
+        })
+    )
+}
+
+/**
+ * Validates an OTP (increments attempts, checks expiry/hash).
+ * Does not consume the token — pair with {@link consumeVerificationToken} after login.
+ */
 export const emailVerifyOtp = async ({
   email,
   token,
@@ -91,12 +136,12 @@ export const emailVerifyOtp = async ({
   token: string
   codeVerifier: string
   logger: Logger
-}) => {
+}): Promise<{ vfnIdentifier: string }> => {
   const codeChallenge = ssCreatePkceChallenge(codeVerifier)
   const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
 
   try {
-    // Not in transaction, because we do not want it to rollback
+    // Not in transaction, because we do not want failed OTP attempts to roll back
     const hashedToken = await db.verificationToken.update({
       data: {
         attempts: {
@@ -142,24 +187,7 @@ export const emailVerifyOtp = async ({
       })
     }
 
-    // NOTE: You can also use `kysely` for your queries
-    // if you want more fine-grained control.
-    // Valid token, delete record to prevent reuse
-    return await db.$kysely
-      .deleteFrom('VerificationToken')
-      .where('identifier', '=', vfnIdentifier)
-      .returningAll()
-      .executeTakeFirstOrThrow(
-        // NOTE: If we are unable to find the token,
-        // this means that it has been deleted between
-        // our initial query and the deletion here
-        () =>
-          new TRPCError({
-            code: 'BAD_REQUEST',
-            message:
-              'Token is invalid or has expired. Please request a new OTP.',
-          })
-      )
+    return { vfnIdentifier }
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025
     if (

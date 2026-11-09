@@ -3,11 +3,30 @@ import { describe, expect, it } from 'vitest'
 import {
   createAuthToken,
   createVfnIdentifier,
+  createVfnIdentifierEmailPrefix,
   createVfnPrefix,
   isValidToken,
 } from '../auth.utils'
 
 describe('auth.utils', () => {
+  describe(createVfnIdentifierEmailPrefix, () => {
+    it('should match every identifier for the same email', () => {
+      const email = 'test@example.com'
+      const prefix = createVfnIdentifierEmailPrefix(email)
+
+      expect(
+        createVfnIdentifier({ codeChallenge: 'challenge-a', email }).startsWith(
+          prefix
+        )
+      ).toBe(true)
+      expect(
+        createVfnIdentifier({ codeChallenge: 'challenge-b', email }).startsWith(
+          prefix
+        )
+      ).toBe(true)
+    })
+  })
+
   describe(createVfnIdentifier, () => {
     it('should create different identifiers for different codeChallenges with same email', () => {
       const email = 'test@example.com'
