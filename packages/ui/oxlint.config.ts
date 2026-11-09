@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint'
 
-import { react } from '@acme/oxlint-config/presets.ts'
 import { e18e, e18eJsPlugins } from '@acme/oxlint-config/e18e.ts'
+import { react } from '@acme/oxlint-config/presets.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
