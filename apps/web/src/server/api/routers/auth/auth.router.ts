@@ -7,15 +7,15 @@ export const authRouter = createTRPCRouter({
     const { sessionId, userId } = ctx.session
     ctx.session.destroy()
 
-    if (
-      sessionId !== undefined &&
-      sessionId !== '' &&
-      userId !== undefined &&
-      userId !== ''
-    ) {
+    if (userId !== undefined && userId !== '') {
+      const auditSessionId =
+        sessionId !== undefined && sessionId !== ''
+          ? sessionId
+          : crypto.randomUUID()
+
       ctx.logger.audit.authn.sessionTerminated({
         reason: 'logout',
-        sessionId,
+        sessionId: auditSessionId,
         userId,
       })
     }

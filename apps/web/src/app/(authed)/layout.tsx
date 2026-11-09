@@ -6,6 +6,7 @@ import { VersionCheckWrapper } from '../_components/version-check-wrapper'
 import { AuthedNavbar } from './_components/authed-navbar'
 
 import { LOGIN_ROUTE } from '~/constants'
+import { assertAuthedSessionUser } from '~/server/session-auth'
 import { getSession } from '~/server/session'
 import { HydrateClient, prefetch, trpc } from '~/trpc/server'
 import type { DynamicLayoutProps } from '~/types/nextjs'
@@ -17,7 +18,7 @@ const AuthedLayout = async ({ children }: DynamicLayoutProps) => {
 
   const session = await getSession()
 
-  if (session.userId === undefined || session.userId === '') {
+  if ((await assertAuthedSessionUser(session)) === null) {
     redirect(LOGIN_ROUTE)
   }
 

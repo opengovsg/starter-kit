@@ -1,6 +1,7 @@
 import { LandingPageComponent } from './_components/landing-page/_page'
 
 import { env } from '~/env'
+import { assertAuthedSessionUser } from '~/server/session-auth'
 import { getSession } from '~/server/session'
 
 const LandingPage = async () => {
@@ -8,7 +9,7 @@ const LandingPage = async () => {
   // check for authentication. Remove this logic if you want to keep this as a static
   // page.
   const session = await getSession()
-  const isAuthed = session.userId !== undefined
+  const isAuthed = (await assertAuthedSessionUser(session)) !== null
 
   return (
     <LandingPageComponent

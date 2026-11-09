@@ -17,7 +17,7 @@ import {
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { getSession } from '../session'
+import { getSession, isSessionAuthed } from '../session'
 import { extractIpAddress } from '../utils/request'
 import { tracingMiddleware } from './tracing'
 
@@ -221,7 +221,7 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
 })
 
 const authMiddleware = t.middleware(async ({ ctx, next }) => {
-  if (ctx.session.userId === undefined || ctx.session.userId === '') {
+  if (!isSessionAuthed(ctx.session)) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 

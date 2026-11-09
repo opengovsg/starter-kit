@@ -4,12 +4,13 @@ import { SignInPageComponent } from './_components/_page'
 
 import { JavaScriptRequiredNotice } from '~/app/_components/javascript-required-notice'
 import { AUTHED_ROOT_ROUTE } from '~/constants'
+import { assertAuthedSessionUser } from '~/server/session-auth'
 import { getSession } from '~/server/session'
 
 const SignInPage = async () => {
   const session = await getSession()
 
-  if (session.userId !== undefined && session.userId !== '') {
+  if ((await assertAuthedSessionUser(session)) !== null) {
     redirect(AUTHED_ROOT_ROUTE)
   }
 
