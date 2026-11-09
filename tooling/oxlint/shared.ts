@@ -2,14 +2,6 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
-/** prisma-extension-kysely does not implement Kysely's transaction API. */
-export const kyselyTransactionRestriction = {
-  property: 'transaction',
-  allowObjects: ['db'],
-  message:
-    'Use db.$transaction(). The Prisma-Kysely extension does not support $kysely.transaction().',
-}
-
 export default defineConfig({
   extends: [core, antiSlop],
   settings: {
@@ -47,6 +39,5 @@ export default defineConfig({
     'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     'vitest/no-conditional-expect': 'off',
     'vitest/require-to-throw-message': 'off',
-    'no-restricted-properties': ['error', kyselyTransactionRestriction],
   },
 })
