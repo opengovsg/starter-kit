@@ -7,13 +7,20 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
+import {
+  tailwindcssOxlint,
+  tailwindcssUiSettings,
+} from '@acme/oxlint-config/tailwindcss.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, react, reactDoctor, e18e],
+  extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e],
   jsPlugins: [...reactDoctor.jsPlugins, ...e18eJsPlugins],
   options: {
     reportUnusedDisableDirectives: 'off',
     typeAware: true,
   },
-  settings: reactDoctorSettings,
+  settings: {
+    ...reactDoctorSettings,
+    ...tailwindcssUiSettings,
+  },
 })

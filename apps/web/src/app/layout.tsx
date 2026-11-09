@@ -28,7 +28,7 @@ const RootLayout = (props: { children: React.ReactNode }) => (
   <html lang="en" suppressHydrationWarning>
     <body
       className={cn(
-        'text-base-content-default font-sans antialiased',
+        'font-sans text-base-content-default antialiased',
         inter.variable,
         ibmPlexMono.variable
       )}

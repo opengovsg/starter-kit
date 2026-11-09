@@ -14,10 +14,10 @@ export const infoboxStyles = tv({
     size: {
       md: {
         base: 'p-4 prose-body-1',
-        icon: 'text-2xl mr-2',
+        icon: 'mr-2 text-2xl',
       },
       sm: {
-        base: 'prose-body-2 p-2.5',
+        base: 'p-2.5 prose-body-2',
         icon: 'my-0.5 mr-2',
       },
     },

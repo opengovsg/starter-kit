@@ -158,7 +158,7 @@ export const VerificationStep = () => {
             startContent={
               <div
                 aria-label={`OTP prefix is ${vfnStepData.otpPrefix}`}
-                className="border-base-divider-strong bg-interaction-support-disabled text-base-content-default prose-body-2 -mr-px inline-flex items-center rounded-l-sm border px-3"
+                className="-mr-px inline-flex items-center rounded-l-sm border border-base-divider-strong bg-interaction-support-disabled px-3 prose-body-2 text-base-content-default"
               >
                 {vfnStepData.otpPrefix} -
               </div>
@@ -186,7 +186,7 @@ export const VerificationStep = () => {
           variant="unstyled"
           disableRipple
           className={cn(
-            'prose-caption-2 disabled:text-interaction-support-disabled-content h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 whitespace-pre enabled:underline'
+            'h-auto w-fit min-w-auto gap-0 self-end rounded-none p-0 prose-caption-2 whitespace-pre enabled:underline disabled:text-interaction-support-disabled-content'
           )}
           size="xs"
           onPress={() => {

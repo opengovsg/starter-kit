@@ -29,7 +29,7 @@ export const SectionHeader = ({
 }: PropsWithChildren<{ className?: string }>) => (
   <h2
     className={cn(
-      'md:prose-responsive-heading-heavy-480 prose-responsive-heading-heavy text-base-content-strong',
+      'prose-responsive-heading-heavy text-base-content-strong md:prose-responsive-heading-heavy-480',
       className
     )}
   >

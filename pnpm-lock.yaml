@@ -134,6 +134,9 @@ catalogs:
     oxlint-plugin-react-doctor:
       specifier: ^0.9.18
       version: 0.9.18
+    oxlint-tailwindcss:
+      specifier: ^1.17.1
+      version: 1.17.1
     oxlint-tsgolint:
       specifier: ^7.0.2005
       version: 7.0.2005
@@ -801,6 +804,9 @@ importers:
       oxlint-plugin-react-doctor:
         specifier: 'catalog:'
         version: 0.9.18
+      oxlint-tailwindcss:
+        specifier: 'catalog:'
+        version: 1.17.1
 
   tooling/storybook:
     devDependencies:
@@ -6627,6 +6633,10 @@ packages:
   oxlint-plugin-react-doctor@0.9.18:
     resolution: {integrity: sha512-1mfeb/jzXnduWOZJxrvdJjvKT0pFNKrNFYcPO4ncpFAnfW41M0mLz/23lAFzHb0knNLYayEgIQ5DjI4ZfFe+DQ==}
     engines: {node: ^20.19.0 || >=22.13.0}
+
+  oxlint-tailwindcss@1.17.1:
+    resolution: {integrity: sha512-fIsTVO97ruLU7GK8mNfQiE0TsjcnOccVz/w+C/lvbo54Hb/0ZZvT4cw3a0TCxM/buREd09enI+h7zfm6cG8OzA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
 
   oxlint-tsgolint@7.0.2005:
     resolution: {integrity: sha512-6ccPGu4u4J9bwYPHXBFPee3RZrX3BboRdU7k14zRDDB1lvN3O7J/vPRFdaEfa1+CWx4xnQQOp4ctoaF66oO0uw==}
@@ -14028,6 +14038,11 @@ snapshots:
       eslint-visitor-keys: 5.0.1
       lightningcss: 1.33.0
       oxc-parser: 0.148.0
+
+  oxlint-tailwindcss@1.17.1:
+    dependencies:
+      '@tailwindcss/node': 4.3.3
+      tailwindcss: 4.3.3
 
   oxlint-tsgolint@7.0.2005:
     optionalDependencies:

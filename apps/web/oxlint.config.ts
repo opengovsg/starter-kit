@@ -9,6 +9,10 @@ import {
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
+import {
+  tailwindcssOxlint,
+  tailwindcssWebSettings,
+} from '@acme/oxlint-config/tailwindcss.ts'
 
 export default defineConfig({
   extends: [
@@ -19,6 +23,7 @@ export default defineConfig({
     reactDoctor,
     nextReactDoctor,
     reactQuery,
+    tailwindcssOxlint,
     e18e,
   ],
   jsPlugins: [...reactDoctor.jsPlugins, ...e18eJsPlugins],
@@ -26,7 +31,10 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  settings: reactDoctorSettings,
+  settings: {
+    ...reactDoctorSettings,
+    ...tailwindcssWebSettings,
+  },
   ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {

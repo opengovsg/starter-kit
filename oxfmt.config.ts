@@ -10,6 +10,7 @@ export default defineConfig({
   semi: false,
   singleQuote: true,
   sortTailwindcss: {
+    stylesheet: './apps/web/src/app/globals.css',
     functions: ['cn', 'cva'],
   },
   sortPackageJson: {
