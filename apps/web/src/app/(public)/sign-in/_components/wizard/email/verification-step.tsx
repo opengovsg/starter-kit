@@ -26,7 +26,11 @@ export const VerificationStep = () => {
   const {
     vfnStepData,
     timer,
+    verifyInFlight,
     setVfnStepData,
+    beginVerifySubmit,
+    endVerifySubmit,
+    completeVerify,
     resetTimer,
     newChallenge,
     getVerifier,
@@ -57,8 +61,12 @@ export const VerificationStep = () => {
       onError: (error) => {
         setError('token', { message: error.message })
       },
+      onSettled: () => {
+        endVerifySubmit()
+      },
       onSuccess: () => {
         clearVerifierMap()
+        completeVerify()
         router.refresh()
       },
     })
@@ -102,7 +110,7 @@ export const VerificationStep = () => {
     let codeChallenge: string | undefined
 
     try {
-      codeChallenge = await newChallenge()
+      codeChallenge = await newChallenge(vfnStepData.codeChallenge)
     } catch (error) {
       console.error(error)
     }
@@ -124,6 +132,8 @@ export const VerificationStep = () => {
     return null
   }
 
+  const isVerifyPending = verifyOtpMutation.isPending || verifyInFlight
+
   const handleFormSubmit = ({
     email,
     token,
@@ -131,6 +141,14 @@ export const VerificationStep = () => {
     email: string
     token: string
   }) => {
+    if (isVerifyPending) {
+      return
+    }
+
+    if (!beginVerifySubmit()) {
+      return
+    }
+
     verifyOtpMutation.mutate({ codeVerifier, email, token })
   }
 
@@ -172,7 +190,7 @@ export const VerificationStep = () => {
         )}
       />
       <div className="flex flex-col gap-3">
-        <Button size="sm" isPending={verifyOtpMutation.isPending} type="submit">
+        <Button size="sm" isPending={isVerifyPending} type="submit">
           Log in
         </Button>
         {showOtpDelayMessage && (

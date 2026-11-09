@@ -7,8 +7,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useQueryState } from 'nuqs'
 import { Controller, useForm } from 'react-hook-form'
 
-import type { VfnStepData } from '../context'
 import { useSignInWizard } from '../context'
+import type { VfnStepData } from '../types'
 
 import { TextField } from '@acme/ui/text-field'
 import { useTRPC } from '~/trpc/react'

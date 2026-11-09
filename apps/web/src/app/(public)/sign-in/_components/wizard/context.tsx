@@ -1,23 +1,45 @@
 'use client'
 
-import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import type { PropsWithChildren } from 'react'
 
 import { createContext, useContext, useRef, useState } from 'react'
 
+import { useMachine } from '@xstate/react'
 import { useInterval } from 'usehooks-ts'
+
+import {
+  createRestoredWizardSnapshot,
+  emailWizardMachine,
+} from './email/email-wizard.machine'
+import type { VfnStepData } from './types'
+import {
+  clearPersistedVfnStep,
+  persistVfnStep,
+  readPersistedVfnStep,
+} from './wizard-persistence'
 
 import {
   browserCreatePkceChallenge,
   browserCreatePkceVerifier,
 } from '~/lib/pkce/browser-pkce'
 
+export type { VfnStepData } from './types'
+
+const PKCE_MAP_MAX_ENTRIES = 2
+
 interface SignInState {
+  wizardStep: 'email' | 'verify'
   timer: number
-  resetTimer: () => void
+  verifyInFlight: boolean
   vfnStepData: VfnStepData | undefined
-  setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
+  setVfnStepData: (data: VfnStepData) => void
+  advanceToVerify: (data: VfnStepData) => void
+  beginVerifySubmit: () => boolean
+  endVerifySubmit: () => void
+  completeVerify: () => void
+  resetTimer: () => void
   getVerifier: (challenge: string) => string | undefined
-  newChallenge: () => Promise<string | undefined>
+  newChallenge: (activeChallenge?: string) => Promise<string | undefined>
   clearVerifierMap: () => void
 }
 
@@ -45,23 +67,50 @@ interface SignInWizardProviderProps {
   delayForResendSeconds?: number
 }
 
-export interface VfnStepData {
-  email: string
-  otpPrefix: string
-  codeChallenge: string
+const readInitialWizardSnapshot = (delayForResendSeconds: number) => {
+  const persisted = readPersistedVfnStep()
+
+  if (persisted !== undefined) {
+    return createRestoredWizardSnapshot(delayForResendSeconds, persisted)
+  }
+
+  return null
 }
 
 export const SignInWizardProvider = ({
   children,
   delayForResendSeconds = 60,
 }: PropsWithChildren<SignInWizardProviderProps>) => {
-  const [vfnStepData, setVfnStepData] = useState<VfnStepData>()
-  const [timer, setTimer] = useState(delayForResendSeconds)
-
   const challengeToVerifierMap = useRef(new Map<string, string>())
 
-  const newChallenge = async (): Promise<string | undefined> => {
+  // oxlint-disable-next-line eslint/no-unused-vars -- setter required by react/hook-use-state.
+  const [initialWizardSnapshot, setInitialWizardSnapshot] = useState(() =>
+    readInitialWizardSnapshot(delayForResendSeconds)
+  )
+
+  const [state, send] = useMachine(emailWizardMachine, {
+    input: { delayForResendSeconds },
+    snapshot: initialWizardSnapshot ?? undefined,
+  })
+
+  const prunePkceMap = (activeChallenge?: string) => {
+    const map = challengeToVerifierMap.current
+
+    if (activeChallenge !== undefined) {
+      map.delete(activeChallenge)
+    }
+
+    if (map.size >= PKCE_MAP_MAX_ENTRIES) {
+      map.clear()
+    }
+  }
+
+  const newChallenge = async (
+    activeChallenge?: string
+  ): Promise<string | undefined> => {
     try {
+      prunePkceMap(activeChallenge)
+
       const verifier = browserCreatePkceVerifier()
       const challenge = await browserCreatePkceChallenge(verifier)
       challengeToVerifierMap.current.set(challenge, verifier)
@@ -81,29 +130,62 @@ export const SignInWizardProvider = ({
     challengeToVerifierMap.current.clear()
   }
 
-  const resetTimer = () => {
-    setTimer(delayForResendSeconds)
+  const advanceToVerify = (data: VfnStepData) => {
+    send({ data, type: 'ADVANCE_TO_VERIFY' })
+    persistVfnStep(data)
   }
 
-  // Start the resend timer once in the vfn step.
-  // Stop interval if timer hits 0, else rerun every 1000ms.
+  const setVfnStepData = (data: VfnStepData) => {
+    send({ data, type: 'UPDATE_VFN_DATA' })
+    persistVfnStep(data)
+  }
+
+  const beginVerifySubmit = () => {
+    if (state.context.verifyInFlight) {
+      return false
+    }
+
+    send({ type: 'BEGIN_VERIFY' })
+
+    return true
+  }
+
+  const endVerifySubmit = () => {
+    send({ type: 'END_VERIFY' })
+  }
+
+  const completeVerify = () => {
+    clearPersistedVfnStep()
+    send({ type: 'VERIFY_COMPLETE' })
+  }
+
+  const resetTimer = () => {
+    send({ type: 'RESET_RESEND_TIMER' })
+  }
+
   useInterval(
     () => {
-      setTimer((prev) => prev - 1)
+      send({ type: 'TICK_RESEND_TIMER' })
     },
-    vfnStepData !== undefined && timer > 0 ? 1000 : null
+    state.matches('verify') && state.context.resendTimer > 0 ? 1000 : null
   )
 
   return (
     <SignInWizardContext.Provider
       value={{
+        advanceToVerify,
+        beginVerifySubmit,
         clearVerifierMap,
+        completeVerify,
+        endVerifySubmit,
         getVerifier,
         newChallenge,
         resetTimer,
         setVfnStepData,
-        timer,
-        vfnStepData,
+        timer: state.context.resendTimer,
+        verifyInFlight: state.context.verifyInFlight,
+        vfnStepData: state.context.vfnStepData,
+        wizardStep: state.matches('verify') ? 'verify' : 'email',
       }}
     >
       {children}

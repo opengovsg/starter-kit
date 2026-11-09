@@ -1,22 +1,18 @@
 'use client'
 
-import type { VfnStepData } from '../context'
 import { useSignInWizard } from '../context'
+import type { VfnStepData } from '../types'
 import { EmailStep } from './email-step'
 import { VerificationStep } from './verification-step'
 
 export const EmailFlow = () => {
-  const { setVfnStepData, vfnStepData } = useSignInWizard()
+  const { advanceToVerify, wizardStep } = useSignInWizard()
 
-  const handleOnSuccessEmail = ({
-    email,
-    otpPrefix,
-    codeChallenge,
-  }: VfnStepData) => {
-    setVfnStepData({ codeChallenge, email, otpPrefix })
+  const handleOnSuccessEmail = (data: VfnStepData) => {
+    advanceToVerify(data)
   }
 
-  if (vfnStepData?.email !== undefined && vfnStepData.email !== '') {
+  if (wizardStep === 'verify') {
     return <VerificationStep />
   }
 
