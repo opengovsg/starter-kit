@@ -47,7 +47,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
     points: mergedConfig.points,
   })
 
-  // If no Redis, use memory-only limiter
+  // If no Redis client, use memory-only limiter (single-process limits).
   if (!redis) {
     const memoryBurstLimiter = new RateLimiterMemory({
       duration: mergedConfig.burstDuration,
@@ -60,13 +60,15 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
     return limiter
   }
 
+  // When Redis exists but is not ready (failover/warmup), fall back to each
+  // limiter's insuranceLimiter instead of failing requests (see I-07).
   const limiter = new BurstyRateLimiter(
     new RateLimiterRedis({
       duration: mergedConfig.duration,
       insuranceLimiter: memoryLimiter,
       keyPrefix: `${RATE_LIMIT_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
       points: mergedConfig.points,
-      rejectIfRedisNotReady: true,
+      rejectIfRedisNotReady: false,
       storeClient: redis,
     }),
     new RateLimiterRedis({
@@ -77,7 +79,7 @@ const createRateLimiter = (config: RateLimiterConfig): BurstyRateLimiter => {
       }),
       keyPrefix: `${RATE_LIMIT_BURST_NAMESPACE_KEY}${mergedConfig.keyPrefix}:`,
       points: mergedConfig.burstPoints,
-      rejectIfRedisNotReady: true,
+      rejectIfRedisNotReady: false,
       storeClient: redis,
     })
   )

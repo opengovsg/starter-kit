@@ -7,6 +7,7 @@ import superjson from 'superjson'
 
 import { createQueryClient } from './query-client'
 
+import { assertClientMayWrite, markUpdateRequired } from '~/client/version-sync'
 import { APP_VERSION_HEADER_KEY, REQUIRE_UPDATE_EVENT } from '~/constants'
 import { env } from '~/env'
 import type { AppRouter } from '~/server/api/root'
@@ -38,6 +39,8 @@ const createBrowserTrpcClient = () =>
       }),
       httpLink({
         async fetch(url, options) {
+          assertClientMayWrite(options?.method)
+
           const response = await fetch(url, options)
           const serverVersion = response.headers.get(APP_VERSION_HEADER_KEY)
 
@@ -47,6 +50,7 @@ const createBrowserTrpcClient = () =>
             env.NEXT_PUBLIC_APP_VERSION !== '' &&
             serverVersion !== env.NEXT_PUBLIC_APP_VERSION
           ) {
+            markUpdateRequired()
             globalThis.window.dispatchEvent(new Event(REQUIRE_UPDATE_EVENT))
           }
 
