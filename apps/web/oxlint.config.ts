@@ -1,5 +1,7 @@
 import { defineConfig } from 'oxlint'
 
+import { acme } from '@acme/oxlint-config/acme.ts'
+import { e18e } from '@acme/oxlint-config/e18e.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
 import {
@@ -8,6 +10,17 @@ import {
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
+import {
+  tailwindcssOxlint,
+  tailwindcssWebSettings,
+} from '@acme/oxlint-config/tailwindcss.ts'
+
+const restrictProcessEnvImport = {
+  name: 'process',
+  importNames: ['env'],
+  message:
+    "Use `import { env } from '~/env'` instead to ensure validated types.",
+}
 
 export default defineConfig({
   extends: [
@@ -18,13 +31,19 @@ export default defineConfig({
     reactDoctor,
     nextReactDoctor,
     reactQuery,
+    tailwindcssOxlint,
+    e18e,
+    acme,
   ],
-  jsPlugins: reactDoctor.jsPlugins,
+  jsPlugins: [...reactDoctor.jsPlugins],
   options: {
     typeAware: true,
     reportUnusedDisableDirectives: 'off',
   },
-  settings: reactDoctorSettings,
+  settings: {
+    ...reactDoctorSettings,
+    ...tailwindcssWebSettings,
+  },
   ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
   overrides: [
     {
@@ -40,16 +59,34 @@ export default defineConfig({
             message:
               "Use `import { env } from '~/env'` instead to ensure validated types.",
           },
+          {
+            property: 'transaction',
+            allowObjects: ['db'],
+            message:
+              'Use db.$transaction(). The Prisma-Kysely extension does not support $kysely.transaction().',
+          },
         ],
         'no-restricted-imports': [
           'error',
           {
-            name: 'process',
-            importNames: ['env'],
-            message:
-              "Use `import { env } from '~/env'` instead to ensure validated types.",
+            paths: [restrictProcessEnvImport],
+            patterns: [
+              {
+                group: ['**/trpc'],
+                importNames: ['publicProcedure'],
+                allowTypeImports: true,
+                message:
+                  'Use protectedProcedure. Public procedures are limited to auth and healthcheck.',
+              },
+            ],
           },
         ],
+      },
+    },
+    {
+      files: ['src/server/api/root.ts', 'src/server/api/routers/auth/**'],
+      rules: {
+        'no-restricted-imports': ['error', restrictProcessEnvImport],
       },
     },
     {

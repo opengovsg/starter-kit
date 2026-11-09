@@ -7,6 +7,8 @@ import { withChromaticModes } from '@acme/storybook-config'
 
 import { SignInPageComponent } from '~/app/(public)/sign-in/_components/_page'
 
+const LOG_IN_LABEL = /log in/iu
+
 const meta: Meta<typeof SignInPageComponent> = {
   component: SignInPageComponent,
   decorators: [AppDecorator],
@@ -44,7 +46,7 @@ export const LoginStepLoading: Story = {
     },
   },
   play: async ({ canvas, userEvent }) => {
-    const emailInput = canvas.getByLabelText(/log in/iu)
+    const emailInput = canvas.getByLabelText(LOG_IN_LABEL)
     const submitButton = canvas.getByRole('button', { name: 'Get OTP' })
 
     await userEvent.type(emailInput, 'example@gov.sg')
@@ -54,7 +56,7 @@ export const LoginStepLoading: Story = {
 
 export const VerifyOtpStep: Story = {
   play: async ({ canvas, userEvent }) => {
-    const emailInput = canvas.getByLabelText(/log in/iu)
+    const emailInput = canvas.getByLabelText(LOG_IN_LABEL)
     const submitButton = canvas.getByRole('button', { name: 'Get OTP' })
 
     await userEvent.type(emailInput, 'example@gov.sg')

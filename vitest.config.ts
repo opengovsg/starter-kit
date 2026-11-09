@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     silent: true,
-    projects: ['packages/*', 'apps/*'],
+    projects: ['packages/*', 'apps/*', 'tooling/oxlint'],
     retry: 0,
     globals: true,
     exclude: ['node_modules', 'dist', '.turbo'],

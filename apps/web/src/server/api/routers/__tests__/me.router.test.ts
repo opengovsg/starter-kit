@@ -27,6 +27,7 @@ describe('meRouter', () => {
           email: 'test@example.com',
           name: 'Test User',
         },
+        select: { id: true },
       })
 
       const ctx = createTestContext({ session: { userId: testUser.id } })
@@ -59,6 +60,7 @@ describe('meRouter', () => {
           email: 'user1@example.com',
           name: 'User One',
         },
+        select: { id: true },
       })
 
       const user2 = await db.user.create({
@@ -66,6 +68,7 @@ describe('meRouter', () => {
           email: 'user2@example.com',
           name: 'User Two',
         },
+        select: { id: true },
       })
 
       // Authenticate as user2
