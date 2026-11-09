@@ -39,6 +39,7 @@ describe('user.service', () => {
 
       // Verify user was created in database
       const dbUser = await db.user.findUnique({
+        select: { email: true },
         where: { email },
       })
 
@@ -98,6 +99,7 @@ describe('user.service', () => {
 
       // Should only have one user in database
       const users = await db.user.findMany({
+        select: { id: true },
         where: { email },
       })
 
@@ -174,6 +176,7 @@ describe('user.service', () => {
 
       // Both user and account should exist
       const dbUser = await db.user.findUnique({
+        select: { id: true },
         where: { email },
       })
 
@@ -234,6 +237,7 @@ describe('user.service', () => {
       // Manually update user data
       await db.user.update({
         data: { image: 'https://example.com/avatar.jpg' },
+        select: { id: true },
         where: { id: user1.id },
       })
 
@@ -267,6 +271,7 @@ describe('user.service', () => {
 
       const createdUser = await db.user.create({
         data: { email, name: 'Test user' },
+        select: { id: true },
       })
 
       const user = await getUserById(createdUser.id)
