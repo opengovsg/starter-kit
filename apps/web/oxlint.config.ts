@@ -15,6 +15,13 @@ import {
   tailwindcssWebSettings,
 } from '@acme/oxlint-config/tailwindcss.ts'
 
+const restrictProcessEnvImport = {
+  name: 'process',
+  importNames: ['env'],
+  message:
+    "Use `import { env } from '~/env'` instead to ensure validated types.",
+}
+
 export default defineConfig({
   extends: [
     sharedConfig,
@@ -52,16 +59,34 @@ export default defineConfig({
             message:
               "Use `import { env } from '~/env'` instead to ensure validated types.",
           },
+          {
+            property: 'transaction',
+            allowObjects: ['db'],
+            message:
+              'Use db.$transaction(). The Prisma-Kysely extension does not support $kysely.transaction().',
+          },
         ],
         'no-restricted-imports': [
           'error',
           {
-            name: 'process',
-            importNames: ['env'],
-            message:
-              "Use `import { env } from '~/env'` instead to ensure validated types.",
+            paths: [restrictProcessEnvImport],
+            patterns: [
+              {
+                group: ['**/trpc'],
+                importNames: ['publicProcedure'],
+                allowTypeImports: true,
+                message:
+                  'Use protectedProcedure. Public procedures are limited to auth and healthcheck.',
+              },
+            ],
           },
         ],
+      },
+    },
+    {
+      files: ['src/server/api/root.ts', 'src/server/api/routers/auth/**'],
+      rules: {
+        'no-restricted-imports': ['error', restrictProcessEnvImport],
       },
     },
     {
