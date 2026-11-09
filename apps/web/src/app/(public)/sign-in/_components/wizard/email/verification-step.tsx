@@ -131,6 +131,10 @@ export const VerificationStep = () => {
     email: string
     token: string
   }) => {
+    if (verifyOtpMutation.isPending || codeVerifier === '') {
+      return
+    }
+
     verifyOtpMutation.mutate({ codeVerifier, email, token })
   }
 

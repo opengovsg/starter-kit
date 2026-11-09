@@ -2,7 +2,11 @@ import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../../trpc'
 
-import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
+import {
+  deleteVerificationToken,
+  emailLogin,
+  emailVerifyOtp,
+} from '~/server/modules/auth/auth.service'
 import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
   emailSignInSchema,
@@ -35,12 +39,19 @@ export const emailAuthRouter = createTRPCRouter({
   verifyOtp: publicProcedure
     .input(emailVerifyOtpSchema)
     .mutation(async ({ input: { email, token, codeVerifier }, ctx }) => {
-      await emailVerifyOtp({ codeVerifier, email, logger: ctx.logger, token })
+      const { vfnIdentifier } = await emailVerifyOtp({
+        codeVerifier,
+        email,
+        logger: ctx.logger,
+        token,
+      })
       const user = await loginUserByEmail(email, ctx.logger)
       const sessionId = crypto.randomUUID()
       ctx.session.userId = user.id
       ctx.session.sessionId = sessionId
       await ctx.session.save()
+
+      await deleteVerificationToken(vfnIdentifier)
 
       // userId is payload-borne on these events, so ctx.logger (already carrying
       // client_ip / user_agent from headers) is sufficient; no rebuild needed.

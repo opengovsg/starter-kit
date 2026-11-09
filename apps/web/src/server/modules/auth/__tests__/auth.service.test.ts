@@ -10,7 +10,11 @@ import type { Logger } from '@acme/logging'
 import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
-import { emailLogin, emailVerifyOtp } from '../auth.service'
+import {
+  deleteVerificationToken,
+  emailLogin,
+  emailVerifyOtp,
+} from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
 import {
@@ -112,13 +116,14 @@ describe('auth.service', () => {
       // Create a verification token
       const { token } = await emailLogin({ codeChallenge, email })
 
-      // Should not throw
-      await expect(
-        emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).resolves.not.toThrow()
+      const { vfnIdentifier } = await emailVerifyOtp({
+        codeVerifier,
+        email,
+        logger,
+        token,
+      })
 
-      // Token should be deleted after successful verification
-      const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
+      await deleteVerificationToken(vfnIdentifier)
 
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
@@ -271,25 +276,32 @@ describe('auth.service', () => {
       ).rejects.toThrow('Wrong OTP was entered too many times')
     })
 
-    it('should delete verification token after successful verification', async () => {
+    it('should leave verification token until explicitly deleted', async () => {
       const email = 'test@example.com'
       const codeVerifier = ssCreatePkceVerifier()
       const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ codeChallenge, email })
 
-      await emailVerifyOtp({ codeVerifier, email, logger, token })
-
-      // Token should be deleted
-      const vfnIdentifier = createVfnIdentifier({
-        codeChallenge,
+      const { vfnIdentifier } = await emailVerifyOtp({
+        codeVerifier,
         email,
+        logger,
+        token,
       })
 
       const verificationToken = await db.verificationToken.findUnique({
         where: { identifier: vfnIdentifier },
       })
 
-      expect(verificationToken).toBeNull()
+      expect(verificationToken).not.toBeNull()
+
+      await deleteVerificationToken(vfnIdentifier)
+
+      expect(
+        await db.verificationToken.findUnique({
+          where: { identifier: vfnIdentifier },
+        })
+      ).toBeNull()
     })
 
     it('should prevent token reuse after successful verification', async () => {
@@ -298,12 +310,15 @@ describe('auth.service', () => {
       const codeChallenge = ssCreatePkceChallenge(codeVerifier)
       const { token } = await emailLogin({ codeChallenge, email })
 
-      // First verification succeeds
-      await expect(
-        emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).resolves.toBeDefined()
+      const { vfnIdentifier } = await emailVerifyOtp({
+        codeVerifier,
+        email,
+        logger,
+        token,
+      })
 
-      // Second verification with same token should fail
+      await deleteVerificationToken(vfnIdentifier)
+
       await expect(
         emailVerifyOtp({ codeVerifier, email, logger, token })
       ).rejects.toThrow(WRONG_OTP_OR_REUSED_MESSAGE)

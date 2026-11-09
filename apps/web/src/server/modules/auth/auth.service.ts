@@ -142,24 +142,9 @@ export const emailVerifyOtp = async ({
       })
     }
 
-    // NOTE: You can also use `kysely` for your queries
-    // if you want more fine-grained control.
-    // Valid token, delete record to prevent reuse
-    return await db.$kysely
-      .deleteFrom('VerificationToken')
-      .where('identifier', '=', vfnIdentifier)
-      .returningAll()
-      .executeTakeFirstOrThrow(
-        // NOTE: If we are unable to find the token,
-        // this means that it has been deleted between
-        // our initial query and the deletion here
-        () =>
-          new TRPCError({
-            code: 'BAD_REQUEST',
-            message:
-              'Token is invalid or has expired. Please request a new OTP.',
-          })
-      )
+    // Valid token: caller must delete after establishing a session so a
+    // downstream failure does not consume the OTP without logging the user in.
+    return { vfnIdentifier }
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025
     if (
@@ -181,4 +166,11 @@ export const emailVerifyOtp = async ({
 
     throw error
   }
+}
+
+export const deleteVerificationToken = async (vfnIdentifier: string) => {
+  await db.$kysely
+    .deleteFrom('VerificationToken')
+    .where('identifier', '=', vfnIdentifier)
+    .execute()
 }
