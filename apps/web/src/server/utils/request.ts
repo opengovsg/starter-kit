@@ -1,3 +1,5 @@
+const FORWARDED_FOR_SEPARATOR = /, /u
+
 export const extractIpAddress = (headers: Headers): string | null => {
   const forwarded =
     headers.get('cf-connecting-ip') ??
@@ -8,5 +10,5 @@ export const extractIpAddress = (headers: Headers): string | null => {
     return null
   }
 
-  return forwarded.split(/, /u)[0] ?? null
+  return forwarded.split(FORWARDED_FOR_SEPARATOR)[0] ?? null
 }

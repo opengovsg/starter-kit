@@ -11,12 +11,14 @@
     "./react-doctor.ts": "./react-doctor.ts",
     "./next-react-doctor.ts": "./next-react-doctor.ts",
     "./react-query.ts": "./react-query.ts",
+    "./e18e.ts": "./e18e.ts",
     "./tailwindcss.ts": "./tailwindcss.ts"
   },
   "dependencies": {
     "ultracite": "catalog:"
   },
   "devDependencies": {
+    "@e18e/eslint-plugin": "catalog:",
     "oxlint": "catalog:",
     "oxlint-plugin-react-doctor": "catalog:",
     "oxlint-tailwindcss": "catalog:"

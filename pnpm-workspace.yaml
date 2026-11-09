@@ -10,6 +10,7 @@ catalog:
   'oxlint': ^1.90.0
   'oxlint-tailwindcss': ^1.17.1
   'oxlint-plugin-react-doctor': ^0.9.18
+  '@e18e/eslint-plugin': ^0.8.1
   'oxlint-tsgolint': ^7.0.2005
   dd-trace: ^6.21.0
   dotenv-cli: ^11.0.0
