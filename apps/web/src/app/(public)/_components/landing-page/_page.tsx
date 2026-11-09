@@ -34,10 +34,10 @@ export const LandingPageComponent = ({
           <LandingPageHeader isAuthed={isAuthed} />
           <div className="flex flex-col py-14 md:flex-row md:py-22">
             <div className="flex flex-1 flex-col">
-              <h1 className="lg:prose-responsive-display-heavy-1280 md:prose-responsive-display-heavy-480 prose-responsive-display-heavy text-base-content-strong">
+              <h1 className="prose-responsive-display-heavy text-base-content-strong md:prose-responsive-display-heavy-480 lg:prose-responsive-display-heavy-1280">
                 Build production ready applications in minutes.
               </h1>
-              <p className="prose-body-1 text-base-content-default mt-4">
+              <p className="mt-4 prose-body-1 text-base-content-default">
                 StarterApp is our baseline application created by StarterKit.
                 You can explore it to get a sense of basic functions and
                 interactions.
@@ -114,7 +114,7 @@ export const LandingPageComponent = ({
             href="https://reports.open.gov.sg/products"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-interaction-main-default hover:text-interaction-main-hover inline-flex items-center gap-0.5 underline underline-offset-4"
+            className="inline-flex items-center gap-0.5 text-interaction-main-default underline underline-offset-4 hover:text-interaction-main-hover"
           >
             Full list of OGP products
             <BiRightArrowAlt className="text-2xl" />

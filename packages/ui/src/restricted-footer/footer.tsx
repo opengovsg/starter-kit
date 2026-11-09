@@ -32,13 +32,13 @@ export const RestrictedFooter = ({
     <footer className="bg-base-canvas-brand-subtle px-4 py-12">
       <div className="container mx-auto flex flex-col gap-10">
         <div className="flex flex-col justify-between gap-4 lg:flex-row">
-          <div className="prose-h4 flex-1">{appName}</div>
+          <div className="flex-1 prose-h4">{appName}</div>
           {navLinks.length > 0 && (
-            <nav className="prose-body-2 flex flex-1 flex-col justify-end gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-6">
+            <nav className="flex flex-1 flex-col justify-end gap-4 prose-body-2 lg:flex-row lg:flex-wrap lg:items-center lg:gap-6">
               {navLinks.map((link) => (
                 <FooterLink
                   key={link.href}
-                  className="text-interaction-links-neutral-default hover:text-interaction-links-neutral-hover inline-flex items-center gap-1 underline-offset-2 transition-colors hover:underline"
+                  className="inline-flex items-center gap-1 text-interaction-links-neutral-default underline-offset-2 transition-colors hover:text-interaction-links-neutral-hover hover:underline"
                   {...link}
                 />
               ))}
@@ -71,7 +71,7 @@ export const RestrictedFooter = ({
                   target="_blank"
                   href={href}
                   aria-label={label}
-                  className="hover:text-base-content-strong transition-colors"
+                  className="transition-colors hover:text-base-content-strong"
                 >
                   <Icon className="size-8" />
                 </Link>
