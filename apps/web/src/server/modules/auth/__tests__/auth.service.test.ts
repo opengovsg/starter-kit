@@ -112,10 +112,7 @@ describe('auth.service', () => {
       // Create a verification token
       const { token } = await emailLogin({ codeChallenge, email })
 
-      // Should not throw
-      await expect(
-        emailVerifyOtp({ codeVerifier, email, logger, token })
-      ).resolves.not.toThrow()
+      await emailVerifyOtp({ codeVerifier, email, logger, token })
 
       // Token should be deleted after successful verification
       const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })

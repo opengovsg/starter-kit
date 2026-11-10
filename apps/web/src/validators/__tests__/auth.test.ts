@@ -9,12 +9,14 @@ import { validateCodeChallenge } from '~/validators/auth'
 describe('auth', () => {
   describe(validateCodeChallenge, () => {
     it('should successfully validate our generated code challenges', () => {
-      for (let i = 0; i < 10_000; i += 1) {
+      const results = Array.from({ length: 10_000 }, () => {
         const verifier = ssCreatePkceVerifier()
         const challenge = ssCreatePkceChallenge(verifier)
-        const validationResult = validateCodeChallenge(challenge)
-        expect(validationResult).toBeTruthy()
-      }
+
+        return validateCodeChallenge(challenge)
+      })
+
+      expect(results.every(Boolean)).toBeTruthy()
     })
   })
 })

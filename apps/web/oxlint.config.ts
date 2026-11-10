@@ -108,11 +108,14 @@ export default defineConfig({
       },
     },
     {
-      files: ['**/__tests__/**', 'tests/**', '**/__mocks__/**'],
+      files: [
+        '**/__tests__/**',
+        '**/__mocks__/**',
+        'tests/db/**',
+        'tests/redis/**',
+      ],
       rules: {
-        'anti-slop/no-chained-type-assertions': 'off',
         'anti-slop/no-module-mocking': 'off',
-        'anti-slop/require-safety-comment-for-type-assertion': 'off',
         'typescript/no-unsafe-assignment': 'off',
         'typescript/no-unsafe-type-assertion': 'off',
         'vitest/prefer-describe-function-title': 'off',

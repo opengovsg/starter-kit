@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockDeep } from 'vitest-mock-extended'
 import { resetTables } from '~tests/db/utils'
 
 import type { Logger } from '@acme/logging'
@@ -11,12 +12,9 @@ import { getUserById, loginUserByEmail } from '../user.service'
 // Minimal Logger stub capturing the self-signup audit call.
 const makeAuditLoggerStub = () => {
   const accountCreated = vi.fn<(input: { targetUserId: string }) => void>()
-
-  const logger = {
-    withBindings: () => ({
-      audit: { userManagement: { accountCreated } },
-    }),
-  } as unknown as Logger
+  const logger = mockDeep<Logger>()
+  logger.withBindings.mockReturnThis()
+  logger.audit.userManagement.accountCreated.mockImplementation(accountCreated)
 
   return { accountCreated, logger }
 }
@@ -208,24 +206,21 @@ describe('user.service', () => {
       const uniqueIds = new Set(userIds)
       expect(uniqueIds.size).toBe(emails.length)
 
-      // All users should have correct emails
-      for (const [index, user] of users.entries()) {
-        expect(user.email).toBe(emails[index])
-      }
+      expect(users.map((user) => user.email)).toStrictEqual(emails)
 
-      await Promise.all(
-        users.map(async (user) => {
-          // Each user should have one account
-          const accounts = await db.account.findMany({
-            where: {
-              provider: AccountProvider.Email,
-              userId: user.id,
-            },
-          })
-
-          expect(accounts).toHaveLength(1)
-        })
+      const accountCounts = await Promise.all(
+        users.map(
+          async (user) =>
+            await db.account.count({
+              where: {
+                provider: AccountProvider.Email,
+                userId: user.id,
+              },
+            })
+        )
       )
+
+      expect(accountCounts).toStrictEqual(emails.map(() => 1))
     })
 
     it('should preserve user data on subsequent upserts', async () => {
