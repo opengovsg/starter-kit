@@ -36,7 +36,7 @@ export default defineConfig({
       { max: 80, skipBlankLines: true, skipComments: true },
     ],
     'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }],
-    'max-depth': ['warn', { max: 4 }],
+    'max-depth': ['error', { max: 4 }],
     'max-params': ['warn', { max: 4 }],
     // Ultracite: error at default 20. Measure warn@15.
     complexity: ['warn', { max: 15 }],
