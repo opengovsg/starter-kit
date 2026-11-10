@@ -9,7 +9,7 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
-import sharedConfig from '@acme/oxlint-config/shared.ts'
+import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 import {
   tailwindcssOxlint,
   tailwindcssWebSettings,
@@ -36,10 +36,7 @@ export default defineConfig({
     acme,
   ],
   jsPlugins: [...reactDoctor.jsPlugins],
-  options: {
-    typeAware: true,
-    reportUnusedDisableDirectives: 'error',
-  },
+  options: oxlintOptions,
   settings: {
     ...reactDoctorSettings,
     ...tailwindcssWebSettings,

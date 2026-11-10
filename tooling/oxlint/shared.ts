@@ -2,8 +2,15 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
+/** Oxlint only honors `options` on the root config, not via `extends`. */
+export const oxlintOptions = {
+  typeAware: true,
+  reportUnusedDisableDirectives: 'error',
+} as const
+
 export default defineConfig({
   extends: [core, antiSlop],
+  options: oxlintOptions,
   settings: {
     next: {
       rootDir: 'apps/web',
