@@ -33,10 +33,6 @@ export default defineConfig({
       'warn',
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
     ],
-    'typescript/no-misused-promises': [
-      'error',
-      { checksVoidReturn: { attributes: false } },
-    ],
     // Ultracite core leaves this off. 4 is ESLint's default; tree is currently clean.
     'max-depth': ['error', { max: 4 }],
     'typescript/no-unnecessary-condition': [
