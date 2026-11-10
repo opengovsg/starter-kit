@@ -30,16 +30,8 @@ export default defineConfig({
       'error',
       { checksVoidReturn: { attributes: false } },
     ],
-    // Ultracite core turns size caps off; warn-only inventory.
-    'max-lines-per-function': [
-      'warn',
-      { max: 80, skipBlankLines: true, skipComments: true },
-    ],
-    'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }],
+    // Ultracite core leaves this off. 4 is ESLint's default; tree is currently clean.
     'max-depth': ['error', { max: 4 }],
-    'max-params': ['warn', { max: 4 }],
-    // Ultracite: error at default 20. Measure warn@15.
-    complexity: ['warn', { max: 15 }],
     'typescript/no-unnecessary-condition': [
       'error',
       { allowConstantLoopConditions: true },

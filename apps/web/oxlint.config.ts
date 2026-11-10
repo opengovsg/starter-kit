@@ -38,7 +38,7 @@ export default defineConfig({
   jsPlugins: [...reactDoctor.jsPlugins],
   options: {
     typeAware: true,
-    reportUnusedDisableDirectives: 'warn',
+    reportUnusedDisableDirectives: 'error',
   },
   settings: {
     ...reactDoctorSettings,

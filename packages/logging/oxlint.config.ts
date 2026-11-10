@@ -7,7 +7,7 @@ import sharedConfig from '@acme/oxlint-config/shared.ts'
 export default defineConfig({
   extends: [sharedConfig, vitest, e18e],
   options: {
-    reportUnusedDisableDirectives: 'warn',
+    reportUnusedDisableDirectives: 'error',
     typeAware: true,
   },
 })
