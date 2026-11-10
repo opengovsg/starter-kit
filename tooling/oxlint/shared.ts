@@ -30,7 +30,7 @@ export default defineConfig({
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
     'typescript/consistent-type-imports': [
-      'warn',
+      'error',
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
     ],
     'typescript/no-misused-promises': [
@@ -46,8 +46,6 @@ export default defineConfig({
     'typescript/no-non-null-assertion': 'error',
     'typescript/no-unsafe-assignment': 'error',
     'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-    'vitest/no-conditional-expect': 'off',
-    'vitest/require-to-throw-message': 'off',
     // e18e rules with no equivalent already set to error in ultracite
     // core or anti-slop. Duplicates of those presets stay off, as does
     // prefer-string-fromcharcode (it contradicts unicorn/prefer-code-point)

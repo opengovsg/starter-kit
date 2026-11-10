@@ -10,23 +10,22 @@ describe('base logger', () => {
       userAgent: null,
     })
 
-    expect(() => {
-      logger.info({ message: 'hello' })
-      logger.scope({ action: 'request' }).error({
-        error: new Error('boom'),
-        message: 'Request failed',
-      })
-      logger.audit.authn.loginSucceeded({
-        privileged: false,
-        role: 'user',
-        userId: 'u1',
-      })
-    }).not.toThrow()
+    expect(logger).toBeDefined()
+    logger.info({ message: 'hello' })
+    logger.scope({ action: 'request' }).error({
+      error: new Error('boom'),
+      message: 'Request failed',
+    })
+    logger.audit.authn.loginSucceeded({
+      privileged: false,
+      role: 'user',
+      userId: 'u1',
+    })
   })
 
   it('exposes a request-less system logger', () => {
-    expect(() => {
-      createBaseLogger.system({ path: 'boot' }).info({ message: 'boot' })
-    }).not.toThrow()
+    const logger = createBaseLogger.system({ path: 'boot' })
+    expect(logger).toBeDefined()
+    logger.info({ message: 'boot' })
   })
 })

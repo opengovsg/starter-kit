@@ -360,17 +360,16 @@ describe('auth.utils', () => {
         return { codeChallenge, email, hashedToken, token }
       })
 
-      // Verify each token is valid for its own email and codeChallenge
-      for (const { email, codeChallenge, token, hashedToken } of tokens) {
-        const isValid = isValidToken({
-          codeChallenge,
-          email,
-          hash: hashedToken,
-          token,
-        })
-
-        expect(isValid).toBeTruthy()
-      }
+      expect(
+        tokens.map(({ email, codeChallenge, token, hashedToken }) =>
+          isValidToken({
+            codeChallenge,
+            email,
+            hash: hashedToken,
+            token,
+          })
+        )
+      ).toStrictEqual(tokens.map(() => true))
 
       // Verify tokens are unique
       const tokenStrings = tokens.map((t) => t.token)
