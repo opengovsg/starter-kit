@@ -2,8 +2,15 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
+/** Oxlint only honors `options` on the root config, not via `extends`. */
+export const oxlintOptions = {
+  typeAware: true,
+  reportUnusedDisableDirectives: 'error',
+} as const
+
 export default defineConfig({
   extends: [core, antiSlop],
+  options: oxlintOptions,
   settings: {
     next: {
       rootDir: 'apps/web',
@@ -27,9 +34,11 @@ export default defineConfig({
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
     ],
     'typescript/no-misused-promises': [
-      'warn',
-      { checksVoidReturn: { attributes: false } },
+      'error',
+      { checksVoidReturn: { attributes: true } },
     ],
+    // Ultracite core leaves this off. 4 is ESLint's default.
+    'max-depth': ['error', { max: 4 }],
     'typescript/no-unnecessary-condition': [
       'error',
       { allowConstantLoopConditions: true },

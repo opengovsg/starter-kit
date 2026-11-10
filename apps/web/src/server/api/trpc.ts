@@ -84,7 +84,6 @@ const t = initTRPC
     },
     errorFormatter(opts) {
       const { error } = opts
-      // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- tRPC error formatter API names this field `shape`.
       const formattedError = opts.shape
 
       return {
