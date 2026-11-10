@@ -30,6 +30,16 @@ export default defineConfig({
       'warn',
       { checksVoidReturn: { attributes: false } },
     ],
+    // Ultracite core turns size caps off; warn-only inventory.
+    'max-lines-per-function': [
+      'warn',
+      { max: 80, skipBlankLines: true, skipComments: true },
+    ],
+    'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }],
+    'max-depth': ['warn', { max: 4 }],
+    'max-params': ['warn', { max: 4 }],
+    // Ultracite: error at default 20. Measure warn@15.
+    complexity: ['warn', { max: 15 }],
     'typescript/no-unnecessary-condition': [
       'error',
       { allowConstantLoopConditions: true },
@@ -59,4 +69,16 @@ export default defineConfig({
     'e18e/prefer-timer-args': 'error',
     'e18e/prefer-url-canparse': 'error',
   },
+  overrides: [
+    {
+      // JSX/TSX stays warn (checksVoidReturn.attributes=false). .ts is error.
+      files: ['**/*.ts'],
+      rules: {
+        'typescript/no-misused-promises': [
+          'error',
+          { checksVoidReturn: { attributes: false } },
+        ],
+      },
+    },
+  ],
 })

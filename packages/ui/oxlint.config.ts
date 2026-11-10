@@ -16,7 +16,7 @@ export default defineConfig({
   extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e],
   jsPlugins: [...reactDoctor.jsPlugins],
   options: {
-    reportUnusedDisableDirectives: 'off',
+    reportUnusedDisableDirectives: 'warn',
     typeAware: true,
   },
   settings: {
