@@ -72,5 +72,9 @@ export default defineConfig({
       'error',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
+
+    // ── vitest ─────────────────────────────────────────────────────────
+    // Noise on `.not.toThrow()` — there is no expected message.
+    'vitest/require-to-throw-message': 'off',
   },
 })
