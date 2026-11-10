@@ -27,7 +27,7 @@ export default defineConfig({
       { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
     ],
     'typescript/no-misused-promises': [
-      'warn',
+      'error',
       { checksVoidReturn: { attributes: false } },
     ],
     // Ultracite core turns size caps off; warn-only inventory.
@@ -69,16 +69,4 @@ export default defineConfig({
     'e18e/prefer-timer-args': 'error',
     'e18e/prefer-url-canparse': 'error',
   },
-  overrides: [
-    {
-      // JSX/TSX stays warn (checksVoidReturn.attributes=false). .ts is error.
-      files: ['**/*.ts'],
-      rules: {
-        'typescript/no-misused-promises': [
-          'error',
-          { checksVoidReturn: { attributes: false } },
-        ],
-      },
-    },
-  ],
 })
