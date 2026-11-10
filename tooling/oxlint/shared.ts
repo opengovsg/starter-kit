@@ -25,27 +25,7 @@ export default defineConfig({
     'apps/web/public/mockServiceWorker.js',
   ],
   rules: {
-    'typescript/no-unused-vars': [
-      'error',
-      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-    ],
-    'typescript/consistent-type-imports': [
-      'error',
-      { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
-    ],
-    'typescript/no-misused-promises': [
-      'error',
-      { checksVoidReturn: { attributes: true } },
-    ],
-    // Ultracite core leaves this off. 4 is ESLint's default.
-    'max-depth': ['error', { max: 4 }],
-    'typescript/no-unnecessary-condition': [
-      'error',
-      { allowConstantLoopConditions: true },
-    ],
-    'typescript/no-non-null-assertion': 'error',
-    'typescript/no-unsafe-assignment': 'error',
-    'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+    // ── e18e ───────────────────────────────────────────────────────────
     // e18e rules with no equivalent already set to error in ultracite
     // core or anti-slop. Duplicates of those presets stay off, as does
     // prefer-string-fromcharcode (it contradicts unicorn/prefer-code-point)
@@ -65,5 +45,32 @@ export default defineConfig({
     'e18e/prefer-throw-if-no-entry': 'error',
     'e18e/prefer-timer-args': 'error',
     'e18e/prefer-url-canparse': 'error',
+
+    // ── import ─────────────────────────────────────────────────────────
+    'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+
+    // ── eslint ──────────────────────────────────────────────────────────
+    // Ultracite core leaves this off. 4 is ESLint's default.
+    'max-depth': ['error', { max: 4 }],
+
+    // ── typescript ─────────────────────────────────────────────────────
+    'typescript/consistent-type-imports': [
+      'error',
+      { fixStyle: 'separate-type-imports', prefer: 'type-imports' },
+    ],
+    'typescript/no-misused-promises': [
+      'error',
+      { checksVoidReturn: { attributes: true } },
+    ],
+    'typescript/no-non-null-assertion': 'error',
+    'typescript/no-unnecessary-condition': [
+      'error',
+      { allowConstantLoopConditions: true },
+    ],
+    'typescript/no-unsafe-assignment': 'error',
+    'typescript/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
   },
 })
