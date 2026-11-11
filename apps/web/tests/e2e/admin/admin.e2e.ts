@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test'
 import { ROLES, roleTag, TEST_EMAILS } from '../fixtures/auth'
 import { AdminPO } from './admin.po'
 
+const signInUrl = /\/sign-in/u
+
 // Untagged tests run signed out (`unauthenticated` project).
 test('redirects signed-out visitors to sign-in', async ({ page }) => {
   // Arrange
@@ -12,7 +14,7 @@ test('redirects signed-out visitors to sign-in', async ({ page }) => {
   await admin.goto()
 
   // Assert
-  await expect(page).toHaveURL(/\/sign-in/u)
+  await expect(page).toHaveURL(signInUrl)
 })
 
 // Tagged tests run with that role's minted session; no login steps needed.

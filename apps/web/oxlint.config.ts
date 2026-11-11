@@ -111,6 +111,13 @@ export default defineConfig({
         'no-empty-pattern': 'off',
         'react-hooks/rules-of-hooks': 'off',
         ...playwrightE2eRules,
+        // roleTag() returns `@role:${role}`; the plugin only accepts literals.
+        'playwright/valid-test-tags': 'off',
+        // Page objects assert via expect* methods (see tests/e2e/README.md).
+        'playwright/expect-expect': [
+          'error',
+          { assertFunctionPatterns: ['^expect'] },
+        ],
       },
     },
     {

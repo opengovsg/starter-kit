@@ -8,6 +8,7 @@ import { expectUserLastLogin } from '../fixtures/user-expect'
 import { SignInPO } from './sign-in.po'
 
 const uniqueEmail = () => `sign-in-${randomUUID()}@e2e.gov.sg`
+const adminUrl = /\/admin$/u
 
 // The only test that signs in through the UI. Every other signed-in test
 // reuses the session minted by auth.setup.ts (see `roleTag`).
@@ -23,7 +24,7 @@ test('signs in with email OTP', async ({ page }) => {
   await signIn.submitOtp(email, await setKnownOtp(email))
 
   // Assert
-  await expect(page).toHaveURL(/\/admin$/u)
+  await expect(page).toHaveURL(adminUrl)
   await expectUserLastLogin(email).toBeInstanceOf(Date)
 })
 
