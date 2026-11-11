@@ -80,6 +80,7 @@
     "@vitest/coverage-v8": "catalog:vitest",
     "dotenv": "^17.2.3",
     "dotenv-cli": "catalog:",
+    "eslint-plugin-playwright": "catalog:",
     "jiti": "^2.6.1",
     "msw": "^2.12.7",
     "msw-storybook-addon": "^2.0.6",
