@@ -79,7 +79,6 @@ updates:
         patterns:
           - 'playwright'
           - '@playwright/*'
-          - 'eslint-plugin-playwright'
       t3-env:
         applies-to: version-updates
         patterns:
