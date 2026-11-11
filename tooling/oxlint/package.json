@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
-    "lint": "oxlint plugin playwright.ts",
+    "lint": "oxlint plugin",
     "test": "vitest",
     "test:ci": "vitest run",
     "typecheck": "tsc --noEmit"
