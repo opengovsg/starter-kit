@@ -3,6 +3,10 @@ import { defineConfig } from 'oxlint'
 import { acme } from '@acme/oxlint-config/acme.ts'
 import { e18e } from '@acme/oxlint-config/e18e.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
+import {
+  playwrightE2eRules,
+  playwrightJsPlugins,
+} from '@acme/oxlint-config/playwright.ts'
 import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
 import {
   reactDoctor,
@@ -102,9 +106,11 @@ export default defineConfig({
     },
     {
       files: ['tests/e2e/**'],
+      jsPlugins: [...playwrightJsPlugins],
       rules: {
         'no-empty-pattern': 'off',
         'react-hooks/rules-of-hooks': 'off',
+        ...playwrightE2eRules,
       },
     },
     {

@@ -50,15 +50,15 @@ test.beforeAll(async ({ databaseContainer }) => {
   await takeDbSnapshot(databaseContainer)
 })
 
+test.afterEach(async ({ resetDatabase, flushRedis }) => {
+  await Promise.all([resetDatabase(), flushRedis()])
+})
+
 test.afterAll(async ({ databaseContainer, redisContainer }) => {
   await Promise.all([
     databaseContainer.container.stop(),
     redisContainer.container.stop(),
   ])
-})
-
-test.afterEach(async ({ resetDatabase, flushRedis }) => {
-  await Promise.all([resetDatabase(), flushRedis()])
 })
 
 export { test }
