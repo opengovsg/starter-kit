@@ -37,6 +37,7 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "@xstate/react": "^6.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "date-fns": "^4.1.0",
     "dd-trace": "catalog:",
@@ -55,6 +56,7 @@
     "superjson": "2.2.5",
     "type-fest": "^5.3.1",
     "usehooks-ts": "^3.1.1",
+    "xstate": "^5.28.0",
     "zod": "catalog:"
   },
   "devDependencies": {

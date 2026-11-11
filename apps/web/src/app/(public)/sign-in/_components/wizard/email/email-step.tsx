@@ -7,19 +7,21 @@ import { useMutation } from '@tanstack/react-query'
 import { useQueryState } from 'nuqs'
 import { Controller, useForm } from 'react-hook-form'
 
-import type { VfnStepData } from '../context'
-import { useSignInWizard } from '../context'
+import type { VfnStepData } from './email-wizard.machine'
 
 import { TextField } from '@acme/ui/text-field'
+import {
+  browserCreatePkceChallenge,
+  browserCreatePkceVerifier,
+} from '~/lib/pkce/browser-pkce'
 import { useTRPC } from '~/trpc/react'
 import { emailSignInSchema } from '~/validators/auth'
 
 interface EmailStepProps {
-  onNext: ({ email, otpPrefix, codeChallenge }: VfnStepData) => void
+  onNext: (data: VfnStepData) => void
 }
 
 export const EmailStep = ({ onNext }: EmailStepProps) => {
-  const { newChallenge } = useSignInWizard()
   const [newChallengePending, setNewChallengePending] = useState(false)
 
   const { handleSubmit, setError, control } = useForm({
@@ -43,13 +45,6 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
       onMutate: async () => {
         await setQueryError('')
       },
-      onSuccess: (res, req) => {
-        onNext({
-          codeChallenge: req.codeChallenge,
-          email: res.email,
-          otpPrefix: res.otpPrefix,
-        })
-      },
     })
   )
 
@@ -61,10 +56,11 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     }
 
     setNewChallengePending(true)
+    const codeVerifier = browserCreatePkceVerifier()
     let codeChallenge: string | undefined
 
     try {
-      codeChallenge = await newChallenge()
+      codeChallenge = await browserCreatePkceChallenge(codeVerifier)
     } catch (error) {
       console.error(error)
     }
@@ -79,7 +75,14 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
       return
     }
 
-    loginMutation.mutate({ codeChallenge, email })
+    loginMutation.mutate(
+      { codeChallenge, email },
+      {
+        onSuccess: (res) => {
+          onNext({ codeVerifier, email: res.email, otpPrefix: res.otpPrefix })
+        },
+      }
+    )
   }
 
   return (

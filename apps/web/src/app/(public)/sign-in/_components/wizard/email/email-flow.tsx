@@ -1,24 +1,25 @@
 'use client'
 
-import type { VfnStepData } from '../context'
-import { useSignInWizard } from '../context'
 import { EmailStep } from './email-step'
+import { EmailWizard } from './email-wizard.context'
 import { VerificationStep } from './verification-step'
 
 export const EmailFlow = () => {
-  const { setVfnStepData, vfnStepData } = useSignInWizard()
+  const actorRef = EmailWizard.useActorRef()
 
-  const handleOnSuccessEmail = ({
-    email,
-    otpPrefix,
-    codeChallenge,
-  }: VfnStepData) => {
-    setVfnStepData({ codeChallenge, email, otpPrefix })
-  }
+  const isVerifyStep = EmailWizard.useSelector((state) =>
+    state.matches('verify')
+  )
 
-  if (vfnStepData?.email !== undefined && vfnStepData.email !== '') {
+  if (isVerifyStep) {
     return <VerificationStep />
   }
 
-  return <EmailStep onNext={handleOnSuccessEmail} />
+  return (
+    <EmailStep
+      onNext={(data) => {
+        actorRef.send({ data, type: 'OTP_SENT' })
+      }}
+    />
+  )
 }
