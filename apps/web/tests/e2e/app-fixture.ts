@@ -18,6 +18,7 @@ interface RedisFixture {
   flushRedis: () => Promise<void>
 }
 
+/* oxlint-disable no-empty-pattern, react-hooks/rules-of-hooks -- Playwright fixtures require empty `{}` when a worker has no deps (runtime parses destructuring); `use` is Playwright's worker callback, not React.use(). */
 const test = baseTest.extend<DatabaseFixture & RedisFixture>({
   databaseContainer: async ({}, use) => {
     const container = await startDatabase()

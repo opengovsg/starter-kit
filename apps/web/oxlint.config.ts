@@ -108,8 +108,6 @@ export default defineConfig({
       files: ['tests/e2e/**'],
       jsPlugins: [...playwrightJsPlugins],
       rules: {
-        'no-empty-pattern': 'off',
-        'react-hooks/rules-of-hooks': 'off',
         ...playwrightE2eRules,
       },
     },
