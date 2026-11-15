@@ -25,4 +25,3 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 - **DB access**: test files must not import `@acme/db`. Add a getter to `fixtures/<entity>.db.ts`.
 - **What to cover** per screen: one happy path, one permission gate (e.g. signed-out redirect), and each error the user can see. Validation and server-only behaviour (audit logs, error codes) belong in Vitest integration tests.
 - **Time**: call `page.clock.install()` before the first navigation, never after.
-- Use Arrange / Act / Assert comments, as in `auth/sign-in.e2e.ts`.
