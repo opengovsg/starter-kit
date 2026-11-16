@@ -9,7 +9,8 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 import { RateLimiterRes } from 'rate-limiter-flexible'
-import superjson from 'superjson'
+import { deserialize, serialize } from 'superjson'
+import type { SuperJSONResult } from 'superjson'
 import { z, ZodError } from 'zod'
 
 import {
@@ -68,6 +69,31 @@ interface Meta {
   rateLimitOptions?: RateLimiterConfig | null
 }
 
+type InputAnnotations = NonNullable<SuperJSONResult['meta']>['values']
+
+// superjson rebuilds a Set or Map by walking it one key at a time (getNthKey),
+// so a payload with many paths into that container deserializes in O(N^2)
+// before auth or zod.
+const hasSetOrMap = (tree: InputAnnotations | null): boolean => {
+  if (tree === undefined || tree === null) {
+    return false
+  }
+
+  if (Array.isArray(tree)) {
+    const [type, children] = tree
+
+    return (
+      type === 'set' ||
+      type === 'map' ||
+      (children !== undefined && Object.values(children).some(hasSetOrMap))
+    )
+  }
+
+  return Object.values(tree).some(hasSetOrMap)
+}
+
+const decodeInput = (input: SuperJSONResult) => deserialize(input)
+
 /**
  * 2. INITIALIZATION
  *
@@ -98,7 +124,25 @@ const t = initTRPC
         },
       }
     },
-    transformer: superjson,
+    transformer: {
+      input: {
+        deserialize: (input: SuperJSONResult) => {
+          if (hasSetOrMap(input.meta?.values)) {
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: 'Input must not contain a Set or Map',
+            })
+          }
+
+          return decodeInput(input)
+        },
+        serialize,
+      },
+      output: {
+        deserialize,
+        serialize,
+      },
+    },
   })
 
 /**
