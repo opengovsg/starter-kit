@@ -3,7 +3,6 @@ import { expect } from '@playwright/test'
 
 import { env } from '~/env'
 
-/** Page object for /: the public landing page. */
 export class LandingPO {
   readonly page: Page
 

@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
-/** Page object for /admin: locators, actions and assertions for this one screen. */
 export class AdminPO {
   readonly page: Page
 

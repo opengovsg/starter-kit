@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
-/** Page object for /sign-in: locators, actions and assertions for this one screen. */
 export class SignInPO {
   readonly page: Page
 

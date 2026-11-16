@@ -162,16 +162,12 @@ jobs:
       - name: Install Playwright (Chromium)
         run: pnpm --filter @acme/web exec playwright install --with-deps chromium
 
-      # Calling the web filter directly skips turbo's @acme/db#generate.
       - name: Generate Prisma client
         run: pnpm --filter @acme/db exec prisma generate
 
-      # Playwright serves this build via `next start` when CI is set
-      # (see webServer in apps/web/playwright.config.ts).
       - name: Build app
         run: pnpm --filter @acme/web build-e2e
 
-      # Containers are started by the Playwright globalSetup (testcontainers).
       - name: Run Playwright tests
         run: pnpm --filter @acme/web e2e
 

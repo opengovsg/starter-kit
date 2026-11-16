@@ -1,10 +1,5 @@
 import type { Page } from '@playwright/test'
 
-/**
- * Make a tRPC procedure (e.g. `auth.email.login`) fail with a 500, so a test
- * can check what the user sees on error. Also the pattern for stubbing
- * external services (uploads, third-party APIs) the CI run can't reach.
- */
 export const mockTrpcFailure = async (
   page: Page,
   procedure: string,

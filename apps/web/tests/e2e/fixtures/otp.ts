@@ -2,15 +2,9 @@ import { scryptSync } from 'node:crypto'
 
 import { db } from '@acme/db'
 
-/**
- * The real OTP is only sent by email, so replace the stored hash for the
- * email's pending OTP with the hash of a known one. Call after requesting
- * the OTP; returns the OTP to type in.
- */
 export const setKnownOtp = async (email: string) => {
   const otp = 'ABCDEFGH'
 
-  // The identifier is JSON.stringify([email, codeChallenge]).
   const { identifier } = await db.verificationToken.findFirstOrThrow({
     select: { identifier: true },
     where: {

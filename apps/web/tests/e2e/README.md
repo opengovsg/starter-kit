@@ -12,7 +12,7 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 | `fixtures/` | Helpers shared across features. Move a page object here once a second feature needs it. |
 | `fixtures/auth.ts` | `ROLES`, `TEST_EMAILS`, `roleTag`. |
 | `fixtures/<entity>.db.ts` | Read-only queries for persisted state. Return rows, no `expect`. |
-| `fixtures/<entity>-expect.ts` | `expect.poll` wrappers over `.db.ts` getters, for writes that land after the UI updates. |
+| `fixtures/<entity>-expect.ts` | Assertions over `.db.ts` getters. |
 | `fixtures/network.ts` | `page.route` stubs for failures and external services CI can't reach. |
 | `global-setup.ts` + `setup/` | Runs once per run: start containers, reset DB, seed users. One module per job. |
 | `auth.setup.ts` | Mints one role's session cookie per `setup:<role>` project; runs only when selected tests need that role. |

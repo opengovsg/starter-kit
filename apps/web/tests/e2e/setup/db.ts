@@ -18,7 +18,6 @@ const MIGRATIONS_DIR = fileURLToPath(
 
 export const startDatabase = async () => {
   const [db] = await setup([
-    // Host port must match .env.e2e. `reuse` keeps the container warm across local runs.
     postgres({ ports: [{ container: 5432, host: 64_321 }], reuse: true }),
   ])
 
@@ -31,9 +30,6 @@ export const startDatabase = async () => {
 
 type DatabaseContainer = Awaited<ReturnType<typeof startDatabase>>
 
-// dotenv does not override variables already set in the shell, so an exported
-// dev DATABASE_URL would silently point the app server at the dev database
-// while this setup resets the container, and tests would then write dev data.
 export const assertAppUsesDatabase = (db: DatabaseContainer) => {
   const appUrl = new URL(env.DATABASE_URL)
   const expectedPort = String(getMappedPort(db, 5432))
@@ -45,9 +41,6 @@ export const assertAppUsesDatabase = (db: DatabaseContainer) => {
   }
 }
 
-// Drop and re-create the schema rather than truncating, so a reused container
-// always matches the current migrations. Migrations are applied as raw SQL
-// because dd-trace intercepts `exec` and would block `prisma migrate`.
 export const resetDatabase = async (db: DatabaseContainer) => {
   const client = new PrismaClient({
     adapter: new PrismaPg({
@@ -69,7 +62,6 @@ export const resetDatabase = async (db: DatabaseContainer) => {
         )
       }
     }
-    // Seed data shared by every test goes here.
   } finally {
     await client.$disconnect()
   }

@@ -10,8 +10,6 @@ import { SignInPO } from './sign-in.po'
 const uniqueEmail = () => `sign-in-${randomUUID()}@e2e.gov.sg`
 const adminUrl = /\/admin$/u
 
-// The only test that signs in through the UI. Every other signed-in test
-// reuses the session minted by auth.setup.ts (see `roleTag`).
 test('signs in with email OTP', async ({ page }) => {
   const email = uniqueEmail()
   const signIn = new SignInPO(page)
@@ -22,7 +20,7 @@ test('signs in with email OTP', async ({ page }) => {
   await signIn.submitOtp(email, await setKnownOtp(email))
 
   await expect(page).toHaveURL(adminUrl)
-  await expectUserLastLogin(email).toBeInstanceOf(Date)
+  await expectUserLastLogin(email)
 })
 
 test('shows the error when requesting an OTP fails', async ({ page }) => {

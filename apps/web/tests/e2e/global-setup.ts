@@ -1,16 +1,7 @@
-/**
- * Runs once per `playwright test` invocation, after `webServer` has started
- * (the app connects to Postgres/Redis lazily, so it boots before they exist).
- *
- * State is reset per run, not per test: tests run fully in parallel, so each
- * test creates its own uniquely named data instead of relying on a clean DB.
- */
 import { assertAppUsesDatabase, resetDatabase, startDatabase } from './setup/db'
 import { flushRedis, startRedis } from './setup/redis'
 import { seedUsers } from './setup/seed'
 
-// Session cookies are minted per role by auth.setup.ts, only for the roles
-// the selected tests need.
 const globalSetup = async () => {
   const [db, cache] = await Promise.all([startDatabase(), startRedis()])
   assertAppUsesDatabase(db)
