@@ -169,7 +169,7 @@ jobs:
         run: pnpm --filter @acme/web build-e2e
 
       - name: Run Playwright tests
-        run: pnpm --filter @acme/web e2e
+        run: pnpm exec turbo run e2e --filter=@acme/web --env-mode=loose --log-order=stream
 
       - name: Upload test results
         if: ${{ !cancelled() }}
