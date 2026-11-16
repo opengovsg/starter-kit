@@ -62,6 +62,12 @@ describe('tRPC input deserialize', () => {
     }).toThrow('Input must not contain a Set or Map')
   })
 
+  it('deserializes input that has no meta', () => {
+    const output: unknown = inputTransformer.deserialize({ json: { a: 1 } })
+
+    expect(output).toStrictEqual({ a: 1 })
+  })
+
   it('still restores Dates, bigints, undefined, and shared references', () => {
     const shared = { at: new Date(0) }
 
