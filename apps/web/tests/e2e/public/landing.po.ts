@@ -1,8 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
-import { env } from '~/env'
-
 export class LandingPO {
   readonly page: Page
 
@@ -16,7 +14,9 @@ export class LandingPO {
 
   async expectLoaded() {
     await expect(
-      this.page.getByRole('contentinfo').getByText(env.NEXT_PUBLIC_APP_NAME)
+      this.page.getByRole('heading', {
+        name: 'Build production ready applications in minutes.',
+      })
     ).toBeVisible()
   }
 }
