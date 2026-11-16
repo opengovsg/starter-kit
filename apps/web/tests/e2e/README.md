@@ -23,5 +23,4 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 - **Auth**: tag a `test.describe` with `{ tag: roleTag('user') }` to run it signed in. Do not sign in through the UI or call `test.use({ storageState })`; only `auth/sign-in.e2e.ts` covers the login UI. Untagged tests run signed out. To add a role, extend `ROLES` and `TEST_EMAILS`; its user, setup project and test project follow.
 - **Page objects**: a PO wraps `page.goto` only when it's the canonical entry onto its screen. One-off calls (`page.reload()`, `page.goto` to a screen without a PO, `expect(page).toHaveURL`) stay inline in the test.
 - **DB access**: test files must not import `@acme/db`. Add a getter to `fixtures/<entity>.db.ts`.
-- **What to cover** per screen: one happy path, one permission gate (e.g. signed-out redirect), and each error the user can see. Validation and server-only behaviour (audit logs, error codes) belong in Vitest integration tests.
 - **Time**: call `page.clock.install()` before the first navigation, never after.
