@@ -22,5 +22,6 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 - **Data**: the DB is reset once per run, not per test, and tests run in parallel. Create your own data with unique names (`randomUUID()`); never rely on another test's data or an empty table.
 - **Auth**: tag a `test.describe` with `{ tag: roleTag('user') }` to run it signed in. Do not sign in through the UI or call `test.use({ storageState })`; only `auth/sign-in.e2e.ts` covers the login UI. Untagged tests run signed out. To add a role, extend `ROLES` and `TEST_EMAILS`; its user, setup project and test project follow.
 - **Page objects**: a PO wraps `page.goto` only when it's the canonical entry onto its screen. One-off calls (`page.reload()`, `page.goto` to a screen without a PO, `expect(page).toHaveURL`) stay inline in the test.
+- **Imports**: shared helpers use the `~tests/e2e` alias (`~tests/e2e/fixtures/auth`). A page object that lives next to its test stays a relative import (`./sign-in.po`).
 - **DB access**: test files must not import `@acme/db`. Add a getter to `fixtures/<entity>.db.ts`.
 - **Time**: call `page.clock.install()` before the first navigation, never after.

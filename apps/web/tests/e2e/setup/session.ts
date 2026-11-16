@@ -3,11 +3,10 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { sealData } from 'iron-session'
+import type { Role } from '~tests/e2e/fixtures/auth'
+import { storageStateFor, TEST_EMAILS } from '~tests/e2e/fixtures/auth'
 
 import { db } from '@acme/db'
-
-import type { Role } from '../fixtures/auth'
-import { storageStateFor, TEST_EMAILS } from '../fixtures/auth'
 
 import type { SessionData } from '~/server/session-options'
 import { sessionOptions } from '~/server/session-options'

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { ROLES, roleTag, TEST_EMAILS } from '~tests/e2e/fixtures/auth'
 
-import { ROLES, roleTag, TEST_EMAILS } from '../fixtures/auth'
 import { AdminPO } from './admin.po'
 
 const signInUrl = /\/sign-in/u

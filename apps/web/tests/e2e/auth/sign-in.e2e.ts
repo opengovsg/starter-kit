@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto'
 
 import { expect, test } from '@playwright/test'
+import { mockTrpcFailure } from '~tests/e2e/fixtures/network'
+import { setKnownOtp } from '~tests/e2e/fixtures/otp'
+import { expectUserLastLogin } from '~tests/e2e/fixtures/user-expect'
 
-import { mockTrpcFailure } from '../fixtures/network'
-import { setKnownOtp } from '../fixtures/otp'
-import { expectUserLastLogin } from '../fixtures/user-expect'
 import { SignInPO } from './sign-in.po'
 
 const uniqueEmail = () => `sign-in-${randomUUID()}@e2e.gov.sg`

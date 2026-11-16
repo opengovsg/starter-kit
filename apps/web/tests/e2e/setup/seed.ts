@@ -1,6 +1,6 @@
-import { db } from '@acme/db'
+import { ROLES, TEST_EMAILS } from '~tests/e2e/fixtures/auth'
 
-import { ROLES, TEST_EMAILS } from '../fixtures/auth'
+import { db } from '@acme/db'
 
 export const seedUsers = async () => {
   await db.user.createMany({
