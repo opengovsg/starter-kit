@@ -71,11 +71,16 @@ interface Meta {
 
 type InputAnnotations = NonNullable<SuperJSONResult['meta']>['values']
 
+const isAnnotationTree = (
+  value: InputAnnotations | null
+): value is NonNullable<InputAnnotations> =>
+  typeof value === 'object' && value !== null
+
 // superjson rebuilds a Set or Map by walking it one key at a time (getNthKey),
 // so a payload with many paths into that container deserializes in O(N^2)
 // before auth or zod.
 const hasSetOrMap = (tree: InputAnnotations | null): boolean => {
-  if (tree === undefined || tree === null) {
+  if (!isAnnotationTree(tree)) {
     return false
   }
 
@@ -85,7 +90,7 @@ const hasSetOrMap = (tree: InputAnnotations | null): boolean => {
     return (
       type === 'set' ||
       type === 'map' ||
-      (children !== undefined && Object.values(children).some(hasSetOrMap))
+      (isAnnotationTree(children) && Object.values(children).some(hasSetOrMap))
     )
   }
 

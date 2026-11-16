@@ -68,6 +68,33 @@ describe('tRPC input deserialize', () => {
     expect(output).toStrictEqual({ a: 1 })
   })
 
+  it('deserializes a Date when its annotation children are null', () => {
+    const output: unknown = inputTransformer.deserialize({
+      json: '2020-01-01T00:00:00.000Z',
+      meta: { values: ['Date', null] },
+    })
+
+    expect(output).toStrictEqual(new Date('2020-01-01T00:00:00.000Z'))
+  })
+
+  it.each([
+    [
+      'string children',
+      {
+        json: '2020-01-01T00:00:00.000Z',
+        meta: { values: ['Date', 'x'] },
+      },
+    ],
+    ['string values', { json: { a: 1 }, meta: { values: 'x' } }],
+  ])('fails fast when an annotation is %s', (_label, payload) => {
+    const start = performance.now()
+
+    expect(() => {
+      inputTransformer.deserialize(payload)
+    }).toThrow(RangeError)
+    expect(performance.now() - start).toBeLessThan(100)
+  })
+
   it('still restores Dates, bigints, undefined, and shared references', () => {
     const shared = { at: new Date(0) }
 
