@@ -31,6 +31,35 @@ describe('tRPC input deserialize', () => {
     expect(performance.now() - start).toBeLessThan(100)
   })
 
+  it('rejects a deep annotation path with many children, before walking it', () => {
+    const children = Object.fromEntries(
+      Array.from({ length: 2_000 }, (_, i) => [i, ['undefined']])
+    )
+    const payload = {
+      json: {},
+      meta: {
+        values: {
+          [Array(20_000).fill('a').join('.')]: ['undefined', children],
+        },
+      },
+    }
+
+    const start = performance.now()
+
+    expect(() => {
+      inputTransformer.deserialize(payload)
+    }).toThrow('Input is too complex')
+    expect(performance.now() - start).toBeLessThan(100)
+  })
+
+  it('rejects too many annotation nodes', () => {
+    const value = Array.from({ length: 10_001 }, () => ({ x: undefined }))
+
+    expect(() => {
+      inputTransformer.deserialize(serialize(value))
+    }).toThrow('Input is too complex')
+  })
+
   it('rejects a set annotation in the first array child', () => {
     const payload = {
       json: [{ s: [1, 2] }],

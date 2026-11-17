@@ -10,7 +10,6 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 import { RateLimiterRes } from 'rate-limiter-flexible'
 import { deserialize, serialize } from 'superjson'
-import type { SuperJSONResult } from 'superjson'
 import { z, ZodError } from 'zod'
 
 import {
@@ -20,6 +19,7 @@ import {
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
+import { deserializeInput } from './deserialize-input'
 import { tracingMiddleware } from './tracing'
 
 import { env } from '~/env'
@@ -69,36 +69,6 @@ interface Meta {
   rateLimitOptions?: RateLimiterConfig | null
 }
 
-type InputAnnotations = NonNullable<SuperJSONResult['meta']>['values']
-
-const isAnnotationTree = (
-  value: InputAnnotations | null
-): value is NonNullable<InputAnnotations> =>
-  typeof value === 'object' && value !== null
-
-// superjson rebuilds a Set or Map by walking it one key at a time (getNthKey),
-// so a payload with many paths into that container deserializes in O(N^2)
-// before auth or zod.
-const hasSetOrMap = (tree: InputAnnotations | null): boolean => {
-  if (!isAnnotationTree(tree)) {
-    return false
-  }
-
-  if (Array.isArray(tree)) {
-    const [type, children] = tree
-
-    return (
-      type === 'set' ||
-      type === 'map' ||
-      (isAnnotationTree(children) && Object.values(children).some(hasSetOrMap))
-    )
-  }
-
-  return Object.values(tree).some(hasSetOrMap)
-}
-
-const decodeInput = (input: SuperJSONResult) => deserialize(input)
-
 /**
  * 2. INITIALIZATION
  *
@@ -130,16 +100,7 @@ const t = initTRPC
     },
     transformer: {
       input: {
-        deserialize: (input: SuperJSONResult) => {
-          if (hasSetOrMap(input.meta?.values)) {
-            throw new TRPCError({
-              code: 'BAD_REQUEST',
-              message: 'Input must not contain a Set or Map',
-            })
-          }
-
-          return decodeInput(input)
-        },
+        deserialize: deserializeInput,
         serialize,
       },
       output: {
