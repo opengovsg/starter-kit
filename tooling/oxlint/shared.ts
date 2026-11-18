@@ -2,8 +2,10 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
+import landmines from '@acme/oxlint-config/landmines.ts'
+
 export default defineConfig({
-  extends: [core, antiSlop],
+  extends: [core, antiSlop, landmines],
   settings: {
     next: {
       rootDir: 'apps/web',

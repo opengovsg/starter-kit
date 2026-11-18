@@ -5,6 +5,7 @@ packages:
 
 catalog:
   '@hookform/resolvers': ^5.2.2
+  '@interfere/landmines': ^0.1.0
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
   'oxlint': ^1.94.0
@@ -102,6 +103,7 @@ minimumReleaseAgeExclude:
   # Leave empty otherwise. Only add a pinned entry when the security fix is
   # newer than `minimumReleaseAge`. If the patched version is already >24h
   # old, the cooldown lets it through on its own.
+  - '@interfere/landmines@0.1.0'
 
   # Under pnpm v12, every package with a build script must be listed here as
   # true (run the script) or false (skip it). Leaving one unlisted throws
@@ -178,6 +180,7 @@ registries:
 # hoist all 21 `@prisma/*` internals.
 publicHoistPattern:
   - '*oxfmt*'
+  - '@interfere/landmines'
   - '*@opengovsg/oui*'
   - prisma
   - '@prisma/client'

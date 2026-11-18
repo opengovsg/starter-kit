@@ -53,7 +53,7 @@ export default defineConfig({
       },
     },
     {
-      files: ['**/env.ts'],
+      files: ['**/env.ts', 'tests/**'],
       rules: {
         'no-restricted-properties': 'off',
         'no-restricted-imports': 'off',
@@ -74,10 +74,9 @@ export default defineConfig({
       },
     },
     {
-      files: ['**/__tests__/**', 'tests/**', '**/__mocks__/**'],
+      files: ['**/__tests__/**', 'tests/**'],
       rules: {
         'anti-slop/no-chained-type-assertions': 'off',
-        'anti-slop/no-module-mocking': 'off',
         'anti-slop/require-safety-comment-for-type-assertion': 'off',
         'typescript/no-unsafe-assignment': 'off',
         'typescript/no-unsafe-type-assertion': 'off',

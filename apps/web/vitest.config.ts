@@ -17,12 +17,15 @@ export default defineConfig({
       reporter: ['text', ['lcovonly', { projectRoot: '../..' }]],
     },
     globalSetup: 'tests/global-setup.ts',
-    setupFiles: ['tests/db/setup.ts', 'tests/redis/setup.ts'],
+    setupFiles: [
+      'tests/db/setup.ts',
+      'tests/redis/setup.ts',
+      'tests/msw/setup.ts',
+    ],
     env: {
-      // Add any other test specific environment variables here.
-      // These environment variables will still be validated against the schema in `env.ts`.
       DATABASE_URL: 'postgresql://root:root@localhost:54321/willbeoverridden',
       NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+      POSTMAN_API_KEY: 'test-postman-key',
       SESSION_SECRET: 'thisisasecretthatshouldbeatleast32characters!',
     },
   },

@@ -68,6 +68,7 @@ updates:
         applies-to: version-updates
         patterns:
           - 'oxlint'
+          - '@interfere/landmines'
       vitest:
         applies-to: version-updates
         patterns:

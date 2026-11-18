@@ -1,18 +1,3 @@
-/**
- * Test Database Setup
- *
- * This file sets up isolated test databases for each test run using Testcontainers.
- * The setup process involves:
- * 1. Creating a unique test database for each test run
- * 2. Importing the pre-exported schema (from export_schema.sh) for fast setup
- * 3. Configuring Prisma client to use the test database
- *
- * This approach ensures test isolation and faster test execution compared to
- * running migrations during test setup.
- *
- * See README.md for documentation on the schema export process.
- */
-
 import { randomUUID } from 'node:crypto'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
@@ -20,10 +5,9 @@ import { fileURLToPath } from 'node:url'
 
 import { getPostgresConnectionString } from '@opengovsg/testcontainers'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { inject, vi } from 'vitest'
+import { inject } from 'vitest'
 
 import { PrismaClient } from '@acme/db/client'
-import { kyselyPrismaExtension } from '@acme/db/extensions'
 
 const { postgres: container } = inject('testcontainers')
 
@@ -69,7 +53,6 @@ const prismaMigrationDir = path.join(
   'migrations'
 )
 
-// Running migrations manually; if using `dd-trace`, it intercepts `exec` usage and prevents runs
 const applyMigrations = async (client: PrismaClient) => {
   const directory = readdirSync(prismaMigrationDir).toSorted()
 
@@ -84,15 +67,6 @@ const applyMigrations = async (client: PrismaClient) => {
   }
 }
 
-const db = new PrismaClient({
-  adapter: new PrismaPg({ connectionString }),
-}).$extends(kyselyPrismaExtension)
-
-vi.mock('@acme/db', () => ({
-  db,
-}))
-
-// Set up the test database
 const client = await setupTestClient()
 
 await client.$connect()
@@ -100,3 +74,7 @@ await client.$connect()
 await applyMigrations(client)
 
 await client.$disconnect()
+
+process.env.DATABASE_URL = connectionString
+
+Reflect.deleteProperty(globalThis, 'prisma')

@@ -23,6 +23,7 @@
     "vercel-build": "turbo run vercel-build"
   },
   "devDependencies": {
+    "@interfere/landmines": "catalog:",
     "@turbo/gen": "^2.10.5",
     "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",

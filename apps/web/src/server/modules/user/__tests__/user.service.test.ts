@@ -8,8 +8,7 @@ import { db } from '@acme/db'
 import { AccountProvider } from '../../auth/auth.constants'
 import { getUserById, loginUserByEmail } from '../user.service'
 
-// Minimal Logger stub capturing the self-signup audit call.
-const makeAuditLoggerStub = () => {
+const makeAuditLoggerSpy = () => {
   const accountCreated = vi.fn<(input: { targetUserId: string }) => void>()
 
   const logger = {
@@ -62,7 +61,7 @@ describe('user.service', () => {
 
     it('should emit accountCreated audit only for a first-time (new) user', async () => {
       const email = 'signup@example.com'
-      const { logger, accountCreated } = makeAuditLoggerStub()
+      const { logger, accountCreated } = makeAuditLoggerSpy()
 
       const user = await loginUserByEmail(email, logger)
       expect(accountCreated).toHaveBeenCalledOnce()

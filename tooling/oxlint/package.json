@@ -7,12 +7,14 @@
   "exports": {
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
+    "./landmines.ts": "./landmines.ts",
     "./presets.ts": "./presets.ts",
     "./react-doctor.ts": "./react-doctor.ts",
     "./next-react-doctor.ts": "./next-react-doctor.ts",
     "./react-query.ts": "./react-query.ts"
   },
   "dependencies": {
+    "@interfere/landmines": "catalog:",
     "ultracite": "catalog:"
   },
   "devDependencies": {

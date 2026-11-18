@@ -1,15 +1,11 @@
 import { add } from 'date-fns/add'
-
-import '../../mail/__mocks__/mail.service'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { mock, mockDeep } from 'vitest-mock-extended'
 import { resetTables } from '~tests/db/utils'
-
-import type { Logger } from '@acme/logging'
+import { postmanMails } from '~tests/msw/server'
 
 import { db } from '@acme/db'
+import { createBaseLogger } from '@acme/logging'
 
-import * as mailService from '../../mail/mail.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 
@@ -18,8 +14,11 @@ import {
   ssCreatePkceVerifier,
 } from '~/lib/pkce/server-pkce'
 
-const mockedMailService = mock(mailService)
-const logger = mockDeep<Logger>()
+const logger = createBaseLogger({
+  clientIp: null,
+  path: 'tests',
+  userAgent: null,
+})
 
 const INVALID_OR_EXPIRED_MESSAGE = 'Token is invalid or has expired'
 
@@ -52,11 +51,13 @@ describe('auth.service', () => {
       })
 
       expect(token).toBeDefined()
-      expect(mockedMailService.sendMail).toHaveBeenCalledWith({
-        body: expect.any(String),
-        recipient: email,
-        subject: expect.stringContaining('Sign in to '),
-      })
+      expect(postmanMails).toStrictEqual([
+        {
+          body: expect.any(String),
+          recipient: email,
+          subject: expect.stringContaining('Sign in to '),
+        },
+      ])
     })
 
     it('should throw when code challenge is reused', async () => {
