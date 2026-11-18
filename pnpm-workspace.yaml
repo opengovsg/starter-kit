@@ -17,8 +17,6 @@ catalog:
   react-aria-components: 1.16.0
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
-  # Rust port of the TS 7 checker; drives `typecheck` and Oxlint type-aware lint.
-  # `typescript` stays for Next/Storybook/editors.
   tsrs: 7.1.0-beta.tsrs2
   typescript: ^7.0.2
   ultracite: ^8.1.0
@@ -163,12 +161,10 @@ trustPolicy: no-downgrade
 # roughly when provenance became common.
 trustPolicyIgnoreAfter: 525600
 
-# Pinned versions only, same rule as minimumReleaseAgeExclude.
 trustPolicyExclude:
   # The npm name moved from its 2024 owner to oxc-project in Oct 2026, which
   # pnpm reads as a takeover. Verified this version and every @tsrs/* binary
   # are trusted-published from oxc-project/tsrs CI with SLSA provenance.
-  # Bump this pin together with the catalog entry.
   - 'tsrs@7.1.0-beta.tsrs2'
 
 # Pin the registry so a global config or `pnpm_config_*` env var cannot
