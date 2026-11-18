@@ -13,12 +13,12 @@
     }
   },
   "scripts": {
-    "build": "tsrs",
+    "build": "tsrs --fast",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsrs",
+    "dev": "tsrs --fast",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsrs --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false --fast"
   },
   "dependencies": {
     "@t3-oss/env-core": "catalog:t3-env",
@@ -31,7 +31,6 @@
     "@types/node": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
-    "oxlint-tsgolint": "catalog:",
     "tsrs": "catalog:",
     "typescript": "catalog:"
   }

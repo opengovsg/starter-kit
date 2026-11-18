@@ -16,7 +16,7 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsrs --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false --fast"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
@@ -36,7 +36,6 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-plugin-react-doctor": "catalog:",
-    "oxlint-tsgolint": "catalog:",
     "react": "catalog:react",
     "tsrs": "catalog:",
     "typescript": "catalog:",

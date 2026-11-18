@@ -9,14 +9,13 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
     "lint": "oxlint .",
-    "typecheck": "tsrs --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsrs --noEmit --emitDeclarationOnly false --fast"
   },
   "devDependencies": {
     "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
-    "oxlint-tsgolint": "catalog:",
     "tsrs": "catalog:",
     "typescript": "catalog:"
   }
