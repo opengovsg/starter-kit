@@ -174,14 +174,15 @@ export default defineConfig({
       rules: { 'acme/no-e2e-literal-role-tag': 'off' },
     },
     {
-      files: ['tests/e2e/fixtures/*.db.ts'],
+      files: ['tests/e2e/fixtures/*.db.ts', 'tests/e2e/fixtures/*.factory.ts'],
       rules: {
         'no-restricted-imports': restrictImports(
           [e2eRelativeImport],
           [
             {
               name: '@playwright/test',
-              message: '.db.ts returns rows and has no `expect`.',
+              message:
+                '.db.ts and .factory.ts have no `expect`; assert in <entity>-expect.ts.',
             },
           ]
         ),

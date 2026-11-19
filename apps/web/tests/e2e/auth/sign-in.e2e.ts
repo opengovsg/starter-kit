@@ -2,8 +2,8 @@ import { randomUUID } from 'node:crypto'
 
 import { expect, test } from '@playwright/test'
 import { mockTrpcFailure } from '~tests/e2e/fixtures/network'
-import { setKnownOtp } from '~tests/e2e/fixtures/otp'
 import { expectUserLastLogin } from '~tests/e2e/fixtures/user-expect'
+import { setKnownOtp } from '~tests/e2e/fixtures/verification-token.factory'
 
 import { SignInPO } from './sign-in.po'
 

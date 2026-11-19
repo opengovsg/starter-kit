@@ -12,6 +12,7 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 | `fixtures/` | Helpers shared across features. Move a page object here once a second feature needs it. |
 | `fixtures/auth.ts` | `ROLES`, `TEST_EMAILS`, `roleTag`. |
 | `fixtures/<entity>.db.ts` | Read-only queries for persisted state. Return rows, no `expect`. |
+| `fixtures/<entity>.factory.ts` | Writes a test needs: create rows with unique `randomUUID()` defaults and overrides, or set state the UI can't (`setKnownOtp`). No `expect`. |
 | `fixtures/<entity>-expect.ts` | Assertions over `.db.ts` getters. |
 | `fixtures/network.ts` | `page.route` stubs for failures and external services CI can't reach. |
 | `global-setup.ts` + `setup/` | Runs once per run: start containers, reset DB, seed users. One module per job. |
@@ -19,6 +20,6 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 
 ## Rules
 
-- **Data**: the DB is reset once per run, not per test, and tests run in parallel. Create your own data with unique names (`randomUUID()`); never rely on another test's data or an empty table.
+- **Data**: the DB is reset once per run, not per test, and tests run in parallel. Create your own data through a factory; never rely on another test's data or an empty table.
 - **Auth**: tag a `test.describe` with `{ tag: roleTag('user') }` to run it signed in. Untagged tests run signed out. To add a role, extend `ROLES` and `TEST_EMAILS`; its user, setup project and test project follow.
 - **Page objects**: a PO wraps `page.goto` only when it's the canonical entry onto its screen. One-off calls (`page.reload()`, `page.goto` to a screen without a PO, `expect(page).toHaveURL`) stay inline in the test.
