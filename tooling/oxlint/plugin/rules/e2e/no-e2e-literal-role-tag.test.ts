@@ -1,5 +1,3 @@
-// Cases are source text; `${…}` belongs to the templates under test.
-/* oxlint-disable no-template-curly-in-string */
 import { RuleTester } from 'oxlint/plugins-dev'
 
 import { noE2eLiteralRoleTagRule } from './no-e2e-literal-role-tag.ts'

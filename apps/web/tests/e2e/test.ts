@@ -27,8 +27,6 @@ interface A11y {
  */
 export const test = base.extend<PageObjects & A11y>({
   a11y: [true, { option: true }],
-  // Runs axe on the page each passing test ends on: the safety net for
-  // states asserted without a page object's `expect*` method.
   a11yCheck: [
     async ({ a11y, page }, use, testInfo) => {
       await use(undefined)

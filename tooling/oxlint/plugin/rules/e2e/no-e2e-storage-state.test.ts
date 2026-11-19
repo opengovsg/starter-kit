@@ -8,7 +8,6 @@ const tester = new RuleTester({
 
 tester.run('no-e2e-storage-state', noE2eStorageStateRule, {
   invalid: [
-    // --- Key forms ---
     "test.use({ storageState: 'a.json' })",
     'test.use({ storageState })',
     "test.use({ 'storageState': 'a.json' })",
@@ -16,15 +15,12 @@ tester.run('no-e2e-storage-state', noE2eStorageStateRule, {
     'test.use({ [`storageState`]: s })',
     "test.use({ locale: 'en', storageState: storageStateFor('user') })",
 
-    // --- Placement ---
     "test.describe('x', () => { test.use({ storageState: s }) })",
     "test['use']({ storageState: s })",
 
-    // --- Renamed test ---
     'setup.use({ storageState: s })',
     'base.use({ storageState: s })',
 
-    // --- Other ways to set it ---
     "test.extend({ storageState: async ({}, use) => use('a.json') })",
     'browser.newContext({ storageState: s })',
     'browser.newPage({ storageState: s })',
@@ -41,7 +37,6 @@ tester.run('no-e2e-storage-state', noE2eStorageStateRule, {
     "foo({ storageState: 'a.json' })",
     "test.other({ storageState: 'a.json' })",
     'const { storageState } = opts',
-    // ponytail: known gap, options via a variable or spread are not resolved.
     'test.use(opts)',
     'test.use({ ...opts })',
   ].map((code) => ({ code })),

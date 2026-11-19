@@ -2,7 +2,6 @@ import { AxeBuilder } from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
-/** WCAG 2.1 A/AA, the bar for Singapore government digital services. */
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']
 
 /**

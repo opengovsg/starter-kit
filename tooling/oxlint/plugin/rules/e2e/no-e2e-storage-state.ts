@@ -2,10 +2,6 @@ import { defineRule } from '@oxlint/plugins'
 
 import { getName } from '../../ast.ts'
 
-/**
- * Calls whose options object can carry `storageState`. Matched by method name
- * so a renamed `test` (`test as setup`, `base.extend(…)`) is still caught.
- */
 const STORAGE_STATE_METHODS = new Set([
   'extend',
   'newContext',

@@ -20,4 +20,4 @@ When working on UI components or stories in this repo, use the **acme-web-storyb
 
 ## E2E tests (Playwright)
 
-Before adding or changing tests in `apps/web/tests/e2e`, read [its README](apps/web/tests/e2e/README.md) for the layout (feature folders, `.po.ts`, `.db.ts`, `-expect.ts`, `network.ts`) and the rules on data, auth and coverage.
+Before adding or changing tests in `apps/web/tests/e2e`, read [its README](apps/web/tests/e2e/README.md) for the layout (feature folders, `.po.ts`, `.db.ts`, `-expect.ts`, `network.ts`) and the rules on data, auth, accessibility, and page objects.

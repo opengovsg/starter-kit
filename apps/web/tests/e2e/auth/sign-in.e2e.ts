@@ -8,7 +8,6 @@ import { test as base } from '~tests/e2e/test'
 
 import { SignInPO } from './sign-in.po'
 
-// Local, not in ~tests/e2e/test: only this file may drive the login UI.
 const test = base.extend<{ signIn: SignInPO }>({
   signIn: async ({ page }, use) => {
     await use(new SignInPO(page))

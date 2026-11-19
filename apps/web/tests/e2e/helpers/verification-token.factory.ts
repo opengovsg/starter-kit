@@ -13,8 +13,6 @@ export const setKnownOtp = async (email: string) => {
   })
 
   await db.verificationToken.update({
-    // Mirrors createTokenHash in src/server/modules/auth/auth.utils.ts (not
-    // imported: it pulls in CJS deps Playwright's ESM loader can't resolve).
     data: { token: scryptSync(otp, identifier, 64).toString('base64') },
     where: { identifier },
   })

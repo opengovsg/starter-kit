@@ -54,7 +54,6 @@ const restrictImports = (
   },
 ]
 
-// tests/e2e/README.md "Imports", "DB access" and auth rules.
 const e2eRelativeImport = {
   group: ['../**'],
   message: 'Use the `~tests/e2e/...` alias; only same-folder `./` is relative.',
@@ -188,7 +187,6 @@ export default defineConfig({
       },
     },
     {
-      // Defines roleTag(); the only place a literal `@role:` belongs.
       files: ['tests/e2e/helpers/auth.ts'],
       rules: { 'acme/no-e2e-literal-role-tag': 'off' },
     },

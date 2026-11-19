@@ -6,7 +6,6 @@ import { getName } from '../../ast.ts'
 const SCAN_MODULE = '~tests/e2e/helpers/a11y-expect'
 const SCAN_EXPORT = 'expectNoA11yViolations'
 
-// `expectLoaded`, `expectError`, `expect`; not `expectedTitle`.
 const EXPECT_NAME = /^expect(?:[A-Z]|$)/u
 
 // `ESTree.Function` covers declarations and expressions (and body-less TS
@@ -20,7 +19,6 @@ const isFunction = (node: ESTree.Node): node is Fn =>
   node.type === 'TSDeclareFunction' ||
   node.type === 'TSEmptyBodyFunctionExpression'
 
-/** `a`, `#a`, `'a'` or `['a']` as a key. */
 const getKeyName = (key: ESTree.Node, computed: boolean) => {
   if (key.type === 'Literal') {
     return String(key.value)
@@ -35,10 +33,6 @@ const getKeyName = (key: ESTree.Node, computed: boolean) => {
     : null
 }
 
-/**
- * The name a function is bound to: a class or object member, a variable, a
- * declaration, or an assignment like `this.expectX = async () => {}`.
- */
 const getFunctionName = (fn: Fn) => {
   const { parent } = fn
 
@@ -84,7 +78,6 @@ const getEnclosingFunction = (node: ESTree.Node) => {
   return null
 }
 
-/** Nearest named function, skipping anonymous callbacks (`toPass(async () => …)`). */
 const getOwningFunction = (node: ESTree.Node) => {
   for (
     let fn = getEnclosingFunction(node);
@@ -99,7 +92,6 @@ const getOwningFunction = (node: ESTree.Node) => {
   return null
 }
 
-/** `expect(…)`, `expect.soft(…)`, `expect.poll(…)`. */
 const isPlaywrightExpect = ({ callee }: ESTree.CallExpression) =>
   (callee.type === 'Identifier' && callee.name === 'expect') ||
   (callee.type === 'MemberExpression' &&
@@ -113,7 +105,6 @@ const getAwaitedCall = (statement: ESTree.Node | undefined) =>
     ? statement.expression.argument
     : null
 
-/** `await this.expectOther(…)`: delegates to a method this rule also checks. */
 const isDelegation = (call: ESTree.CallExpression) =>
   call.callee.type === 'MemberExpression' &&
   call.callee.object.type === 'ThisExpression' &&
@@ -135,7 +126,6 @@ const isDelegation = (call: ESTree.CallExpression) =>
  */
 export const requireE2ePoExpectScanRule = defineRule({
   createOnce(context) {
-    // Per file.
     let scanName: string | null = null
     let awaits = new Map<Fn, number[]>()
     let asserting = new Set<Fn>()
@@ -176,7 +166,6 @@ export const requireE2ePoExpectScanRule = defineRule({
         return
       }
 
-      // A wait: some `await` in this function before the final scan.
       const waited =
         last !== undefined &&
         (awaits.get(fn) ?? []).some((start) => start < last.start)
@@ -186,7 +175,6 @@ export const requireE2ePoExpectScanRule = defineRule({
       }
     }
 
-    // `check` runs on exit, once the body's awaits and `expect` calls are recorded.
     return {
       'ArrowFunctionExpression:exit': check,
       AwaitExpression(node) {
