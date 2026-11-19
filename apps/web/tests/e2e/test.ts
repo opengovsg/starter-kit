@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test'
-import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y-expect'
+import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y.expect'
 
 import { AdminPO } from './admin/admin.po'
 import { LandingPO } from './public/landing.po'

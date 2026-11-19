@@ -1,6 +1,6 @@
-import { scryptSync } from 'node:crypto'
-
 import { db } from '@acme/db'
+
+import { hashToken } from '~/server/modules/auth/token-hash'
 
 export const setKnownOtp = async (email: string) => {
   const otp = 'ABCDEFGH'
@@ -13,7 +13,7 @@ export const setKnownOtp = async (email: string) => {
   })
 
   await db.verificationToken.update({
-    data: { token: scryptSync(otp, identifier, 64).toString('base64') },
+    data: { token: hashToken(otp, identifier) },
     where: { identifier },
   })
 

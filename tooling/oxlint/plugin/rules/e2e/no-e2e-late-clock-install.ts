@@ -39,7 +39,7 @@ const isFunction = (node: ESTree.Node): node is Fn =>
   node.type === 'FunctionDeclaration' ||
   node.type === 'FunctionExpression'
 
-const getCalleeNames = (call: ESTree.CallExpression) => {
+const calleeNamesInnermostFirst = (call: ESTree.CallExpression) => {
   const names: string[] = []
   let callee: ESTree.Node = call.callee
 
@@ -66,11 +66,11 @@ const getCallbackCall = (fn: Fn) => {
 const isDescribeCallback = (fn: Fn) => {
   const call = getCallbackCall(fn)
 
-  return call !== null && getCalleeNames(call).includes('describe')
+  return call !== null && calleeNamesInnermostFirst(call).includes('describe')
 }
 
 const getHookKind = (call: ESTree.CallExpression): Hook | null => {
-  const [name] = getCalleeNames(call)
+  const [name] = calleeNamesInnermostFirst(call)
 
   return name === 'beforeAll' || name === 'beforeEach' ? name : null
 }
@@ -168,7 +168,7 @@ const runsInline = (navigation: Navigation, scope: Fn) => {
   return false
 }
 
-const getScope = (node: ESTree.Node) => {
+const getOutermostNonDescribeFunction = (node: ESTree.Node) => {
   let scope: Fn | null = null
 
   for (const ancestor of getAncestors(node)) {
@@ -216,8 +216,6 @@ const getPrecedingHooks = (scope: Fn, own: ESTree.CallExpression) => {
  * ponytail: matches navigation by method name on any receiver; misses page
  * objects that navigate under another name (`open()`) and fixtures that
  * navigate, and can flag a `goto` on a different page.
- *
- * @see apps/web/tests/e2e/README.md
  */
 export const noE2eLateClockInstallRule = defineRule({
   createOnce(context) {
@@ -231,7 +229,7 @@ export const noE2eLateClockInstallRule = defineRule({
       )
 
     const check = (install: ESTree.CallExpression) => {
-      const scope = getScope(install)
+      const scope = getOutermostNonDescribeFunction(install)
 
       if (scope === null) {
         return

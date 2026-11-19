@@ -7,7 +7,7 @@ const tester = new RuleTester({
 })
 
 const IMPORT =
-  "import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y-expect'\n"
+  "import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y.expect'\n"
 
 const WAIT = 'await expect(this.page.getByText("x")).toBeVisible()'
 const SCAN = 'await expectNoA11yViolations(this.page)'
@@ -172,7 +172,7 @@ tester.run('require-e2e-po-expect-scan', requireE2ePoExpectScanRule, {
 
     po(
       `async expectLoaded() { ${WAIT}; await scan(this.page) }`,
-      "import { expectNoA11yViolations as scan } from '~tests/e2e/helpers/a11y-expect'\n"
+      "import { expectNoA11yViolations as scan } from '~tests/e2e/helpers/a11y.expect'\n"
     ),
 
     po(

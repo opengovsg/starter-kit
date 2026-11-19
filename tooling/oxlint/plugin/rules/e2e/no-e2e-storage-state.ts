@@ -15,8 +15,6 @@ const STORAGE_STATE_METHODS = new Set([
  * `roleTag(...)` instead; playwright.config.ts wires the session per role.
  *
  * ponytail: syntactic only, misses options passed through a variable or spread.
- *
- * @see apps/web/tests/e2e/README.md
  */
 export const noE2eStorageStateRule = defineRule({
   createOnce(context) {

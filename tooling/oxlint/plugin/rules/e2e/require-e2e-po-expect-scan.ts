@@ -3,7 +3,7 @@ import type { ESTree } from '@oxlint/plugins'
 
 import { getName } from '../../ast.ts'
 
-const SCAN_MODULE = '~tests/e2e/helpers/a11y-expect'
+const SCAN_MODULE = '~tests/e2e/helpers/a11y.expect'
 const SCAN_EXPORT = 'expectNoA11yViolations'
 
 const EXPECT_NAME = /^expect(?:[A-Z]|$)/u
@@ -78,7 +78,7 @@ const getEnclosingFunction = (node: ESTree.Node) => {
   return null
 }
 
-const getOwningFunction = (node: ESTree.Node) => {
+const getNearestNamedFunction = (node: ESTree.Node) => {
   for (
     let fn = getEnclosingFunction(node);
     fn !== null;
@@ -113,7 +113,7 @@ const isDelegation = (call: ESTree.CallExpression) =>
 /**
  * Every `expect*` function in an e2e page object asserts a screen state, so it
  * must wait for that state, then end with `await expectNoA11yViolations(this.page)`
- * (imported from `~tests/e2e/helpers/a11y-expect`) or delegate by ending with
+ * (imported from `~tests/e2e/helpers/a11y.expect`) or delegate by ending with
  * `await this.expectOther()`. It may not return early, and any function that
  * calls Playwright's `expect` must itself be named `expect*`, so an assertion
  * can't dodge the scan by its name. Covers class members (including `#private`
@@ -121,8 +121,6 @@ const isDelegation = (call: ESTree.CallExpression) =>
  *
  * ponytail: `// oxlint-disable` and the `test.use({ a11y: false })` opt-out are
  * still escape hatches; review catches those.
- *
- * @see apps/web/tests/e2e/README.md
  */
 export const requireE2ePoExpectScanRule = defineRule({
   createOnce(context) {
@@ -185,7 +183,9 @@ export const requireE2ePoExpectScanRule = defineRule({
         }
       },
       CallExpression(node) {
-        const owner = isPlaywrightExpect(node) ? getOwningFunction(node) : null
+        const owner = isPlaywrightExpect(node)
+          ? getNearestNamedFunction(node)
+          : null
 
         if (owner !== null) {
           asserting.add(owner)
@@ -233,7 +233,7 @@ export const requireE2ePoExpectScanRule = defineRule({
       return:
         "Don't return from `{{name}}()`; it must always reach its final axe scan.",
       scanLast:
-        "`{{name}}()` must `await` the screen state first and end with `await expectNoA11yViolations(this.page)` (from '~tests/e2e/helpers/a11y-expect') or `await this.expectOther()`.",
+        "`{{name}}()` must `await` the screen state first and end with `await expectNoA11yViolations(this.page)` (from '~tests/e2e/helpers/a11y.expect') or `await this.expectOther()`.",
     },
     type: 'problem',
   },

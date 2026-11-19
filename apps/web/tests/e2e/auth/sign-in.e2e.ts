@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 
 import { expect } from '@playwright/test'
 import { mockTrpcFailure } from '~tests/e2e/helpers/network'
-import { expectUserLastLogin } from '~tests/e2e/helpers/user-expect'
+import { expectUserLastLogin } from '~tests/e2e/helpers/user.expect'
 import { setKnownOtp } from '~tests/e2e/helpers/verification-token.factory'
 import { test as base } from '~tests/e2e/test'
 

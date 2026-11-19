@@ -199,7 +199,7 @@ export default defineConfig({
             {
               name: '@playwright/test',
               message:
-                '.db.ts and .factory.ts have no `expect`; assert in <entity>-expect.ts.',
+                '.db.ts and .factory.ts have no `expect`; assert in <entity>.expect.ts.',
             },
           ]
         ),

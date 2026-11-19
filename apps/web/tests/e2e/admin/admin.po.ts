@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
-import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y-expect'
+import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y.expect'
 
 export class AdminPO {
   readonly page: Page

@@ -12,7 +12,7 @@ tester.run('no-e2e-literal-role-tag', noE2eLiteralRoleTagRule, {
     "test.describe('x', { tag: '@role:usr' }, () => {})",
     "test('x', { tag: ['@slow', '@role:user'] }, () => {})",
     'test.describe("x", { tag: "@role:user" }, () => {})',
-    "test.describe('x', { tag: `@role:${role}` }, () => {})",
+    `test.describe('x', { tag: \`@role:\${role}\` }, () => {})`,
     'const tag = `@role:user`',
     "const tag = '@role:' + role",
   ].map((code) => ({ code, errors: 1 })),
@@ -22,6 +22,6 @@ tester.run('no-e2e-literal-role-tag', noE2eLiteralRoleTagRule, {
     "test.describe('x', { tag: '@slow' }, () => {})",
     "const role = 'user'",
     'const re = /@role:/u',
-    'const s = `role: ${role}`',
+    `const s = \`role: \${role}\``,
   ].map((code) => ({ code })),
 })

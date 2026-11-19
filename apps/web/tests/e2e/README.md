@@ -14,8 +14,8 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 | `helpers/auth.ts` | `ROLES`, `TEST_EMAILS`, `roleTag`. |
 | `helpers/<entity>.db.ts` | Read-only queries for persisted state. |
 | `helpers/<entity>.factory.ts` | Writes a test needs: create rows with unique `randomUUID()` defaults and overrides, or set state the UI can't (`setKnownOtp`). |
-| `helpers/<entity>-expect.ts` | Assertions over `.db.ts` getters. |
-| `helpers/a11y-expect.ts` | `expectNoA11yViolations(page)`: axe against WCAG 2.1 A/AA. |
+| `helpers/<entity>.expect.ts` | Assertions over `.db.ts` getters. |
+| `helpers/a11y.expect.ts` | `expectNoA11yViolations(page)`: axe against WCAG 2.1 A/AA. |
 | `helpers/network.ts` | `page.route` stubs for failures and external services CI can't reach. |
 | `global-setup.ts` + `setup/` | Runs once per run: start containers, reset DB, seed users. One module per job. |
 | `auth.setup.ts` | Mints one role's session cookie per `setup:<role>` project; runs only when selected tests need that role. |
