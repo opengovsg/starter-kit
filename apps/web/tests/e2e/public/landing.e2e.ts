@@ -1,9 +1,6 @@
-import { test } from '@playwright/test'
+import { test } from '~tests/e2e/test'
 
-import { LandingPO } from './landing.po'
-
-test('shows the landing page', async ({ page }) => {
-  const landing = new LandingPO(page)
+test('shows the landing page', async ({ landing }) => {
   await landing.goto()
   await landing.expectLoaded()
 })

@@ -68,6 +68,12 @@ const e2eNoSignInPO = {
   group: ['**/sign-in.po', './sign-in.po'],
   message: 'Only auth/sign-in.e2e.ts covers the login UI.',
 }
+const e2eOwnTest = {
+  name: '@playwright/test',
+  importNames: ['test'],
+  message:
+    "Import `test` from '~tests/e2e/test', which adds the page-object fixtures.",
+}
 
 export default defineConfig({
   extends: [
@@ -153,7 +159,7 @@ export default defineConfig({
       },
     },
     {
-      files: ['tests/e2e/**/*.e2e.ts', 'tests/e2e/**/*.po.ts'],
+      files: ['tests/e2e/**/*.po.ts'],
       rules: {
         'no-restricted-imports': restrictImports([
           e2eRelativeImport,
@@ -163,9 +169,21 @@ export default defineConfig({
       },
     },
     {
+      files: ['tests/e2e/**/*.e2e.ts'],
+      rules: {
+        'no-restricted-imports': restrictImports(
+          [e2eRelativeImport, e2eNoDb, e2eNoSignInPO],
+          [e2eOwnTest]
+        ),
+      },
+    },
+    {
       files: ['tests/e2e/auth/sign-in.e2e.ts'],
       rules: {
-        'no-restricted-imports': restrictImports([e2eRelativeImport, e2eNoDb]),
+        'no-restricted-imports': restrictImports(
+          [e2eRelativeImport, e2eNoDb],
+          [e2eOwnTest]
+        ),
       },
     },
     {

@@ -1,11 +1,12 @@
 # E2E tests
 
-Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in globalSetup). CI runs the same suite against a production build.
+Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in globalSetup), or `e2e:ui` for UI mode. CI runs the same suite against a production build. The recommended VS Code extension (`ms-playwright.playwright`) runs and debugs single tests and picks locators.
 
 ## Layout
 
 | Path | Holds |
 | --- | --- |
+| `test.ts` | The `test` every `.e2e.ts` imports (`expect` comes from `@playwright/test`): Playwright's, plus one fixture per page object (`async ({ admin }) => …`). Register a new page object here. |
 | `<feature>/` | One folder per feature (`auth/`, `admin/`, `public/`): its tests and the page objects only it uses. |
 | `<feature>/<screen>.e2e.ts` | Tests, named after the screen they drive (`sign-in.e2e.ts`), not the assertion. Several scenarios per file. |
 | `<feature>/<screen>.po.ts` | Page object for **one** screen: locators, actions and `expect*` assertions (`SignInPO`). |
