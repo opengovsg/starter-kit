@@ -33,13 +33,17 @@ describe('tRPC input deserialize', () => {
 
   it('rejects a deep annotation path with many children, before walking it', () => {
     const children = Object.fromEntries(
-      Array.from({ length: 2_000 }, (_, i) => [i, ['undefined']])
+      Array.from({ length: 2000 }, (_, i) => [i, ['undefined']])
     )
+
     const payload = {
       json: {},
       meta: {
         values: {
-          [Array(20_000).fill('a').join('.')]: ['undefined', children],
+          [Array.from({ length: 20_000 }).fill('a').join('.')]: [
+            'undefined',
+            children,
+          ],
         },
       },
     }

@@ -2,7 +2,11 @@ import { TRPCError } from '@trpc/server'
 import { deserialize } from 'superjson'
 import type { SuperJSONResult } from 'superjson'
 
-type UntrustedAnnotation = string | null | UntrustedAnnotation[] | { [key: string]: UntrustedAnnotation }
+type UntrustedAnnotation =
+  | string
+  | null
+  | UntrustedAnnotation[]
+  | { [key: string]: UntrustedAnnotation }
 
 const isBranch = (
   value: UntrustedAnnotation | undefined
