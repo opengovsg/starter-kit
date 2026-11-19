@@ -26,6 +26,49 @@ const restrictProcessEnvImport = {
     "Use `import { env } from '~/env'` instead to ensure validated types.",
 }
 
+const restrictPublicProcedure = {
+  group: ['**/trpc'],
+  importNames: ['publicProcedure'],
+  allowTypeImports: true,
+  message:
+    'Use protectedProcedure. Public procedures are limited to auth and healthcheck.',
+}
+
+type RestrictedPath = { name: string; importNames?: string[]; message: string }
+type RestrictedPattern = {
+  group: string[]
+  importNames?: string[]
+  allowTypeImports?: boolean
+  message: string
+}
+
+// A later override replaces the whole rule, so each one restates the base set.
+const restrictImports = (
+  patterns: RestrictedPattern[] = [],
+  paths: RestrictedPath[] = []
+): ['error', { paths: RestrictedPath[]; patterns: RestrictedPattern[] }] => [
+  'error',
+  {
+    paths: [restrictProcessEnvImport, ...paths],
+    patterns: [restrictPublicProcedure, ...patterns],
+  },
+]
+
+// tests/e2e/README.md "Imports", "DB access" and auth rules.
+const e2eRelativeImport = {
+  group: ['../**'],
+  message: 'Use the `~tests/e2e/...` alias; only same-folder `./` is relative.',
+}
+const e2eNoDb = {
+  group: ['@acme/db', '@acme/db/*'],
+  message:
+    'Test files must not import @acme/db. Add a getter to fixtures/<entity>.db.ts.',
+}
+const e2eNoSignInPO = {
+  group: ['**/sign-in.po', './sign-in.po'],
+  message: 'Only auth/sign-in.e2e.ts covers the login UI.',
+}
+
 export default defineConfig({
   extends: [
     sharedConfig,
@@ -67,21 +110,7 @@ export default defineConfig({
               'Use db.$transaction(). The Prisma-Kysely extension does not support $kysely.transaction().',
           },
         ],
-        'no-restricted-imports': [
-          'error',
-          {
-            paths: [restrictProcessEnvImport],
-            patterns: [
-              {
-                group: ['**/trpc'],
-                importNames: ['publicProcedure'],
-                allowTypeImports: true,
-                message:
-                  'Use protectedProcedure. Public procedures are limited to auth and healthcheck.',
-              },
-            ],
-          },
-        ],
+        'no-restricted-imports': restrictImports(),
       },
     },
     {
@@ -113,10 +142,49 @@ export default defineConfig({
         ...playwrightE2eRules,
         // roleTag() returns `@role:${role}`; the plugin only accepts literals.
         'playwright/valid-test-tags': 'off',
+        'acme/no-e2e-storage-state': 'error',
+        'acme/no-e2e-late-clock-install': 'error',
+        'acme/no-e2e-literal-role-tag': 'error',
         'playwright/expect-expect': [
           'error',
           { assertFunctionPatterns: ['^expect'] },
         ],
+        'no-restricted-imports': restrictImports([e2eRelativeImport]),
+      },
+    },
+    {
+      files: ['tests/e2e/**/*.e2e.ts', 'tests/e2e/**/*.po.ts'],
+      rules: {
+        'no-restricted-imports': restrictImports([
+          e2eRelativeImport,
+          e2eNoDb,
+          e2eNoSignInPO,
+        ]),
+      },
+    },
+    {
+      files: ['tests/e2e/auth/sign-in.e2e.ts'],
+      rules: {
+        'no-restricted-imports': restrictImports([e2eRelativeImport, e2eNoDb]),
+      },
+    },
+    {
+      // Defines roleTag(); the only place a literal `@role:` belongs.
+      files: ['tests/e2e/fixtures/auth.ts'],
+      rules: { 'acme/no-e2e-literal-role-tag': 'off' },
+    },
+    {
+      files: ['tests/e2e/fixtures/*.db.ts'],
+      rules: {
+        'no-restricted-imports': restrictImports(
+          [e2eRelativeImport],
+          [
+            {
+              name: '@playwright/test',
+              message: '.db.ts returns rows and has no `expect`.',
+            },
+          ]
+        ),
       },
     },
     {
