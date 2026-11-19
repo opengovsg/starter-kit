@@ -3,8 +3,8 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { sealData } from 'iron-session'
-import type { Role } from '~tests/e2e/fixtures/auth'
-import { storageStateFor, TEST_EMAILS } from '~tests/e2e/fixtures/auth'
+import type { Role } from '~tests/e2e/helpers/auth'
+import { storageStateFor, TEST_EMAILS } from '~tests/e2e/helpers/auth'
 
 import { db } from '@acme/db'
 

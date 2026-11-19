@@ -1,5 +1,5 @@
 import { expect, test as setup } from '@playwright/test'
-import { ROLES, roleTag } from '~tests/e2e/fixtures/auth'
+import { ROLES, roleTag } from '~tests/e2e/helpers/auth'
 import { mintStorageState } from '~tests/e2e/setup/session'
 
 for (const role of ROLES) {

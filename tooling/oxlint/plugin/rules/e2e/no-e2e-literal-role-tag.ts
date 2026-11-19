@@ -7,7 +7,7 @@ const ROLE_TAG_PREFIX = '@role:'
  * the test from every project, so it silently never runs; `roleTag(role)` is
  * type-checked against `ROLES`. Disable for the file that defines `roleTag`.
  *
- * @see apps/web/tests/e2e/fixtures/auth.ts
+ * @see apps/web/tests/e2e/helpers/auth.ts
  */
 export const noE2eLiteralRoleTagRule = defineRule({
   createOnce(context) {

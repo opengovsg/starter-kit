@@ -1,4 +1,4 @@
-import { ROLES, TEST_EMAILS } from '~tests/e2e/fixtures/auth'
+import { ROLES, TEST_EMAILS } from '~tests/e2e/helpers/auth'
 
 import { db } from '@acme/db'
 

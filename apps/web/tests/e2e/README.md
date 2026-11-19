@@ -9,12 +9,12 @@ Run with `pnpm --filter @acme/web e2e` (Docker required; containers start in glo
 | `<feature>/` | One folder per feature (`auth/`, `admin/`, `public/`): its tests and the page objects only it uses. |
 | `<feature>/<screen>.e2e.ts` | Tests, named after the screen they drive (`sign-in.e2e.ts`), not the assertion. Several scenarios per file. |
 | `<feature>/<screen>.po.ts` | Page object for **one** screen: locators, actions and `expect*` assertions (`SignInPO`). |
-| `fixtures/` | Helpers shared across features. Move a page object here once a second feature needs it. |
-| `fixtures/auth.ts` | `ROLES`, `TEST_EMAILS`, `roleTag`. |
-| `fixtures/<entity>.db.ts` | Read-only queries for persisted state. Return rows, no `expect`. |
-| `fixtures/<entity>.factory.ts` | Writes a test needs: create rows with unique `randomUUID()` defaults and overrides, or set state the UI can't (`setKnownOtp`). No `expect`. |
-| `fixtures/<entity>-expect.ts` | Assertions over `.db.ts` getters. |
-| `fixtures/network.ts` | `page.route` stubs for failures and external services CI can't reach. |
+| `helpers/` | Helpers shared across features. Move a page object here once a second feature needs it. |
+| `helpers/auth.ts` | `ROLES`, `TEST_EMAILS`, `roleTag`. |
+| `helpers/<entity>.db.ts` | Read-only queries for persisted state. Return rows, no `expect`. |
+| `helpers/<entity>.factory.ts` | Writes a test needs: create rows with unique `randomUUID()` defaults and overrides, or set state the UI can't (`setKnownOtp`). No `expect`. |
+| `helpers/<entity>-expect.ts` | Assertions over `.db.ts` getters. |
+| `helpers/network.ts` | `page.route` stubs for failures and external services CI can't reach. |
 | `global-setup.ts` + `setup/` | Runs once per run: start containers, reset DB, seed users. One module per job. |
 | `auth.setup.ts` | Mints one role's session cookie per `setup:<role>` project; runs only when selected tests need that role. |
 

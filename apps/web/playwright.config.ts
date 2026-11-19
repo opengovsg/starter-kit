@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
-import { ROLES, storageStateFor } from '~tests/e2e/fixtures/auth'
+import { ROLES, storageStateFor } from '~tests/e2e/helpers/auth'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 

@@ -62,7 +62,7 @@ const e2eRelativeImport = {
 const e2eNoDb = {
   group: ['@acme/db', '@acme/db/*'],
   message:
-    'Test files must not import @acme/db. Add a getter to fixtures/<entity>.db.ts.',
+    'Test files must not import @acme/db. Add a getter to helpers/<entity>.db.ts.',
 }
 const e2eNoSignInPO = {
   group: ['**/sign-in.po', './sign-in.po'],
@@ -170,11 +170,11 @@ export default defineConfig({
     },
     {
       // Defines roleTag(); the only place a literal `@role:` belongs.
-      files: ['tests/e2e/fixtures/auth.ts'],
+      files: ['tests/e2e/helpers/auth.ts'],
       rules: { 'acme/no-e2e-literal-role-tag': 'off' },
     },
     {
-      files: ['tests/e2e/fixtures/*.db.ts', 'tests/e2e/fixtures/*.factory.ts'],
+      files: ['tests/e2e/helpers/*.db.ts', 'tests/e2e/helpers/*.factory.ts'],
       rules: {
         'no-restricted-imports': restrictImports(
           [e2eRelativeImport],
