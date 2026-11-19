@@ -4,6 +4,7 @@ packages:
   - tooling/*
 
 catalog:
+  '@axe-core/playwright': ^4.14.0
   '@hookform/resolvers': ^5.2.2
   '@opengovsg/logging': ^0.5.1
   '@types/node': ^24.10.4
@@ -34,8 +35,8 @@ catalogs:
     '@opengovsg/oui': 0.0.52
     '@opengovsg/oui-theme': 0.0.52
   playwright:
-    '@playwright/test': 1.57.0
-    playwright: 1.57.0
+    '@playwright/test': 1.65.1
+    playwright: 1.65.1
   prisma:
     '@prisma/adapter-pg': 7.10.1
     '@prisma/client': 7.10.1

@@ -1,6 +1,8 @@
-import { scryptSync, timingSafeEqual } from 'node:crypto'
+import { timingSafeEqual } from 'node:crypto'
 
 import { customAlphabet } from 'nanoid'
+
+import { hashToken } from './token-hash'
 
 import { OTP_LENGTH, OTP_PREFIX_LENGTH } from '~/validators/auth'
 
@@ -38,7 +40,7 @@ const createTokenHash = ({
   const identifier = createVfnIdentifier({ codeChallenge, email })
 
   // in theory we should generate a unique salt per entry, but this is sufficient for OTPs
-  return scryptSync(token, identifier, 64).toString('base64')
+  return hashToken(token, identifier)
 }
 
 // extracted for testing

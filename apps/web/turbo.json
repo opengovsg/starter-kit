@@ -11,6 +11,9 @@
     },
     "dev": {
       "persistent": true
+    },
+    "e2e": {
+      "cache": false
     }
   }
 }

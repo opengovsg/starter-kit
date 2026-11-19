@@ -5,7 +5,7 @@ import { createBaseLogger } from '@acme/logging'
 
 import { appRouter } from '~/server/api/root'
 import { createCallerFactory } from '~/server/api/trpc'
-import type { SessionData } from '~/server/session'
+import type { SessionData } from '~/server/session-options'
 
 const testLogger = createBaseLogger({
   clientIp: null,

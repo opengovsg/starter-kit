@@ -3,6 +3,7 @@
     "oxc.oxc-vscode",
     "prisma.prisma",
     "yoavbls.pretty-ts-errors",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright"
   ]
 }

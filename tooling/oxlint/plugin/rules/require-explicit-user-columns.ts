@@ -1,6 +1,8 @@
 import { defineRule } from '@oxlint/plugins'
 import type { Context, ESTree } from '@oxlint/plugins'
 
+import { getName } from '../ast.ts'
+
 /** Every `user` delegate method that returns rows. Count/batch methods are exempt. */
 const USER_ROW_METHODS = new Set([
   'create',
@@ -44,29 +46,6 @@ const KYSELY_USER_TABLE = /^User(?:\s+as\s+(?<alias>\w+))?$/u
 const RAW_STAR = /\b(?:select|returning)\s+(?:"?\w+"?\.)?\*/iu
 const RAW_SQL_CALLS = new Set(['$queryRawUnsafe', '$executeRawUnsafe'])
 const RAW_SQL_TAGS = new Set(['$queryRaw', '$executeRaw', 'sql'])
-
-type Named =
-  | ESTree.MemberExpression
-  | Extract<ESTree.Node, { type: 'Property' }>
-
-/** `a.b`, `a['b']`, `` a[`b`] `` and `{ b }`, `{ 'b' }`, `{ ['b'] }`. */
-const getName = (node: Named) => {
-  const key = node.type === 'Property' ? node.key : node.property
-
-  if (!node.computed && key.type === 'Identifier') {
-    return key.name
-  }
-
-  if (key.type === 'Literal') {
-    return String(key.value)
-  }
-
-  if (key.type === 'TemplateLiteral' && key.expressions.length === 0) {
-    return key.quasis.map((quasi) => quasi.value.cooked).join('')
-  }
-
-  return null
-}
 
 const getStringValue = (node: ESTree.Node | null | undefined) => {
   if (node?.type === 'Literal') {
