@@ -72,7 +72,7 @@ const e2eOwnTest = {
   name: '@playwright/test',
   importNames: ['test'],
   message:
-    "Import `test` from '~tests/e2e/test', which adds the page-object fixtures.",
+    "Import `test` from '~tests/e2e/test', which adds the page-object fixtures and the end-of-test a11y scan.",
 }
 
 export default defineConfig({
@@ -161,6 +161,7 @@ export default defineConfig({
     {
       files: ['tests/e2e/**/*.po.ts'],
       rules: {
+        'acme/require-e2e-po-expect-scan': 'error',
         'no-restricted-imports': restrictImports([
           e2eRelativeImport,
           e2eNoDb,

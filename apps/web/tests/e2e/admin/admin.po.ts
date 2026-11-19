@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
+import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y-expect'
 
 export class AdminPO {
   readonly page: Page
@@ -20,9 +21,11 @@ export class AdminPO {
     await expect(
       this.page.getByText('This is the root admin page')
     ).toBeVisible()
+    await expectNoA11yViolations(this.page)
   }
 
   async expectSignedInAs(email: string) {
     await expect(this.page.getByText(email)).toBeVisible()
+    await expectNoA11yViolations(this.page)
   }
 }

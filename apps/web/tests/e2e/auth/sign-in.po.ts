@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
+import { expectNoA11yViolations } from '~tests/e2e/helpers/a11y-expect'
 
 export class SignInPO {
   readonly page: Page
@@ -16,15 +17,20 @@ export class SignInPO {
     return this.page.getByLabel(`Enter the OTP sent to ${email}`)
   }
 
+  private emailInput() {
+    return this.page.getByLabel(
+      'Log in with a .gov.sg or whitelisted email address'
+    )
+  }
+
   async requestOtp(email: string) {
-    await this.page
-      .getByLabel('Log in with a .gov.sg or whitelisted email address')
-      .fill(email)
+    await this.emailInput().fill(email)
     await this.page.getByRole('button', { name: 'Get OTP' }).click()
   }
 
   async expectOtpPrompt(email: string) {
     await expect(this.otpInput(email)).toBeVisible()
+    await expectNoA11yViolations(this.page)
   }
 
   async submitOtp(email: string, otp: string) {
@@ -34,5 +40,6 @@ export class SignInPO {
 
   async expectError(message: string) {
     await expect(this.page.getByText(message)).toBeVisible()
+    await expectNoA11yViolations(this.page)
   }
 }
