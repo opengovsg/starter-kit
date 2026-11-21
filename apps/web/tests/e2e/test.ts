@@ -25,7 +25,6 @@ interface A11y {
  *
  * @see https://playwright.dev/docs/test-fixtures
  */
-// `provide`, not Playwright's usual `use`: that name trips rules-of-hooks.
 export const test = base.extend<PageObjects & A11y>({
   a11y: [true, { option: true }],
   a11yCheck: [
