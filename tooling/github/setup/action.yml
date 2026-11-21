@@ -18,7 +18,23 @@ runs:
     - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
         node-version-file: 'package.json'
-        cache: 'pnpm'
+
+    # setup-node cache: pnpm only restores the content store. The age/trust
+    # memo is lockfile-verified.jsonl in cacheDir, so cache both on the lockfile.
+    - name: Get pnpm cache paths
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "store=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+        echo "verified=$(pnpm cache path)/lockfile-verified.jsonl" >> "$GITHUB_OUTPUT"
+
+    - name: Cache pnpm store and lockfile verification
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ steps.pnpm-cache.outputs.store }}
+          ${{ steps.pnpm-cache.outputs.verified }}
+        key: ${{ runner.os }}-${{ runner.arch }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
 
     - name: Cache turbo build setup
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
