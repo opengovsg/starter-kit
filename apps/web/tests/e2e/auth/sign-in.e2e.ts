@@ -9,8 +9,8 @@ import { test as base } from '~tests/e2e/test'
 import { SignInPO } from './sign-in.po'
 
 const test = base.extend<{ signIn: SignInPO }>({
-  signIn: async ({ page }, use) => {
-    await use(new SignInPO(page))
+  signIn: async ({ page }, provide) => {
+    await provide(new SignInPO(page))
   },
 })
 
