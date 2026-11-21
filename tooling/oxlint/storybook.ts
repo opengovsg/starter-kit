@@ -1,13 +1,5 @@
 import { configs } from 'eslint-plugin-storybook'
 
-/**
- * Storybook lint via Oxlint's JS plugin bridge. Ultracite has no Storybook
- * preset. Overrides come from eslint-plugin-storybook `configs.recommended`;
- * every `storybook/*` rule is **error**. Oxlint ignores ESLint `@(ts|tsx)`
- * extglobs, so those become `{ts,tsx}`.
- *
- * @see https://github.com/storybookjs/storybook/tree/next/code/lib/eslint-plugin
- */
 const storybookJsPlugins = [
   { name: 'storybook', specifier: 'eslint-plugin-storybook' },
 ]
