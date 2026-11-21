@@ -35,7 +35,7 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@e18e/eslint-plugin": "catalog:",
-    "@interfere/landmines": "catalog:",
+    "@interfere/landmines": "^0.1.1",
     "@types/node": "catalog:",
     "eslint-plugin-playwright": "catalog:",
     "eslint-plugin-regexp": "catalog:",

@@ -1,22 +1,33 @@
 import { defineConfig } from 'oxlint'
+import landmines from 'ultracite/oxlint/landmines'
 
 /**
- * Interfere landmines **testing** plugin only. Do not extend
- * `ultracite/oxlint/landmines` — that preset turns on all ten rules
- * (comments, file names, no-test-doubles, strict-msw, return types)
- * which fight this kit’s Testcontainers harness, `__tests__/` + `*.e2e.ts`
- * layout, and Storybook MSW.
+ * Ultracite 8.3 `ultracite/oxlint/landmines` **testing** plugin only.
+ * Do not `extends` that preset — it turns on all ten rules (comments, file
+ * names, no-test-doubles, strict-msw, return types) which fight this kit’s
+ * Testcontainers harness, `__tests__/` + `*.e2e.ts` layout, and Storybook MSW.
  *
- * Vitest configs are in this glob so `no-flake-masking` can catch
- * `retry` / `testTimeout` there. Shared ignorePatterns still skip
- * `*.config.*` files until that ignore is narrowed; `retry: 0` is
- * omitted because Vitest’s default is already 0.
+ * The preset is built into Ultracite; the JS plugin is not (unlike anti-slop).
+ * `@interfere/landmines` is a **non-catalog** dep of this package so oxlint
+ * can resolve `@interfere/landmines/testing`. Do not add it to the workspace
+ * catalog or to app packages.
  *
- * @see https://github.com/interfere-inc/landmines
+ * Vitest configs are in this glob so `no-flake-masking` can catch `retry` /
+ * `testTimeout` there. Shared ignorePatterns still skip `*.config.*` files
+ * until that ignore is narrowed; `retry: 0` is omitted because Vitest’s
+ * default is already 0.
+ *
+ * @see https://www.ultracite.ai/docs/provider/oxlint
  */
-export const landminesTestingJsPlugins = [
-  { name: 'landmines-testing', specifier: '@interfere/landmines/testing' },
-]
+const landminesTestingJsPlugins = (landmines.jsPlugins ?? []).filter(
+  (plugin) => plugin.name === 'landmines-testing'
+)
+
+if (landminesTestingJsPlugins.length === 0) {
+  throw new Error(
+    'ultracite/oxlint/landmines is missing the landmines-testing plugin'
+  )
+}
 
 export const landminesTestingFiles = [
   '**/*.{test,spec,e2e}.*',

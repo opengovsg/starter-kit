@@ -11,9 +11,8 @@ catalog:
   'oxlint': ^1.90.0
   '@oxlint/plugins': ^1.90.0
   'oxlint-tailwindcss': ^1.17.1
-  'oxlint-plugin-react-doctor': ^0.9.18
+  'oxlint-plugin-react-doctor': ^0.9.23
   '@e18e/eslint-plugin': ^0.8.1
-  '@interfere/landmines': ^0.1.1
   'eslint-plugin-playwright': ^2.12.2
   'eslint-plugin-regexp': ^3.3.3
   'oxlint-tsgolint': ^7.0.2005
@@ -26,7 +25,7 @@ catalog:
   react-hook-form: ^7.69.0
   sherif: ^1.13.0
   typescript: ^7.0.2
-  ultracite: ^8.1.0
+  ultracite: ^8.3.1
   zod: ^4.6.7
 
 catalogs:
