@@ -4,10 +4,11 @@ import { configs } from 'eslint-plugin-storybook'
  * Storybook lint via Oxlint's JS plugin bridge. Ultracite has no Storybook
  * preset. Consumed only from the apps/web stories / `.storybook/main` overrides.
  *
- * Reads `configs.recommended` and sets every `storybook/*` rule to **error**
- * (plugin ships a few as warn). Non-storybook keys in that preset
- * (`react-hooks/rules-of-hooks`, `import-x/no-anonymous-default-export`) stay
- * out. Oxlint override globs use `{ts,tsx}` braces — `@(ts|tsx)` is silently
+ * `configs.recommended` has no top-level `rules` (eslintrc overrides). Every
+ * `storybook/*` key is set to **error** (plugin ships a few as warn). Filter
+ * to `storybook/` so recommended's `react-hooks/rules-of-hooks: off` and
+ * `import-x/no-anonymous-default-export: off` are not flipped to error.
+ * Oxlint override globs use `{ts,tsx}` braces — `@(ts|tsx)` is silently
  * ignored.
  *
  * Skipped vs csf / csf-strict / unconfigured:
@@ -26,13 +27,9 @@ const storybookRulesAtError = (
   rules: Record<string, unknown>
 ): Record<string, 'error'> =>
   Object.fromEntries(
-    Object.entries(rules)
-      .filter(
-        (entry): entry is [string, 'error' | 'warn'] =>
-          entry[0].startsWith('storybook/') &&
-          (entry[1] === 'error' || entry[1] === 'warn')
-      )
-      .map(([name]) => [name, 'error'])
+    Object.keys(rules)
+      .filter((rule) => rule.startsWith('storybook/'))
+      .map((rule) => [rule, 'error'] as const)
   )
 
 const recommendedRulesFor = (fileNeedle: string): Record<string, unknown> => {
