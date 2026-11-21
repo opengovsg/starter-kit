@@ -20,6 +20,23 @@ runs:
         node-version-file: 'package.json'
         cache: 'pnpm'
 
+    # setup-node's cache: pnpm only restores the content store. The lockfile
+    # supply-chain verdict (minimumReleaseAge + trustPolicy) is memoized as
+    # lockfile-verified.jsonl in cacheDir. Without it, every job re-fetches
+    # ~1470 packuments even on a store hit (~26s). Cache only that file:
+    # the rest of cacheDir is packument blobs (gigabytes) and the jsonl
+    # hits across CI checkouts via content hash when inode/mtime reset.
+    - name: Get pnpm metadata cache path
+      id: pnpm-cache-dir
+      shell: bash
+      run: echo "CACHE_PATH=$(pnpm cache path)/lockfile-verified.jsonl" >> "$GITHUB_OUTPUT"
+
+    - name: Cache pnpm lockfile verification
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.pnpm-cache-dir.outputs.CACHE_PATH }}
+        key: ${{ runner.os }}-pnpm-lockfile-verified-${{ hashFiles('pnpm-lock.yaml') }}
+
     - name: Cache turbo build setup
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
@@ -35,4 +52,4 @@ runs:
     # this composite action is reused from several workflows, and an install that
     # silently rewrites the lockfile would defeat the point of committing one.
     - shell: bash
-      run: pnpm install --frozen-lockfile
+      run: pnpm install --frozen-lockfile --prefer-offline
