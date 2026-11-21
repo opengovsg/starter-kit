@@ -52,4 +52,4 @@ runs:
     # this composite action is reused from several workflows, and an install that
     # silently rewrites the lockfile would defeat the point of committing one.
     - shell: bash
-      run: pnpm install --frozen-lockfile --prefer-offline
+      run: pnpm install --frozen-lockfile
