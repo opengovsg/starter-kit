@@ -1,11 +1,14 @@
+import { configs } from 'eslint-plugin-storybook'
+
 /**
  * Storybook lint via Oxlint's JS plugin bridge. Ultracite has no Storybook
  * preset. Consumed only from the apps/web stories / `.storybook/main` overrides.
  *
- * Recommended (`eslint-plugin-storybook`, catalog `storybook10`) at **error**;
- * the plugin ships `hierarchy-separator`, `no-redundant-story-name`, and
- * `prefer-pascal-case` as warn. Oxlint override globs use `{ts,tsx}` braces —
- * `@(ts|tsx)` is silently ignored.
+ * Reads `configs.recommended` and sets every `storybook/*` rule to **error**
+ * (plugin ships a few as warn). Non-storybook keys in that preset
+ * (`react-hooks/rules-of-hooks`, `import-x/no-anonymous-default-export`) stay
+ * out. Oxlint override globs use `{ts,tsx}` braces — `@(ts|tsx)` is silently
+ * ignored.
  *
  * Skipped vs csf / csf-strict / unconfigured:
  * - `csf-component`: kit already sets `component` on page stories.
@@ -19,19 +22,34 @@ export const storybookJsPlugins = [
   { name: 'storybook', specifier: 'eslint-plugin-storybook' },
 ]
 
-export const storybookStoriesRules = {
-  'storybook/await-interactions': 'error',
-  'storybook/context-in-play-function': 'error',
-  'storybook/default-exports': 'error',
-  'storybook/hierarchy-separator': 'error',
-  'storybook/no-redundant-story-name': 'error',
-  'storybook/no-renderer-packages': 'error',
-  'storybook/prefer-pascal-case': 'error',
-  'storybook/story-exports': 'error',
-  'storybook/use-storybook-expect': 'error',
-  'storybook/use-storybook-testing-library': 'error',
-} as const
+const storybookRulesAtError = (
+  rules: Record<string, unknown>
+): Record<string, 'error'> =>
+  Object.fromEntries(
+    Object.entries(rules)
+      .filter(
+        (entry): entry is [string, 'error' | 'warn'] =>
+          entry[0].startsWith('storybook/') &&
+          (entry[1] === 'error' || entry[1] === 'warn')
+      )
+      .map(([name]) => [name, 'error'])
+  )
 
-export const storybookMainRules = {
-  'storybook/no-uninstalled-addons': 'error',
-} as const
+const recommendedRulesFor = (fileNeedle: string): Record<string, unknown> => {
+  const override = configs.recommended.overrides.find((item) =>
+    item.files.some((pattern) => pattern.includes(fileNeedle))
+  )
+  if (!override) {
+    throw new Error(
+      `eslint-plugin-storybook recommended is missing files matching ${fileNeedle}`
+    )
+  }
+  return override.rules
+}
+
+export const storybookStoriesRules = storybookRulesAtError(
+  recommendedRulesFor('.stories.')
+)
+export const storybookMainRules = storybookRulesAtError(
+  recommendedRulesFor('.storybook/main')
+)
