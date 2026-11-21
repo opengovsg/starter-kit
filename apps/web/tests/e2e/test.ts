@@ -28,8 +28,8 @@ interface A11y {
 export const test = base.extend<PageObjects & A11y>({
   a11y: [true, { option: true }],
   a11yCheck: [
-    async ({ a11y, page }, use, testInfo) => {
-      await use(undefined)
+    async ({ a11y, page }, provide, testInfo) => {
+      await provide(undefined)
 
       if (
         a11y &&
@@ -41,13 +41,13 @@ export const test = base.extend<PageObjects & A11y>({
     },
     { auto: true },
   ],
-  admin: async ({ page }, use) => {
-    await use(new AdminPO(page))
+  admin: async ({ page }, provide) => {
+    await provide(new AdminPO(page))
   },
-  landing: async ({ page }, use) => {
-    await use(new LandingPO(page))
+  landing: async ({ page }, provide) => {
+    await provide(new LandingPO(page))
   },
-  notFound: async ({ page }, use) => {
-    await use(new NotFoundPO(page))
+  notFound: async ({ page }, provide) => {
+    await provide(new NotFoundPO(page))
   },
 })
