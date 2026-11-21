@@ -2,8 +2,8 @@
  * Storybook lint via Oxlint's JS plugin bridge. Ultracite has no Storybook
  * preset. Consumed only from the apps/web stories / `.storybook/main` overrides.
  *
- * Recommended (eslint-plugin-storybook 10.6.8) at **error**; the
- * plugin ships `hierarchy-separator`, `no-redundant-story-name`, and
+ * Recommended (`eslint-plugin-storybook`, catalog `storybook10`) at **error**;
+ * the plugin ships `hierarchy-separator`, `no-redundant-story-name`, and
  * `prefer-pascal-case` as warn. Oxlint override globs use `{ts,tsx}` braces —
  * `@(ts|tsx)` is silently ignored.
  *
