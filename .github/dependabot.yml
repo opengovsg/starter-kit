@@ -50,6 +50,7 @@ updates:
           - '@storybook/*'
           - 'storybook'
           - 'storybook-addon-vite-mock'
+          - 'eslint-plugin-storybook'
       tailwindcss:
         applies-to: version-updates
         patterns:

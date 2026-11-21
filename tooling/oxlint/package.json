@@ -13,6 +13,7 @@
     "./react-query.ts": "./react-query.ts",
     "./e18e.ts": "./e18e.ts",
     "./playwright.ts": "./playwright.ts",
+    "./storybook.ts": "./storybook.ts",
     "./tailwindcss.ts": "./tailwindcss.ts",
     "./acme.ts": "./acme.ts",
     "./plugin": "./plugin/index.ts"
@@ -34,6 +35,7 @@
     "@e18e/eslint-plugin": "catalog:",
     "@types/node": "catalog:",
     "eslint-plugin-playwright": "catalog:",
+    "eslint-plugin-storybook": "catalog:storybook10",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-plugin-react-doctor": "catalog:",
