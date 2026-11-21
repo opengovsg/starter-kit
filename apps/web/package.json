@@ -84,6 +84,7 @@
     "dotenv": "^17.2.3",
     "dotenv-cli": "catalog:",
     "eslint-plugin-playwright": "catalog:",
+    "eslint-plugin-storybook": "catalog:storybook10",
     "jiti": "^2.6.1",
     "msw": "^2.12.7",
     "msw-storybook-addon": "^2.0.6",

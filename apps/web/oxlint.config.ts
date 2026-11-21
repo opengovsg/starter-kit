@@ -14,6 +14,7 @@ import {
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
+import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
 import {
   tailwindcssOxlint,
   tailwindcssWebSettings,
@@ -138,6 +139,7 @@ export default defineConfig({
         'no-restricted-imports': 'off',
       },
     },
+    ...storybookOverrides,
     {
       files: ['tests/e2e/**'],
       jsPlugins: [...playwrightJsPlugins],
