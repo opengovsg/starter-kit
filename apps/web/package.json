@@ -65,6 +65,7 @@
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@axe-core/playwright": "catalog:",
+    "@interfere/landmines": "catalog:",
     "@opengovsg/testcontainers": "^0.2.0",
     "@playwright/test": "catalog:playwright",
     "@prisma/adapter-pg": "catalog:prisma",

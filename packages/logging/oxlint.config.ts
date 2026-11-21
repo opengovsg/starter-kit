@@ -1,11 +1,12 @@
 import { defineConfig } from 'oxlint'
 
 import { e18e } from '@acme/oxlint-config/e18e.ts'
+import landmines from '@acme/oxlint-config/landmines.ts'
 import { vitest } from '@acme/oxlint-config/presets.ts'
 import { regexp } from '@acme/oxlint-config/regexp.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, vitest, e18e, regexp],
+  extends: [sharedConfig, vitest, e18e, regexp, landmines],
   options: oxlintOptions,
 })

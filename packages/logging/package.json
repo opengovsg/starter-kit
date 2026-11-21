@@ -25,6 +25,7 @@
   "devDependencies": {
     "@acme/oxlint-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "@interfere/landmines": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:vitest",
     "oxfmt": "catalog:",
