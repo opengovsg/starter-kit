@@ -50,13 +50,13 @@ catalogs:
     '@tanstack/react-query': ^5.107.1
     '@tanstack/react-query-devtools': ^5.107.1
   storybook10:
-    '@storybook/addon-a11y': ^10.6.5
-    '@storybook/addon-docs': ^10.6.5
-    '@storybook/addon-mcp': ^10.6.5
-    '@storybook/addon-vitest': ^10.6.5
-    '@storybook/nextjs-vite': ^10.6.5
-    eslint-plugin-storybook: ^10.6.5
-    storybook: ^10.6.5
+    '@storybook/addon-a11y': ^10.6.7
+    '@storybook/addon-docs': ^10.6.7
+    '@storybook/addon-mcp': ^10.6.7
+    '@storybook/addon-vitest': ^10.6.7
+    '@storybook/nextjs-vite': ^10.6.7
+    eslint-plugin-storybook: ^10.6.7
+    storybook: ^10.6.7
     storybook-addon-vite-mock: ^1.1.4
   t3-env:
     '@t3-oss/env-core': ^0.13.8
