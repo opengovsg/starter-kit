@@ -1,6 +1,8 @@
 import { defineConfig } from 'oxlint'
 import landmines from 'ultracite/oxlint/landmines'
 
+import { pluginRulesAtError } from '@acme/oxlint-config/plugin-rules.ts'
+
 const landminesTestingJsPlugins = (landmines.jsPlugins ?? []).filter(
   (plugin) => plugin.name === 'landmines-testing'
 )
@@ -17,11 +19,22 @@ export const landminesTestingFiles = [
   '**/vitest.config.*',
 ] as const
 
-export const landminesTestingRules = {
-  'landmines-testing/no-fixed-sleep': 'error',
-  'landmines-testing/no-flake-masking': 'error',
-  'landmines-testing/no-unsignaled-poll': 'error',
-} as const
+export const landminesTestingRules = Object.fromEntries(
+  Object.entries(
+    pluginRulesAtError('landmines-testing/', landmines.rules ?? {})
+  ).filter(
+    ([rule]) =>
+      rule === 'landmines-testing/no-fixed-sleep' ||
+      rule === 'landmines-testing/no-flake-masking' ||
+      rule === 'landmines-testing/no-unsignaled-poll'
+  )
+)
+
+if (Object.keys(landminesTestingRules).length !== 3) {
+  throw new Error(
+    'ultracite/oxlint/landmines is missing the landmines-testing steal'
+  )
+}
 
 export default defineConfig({
   overrides: [

@@ -1,8 +1,6 @@
 import { defineConfig } from 'oxlint'
 
 import { acme } from '@acme/oxlint-config/acme.ts'
-import { e18e } from '@acme/oxlint-config/e18e.ts'
-import landmines from '@acme/oxlint-config/landmines.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import {
   playwrightE2eRules,
@@ -13,8 +11,10 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
-import { regexp } from '@acme/oxlint-config/regexp.ts'
-import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
+import sharedConfig, {
+  oxlintEnv,
+  oxlintOptions,
+} from '@acme/oxlint-config/shared.ts'
 import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
 import {
   tailwindcssOxlint,
@@ -88,12 +88,10 @@ export default defineConfig({
     nextReactDoctor,
     reactQuery,
     tailwindcssOxlint,
-    e18e,
-    regexp,
     acme,
-    landmines,
   ],
   jsPlugins: [...reactDoctor.jsPlugins],
+  env: oxlintEnv,
   options: oxlintOptions,
   settings: {
     ...reactDoctorSettings,
@@ -104,7 +102,6 @@ export default defineConfig({
     {
       files: ['**/*.{js,ts,tsx}'],
       rules: {
-        // React Compiler handles memoization; manual useMemo/useCallback is unnecessary.
         'react/jsx-no-constructed-context-values': 'off',
         'no-restricted-properties': [
           'error',

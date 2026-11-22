@@ -70,6 +70,14 @@ updates:
         patterns:
           - 'oxlint'
           - 'oxlint-tsgolint'
+          - 'oxfmt'
+          - '@oxlint/plugins'
+          - 'oxlint-plugin-react-doctor'
+          - 'oxlint-tailwindcss'
+          - 'eslint-plugin-playwright'
+          - 'eslint-plugin-regexp'
+          - '@e18e/eslint-plugin'
+          - '@interfere/landmines'
       vitest:
         applies-to: version-updates
         patterns:

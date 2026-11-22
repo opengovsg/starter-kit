@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./package.ts",
+    "./plugin-rules.ts": "./plugin-rules.ts",
     "./shared.ts": "./shared.ts",
     "./ultracite.ts": "./ultracite.ts",
     "./vitest.ts": "./vitest.ts",
