@@ -8,7 +8,6 @@ import {
   playwrightE2eRules,
   playwrightJsPlugins,
 } from '@acme/oxlint-config/playwright.ts'
-import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
@@ -21,6 +20,8 @@ import {
   tailwindcssOxlint,
   tailwindcssWebSettings,
 } from '@acme/oxlint-config/tailwindcss.ts'
+import { next, react } from '@acme/oxlint-config/ultracite.ts'
+import { vitest } from '@acme/oxlint-config/vitest.ts'
 
 const restrictProcessEnvImport = {
   name: 'process',
@@ -211,16 +212,23 @@ export default defineConfig({
     },
     {
       files: [
+        'tests/db/setup.ts',
+        'tests/redis/setup.ts',
+        'src/server/modules/mail/__mocks__/mail.service.ts',
+      ],
+      rules: {
+        'anti-slop/no-module-mocking': 'off',
+      },
+    },
+    {
+      files: [
         '**/__tests__/**',
         '**/__mocks__/**',
         'tests/db/**',
         'tests/redis/**',
       ],
       rules: {
-        'anti-slop/no-module-mocking': 'off',
         'typescript/no-unsafe-assignment': 'off',
-        'typescript/no-unsafe-type-assertion': 'off',
-        'vitest/prefer-describe-function-title': 'off',
       },
     },
   ],
