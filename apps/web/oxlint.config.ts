@@ -7,7 +7,6 @@ import {
   playwrightE2eRules,
   playwrightJsPlugins,
 } from '@acme/oxlint-config/playwright.ts'
-import { next, react, vitest } from '@acme/oxlint-config/ultracite.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
@@ -19,6 +18,8 @@ import {
   tailwindcssOxlint,
   tailwindcssWebSettings,
 } from '@acme/oxlint-config/tailwindcss.ts'
+import { next, react } from '@acme/oxlint-config/ultracite.ts'
+import { vitest } from '@acme/oxlint-config/vitest.ts'
 
 const restrictProcessEnvImport = {
   name: 'process',
@@ -224,13 +225,6 @@ export default defineConfig({
       ],
       rules: {
         'typescript/no-unsafe-assignment': 'off',
-        'vitest/no-restricted-vi-methods': [
-          'error',
-          {
-            waitFor:
-              'Do not poll with vi.waitFor. Await the real event or assertion.',
-          },
-        ],
       },
     },
   ],
