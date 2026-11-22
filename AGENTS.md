@@ -18,6 +18,10 @@ When working on UI components or stories in this repo, use the **acme-web-storyb
 - Prefer focused stories that explain **why** a variant exists, not only **what** it renders.
 - Keep autodocs enabled via the global `autodocs` tag in `.storybook/preview.ts`; extend with MDX where prose guidance helps agents and humans.
 
+## Unit tests (Vitest)
+
+When iterating on failing unit tests, rerun with `vitest run --last-failed` instead of the full suite; run the full suite once before finishing.
+
 ## E2E tests (Playwright)
 
 Before adding or changing tests in `apps/web/tests/e2e`, read [its README](apps/web/tests/e2e/README.md) for the layout (feature folders, `.po.ts`, `.db.ts`, `.expect.ts`, `network.ts`) and the rules on data, auth, accessibility, and page objects.
