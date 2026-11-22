@@ -1,26 +1,17 @@
-import { defineConfig } from 'oxlint'
+import type { OxlintOverride } from 'oxlint'
 
 import { acme } from '@acme/oxlint-config/acme.ts'
-import { e18e } from '@acme/oxlint-config/e18e.ts'
-import landmines from '@acme/oxlint-config/landmines.ts'
-import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
+import { defineAcmeConfig } from '@acme/oxlint-config/define.ts'
+import { next } from '@acme/oxlint-config/next.ts'
 import {
   playwrightE2eRules,
   playwrightJsPlugins,
 } from '@acme/oxlint-config/playwright.ts'
-import {
-  reactDoctor,
-  reactDoctorSettings,
-} from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
-import { regexp } from '@acme/oxlint-config/regexp.ts'
-import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
+import { react } from '@acme/oxlint-config/react.ts'
+import sharedConfig from '@acme/oxlint-config/shared.ts'
 import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
-import {
-  tailwindcssOxlint,
-  tailwindcssWebSettings,
-} from '@acme/oxlint-config/tailwindcss.ts'
-import { next, react } from '@acme/oxlint-config/ultracite.ts'
+import { tailwindcssOxlint } from '@acme/oxlint-config/tailwindcss.ts'
 import { vitest } from '@acme/oxlint-config/vitest.ts'
 
 const restrictProcessEnvImport = {
@@ -38,15 +29,19 @@ const restrictPublicProcedure = {
     'Use protectedProcedure. Public procedures are limited to auth and healthcheck.',
 }
 
-type RestrictedPath = { name: string; importNames?: string[]; message: string }
-type RestrictedPattern = {
+interface RestrictedPath {
+  name: string
+  importNames?: string[]
+  message: string
+}
+
+interface RestrictedPattern {
   group: string[]
   importNames?: string[]
   allowTypeImports?: boolean
   message: string
 }
 
-// A later override replaces the whole rule, so each one restates the base set.
 const restrictImports = (
   patterns: RestrictedPattern[] = [],
   paths: RestrictedPath[] = []
@@ -62,15 +57,18 @@ const e2eRelativeImport = {
   group: ['../**'],
   message: 'Use the `~tests/e2e/...` alias; only same-folder `./` is relative.',
 }
+
 const e2eNoDb = {
   group: ['@acme/db', '@acme/db/*'],
   message:
     'Test files must not import @acme/db. Add a getter to helpers/<entity>.db.ts.',
 }
+
 const e2eNoSignInPO = {
   group: ['**/sign-in.po', './sign-in.po'],
   message: 'Only auth/sign-in.e2e.ts covers the login UI.',
 }
+
 const e2eOwnTest = {
   name: '@playwright/test',
   importNames: ['test'],
@@ -78,33 +76,21 @@ const e2eOwnTest = {
     "Import `test` from '~tests/e2e/test', which adds the page-object fixtures and the end-of-test a11y scan.",
 }
 
-export default defineConfig({
+const config = defineAcmeConfig({
   extends: [
     sharedConfig,
     react,
     next,
     vitest,
-    reactDoctor,
-    nextReactDoctor,
     reactQuery,
-    tailwindcssOxlint,
-    e18e,
-    regexp,
+    tailwindcssOxlint('src/app/globals.css'),
     acme,
-    landmines,
   ],
-  jsPlugins: [...reactDoctor.jsPlugins],
-  options: oxlintOptions,
-  settings: {
-    ...reactDoctorSettings,
-    ...tailwindcssWebSettings,
-  },
-  ignorePatterns: ['*.config.*', 'public/mockServiceWorker.js'],
+  ignorePatterns: ['public/mockServiceWorker.js'],
   overrides: [
     {
       files: ['**/*.{js,ts,tsx}'],
       rules: {
-        // React Compiler handles memoization; manual useMemo/useCallback is unnecessary.
         'react/jsx-no-constructed-context-values': 'off',
         'no-restricted-properties': [
           'error',
@@ -138,7 +124,12 @@ export default defineConfig({
       },
     },
     {
-      files: ['src/proxy.ts', 'src/instrumentation.ts'],
+      files: [
+        'src/proxy.ts',
+        'src/instrumentation.ts',
+        'playwright.config.ts',
+        'vitest.config.ts',
+      ],
       rules: {
         'no-restricted-properties': 'off',
         'no-restricted-imports': 'off',
@@ -233,3 +224,23 @@ export default defineConfig({
     },
   ],
 })
+
+const dropsEnvGuard = ({ rules }: OxlintOverride) => {
+  const rule = rules?.['no-restricted-imports']
+
+  return (
+    rule !== undefined &&
+    rule !== 'off' &&
+    !JSON.stringify(rule).includes(restrictProcessEnvImport.message)
+  )
+}
+
+const droppedEnvGuard = config.overrides?.find(dropsEnvGuard)
+
+if (droppedEnvGuard) {
+  throw new Error(
+    `oxlint override for ${droppedEnvGuard.files.join(', ')} sets no-restricted-imports without restrictImports(), dropping the ~/env guard.`
+  )
+}
+
+export default config

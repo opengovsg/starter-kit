@@ -1,4 +1,3 @@
-// Cases are source text; `${…}` belongs to the SQL templates under test.
 /* oxlint-disable no-template-curly-in-string */
 import { RuleTester } from 'oxlint/plugins-dev'
 
@@ -22,7 +21,6 @@ const ROW_METHODS = [
   'upsert',
 ]
 
-// Return counts or aggregates, never user rows.
 const NON_ROW_METHODS = [
   'aggregate',
   'count',
@@ -34,7 +32,6 @@ const NON_ROW_METHODS = [
 
 const CLIENTS = ['db', 'tx', 'prisma', 'ctx.db', 'this.db']
 
-// Any model's call can load the `user` relation.
 const RELATION_CALLS = [
   'db.account.findMany',
   'db.account.findUnique',
@@ -81,8 +78,6 @@ tester.run(
   requireExplicitUserColumnsRule,
   {
     invalid: [
-      // --- Prisma `user` delegate ---
-      // Every row method, on every client shape, with no args.
       ...ROW_METHODS.flatMap((method) =>
         CLIENTS.map((client) => ({
           code: `${client}.user.${method}()`,
@@ -90,13 +85,11 @@ tester.run(
           name: `${client}.user.${method}() without args`,
         }))
       ),
-      // Every row method with args that omit select.
       ...ROW_METHODS.map((method) => ({
         code: `db.user.${method}({ where: { id } })`,
         errors: [missing(method)],
         name: `${method} with where only`,
       })),
-      // Every row method with a nullish select.
       ...ROW_METHODS.flatMap((method) =>
         [
           'null',
@@ -110,7 +103,6 @@ tester.run(
           name: `${method} with select: ${value}`,
         }))
       ),
-      // Every row method with a spread that can override select.
       ...ROW_METHODS.map((method) => ({
         code: `db.user.${method}({ select: defaultUserSelect, ...args })`,
         errors: [missing(method)],
@@ -211,7 +203,6 @@ tester.run(
         name: 'inside transaction callback',
       },
 
-      // --- Prisma `user` relation through other models ---
       ...RELATION_CALLS.flatMap((call) =>
         ['include', 'select'].flatMap((key) => [
           {
@@ -246,7 +237,6 @@ tester.run(
         errors: [relation],
         name: 'relation with conditional undefined select',
       },
-      // Fluent API returns the related User row.
       ...[
         'db.account.findUnique({ where }).user()',
         'db.account.findUniqueOrThrow({ where }).user({})',
@@ -301,7 +291,6 @@ tester.run(
         name: 'self relation inside user select',
       },
 
-      // --- Kysely ---
       ...KYSELY_TABLE_METHODS.flatMap((method) => [
         {
           code: `db.$kysely.${method}('User').selectAll().execute()`,
@@ -360,7 +349,6 @@ tester.run(
         name: "selectAll('User') on base table",
       },
 
-      // --- Raw SQL ---
       {
         code: 'db.$queryRaw`SELECT * FROM "User" WHERE id = ${id}`',
         errors: [raw],
@@ -408,15 +396,12 @@ tester.run(
       },
     ],
     valid: [
-      // --- Prisma `user` delegate ---
-      // Every row method, on every client shape, with select.
       ...ROW_METHODS.flatMap((method) =>
         CLIENTS.map(
           (client) =>
             `${client}.user.${method}({ select: defaultUserSelect, where: { id } })`
         )
       ),
-      // Count/batch methods return no user fields.
       ...NON_ROW_METHODS.map((method) => `db.user.${method}({ where })`),
       ...NON_ROW_METHODS.map((method) => `db.user.${method}()`),
       'db.user.findMany({ select: { id: true } })',
@@ -429,7 +414,6 @@ tester.run(
       'db.user.findMany({ select: getSelect() })',
       "db['user'].findMany({ select: defaultUserSelect })",
       'db.user?.findMany?.({ select: defaultUserSelect })',
-      // References are not calls: tRPC procedures and test mocks.
       'trpc.user.findMany.queryOptions()',
       'trpc.user.update.mutationOptions()',
       'api.user.findUnique.useQuery({ id })',
@@ -437,7 +421,6 @@ tester.run(
       'vi.mocked(db.user.findUnique).mockResolvedValue(user)',
       'vi.spyOn(db.user, "findMany")',
       'const find = db.user.findMany',
-      // Other models, and `user` properties that are not Prisma delegates.
       'db.account.findMany({ where: { userId } })',
       'db.session.findUnique({ where: { id } })',
       'db.users.findMany()',
@@ -453,7 +436,6 @@ tester.run(
       'db[userKey].findMany()',
       'db.user[method]()',
 
-      // --- Prisma `user` relation ---
       ...RELATION_CALLS.flatMap((call) =>
         ['include', 'select'].map(
           (key) =>
@@ -478,7 +460,6 @@ tester.run(
       'const { include: { user } } = args',
       'return { session: { user } }',
 
-      // --- Kysely ---
       "db.$kysely.selectFrom('User').select(['id', 'email']).execute()",
       "db.$kysely.selectFrom('User').select('id').executeTakeFirst()",
       "db.$kysely.insertInto('User').values(v).returning(['id']).execute()",
@@ -493,7 +474,6 @@ tester.run(
       'db.$kysely.selectFrom(table).selectAll().execute()',
       'selectAll()',
 
-      // --- Raw SQL ---
       'db.$queryRaw`SELECT 1`',
       'db.$queryRaw`SELECT id, email FROM "User"`',
       'db.$queryRaw`SELECT * FROM "Account"`',

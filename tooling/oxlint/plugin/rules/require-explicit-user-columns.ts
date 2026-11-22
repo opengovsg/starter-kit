@@ -3,7 +3,6 @@ import type { Context, ESTree } from '@oxlint/plugins'
 
 import { getName } from '../ast.ts'
 
-/** Every `user` delegate method that returns rows. Count/batch methods are exempt. */
 const USER_ROW_METHODS = new Set([
   'create',
   'createManyAndReturn',
@@ -18,7 +17,6 @@ const USER_ROW_METHODS = new Set([
   'upsert',
 ])
 
-/** Kysely builder methods whose first argument names a table. */
 const KYSELY_TABLE_METHODS = new Set([
   'crossJoin',
   'deleteFrom',
@@ -35,14 +33,10 @@ const KYSELY_TABLE_METHODS = new Set([
 
 const KYSELY_ALL_METHODS = new Set(['returningAll', 'selectAll'])
 
-/** Prisma keys whose object can load a `user` relation. */
 const RELATION_KEYS = new Set(['include', 'select'])
 
-/** `'User'` or `'User as u'`; captures the alias. */
 const KYSELY_USER_TABLE = /^User(?:\s+as\s+(?<alias>\w+))?$/u
 
-// ponytail: text heuristic for raw SQL — a quoted "User" plus `*` after
-// SELECT/RETURNING. Misses SQL assembled across variables.
 const RAW_STAR = /\b(?:select|returning)\s+(?:"?\w+"?\.)?\*/iu
 const RAW_SQL_CALLS = new Set(['$queryRawUnsafe', '$executeRawUnsafe'])
 const RAW_SQL_TAGS = new Set(['$queryRaw', '$executeRaw', 'sql'])
@@ -59,7 +53,6 @@ const getStringValue = (node: ESTree.Node | null | undefined) => {
   return null
 }
 
-/** `sql` or `db.$queryRaw` in a tagged template. */
 const getTagName = (tag: ESTree.Expression) => {
   if (tag.type === 'Identifier') {
     return tag.name
@@ -68,7 +61,6 @@ const getTagName = (tag: ESTree.Expression) => {
   return tag.type === 'MemberExpression' ? getName(tag) : null
 }
 
-/** `null`, `undefined`, `void 0`, or a ternary with a nullish branch. */
 const isNullish = (node: ESTree.Node): boolean =>
   (node.type === 'Literal' && node.value === null) ||
   (node.type === 'Identifier' && node.name === 'undefined') ||
@@ -79,7 +71,6 @@ const isNullish = (node: ESTree.Node): boolean =>
 const isRawUserStar = (text: string | null) =>
   text !== null && text.includes('"User"') && RAW_STAR.test(text)
 
-/** The last `select` property, unless a later spread could override it. */
 const findSelect = (object: ESTree.ObjectExpression) => {
   let select: ESTree.ObjectProperty | null = null
 
@@ -94,7 +85,6 @@ const findSelect = (object: ESTree.ObjectExpression) => {
   return select
 }
 
-/** Table names (and aliases) for User in a Kysely builder argument. */
 const collectUserTables = (arg: ESTree.Node | undefined, into: Set<string>) => {
   const values = arg?.type === 'ArrayExpression' ? arg.elements : [arg]
 
@@ -111,7 +101,6 @@ const collectUserTables = (arg: ESTree.Node | undefined, into: Set<string>) => {
   }
 }
 
-/** Calls chained through `node`, both before and after it: `a().b().c()`. */
 const getChainCalls = (node: ESTree.CallExpression) => {
   const calls: ESTree.CallExpression[] = []
   let current: ESTree.Node = node
@@ -138,7 +127,6 @@ const getChainCalls = (node: ESTree.CallExpression) => {
   return calls
 }
 
-/** `selectAll()` / `returningAll()` on a builder chain that touches User. */
 const checkKyselyAll = (
   context: Context,
   node: ESTree.CallExpression,
@@ -155,7 +143,6 @@ const checkKyselyAll = (
     }
   }
 
-  // `selectAll()` takes every joined table; `selectAll('u')` only one.
   const scopeArg = node.arguments.at(0)
 
   const scopes =
@@ -175,7 +162,6 @@ const checkKyselyAll = (
   }
 }
 
-/** `<client>.user.<rowMethod>()` must pass a non-nullish `select`. */
 const checkUserDelegate = (
   context: Context,
   node: ESTree.CallExpression,
@@ -204,7 +190,6 @@ const checkUserDelegate = (
   }
 }
 
-/** Fluent `.user()` on a row query: `db.account.findUnique(…).user()`. */
 const isFluentUser = (callee: ESTree.MemberExpression) => {
   let current: ESTree.Node = callee.object
 
@@ -222,23 +207,12 @@ const isFluentUser = (callee: ESTree.MemberExpression) => {
   return false
 }
 
-/** Whether relation-load args carry a non-nullish `select`. */
 const hasSelect = (args: ESTree.Node | undefined) => {
   const select = args?.type === 'ObjectExpression' ? findSelect(args) : null
 
   return select !== null && !isNullish(select.value)
 }
 
-/**
- * Require an explicit column list wherever User rows are read, so new columns
- * are never returned by default:
- * - Prisma: `<client>.user.<method>()`, `user` relations in include/select,
- *   and fluent `.user()` on a row query
- * - Kysely: `selectAll()` / `returningAll()` on a query that touches `User`
- * - Raw SQL: `SELECT *` / `RETURNING *` against `"User"`
- *
- * @see apps/web/src/server/modules/user/user.select.ts
- */
 export const requireExplicitUserColumnsRule = defineRule({
   createOnce(context) {
     return {
@@ -269,9 +243,7 @@ export const requireExplicitUserColumnsRule = defineRule({
           checkUserDelegate(context, node, callee, method)
         }
       },
-      // `include: { user: true }` loads full User rows through any model.
       Property(node) {
-        // Skip destructuring patterns; only object literals are query args.
         if (
           getName(node) !== 'user' ||
           node.parent.type !== 'ObjectExpression'

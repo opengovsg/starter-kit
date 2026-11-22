@@ -1,24 +1,12 @@
-import { defineConfig } from 'oxlint'
+import { defineAcmeConfig } from '@acme/oxlint-config/define.ts'
+import { react } from '@acme/oxlint-config/react.ts'
+import sharedConfig from '@acme/oxlint-config/shared.ts'
+import { tailwindcssOxlint } from '@acme/oxlint-config/tailwindcss.ts'
 
-import { e18e } from '@acme/oxlint-config/e18e.ts'
-import { react } from '@acme/oxlint-config/ultracite.ts'
-import {
-  reactDoctor,
-  reactDoctorSettings,
-} from '@acme/oxlint-config/react-doctor.ts'
-import { regexp } from '@acme/oxlint-config/regexp.ts'
-import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
-import {
-  tailwindcssOxlint,
-  tailwindcssUiSettings,
-} from '@acme/oxlint-config/tailwindcss.ts'
-
-export default defineConfig({
-  extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e, regexp],
-  jsPlugins: [...reactDoctor.jsPlugins],
-  options: oxlintOptions,
-  settings: {
-    ...reactDoctorSettings,
-    ...tailwindcssUiSettings,
-  },
+export default defineAcmeConfig({
+  extends: [
+    sharedConfig,
+    react,
+    tailwindcssOxlint('../../apps/web/src/app/globals.css'),
+  ],
 })

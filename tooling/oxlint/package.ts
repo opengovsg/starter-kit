@@ -1,11 +1,8 @@
-import { defineConfig } from 'oxlint'
-
 import { acme } from '@acme/oxlint-config/acme.ts'
-import { e18e } from '@acme/oxlint-config/e18e.ts'
-import { regexp } from '@acme/oxlint-config/regexp.ts'
-import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
+import { defineAcmeConfig } from '@acme/oxlint-config/define.ts'
+import sharedConfig from '@acme/oxlint-config/shared.ts'
+import { vitest } from '@acme/oxlint-config/vitest.ts'
 
-export default defineConfig({
-  extends: [sharedConfig, e18e, regexp, acme],
-  options: oxlintOptions,
+export default defineAcmeConfig({
+  extends: [sharedConfig, acme, vitest],
 })

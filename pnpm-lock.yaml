@@ -504,15 +504,6 @@ importers:
       dotenv-cli:
         specifier: 'catalog:'
         version: 11.0.0
-      eslint-plugin-playwright:
-        specifier: 'catalog:'
-        version: 2.12.2(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
-      eslint-plugin-regexp:
-        specifier: 'catalog:'
-        version: 3.3.3(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
-      eslint-plugin-storybook:
-        specifier: catalog:storybook10
-        version: 10.6.8(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.0.2)
       jiti:
         specifier: ^2.6.1
         version: 2.7.0
@@ -531,9 +522,6 @@ importers:
       oxlint:
         specifier: 'catalog:'
         version: 1.90.0(oxlint-tsgolint@7.0.2005)
-      oxlint-plugin-react-doctor:
-        specifier: 'catalog:'
-        version: 0.9.23
       oxlint-tsgolint:
         specifier: 'catalog:'
         version: 7.0.2005
@@ -773,9 +761,6 @@ importers:
       oxlint:
         specifier: 'catalog:'
         version: 1.90.0(oxlint-tsgolint@7.0.2005)
-      oxlint-plugin-react-doctor:
-        specifier: 'catalog:'
-        version: 0.9.23
       oxlint-tsgolint:
         specifier: 'catalog:'
         version: 7.0.2005

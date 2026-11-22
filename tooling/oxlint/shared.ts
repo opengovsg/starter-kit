@@ -2,59 +2,34 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
-/** Oxlint only honors `options` on the root config, not via `extends`. */
-export const oxlintOptions = {
-  typeAware: true,
-  reportUnusedDisableDirectives: 'error',
-} as const
+import { acmeJsPlugins } from '@acme/oxlint-config/acme.ts'
+import { e18e } from '@acme/oxlint-config/e18e.ts'
+import landmines from '@acme/oxlint-config/landmines.ts'
+import { regexp } from '@acme/oxlint-config/regexp.ts'
 
 export default defineConfig({
-  extends: [core, antiSlop],
-  options: oxlintOptions,
-  settings: {
-    next: {
-      rootDir: 'apps/web',
-    },
+  extends: [core, antiSlop, e18e, regexp, landmines],
+  options: {
+    typeAware: true,
+    reportUnusedDisableDirectives: 'error',
   },
   ignorePatterns: [
-    ...(core.ignorePatterns ?? []),
-    '**/*.config.*',
+    ...core.ignorePatterns,
     'dist/**',
     'src/generated/**',
     '.next/**',
-    'apps/web/public/mockServiceWorker.js',
+    'public/mockServiceWorker.js',
+  ],
+  overrides: [
+    {
+      files: ['**/oxlint.config.*'],
+      jsPlugins: acmeJsPlugins,
+      rules: { 'acme/require-define-acme-config': 'error' },
+    },
   ],
   rules: {
-    // ── e18e ───────────────────────────────────────────────────────────
-    // e18e rules with no equivalent already set to error in ultracite
-    // core or anti-slop. Duplicates of those presets stay off, as does
-    // prefer-string-fromcharcode (it contradicts unicorn/prefer-code-point)
-    // and no-indexof-equality (it throws without typescript-eslint types).
-    'e18e/ban-dependencies': 'error',
-    'e18e/no-delete-property': 'error',
-    'e18e/no-spread-in-reduce': 'error',
-    'e18e/prefer-array-fill': 'error',
-    'e18e/prefer-array-from-map': 'error',
-    'e18e/prefer-array-to-spliced': 'error',
-    'e18e/prefer-charcode-at-in-loop': 'error',
-    'e18e/prefer-get-or-insert': 'error',
-    'e18e/prefer-includes-over-regex-test': 'error',
-    'e18e/prefer-inline-equality': 'error',
-    'e18e/prefer-slice-over-split-index': 'error',
-    'e18e/prefer-static-collator': 'error',
-    'e18e/prefer-static-regex': 'error',
-    'e18e/prefer-throw-if-no-entry': 'error',
-    'e18e/prefer-timer-args': 'error',
-    'e18e/prefer-url-canparse': 'error',
-
-    // ── import ─────────────────────────────────────────────────────────
-    'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-
-    // ── eslint ──────────────────────────────────────────────────────────
-    // Ultracite core leaves this off. 4 is ESLint's default.
     'max-depth': ['error', { max: 4 }],
-
-    // ── typescript ─────────────────────────────────────────────────────
+    'no-implicit-coercion': 'error',
     'typescript/consistent-type-imports': [
       'error',
       { fixStyle: 'separate-type-imports', prefer: 'type-imports' },
@@ -64,12 +39,10 @@ export default defineConfig({
       { checksVoidReturn: { attributes: true } },
     ],
     'typescript/prefer-optional-chain': 'error',
-    'typescript/no-non-null-assertion': 'error',
     'typescript/no-unnecessary-condition': [
       'error',
       { allowConstantLoopConditions: true },
     ],
-    'typescript/no-unsafe-assignment': 'error',
     'typescript/no-unused-vars': [
       'error',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

@@ -6,11 +6,12 @@
   "type": "module",
   "exports": {
     ".": "./package.ts",
+    "./plugin-rules.ts": "./plugin-rules.ts",
+    "./define.ts": "./define.ts",
     "./shared.ts": "./shared.ts",
-    "./ultracite.ts": "./ultracite.ts",
+    "./react.ts": "./react.ts",
     "./vitest.ts": "./vitest.ts",
-    "./react-doctor.ts": "./react-doctor.ts",
-    "./next-react-doctor.ts": "./next-react-doctor.ts",
+    "./next.ts": "./next.ts",
     "./react-query.ts": "./react-query.ts",
     "./e18e.ts": "./e18e.ts",
     "./playwright.ts": "./playwright.ts",
@@ -24,7 +25,7 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
-    "lint": "oxlint plugin",
+    "lint": "oxlint .",
     "test": "vitest",
     "test:ci": "vitest run",
     "typecheck": "tsc --noEmit"
