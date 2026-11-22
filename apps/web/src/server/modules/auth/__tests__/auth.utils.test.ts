@@ -7,7 +7,7 @@ import {
   isValidToken,
 } from '../auth.utils'
 
-const VFN_PREFIX_ALLOWED = /^[ABCDEFGHJKLMNPQRSTUVWXYZ]+$/u
+const VFN_PREFIX_ALLOWED = /^[A-HJ-NP-Z]+$/u
 
 describe('auth.utils', () => {
   describe(createVfnIdentifier, () => {

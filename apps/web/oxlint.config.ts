@@ -13,6 +13,7 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
+import { regexp } from '@acme/oxlint-config/regexp.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
 import {
@@ -86,6 +87,7 @@ export default defineConfig({
     reactQuery,
     tailwindcssOxlint,
     e18e,
+    regexp,
     acme,
   ],
   jsPlugins: [...reactDoctor.jsPlugins],
