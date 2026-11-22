@@ -6,7 +6,6 @@ export default defineConfig({
   },
   test: {
     silent: true,
-    retry: 0,
     globals: true,
     environment: 'node',
     exclude: ['node_modules', 'dist', '.next', '.turbo', 'tests/e2e'],

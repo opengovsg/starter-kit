@@ -2,6 +2,7 @@ import { defineConfig } from 'oxlint'
 
 import { acme } from '@acme/oxlint-config/acme.ts'
 import { e18e } from '@acme/oxlint-config/e18e.ts'
+import landmines from '@acme/oxlint-config/landmines.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import {
   playwrightE2eRules,
@@ -12,6 +13,7 @@ import {
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
+import { regexp } from '@acme/oxlint-config/regexp.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
 import {
@@ -87,7 +89,9 @@ export default defineConfig({
     reactQuery,
     tailwindcssOxlint,
     e18e,
+    regexp,
     acme,
+    landmines,
   ],
   jsPlugins: [...reactDoctor.jsPlugins],
   options: oxlintOptions,

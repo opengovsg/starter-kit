@@ -6,6 +6,7 @@ import {
   reactDoctor,
   reactDoctorSettings,
 } from '@acme/oxlint-config/react-doctor.ts'
+import { regexp } from '@acme/oxlint-config/regexp.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 import {
   tailwindcssOxlint,
@@ -13,7 +14,7 @@ import {
 } from '@acme/oxlint-config/tailwindcss.ts'
 
 export default defineConfig({
-  extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e],
+  extends: [sharedConfig, react, reactDoctor, tailwindcssOxlint, e18e, regexp],
   jsPlugins: [...reactDoctor.jsPlugins],
   options: oxlintOptions,
   settings: {
