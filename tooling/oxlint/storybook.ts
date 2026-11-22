@@ -7,8 +7,8 @@ const storybookJsPlugins = [
 ]
 
 const toOxlintGlob = (pattern: string): string =>
-  pattern.replace(
-    /@\(([^)]+)\)/g,
+  pattern.replaceAll(
+    /@\((?<alts>[^)]+)\)/gu,
     (_match, alts: string) => `{${alts.replaceAll('|', ',')}}`
   )
 

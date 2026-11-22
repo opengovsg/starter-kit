@@ -1,20 +1,19 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path'
 
 import { defineConfig, devices } from '@playwright/test'
-import dotenv from 'dotenv'
 import { ROLES, storageStateFor } from '~tests/e2e/helpers/auth'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+process.loadEnvFile(path.resolve(import.meta.dirname, '.env.e2e'))
 
-dotenv.config({ path: path.resolve(__dirname, '.env.e2e'), quiet: true })
+const isCI = Boolean(process.env.CI)
+const authSetupFile = /auth\.setup\.ts$/u
+const baseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL ?? 'http://localhost:3111'
 
-const baseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3111'
 console.log(`ℹ️ Using base URL "${baseUrl}"`)
 
 const opts = {
   // launch headless on CI, in browser locally
-  headless: !!process.env.CI || !!process.env.PLAYWRIGHT_HEADLESS,
+  headless: isCI || Boolean(process.env.PLAYWRIGHT_HEADLESS),
   // collectCoverage: !!process.env.PLAYWRIGHT_HEADLESS,
 }
 
@@ -26,9 +25,10 @@ const baseUse = {
 
 export default defineConfig({
   webServer: {
-    command: process.env.CI ? 'pnpm start-e2e' : 'pnpm dev-e2e',
+    command: isCI ? 'pnpm start-e2e' : 'pnpm dev-e2e',
     url: baseUrl,
-    reuseExistingServer: !process.env.CI, // Reuses the server locally, but starts a new one in CI
+    // Reuses the server locally, but starts a new one in CI
+    reuseExistingServer: !isCI,
   },
   globalSetup: './tests/e2e/global-setup.ts',
   use: {
@@ -39,10 +39,10 @@ export default defineConfig({
   testDir: './tests/e2e',
   testMatch: '**/*.e2e.ts',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 2 : undefined,
+  forbidOnly: isCI,
+  workers: isCI ? 2 : undefined,
   outputDir: './tests/e2e/test-results',
-  reporter: process.env.CI ? [['github'], ['list']] : 'list',
+  reporter: isCI ? [['github'], ['list']] : 'list',
   projects: [
     { name: 'unauthenticated', grepInvert: /@role:/u, use: baseUse },
     ...ROLES.flatMap((role) => {
@@ -51,7 +51,7 @@ export default defineConfig({
       return [
         {
           name: `setup:${role}`,
-          testMatch: /auth\.setup\.ts$/u,
+          testMatch: authSetupFile,
           grep,
           use: baseUse,
         },

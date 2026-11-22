@@ -1,13 +1,9 @@
-import { defineConfig } from 'oxlint'
-
 import { acme } from '@acme/oxlint-config/acme.ts'
-import sharedConfig, {
-  oxlintEnv,
-  oxlintOptions,
-} from '@acme/oxlint-config/shared.ts'
+import { defineAcmeConfig } from '@acme/oxlint-config/define.ts'
+import sharedConfig from '@acme/oxlint-config/shared.ts'
+import { vitest } from '@acme/oxlint-config/vitest.ts'
 
-export default defineConfig({
-  extends: [sharedConfig, acme],
-  env: oxlintEnv,
-  options: oxlintOptions,
+/** Default for every package; vitest rules only apply to test-file globs. */
+export default defineAcmeConfig({
+  extends: [sharedConfig, acme, vitest],
 })

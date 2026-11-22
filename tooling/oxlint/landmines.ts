@@ -3,7 +3,7 @@ import landmines from 'ultracite/oxlint/landmines'
 
 import { pluginRulesAtError } from '@acme/oxlint-config/plugin-rules.ts'
 
-const landminesTestingJsPlugins = (landmines.jsPlugins ?? []).filter(
+const landminesTestingJsPlugins = landmines.jsPlugins.filter(
   (plugin) => plugin.name === 'landmines-testing'
 )
 
@@ -21,7 +21,7 @@ export const landminesTestingFiles = [
 
 export const landminesTestingRules = Object.fromEntries(
   Object.entries(
-    pluginRulesAtError('landmines-testing/', landmines.rules ?? {})
+    pluginRulesAtError('landmines-testing/', landmines.rules)
   ).filter(
     ([rule]) =>
       rule === 'landmines-testing/no-fixed-sleep' ||

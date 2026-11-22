@@ -31,7 +31,7 @@ const playwrightSkip = new Set([
 
 export const playwrightE2eRules = pluginRuleNamesAtError(
   'playwright/',
-  Object.keys(playwright.rules ?? {}),
+  Object.keys(playwright.rules),
   playwrightSkip
 )
 

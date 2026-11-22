@@ -7,6 +7,7 @@
   "exports": {
     ".": "./package.ts",
     "./plugin-rules.ts": "./plugin-rules.ts",
+    "./define.ts": "./define.ts",
     "./shared.ts": "./shared.ts",
     "./ultracite.ts": "./ultracite.ts",
     "./vitest.ts": "./vitest.ts",
@@ -25,7 +26,7 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo node_modules",
     "format": "oxfmt --ignore-path ../../.gitignore .",
-    "lint": "oxlint plugin",
+    "lint": "oxlint .",
     "test": "vitest",
     "test:ci": "vitest run",
     "typecheck": "tsc --noEmit"
