@@ -12,12 +12,14 @@ const toOxlintGlob = (pattern: string): string =>
 
 const storybookRulesAtError = (
   rules: Record<string, unknown>
-): Record<string, 'error'> =>
-  Object.fromEntries(
+): Record<string, 'error'> => ({
+  ...Object.fromEntries(
     Object.keys(rules)
       .filter((rule) => rule.startsWith('storybook/'))
       .map((rule) => [rule, 'error'] as const)
-  )
+  ),
+  'storybook/no-stories-of': 'error',
+})
 
 export const storybookOverrides = configs.recommended.overrides
   .map((override) => ({

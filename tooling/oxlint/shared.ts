@@ -32,6 +32,7 @@ export default defineConfig({
     // and no-indexof-equality (it throws without typescript-eslint types).
     'e18e/ban-dependencies': 'error',
     'e18e/no-delete-property': 'error',
+    'e18e/no-spread-in-reduce': 'error',
     'e18e/prefer-array-fill': 'error',
     'e18e/prefer-array-from-map': 'error',
     'e18e/prefer-array-to-spliced': 'error',
@@ -52,6 +53,7 @@ export default defineConfig({
     // ── eslint ──────────────────────────────────────────────────────────
     // Ultracite core leaves this off. 4 is ESLint's default.
     'max-depth': ['error', { max: 4 }],
+    'max-params': ['error', { max: 4 }],
 
     // ── typescript ─────────────────────────────────────────────────────
     'typescript/consistent-type-imports': [
@@ -62,6 +64,7 @@ export default defineConfig({
       'error',
       { checksVoidReturn: { attributes: true } },
     ],
+    'typescript/prefer-optional-chain': 'error',
     'typescript/no-non-null-assertion': 'error',
     'typescript/no-unnecessary-condition': [
       'error',
