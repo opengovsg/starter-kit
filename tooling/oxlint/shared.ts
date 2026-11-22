@@ -2,6 +2,7 @@ import { defineConfig } from 'oxlint'
 import antiSlop from 'ultracite/oxlint/anti-slop'
 import core from 'ultracite/oxlint/core'
 
+import { acmeJsPlugins } from '@acme/oxlint-config/acme.ts'
 import { e18e } from '@acme/oxlint-config/e18e.ts'
 import landmines from '@acme/oxlint-config/landmines.ts'
 import { regexp } from '@acme/oxlint-config/regexp.ts'
@@ -20,6 +21,14 @@ export default defineConfig({
     'src/generated/**',
     '.next/**',
     'public/mockServiceWorker.js',
+  ],
+  // Every `oxlint.config.*` must go through `defineAcmeConfig`.
+  overrides: [
+    {
+      files: ['**/oxlint.config.*'],
+      jsPlugins: acmeJsPlugins,
+      rules: { 'acme/require-define-acme-config': 'error' },
+    },
   ],
   // Only what differs from Ultracite core / anti-slop.
   rules: {
