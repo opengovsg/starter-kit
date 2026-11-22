@@ -13,7 +13,6 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'error',
   },
-  // `no-eval` / `no-implied-eval` stay half-deaf without it.
   env: core.env,
   ignorePatterns: [
     ...core.ignorePatterns,
@@ -22,7 +21,6 @@ export default defineConfig({
     '.next/**',
     'public/mockServiceWorker.js',
   ],
-  // Every `oxlint.config.*` must go through `defineAcmeConfig`.
   overrides: [
     {
       files: ['**/oxlint.config.*'],
@@ -30,7 +28,6 @@ export default defineConfig({
       rules: { 'acme/require-define-acme-config': 'error' },
     },
   ],
-  // Only what differs from Ultracite core / anti-slop.
   rules: {
     'max-depth': ['error', { max: 4 }],
     'no-implicit-coercion': 'error',

@@ -14,6 +14,8 @@ tester.run('require-define-acme-config', requireDefineAcmeConfigRule, {
     'const config = {}; export default config',
     'export default config',
     'export default oxlint.defineAcmeConfig({})',
+    'function inner() { const config = defineAcmeConfig({}) }\nexport default config',
+    'function inner() { const config = defineAcmeConfig({}) }\nconst config = defineConfig({})\nexport default config',
   ].map((code) => ({ code, errors: 1 })),
   valid: [
     'export default defineAcmeConfig({ extends: [shared] })',

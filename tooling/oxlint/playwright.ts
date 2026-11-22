@@ -6,27 +6,38 @@ export const playwrightJsPlugins = [
   { name: 'playwright', specifier: 'eslint-plugin-playwright' },
 ]
 
-/** Empty restrict maps, fixture/title fights, and matcher-style extras. */
-const playwrightSkip = new Set([
-  'playwright/max-expects',
-  'playwright/no-hooks',
+const playwrightEmptyRestrictMaps = [
   'playwright/no-restricted-locators',
   'playwright/no-restricted-matchers',
   'playwright/no-restricted-roles',
+] as const
+
+const playwrightFightsKitFixtures = [
+  'playwright/no-hooks',
   'playwright/no-template-literal-title',
-  'playwright/prefer-comparison-matcher',
   'playwright/prefer-ending-with-an-expect',
-  'playwright/prefer-equality-matcher',
   'playwright/prefer-lowercase-title',
-  'playwright/prefer-strict-equal',
-  'playwright/prefer-to-be',
-  'playwright/prefer-to-contain',
   'playwright/require-annotation-reason',
   'playwright/require-hook',
   'playwright/require-soft-assertions',
   'playwright/require-tags',
   'playwright/require-to-throw-message',
   'playwright/require-top-level-describe',
+] as const
+
+const playwrightMatcherStyle = [
+  'playwright/max-expects',
+  'playwright/prefer-comparison-matcher',
+  'playwright/prefer-equality-matcher',
+  'playwright/prefer-strict-equal',
+  'playwright/prefer-to-be',
+  'playwright/prefer-to-contain',
+] as const
+
+const playwrightSkip = new Set<string>([
+  ...playwrightEmptyRestrictMaps,
+  ...playwrightFightsKitFixtures,
+  ...playwrightMatcherStyle,
 ])
 
 export const playwrightE2eRules = pluginRuleNamesAtError(

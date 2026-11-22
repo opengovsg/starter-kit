@@ -43,7 +43,6 @@ interface RestrictedPattern {
   message: string
 }
 
-// A later override replaces the whole rule, so each one restates the base set.
 const restrictImports = (
   patterns: RestrictedPattern[] = [],
   paths: RestrictedPath[] = []
@@ -229,7 +228,6 @@ const config = defineAcmeConfig({
   ],
 })
 
-// Fail loudly instead of silently dropping the `~/env` guard for those files.
 const dropsEnvGuard = ({ rules }: OxlintOverride) => {
   const rule = rules?.['no-restricted-imports']
 

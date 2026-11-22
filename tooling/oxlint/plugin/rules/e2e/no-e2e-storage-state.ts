@@ -9,13 +9,6 @@ const STORAGE_STATE_METHODS = new Set([
   'use',
 ])
 
-/**
- * Forbid setting `storageState` in e2e tests (`test.use`, `test.extend`,
- * `browser.newContext`/`newPage`). Sign in by tagging the describe with
- * `roleTag(...)` instead; playwright.config.ts wires the session per role.
- *
- * ponytail: syntactic only, misses options passed through a variable or spread.
- */
 export const noE2eStorageStateRule = defineRule({
   createOnce(context) {
     return {

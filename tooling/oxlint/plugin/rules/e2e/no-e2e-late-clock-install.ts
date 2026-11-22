@@ -1,7 +1,8 @@
 import { defineRule } from '@oxlint/plugins'
 import type { ESTree } from '@oxlint/plugins'
 
-import { getName } from '../../ast.ts'
+import type { Fn } from '../../ast.ts'
+import { getName, isFunction } from '../../ast.ts'
 
 const NAVIGATION_METHODS = new Set([
   'goBack',
@@ -10,16 +11,6 @@ const NAVIGATION_METHODS = new Set([
   'reload',
   'setContent',
 ])
-
-type Fn = Extract<
-  ESTree.Node,
-  {
-    type:
-      | 'ArrowFunctionExpression'
-      | 'FunctionDeclaration'
-      | 'FunctionExpression'
-  }
->
 
 type Hook = 'beforeAll' | 'beforeEach'
 
@@ -33,11 +24,6 @@ interface Navigation {
   method: string
   node: ESTree.CallExpression
 }
-
-const isFunction = (node: ESTree.Node): node is Fn =>
-  node.type === 'ArrowFunctionExpression' ||
-  node.type === 'FunctionDeclaration' ||
-  node.type === 'FunctionExpression'
 
 const calleeNamesInnermostFirst = (call: ESTree.CallExpression) => {
   const names: string[] = []
@@ -92,7 +78,7 @@ const getStatements = (block: ESTree.Program | Fn) => {
     return block.body
   }
 
-  return block.body.type === 'BlockStatement' ? block.body.body : []
+  return block.body?.type === 'BlockStatement' ? block.body.body : []
 }
 
 const getHookCalls = (block: ESTree.Program | Fn) => {
@@ -116,11 +102,6 @@ const getHookCalls = (block: ESTree.Program | Fn) => {
   return hooks
 }
 
-/**
- * Whether `hook` runs before `own` (a test or hook callback in `ownKind`'s
- * slot). Playwright runs outer describes' hooks first; within one describe,
- * every `beforeAll` before any `beforeEach`, and one kind in declaration order.
- */
 const runsBefore = (
   hook: HookCall,
   own: ESTree.CallExpression,
@@ -207,16 +188,6 @@ const getPrecedingHooks = (scope: Fn, own: ESTree.CallExpression) => {
   return hooks
 }
 
-/**
- * Require `clock.install()` before the first navigation. Installing later
- * leaves the loaded page on the real clock, so timers and `Date` are not
- * faked. Checks the enclosing test, hook, page-object method or helper, plus
- * the `beforeAll`/`beforeEach` hooks that run before it.
- *
- * ponytail: matches navigation by method name on any receiver; misses page
- * objects that navigate under another name (`open()`) and fixtures that
- * navigate, and can flag a `goto` on a different page.
- */
 export const noE2eLateClockInstallRule = defineRule({
   createOnce(context) {
     let navigations: Navigation[] = []

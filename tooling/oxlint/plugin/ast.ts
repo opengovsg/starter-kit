@@ -1,10 +1,20 @@
 import type { ESTree } from '@oxlint/plugins'
 
+// `ESTree.Function` covers declarations and expressions (and body-less TS
+// declarations), so `Extract` on `type` would silently drop it.
+export type Fn = ESTree.ArrowFunctionExpression | ESTree.Function
+
+export const isFunction = (node: ESTree.Node): node is Fn =>
+  node.type === 'ArrowFunctionExpression' ||
+  node.type === 'FunctionDeclaration' ||
+  node.type === 'FunctionExpression' ||
+  node.type === 'TSDeclareFunction' ||
+  node.type === 'TSEmptyBodyFunctionExpression'
+
 type Named =
   | ESTree.MemberExpression
   | Extract<ESTree.Node, { type: 'Property' }>
 
-/** `a.b`, `a['b']`, `` a[`b`] `` and `{ b }`, `{ 'b' }`, `{ ['b'] }`. */
 export const getName = (node: Named) => {
   const key = node.type === 'Property' ? node.key : node.property
 

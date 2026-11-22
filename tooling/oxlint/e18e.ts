@@ -3,9 +3,7 @@ import { defineConfig } from 'oxlint'
 
 import { pluginRuleNamesAtError } from '@acme/oxlint-config/plugin-rules.ts'
 
-/** Ultracite already errors these, type-aware `no-indexof-equality` cannot run, `prefer-string-fromcharcode` fights unicorn/prefer-code-point. */
-const e18eSkip = new Set([
-  'e18e/no-indexof-equality',
+const e18eCoveredByUltracite = [
   'e18e/prefer-array-at',
   'e18e/prefer-array-some',
   'e18e/prefer-date-now',
@@ -16,7 +14,18 @@ const e18eSkip = new Set([
   'e18e/prefer-object-has-own',
   'e18e/prefer-regex-test',
   'e18e/prefer-spread-syntax',
+] as const
+
+const e18eNeedsTypeChecker = ['e18e/no-indexof-equality'] as const
+
+const e18eConflictsWithUnicornCodePoint = [
   'e18e/prefer-string-fromcharcode',
+] as const
+
+const e18eSkip = new Set<string>([
+  ...e18eCoveredByUltracite,
+  ...e18eNeedsTypeChecker,
+  ...e18eConflictsWithUnicornCodePoint,
 ])
 
 export const e18eRules = pluginRuleNamesAtError(

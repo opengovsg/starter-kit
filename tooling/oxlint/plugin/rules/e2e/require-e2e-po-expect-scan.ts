@@ -1,23 +1,13 @@
 import { defineRule } from '@oxlint/plugins'
 import type { ESTree } from '@oxlint/plugins'
 
-import { getName } from '../../ast.ts'
+import type { Fn } from '../../ast.ts'
+import { getName, isFunction } from '../../ast.ts'
 
 const SCAN_MODULE = '~tests/e2e/helpers/a11y.expect'
 const SCAN_EXPORT = 'expectNoA11yViolations'
 
 const EXPECT_NAME = /^expect(?:[A-Z]|$)/u
-
-// `ESTree.Function` covers declarations and expressions (and body-less TS
-// declarations), so `Extract` on `type` would silently drop it.
-type Fn = ESTree.ArrowFunctionExpression | ESTree.Function
-
-const isFunction = (node: ESTree.Node): node is Fn =>
-  node.type === 'ArrowFunctionExpression' ||
-  node.type === 'FunctionDeclaration' ||
-  node.type === 'FunctionExpression' ||
-  node.type === 'TSDeclareFunction' ||
-  node.type === 'TSEmptyBodyFunctionExpression'
 
 const getKeyName = (key: ESTree.Node, computed: boolean) => {
   if (key.type === 'Literal') {
@@ -110,18 +100,6 @@ const isDelegation = (call: ESTree.CallExpression) =>
   call.callee.object.type === 'ThisExpression' &&
   EXPECT_NAME.test(getName(call.callee) ?? '')
 
-/**
- * Every `expect*` function in an e2e page object asserts a screen state, so it
- * must wait for that state, then end with `await expectNoA11yViolations(this.page)`
- * (imported from `~tests/e2e/helpers/a11y.expect`) or delegate by ending with
- * `await this.expectOther()`. It may not return early, and any function that
- * calls Playwright's `expect` must itself be named `expect*`, so an assertion
- * can't dodge the scan by its name. Covers class members (including `#private`
- * and quoted keys), object literals, declarations and assignments.
- *
- * ponytail: `// oxlint-disable` and the `test.use({ a11y: false })` opt-out are
- * still escape hatches; review catches those.
- */
 export const requireE2ePoExpectScanRule = defineRule({
   createOnce(context) {
     let scanName: string | null = null

@@ -6,14 +6,6 @@ const isDefineAcmeConfig = (node: ESTree.Node | null | undefined) =>
   node.callee.type === 'Identifier' &&
   node.callee.name === 'defineAcmeConfig'
 
-/**
- * Require an `oxlint.config.*` default export to come from `defineAcmeConfig`.
- * Oxlint drops `env` and `settings` from `extends`, so a plain `defineConfig`
- * root silently loses browser globals, React Doctor's mode and Tailwind's entry.
- *
- * ponytail: syntactic only, trusts any `defineAcmeConfig` call and only follows
- * `export default <name>` to a top-level `const`.
- */
 export const requireDefineAcmeConfigRule = defineRule({
   createOnce(context) {
     const acmeConfigNames = new Set<string>()
@@ -23,7 +15,12 @@ export const requireDefineAcmeConfigRule = defineRule({
         acmeConfigNames.clear()
       },
       VariableDeclarator(node) {
-        if (node.id.type === 'Identifier' && isDefineAcmeConfig(node.init)) {
+        if (
+          node.id.type === 'Identifier' &&
+          isDefineAcmeConfig(node.init) &&
+          node.parent.type === 'VariableDeclaration' &&
+          node.parent.parent.type === 'Program'
+        ) {
           acmeConfigNames.add(node.id.name)
         }
       },

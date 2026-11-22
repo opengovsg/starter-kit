@@ -2,13 +2,6 @@ import { defineRule } from '@oxlint/plugins'
 
 const ROLE_TAG_PREFIX = '@role:'
 
-/**
- * Forbid hand-written `@role:` tags in e2e tests. A typo (`'@role:usr'`) drops
- * the test from every project, so it silently never runs; `roleTag(role)` is
- * type-checked against `ROLES`. Disable for the file that defines `roleTag`.
- *
- * @see apps/web/tests/e2e/helpers/auth.ts
- */
 export const noE2eLiteralRoleTagRule = defineRule({
   createOnce(context) {
     return {
