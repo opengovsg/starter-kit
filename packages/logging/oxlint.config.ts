@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint'
 
 import { e18e } from '@acme/oxlint-config/e18e.ts'
-import { vitest } from '@acme/oxlint-config/presets.ts'
+import { vitest } from '@acme/oxlint-config/ultracite.ts'
 import sharedConfig, { oxlintOptions } from '@acme/oxlint-config/shared.ts'
 
 export default defineConfig({

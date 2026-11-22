@@ -7,7 +7,7 @@
   "exports": {
     ".": "./package.ts",
     "./shared.ts": "./shared.ts",
-    "./presets.ts": "./presets.ts",
+    "./ultracite.ts": "./ultracite.ts",
     "./react-doctor.ts": "./react-doctor.ts",
     "./next-react-doctor.ts": "./next-react-doctor.ts",
     "./react-query.ts": "./react-query.ts",

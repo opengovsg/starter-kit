@@ -7,7 +7,7 @@ import {
   playwrightE2eRules,
   playwrightJsPlugins,
 } from '@acme/oxlint-config/playwright.ts'
-import { next, react, vitest } from '@acme/oxlint-config/presets.ts'
+import { next, react, vitest } from '@acme/oxlint-config/ultracite.ts'
 import {
   reactDoctor,
   reactDoctorSettings,
