@@ -2,17 +2,16 @@ import type { OxlintOverride } from 'oxlint'
 
 import { acme } from '@acme/oxlint-config/acme.ts'
 import { defineAcmeConfig } from '@acme/oxlint-config/define.ts'
-import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
+import { next } from '@acme/oxlint-config/next.ts'
 import {
   playwrightE2eRules,
   playwrightJsPlugins,
 } from '@acme/oxlint-config/playwright.ts'
-import { reactDoctor } from '@acme/oxlint-config/react-doctor.ts'
 import reactQuery from '@acme/oxlint-config/react-query.ts'
+import { react } from '@acme/oxlint-config/react.ts'
 import sharedConfig from '@acme/oxlint-config/shared.ts'
 import { storybookOverrides } from '@acme/oxlint-config/storybook.ts'
 import { tailwindcssOxlint } from '@acme/oxlint-config/tailwindcss.ts'
-import { next, react } from '@acme/oxlint-config/ultracite.ts'
 import { vitest } from '@acme/oxlint-config/vitest.ts'
 
 const restrictProcessEnvImport = {
@@ -83,8 +82,6 @@ const config = defineAcmeConfig({
     react,
     next,
     vitest,
-    reactDoctor,
-    nextReactDoctor,
     reactQuery,
     tailwindcssOxlint('src/app/globals.css'),
     acme,

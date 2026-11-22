@@ -13,7 +13,6 @@ export default defineConfig({
     typeAware: true,
     reportUnusedDisableDirectives: 'error',
   },
-  env: core.env,
   ignorePatterns: [
     ...core.ignorePatterns,
     'dist/**',
