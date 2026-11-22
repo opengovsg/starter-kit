@@ -10,3 +10,15 @@ export const pluginRulesAtError = (
       })
       .map(([rule]) => [rule, 'error'] as const)
   )
+
+export const pluginRuleNamesAtError = (
+  prefix: string,
+  names: Iterable<string>,
+  skip: ReadonlySet<string> = new Set()
+): Record<string, 'error'> =>
+  Object.fromEntries(
+    [...names]
+      .map((name) => (name.startsWith(prefix) ? name : `${prefix}${name}`))
+      .filter((rule) => !skip.has(rule))
+      .map((rule) => [rule, 'error'] as const)
+  )
