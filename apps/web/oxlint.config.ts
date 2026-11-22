@@ -2,6 +2,7 @@ import { defineConfig } from 'oxlint'
 
 import { acme } from '@acme/oxlint-config/acme.ts'
 import { e18e } from '@acme/oxlint-config/e18e.ts'
+import landmines from '@acme/oxlint-config/landmines.ts'
 import nextReactDoctor from '@acme/oxlint-config/next-react-doctor.ts'
 import {
   playwrightE2eRules,
@@ -89,6 +90,7 @@ export default defineConfig({
     e18e,
     regexp,
     acme,
+    landmines,
   ],
   jsPlugins: [...reactDoctor.jsPlugins],
   options: oxlintOptions,
