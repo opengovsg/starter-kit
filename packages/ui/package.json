@@ -35,7 +35,6 @@
     "@types/react": "catalog:react",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
-    "oxlint-plugin-react-doctor": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "react": "catalog:react",
     "typescript": "catalog:",
