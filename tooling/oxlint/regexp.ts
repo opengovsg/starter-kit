@@ -1,12 +1,6 @@
 import { configs } from 'eslint-plugin-regexp'
 import { defineConfig } from 'oxlint'
 
-/**
- * RegExp lint via Oxlint's JS plugin bridge. Ultracite has no regexp preset.
- * Recommended at **error**; the plugin ships some of these as warn.
- *
- * @see https://github.com/ota-meshi/eslint-plugin-regexp
- */
 export const regexpJsPlugins = [
   { name: 'regexp', specifier: 'eslint-plugin-regexp' },
 ]
