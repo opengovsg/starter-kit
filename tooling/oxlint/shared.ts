@@ -53,7 +53,6 @@ export default defineConfig({
     // ── eslint ──────────────────────────────────────────────────────────
     // Ultracite core leaves this off. 4 is ESLint's default.
     'max-depth': ['error', { max: 4 }],
-    'max-params': ['error', { max: 4 }],
 
     // ── typescript ─────────────────────────────────────────────────────
     'typescript/consistent-type-imports': [

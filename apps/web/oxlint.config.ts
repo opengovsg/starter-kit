@@ -224,6 +224,13 @@ export default defineConfig({
       ],
       rules: {
         'typescript/no-unsafe-assignment': 'off',
+        'vitest/no-restricted-vi-methods': [
+          'error',
+          {
+            waitFor:
+              'Do not poll with vi.waitFor. Await the real event or assertion.',
+          },
+        ],
       },
     },
   ],
