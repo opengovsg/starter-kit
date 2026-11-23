@@ -7,7 +7,7 @@ import { AuthedNavbar } from './_components/authed-navbar'
 
 import { LOGIN_ROUTE } from '~/constants'
 import { getSession } from '~/server/session'
-import { readSessionState } from '~/server/session-state'
+import { isSessionAuthed } from '~/server/session-state'
 import { HydrateClient, prefetch, trpc } from '~/trpc/server'
 import type { DynamicLayoutProps } from '~/types/nextjs'
 
@@ -18,7 +18,7 @@ const AuthedLayout = async ({ children }: DynamicLayoutProps) => {
 
   const session = await getSession()
 
-  if (readSessionState(session).kind === 'anon') {
+  if (!isSessionAuthed(session)) {
     redirect(LOGIN_ROUTE)
   }
 

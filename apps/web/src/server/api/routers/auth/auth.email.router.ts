@@ -32,7 +32,7 @@ export const emailAuthRouter = createTRPCRouter({
       })
 
       if (sent.status !== 'sent') {
-        throw emailLoginError(sent)
+        throw emailLoginError()
       }
 
       return {

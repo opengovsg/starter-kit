@@ -1,32 +1,17 @@
 import { describe, expect, it } from 'vitest'
 
-import { readSessionState } from '../session-state'
+import { isSessionAuthed } from '../session-state'
 
-describe(readSessionState, () => {
+describe(isSessionAuthed, () => {
   it('treats a missing user id as anonymous', () => {
-    expect(readSessionState({})).toStrictEqual({ kind: 'anon' })
+    expect(isSessionAuthed({})).toBeFalsy()
   })
 
   it('treats an empty user id as anonymous', () => {
-    expect(readSessionState({ sessionId: 'session', userId: '' })).toStrictEqual({
-      kind: 'anon',
-    })
+    expect(isSessionAuthed({ sessionId: 'session', userId: '' })).toBeFalsy()
   })
 
-  it('returns a user session for a non-empty user id', () => {
-    expect(
-      readSessionState({ sessionId: 'session', userId: 'user_123' })
-    ).toStrictEqual({
-      kind: 'user',
-      sessionId: 'session',
-      userId: 'user_123',
-    })
-  })
-
-  it('omits an empty session id from a user session', () => {
-    expect(readSessionState({ sessionId: '', userId: 'user_123' })).toStrictEqual({
-      kind: 'user',
-      userId: 'user_123',
-    })
+  it('treats a non-empty user id as signed in', () => {
+    expect(isSessionAuthed({ sessionId: '', userId: 'user_123' })).toBeTruthy()
   })
 })

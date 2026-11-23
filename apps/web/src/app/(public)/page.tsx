@@ -2,14 +2,14 @@ import { LandingPageComponent } from './_components/landing-page/_page'
 
 import { env } from '~/env'
 import { getSession } from '~/server/session'
-import { readSessionState } from '~/server/session-state'
+import { isSessionAuthed } from '~/server/session-state'
 
 const LandingPage = async () => {
   // Might not be worth subscribing this page to be dynamically rendered just to
   // check for authentication. Remove this logic if you want to keep this as a static
   // page.
   const session = await getSession()
-  const isAuthed = readSessionState(session).kind === 'user'
+  const isAuthed = isSessionAuthed(session)
 
   return (
     <LandingPageComponent

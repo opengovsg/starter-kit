@@ -16,8 +16,8 @@ export type EmailLoginResult =
 
 /**
  * Domain outcome of checking an email OTP.
- * User-facing copy is chosen in {@link throwIfOtpVerifyFailed}, not here,
- * so expired and mismatched codes can stay distinct for audit logs.
+ * {@link otpVerifyError} picks the client message. The service already
+ * records expired and invalid as different audit reasons.
  */
 export type OtpVerifyResult =
   | { status: 'verified' }
@@ -39,9 +39,7 @@ const LOCKED_MESSAGE =
   'Wrong OTP was entered too many times. Please request a new OTP.'
 
 /** tRPC error for a duplicate login challenge. */
-export const emailLoginError = (
-  _result: Extract<EmailLoginResult, { status: 'duplicate_challenge' }>
-): TRPCError =>
+export const emailLoginError = (): TRPCError =>
   new TRPCError({
     code: 'BAD_REQUEST',
     message: DUPLICATE_CHALLENGE_MESSAGE,
@@ -65,14 +63,8 @@ export const otpVerifyError = (
       })
     }
 
-    case 'expired': {
-      return invalidOrExpired()
-    }
-
-    case 'invalid': {
-      return invalidOrExpired()
-    }
-
+    case 'expired':
+    case 'invalid':
     case 'consumed': {
       return invalidOrExpired()
     }

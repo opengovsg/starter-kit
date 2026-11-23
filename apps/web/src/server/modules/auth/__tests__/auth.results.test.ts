@@ -5,7 +5,7 @@ import { emailLoginError, otpVerifyError } from '../auth.results'
 
 describe('auth result mapping', () => {
   it('maps a duplicate challenge to the refresh message', () => {
-    const error = emailLoginError({ status: 'duplicate_challenge' })
+    const error = emailLoginError()
 
     expect(error).toBeInstanceOf(TRPCError)
     expect(error.message).toBe('Please refresh and try again.')
