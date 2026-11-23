@@ -18,63 +18,42 @@ const WRITES = new Set([
   'upsert',
 ])
 
-const memberCallee = (callee: ESTree.Node) => {
-  if (callee.type === 'MemberExpression') {
-    return callee
+const rootName = (node: ESTree.Node): string | null => {
+  if (node.type === 'MemberExpression') {
+    return rootName(node.object)
   }
 
-  if (
-    callee.type === 'ChainExpression' &&
-    callee.expression.type === 'MemberExpression'
-  ) {
-    return callee.expression
-  }
-
-  return null
+  return node.type === 'Identifier' ? node.name : null
 }
 
-const rootName = (member: ESTree.MemberExpression) => {
-  let object: ESTree.Node = member.object
-
-  while (
-    object.type === 'MemberExpression' ||
-    object.type === 'ChainExpression'
-  ) {
-    object =
-      object.type === 'ChainExpression' ? object.expression : object.object
+const writeMethod = (callee: ESTree.Node) => {
+  if (callee.type !== 'MemberExpression') {
+    return null
   }
 
-  return object.type === 'Identifier' ? object.name : null
+  const method = getName(callee)
+
+  return method !== null && WRITES.has(method) && rootName(callee) === 'db'
+    ? method
+    : null
 }
 
 export const noE2eDbWritesRule = defineRule({
   createOnce(context) {
-    const check = (node: ESTree.Node, callee: ESTree.Node) => {
-      if (!context.filename.endsWith('.db.ts')) {
-        return
-      }
-
-      const member = memberCallee(callee)
-      const method = member === null ? null : getName(member)
-
-      if (
-        member === null ||
-        method === null ||
-        !WRITES.has(method) ||
-        rootName(member) !== 'db'
-      ) {
-        return
-      }
-
-      context.report({ data: { method }, messageId: 'write', node })
-    }
-
     return {
       CallExpression(node) {
-        check(node, node.callee)
+        const method = writeMethod(node.callee)
+
+        if (method !== null) {
+          context.report({ data: { method }, messageId: 'write', node })
+        }
       },
       TaggedTemplateExpression(node) {
-        check(node, node.tag)
+        const method = writeMethod(node.tag)
+
+        if (method !== null) {
+          context.report({ data: { method }, messageId: 'write', node })
+        }
       },
     }
   },

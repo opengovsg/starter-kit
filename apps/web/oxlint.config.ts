@@ -195,6 +195,10 @@ const config = defineAcmeConfig({
       rules: { 'acme/no-e2e-literal-role-tag': 'off' },
     },
     {
+      files: ['tests/e2e/helpers/network.ts'],
+      rules: { 'acme/no-e2e-page-route': 'off' },
+    },
+    {
       files: ['tests/e2e/helpers/*.db.ts', 'tests/e2e/helpers/*.factory.ts'],
       rules: {
         'no-restricted-imports': restrictImports(
