@@ -14,11 +14,7 @@ export type EmailLoginResult =
     }
   | { status: 'duplicate_challenge' }
 
-/**
- * Domain outcome of checking an email OTP.
- * {@link otpVerifyError} picks the client message. The service already
- * records expired and invalid as different audit reasons.
- */
+/** Domain outcome of checking an email OTP. */
 export type OtpVerifyResult =
   | { status: 'verified' }
   | { status: 'locked'; attempts: number }

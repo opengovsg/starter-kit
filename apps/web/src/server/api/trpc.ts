@@ -236,8 +236,7 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 
   return await next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, userId: ctx.session.userId },
+      session: ctx.session,
     },
   })
 })
