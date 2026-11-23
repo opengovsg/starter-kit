@@ -1,8 +1,7 @@
 import { LandingPageComponent } from './_components/landing-page/_page'
 
 import { env } from '~/env'
-import { getSession } from '~/server/session'
-import { isSessionAuthed } from '~/server/session-state'
+import { getSession, isSessionAuthed } from '~/server/session'
 
 const LandingPage = async () => {
   // Might not be worth subscribing this page to be dynamically rendered just to

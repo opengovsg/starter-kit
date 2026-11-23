@@ -17,8 +17,7 @@ import {
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { getSession } from '../session'
-import { isSessionAuthed } from '../session-state'
+import { getSession, isSessionAuthed } from '../session'
 import { extractIpAddress } from '../utils/request'
 import { deserializeInput } from './deserialize-input'
 import { tracingMiddleware } from './tracing'

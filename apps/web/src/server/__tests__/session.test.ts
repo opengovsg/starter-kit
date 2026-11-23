@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { isSessionAuthed } from '../session-state'
+import { isSessionAuthed } from '../session'
 
 describe(isSessionAuthed, () => {
   it('treats a missing user id as anonymous', () => {
