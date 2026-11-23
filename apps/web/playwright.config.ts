@@ -1,3 +1,4 @@
+/* oxlint-disable no-console -- Prints the base URL when an e2e run starts. */
 import path from 'node:path'
 
 import { defineConfig, devices } from '@playwright/test'

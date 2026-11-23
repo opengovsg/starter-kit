@@ -68,6 +68,7 @@ export const SignInWizardProvider = ({
 
       return challenge
     } catch (error) {
+      // oxlint-disable-next-line no-console -- Browser code has no client reporter yet.
       console.error(error)
     }
 

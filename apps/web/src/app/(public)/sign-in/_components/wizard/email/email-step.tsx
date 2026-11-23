@@ -66,6 +66,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
     try {
       codeChallenge = await newChallenge()
     } catch (error) {
+      // oxlint-disable-next-line no-console -- Browser code has no client reporter yet.
       console.error(error)
     }
 

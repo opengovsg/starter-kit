@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@acme/logging": "workspace:*",
     "@t3-oss/env-core": "catalog:t3-env",
     "ioredis": "^5.8.2",
     "zod": "catalog:"

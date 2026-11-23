@@ -37,12 +37,12 @@ const handler = async (req: NextRequest) => {
         resHeaders,
       }),
     endpoint: '/api/trpc',
-    onError({ error, path, ctx }) {
+    onError({ error, ctx }) {
       if (error.code === 'UNAUTHORIZED') {
         ctx?.session.destroy()
       }
 
-      console.error(`>>> tRPC Error on '${path}'`, error)
+      // `loggerMiddleware` already records the failure.
     },
     req,
     router: appRouter,

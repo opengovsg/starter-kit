@@ -67,7 +67,7 @@ export const createQueryClient = () =>
             return
           }
 
-          // Log the error to an error reporting service
+          // oxlint-disable-next-line no-console -- Browser code has no client reporter yet.
           console.error('>>> Error in mutation', error)
 
           if (isTRPCClientError(error)) {

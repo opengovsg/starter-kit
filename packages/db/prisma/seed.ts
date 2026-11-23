@@ -3,6 +3,7 @@
  *
  * @see https://www.prisma.io/docs/guides/database/seed-database
  */
+/* oxlint-disable no-console -- This script prints a failed seed for the person running it. */
 import { db } from '../src/index'
 
 const main = async () => {

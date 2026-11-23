@@ -28,6 +28,9 @@ export default defineConfig({
     },
   ],
   rules: {
+    // Ultracite leaves this off so CLIs can print. This kit logs through
+    // `@acme/logging`. Scripts that exist to print opt out at the file.
+    'no-console': 'error',
     'max-depth': ['error', { max: 4 }],
     'no-implicit-coercion': 'error',
     'typescript/consistent-type-imports': [
