@@ -72,9 +72,11 @@ describe('auth.service', () => {
 
       await emailLogin({ codeChallenge, email })
 
-      await expect(emailLogin({ codeChallenge, email })).resolves.toStrictEqual({
-        status: 'duplicate_challenge',
-      })
+      await expect(emailLogin({ codeChallenge, email })).resolves.toStrictEqual(
+        {
+          status: 'duplicate_challenge',
+        }
+      )
     })
 
     it('should allow different codeChallenges for same email', async () => {
