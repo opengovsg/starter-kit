@@ -6,7 +6,6 @@ import type { Logger } from '@acme/logging'
 import { db } from '@acme/db'
 
 import { sendMail } from '../mail/mail.service'
-import type { EmailLoginResult, OtpVerifyResult } from './auth.results'
 import {
   createAuthToken,
   createVfnIdentifier,
@@ -18,6 +17,29 @@ import { Prisma } from '@acme/db/client'
 import { env } from '~/env'
 import { ssCreatePkceChallenge } from '~/lib/pkce/server-pkce'
 import { getBaseUrl } from '~/utils/get-base-url'
+
+/**
+ * Domain outcome of requesting an email OTP.
+ * `token` stays on the server result so the mailer can send it. The tRPC
+ * procedure returns only `email` and `otpPrefix`.
+ */
+export type EmailLoginResult =
+  | {
+      status: 'sent'
+      email: string
+      otpPrefix: string
+      token: string
+    }
+  | { status: 'duplicate_challenge' }
+
+/** Domain outcome of checking an email OTP. */
+export type OtpVerifyResult =
+  | { status: 'verified' }
+  | { status: 'locked'; attempts: number }
+  | { status: 'expired' }
+  | { status: 'invalid' }
+  | { status: 'reused' }
+  | { status: 'consumed' }
 
 export const emailLogin = async ({
   email,

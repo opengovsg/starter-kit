@@ -10,7 +10,7 @@ import type { Logger } from '@acme/logging'
 import { db } from '@acme/db'
 
 import * as mailService from '../../mail/mail.service'
-import type { EmailLoginResult } from '../auth.results'
+import type { EmailLoginResult } from '../auth.service'
 import { emailLogin, emailVerifyOtp } from '../auth.service'
 import { createAuthToken, createVfnIdentifier } from '../auth.utils'
 

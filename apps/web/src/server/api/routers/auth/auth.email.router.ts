@@ -1,11 +1,9 @@
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../../trpc'
 
-import {
-  emailLoginError,
-  otpVerifyError,
-} from '~/server/modules/auth/auth.results'
+import type { OtpVerifyResult } from '~/server/modules/auth/auth.service'
 import { emailLogin, emailVerifyOtp } from '~/server/modules/auth/auth.service'
 import { loginUserByEmail } from '~/server/modules/user/user.service'
 import {
@@ -13,6 +11,51 @@ import {
   emailVerifyOtpSchema,
   OTP_PREFIX_LENGTH,
 } from '~/validators/auth'
+
+/** tRPC error for a duplicate login challenge. */
+export const emailLoginError = (): TRPCError =>
+  new TRPCError({
+    code: 'BAD_REQUEST',
+    message: 'Please refresh and try again.',
+  })
+
+/** tRPC error for a failed OTP check. */
+export const otpVerifyError = (
+  result: Exclude<OtpVerifyResult, { status: 'verified' }>
+): TRPCError => {
+  switch (result.status) {
+    case 'locked': {
+      return new TRPCError({
+        code: 'TOO_MANY_REQUESTS',
+        message:
+          'Wrong OTP was entered too many times. Please request a new OTP.',
+      })
+    }
+
+    case 'expired':
+    case 'invalid':
+    case 'consumed': {
+      return new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Token is invalid or has expired. Please request a new OTP.',
+      })
+    }
+
+    case 'reused': {
+      return new TRPCError({
+        code: 'BAD_REQUEST',
+        message:
+          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
+      })
+    }
+
+    default: {
+      const unreachable: never = result
+
+      return unreachable
+    }
+  }
+}
 
 export const emailAuthRouter = createTRPCRouter({
   // Rate limiting for auth endpoints is handled by the default rate limit middleware.

@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server'
 import { describe, expect, it } from 'vitest'
 
-import { emailLoginError, otpVerifyError } from '../auth.results'
+import { emailLoginError, otpVerifyError } from '../auth.email.router'
 
-describe('auth result mapping', () => {
+describe('auth email errors', () => {
   it('maps a duplicate challenge to the refresh message', () => {
     const error = emailLoginError()
 
