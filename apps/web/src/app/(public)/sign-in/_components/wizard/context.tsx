@@ -67,12 +67,9 @@ export const SignInWizardProvider = ({
       challengeToVerifierMap.current.set(challenge, verifier)
 
       return challenge
-    } catch (error) {
-      // oxlint-disable-next-line no-console -- Browser code has no client reporter yet.
-      console.error(error)
+    } catch {
+      return undefined
     }
-
-    return undefined
   }
 
   const getVerifier = (challenge: string) =>

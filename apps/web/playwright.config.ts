@@ -1,4 +1,3 @@
-/* oxlint-disable no-console -- Prints the base URL when an e2e run starts. */
 import path from 'node:path'
 
 import { defineConfig, devices } from '@playwright/test'
@@ -10,6 +9,7 @@ const isCI = Boolean(process.env.CI)
 const authSetupFile = /auth\.setup\.ts$/u
 const baseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL ?? 'http://localhost:3111'
 
+// oxlint-disable-next-line no-console -- Prints the base URL when an e2e run starts.
 console.log(`ℹ️ Using base URL "${baseUrl}"`)
 
 const opts = {
