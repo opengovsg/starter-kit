@@ -9,6 +9,7 @@ import { regexp } from '@acme/oxlint-config/regexp.ts'
 
 export default defineConfig({
   extends: [core, antiSlop, e18e, regexp, landmines],
+  jsPlugins: acmeJsPlugins,
   options: {
     typeAware: true,
     reportUnusedDisableDirectives: 'error',
@@ -28,9 +29,7 @@ export default defineConfig({
     },
   ],
   rules: {
-    // Ultracite leaves this off so CLIs can print. This kit logs through
-    // `@acme/logging`. Scripts that exist to print opt out at the file.
-    'no-console': 'error',
+    'acme/no-console': 'error',
     'max-depth': ['error', { max: 4 }],
     'no-implicit-coercion': 'error',
     'typescript/consistent-type-imports': [
