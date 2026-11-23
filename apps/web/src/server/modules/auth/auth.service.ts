@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server'
 import { add } from 'date-fns/add'
 import { format } from 'date-fns/format'
 
@@ -7,6 +6,7 @@ import type { Logger } from '@acme/logging'
 import { db } from '@acme/db'
 
 import { sendMail } from '../mail/mail.service'
+import type { EmailLoginResult, OtpVerifyResult } from './auth.results'
 import {
   createAuthToken,
   createVfnIdentifier,
@@ -25,7 +25,7 @@ export const emailLogin = async ({
 }: {
   email: string
   codeChallenge: string
-}) => {
+}): Promise<EmailLoginResult> => {
   const identifier = createVfnIdentifier({ codeChallenge, email })
   const { token, hashedToken } = createAuthToken({ codeChallenge, email })
 
@@ -49,10 +49,7 @@ export const emailLogin = async ({
     ) {
       // P2025 cant happen currently because there is no relation on verificationToken table
       // That means a duplicate code challenge was used with the same email
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Please refresh and try again.',
-      })
+      return { status: 'duplicate_challenge' }
     }
 
     throw error
@@ -77,6 +74,7 @@ export const emailLogin = async ({
   return {
     email,
     otpPrefix,
+    status: 'sent',
     token,
   }
 }
@@ -91,7 +89,7 @@ export const emailVerifyOtp = async ({
   token: string
   codeVerifier: string
   logger: Logger
-}) => {
+}): Promise<OtpVerifyResult> => {
   const codeChallenge = ssCreatePkceChallenge(codeVerifier)
   const vfnIdentifier = createVfnIdentifier({ codeChallenge, email })
 
@@ -115,11 +113,8 @@ export const emailVerifyOtp = async ({
         reason: 'too_many_attempts',
         username: email,
       })
-      throw new TRPCError({
-        code: 'TOO_MANY_REQUESTS',
-        message:
-          'Wrong OTP was entered too many times. Please request a new OTP.',
-      })
+
+      return { attempts: hashedToken.attempts, status: 'locked' }
     }
 
     // Expired
@@ -136,30 +131,25 @@ export const emailVerifyOtp = async ({
         reason: hasExpired ? 'otp_expired' : 'otp_invalid',
         username: email,
       })
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Token is invalid or has expired. Please request a new OTP.',
-      })
+
+      return { status: hasExpired ? 'expired' : 'invalid' }
     }
 
     // NOTE: You can also use `kysely` for your queries
     // if you want more fine-grained control.
-    // Valid token, delete record to prevent reuse
-    return await db.$kysely
+    // Valid token, delete record to prevent reuse.
+    // A missing row means it was deleted between the increment and this delete.
+    const deleted = await db.$kysely
       .deleteFrom('VerificationToken')
       .where('identifier', '=', vfnIdentifier)
       .returningAll()
-      .executeTakeFirstOrThrow(
-        // NOTE: If we are unable to find the token,
-        // this means that it has been deleted between
-        // our initial query and the deletion here
-        () =>
-          new TRPCError({
-            code: 'BAD_REQUEST',
-            message:
-              'Token is invalid or has expired. Please request a new OTP.',
-          })
-      )
+      .executeTakeFirst()
+
+    if (deleted === undefined) {
+      return { status: 'consumed' }
+    }
+
+    return { status: 'verified' }
   } catch (error) {
     // see error code here: https://www.prisma.io/docs/orm/reference/error-reference#p2025
     if (
@@ -172,11 +162,8 @@ export const emailVerifyOtp = async ({
         context: { email },
         tokenId: codeChallenge,
       })
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message:
-          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
-      })
+
+      return { status: 'reused' }
     }
 
     throw error

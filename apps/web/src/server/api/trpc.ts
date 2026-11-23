@@ -18,6 +18,7 @@ import {
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { getSession } from '../session'
+import { readSessionState } from '../session-state'
 import { extractIpAddress } from '../utils/request'
 import { deserializeInput } from './deserialize-input'
 import { tracingMiddleware } from './tracing'
@@ -136,11 +137,14 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
 
   // Rebuild the logger so the procedure path lands in the root `path` field
   // (not the action) and the session is surfaced as user_id / correlation_id.
+  const sessionState = readSessionState(ctx.session)
+
   const logger = createLogger({
     headers: ctx.headers,
     path,
-    sessionId: ctx.session.sessionId,
-    userId: ctx.session.userId,
+    sessionId:
+      sessionState.kind === 'user' ? sessionState.sessionId : undefined,
+    userId: sessionState.kind === 'user' ? sessionState.userId : undefined,
   }).scope({ action: 'request' })
 
   // oxlint-disable-next-line node/callback-return -- tRPC middleware must await before logging the result.
@@ -196,11 +200,12 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
   }
 
   try {
+    const sessionState = readSessionState(ctx.session)
     await checkRateLimit({
       key: createRateLimitFingerprint({
         ipAddress: extractIpAddress(ctx.headers),
         path,
-        userId: ctx.session.userId,
+        userId: sessionState.kind === 'user' ? sessionState.userId : undefined,
       }),
       options: rateLimitOptions,
     })
@@ -230,14 +235,16 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
 })
 
 const authMiddleware = t.middleware(async ({ ctx, next }) => {
-  if (ctx.session.userId === undefined || ctx.session.userId === '') {
+  const sessionState = readSessionState(ctx.session)
+
+  if (sessionState.kind === 'anon') {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   return await next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, userId: ctx.session.userId },
+      // `userId` is a non-empty string on the user variant.
+      session: { ...ctx.session, userId: sessionState.userId },
     },
   })
 })
