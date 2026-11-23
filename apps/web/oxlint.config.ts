@@ -61,12 +61,18 @@ const e2eRelativeImport = {
 const e2eNoDb = {
   group: ['@acme/db', '@acme/db/*'],
   message:
-    'Test files must not import @acme/db. Add a getter to helpers/<entity>.db.ts.',
+    'Import @acme/db only from helpers/<entity>.db.ts, helpers/<entity>.factory.ts, or setup/. Add a getter on the .db.ts and assert in <entity>.expect.ts.',
 }
 
 const e2eNoSignInPO = {
   group: ['**/sign-in.po', './sign-in.po'],
   message: 'Only auth/sign-in.e2e.ts covers the login UI.',
+}
+
+const e2eNoPageObject = {
+  group: ['**/*.po', './*.po'],
+  message:
+    'Drive the screen through its fixture on `test` from ~tests/e2e/test. Register the page object in test.ts. sign-in.e2e.ts is the only test that imports one.',
 }
 
 const e2eOwnTest = {
@@ -143,6 +149,8 @@ const config = defineAcmeConfig({
         ...playwrightE2eRules,
         // roleTag() returns `@role:${role}`; the plugin only accepts literals.
         'playwright/valid-test-tags': 'off',
+        'acme/e2e-filename': 'error',
+        'acme/no-e2e-page-route': 'error',
         'acme/no-e2e-storage-state': 'error',
         'acme/no-e2e-late-clock-install': 'error',
         'acme/no-e2e-literal-role-tag': 'error',
@@ -150,7 +158,7 @@ const config = defineAcmeConfig({
           'error',
           { assertFunctionPatterns: ['^expect'] },
         ],
-        'no-restricted-imports': restrictImports([e2eRelativeImport]),
+        'no-restricted-imports': restrictImports([e2eRelativeImport, e2eNoDb]),
       },
     },
     {
@@ -168,7 +176,7 @@ const config = defineAcmeConfig({
       files: ['tests/e2e/**/*.e2e.ts'],
       rules: {
         'no-restricted-imports': restrictImports(
-          [e2eRelativeImport, e2eNoDb, e2eNoSignInPO],
+          [e2eRelativeImport, e2eNoDb, e2eNoPageObject],
           [e2eOwnTest]
         ),
       },
@@ -199,6 +207,17 @@ const config = defineAcmeConfig({
             },
           ]
         ),
+      },
+    },
+    {
+      files: ['tests/e2e/helpers/*.db.ts'],
+      rules: { 'acme/no-e2e-db-writes': 'error' },
+    },
+    {
+      // global-setup's modules reset and seed. Tests still cannot import @acme/db.
+      files: ['tests/e2e/setup/**'],
+      rules: {
+        'no-restricted-imports': restrictImports([e2eRelativeImport]),
       },
     },
     {
