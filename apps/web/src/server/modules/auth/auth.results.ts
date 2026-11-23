@@ -23,28 +23,11 @@ export type OtpVerifyResult =
   | { status: 'reused' }
   | { status: 'consumed' }
 
-const INVALID_OR_EXPIRED_MESSAGE =
-  'Token is invalid or has expired. Please request a new OTP.'
-
-const REUSED_MESSAGE =
-  'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.'
-
-const DUPLICATE_CHALLENGE_MESSAGE = 'Please refresh and try again.'
-
-const LOCKED_MESSAGE =
-  'Wrong OTP was entered too many times. Please request a new OTP.'
-
 /** tRPC error for a duplicate login challenge. */
 export const emailLoginError = (): TRPCError =>
   new TRPCError({
     code: 'BAD_REQUEST',
-    message: DUPLICATE_CHALLENGE_MESSAGE,
-  })
-
-const invalidOrExpired = () =>
-  new TRPCError({
-    code: 'BAD_REQUEST',
-    message: INVALID_OR_EXPIRED_MESSAGE,
+    message: 'Please refresh and try again.',
   })
 
 /** tRPC error for a failed OTP check. */
@@ -55,20 +38,25 @@ export const otpVerifyError = (
     case 'locked': {
       return new TRPCError({
         code: 'TOO_MANY_REQUESTS',
-        message: LOCKED_MESSAGE,
+        message:
+          'Wrong OTP was entered too many times. Please request a new OTP.',
       })
     }
 
     case 'expired':
     case 'invalid':
     case 'consumed': {
-      return invalidOrExpired()
+      return new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Token is invalid or has expired. Please request a new OTP.',
+      })
     }
 
     case 'reused': {
       return new TRPCError({
         code: 'BAD_REQUEST',
-        message: REUSED_MESSAGE,
+        message:
+          'Wrong OTP entered or OTP already used, make sure to use the OTP that corresponds to the 3 character prefix.',
       })
     }
 
