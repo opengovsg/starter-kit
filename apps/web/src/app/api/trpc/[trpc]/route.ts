@@ -41,8 +41,6 @@ const handler = async (req: NextRequest) => {
       if (error.code === 'UNAUTHORIZED') {
         ctx?.session.destroy()
       }
-
-      // `loggerMiddleware` already records the failure.
     },
     req,
     router: appRouter,
