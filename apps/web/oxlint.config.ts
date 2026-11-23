@@ -218,7 +218,6 @@ const config = defineAcmeConfig({
       rules: { 'acme/no-e2e-db-writes': 'error' },
     },
     {
-      // global-setup's modules reset and seed. Tests still cannot import @acme/db.
       files: ['tests/e2e/setup/**'],
       rules: {
         'no-restricted-imports': restrictImports([e2eRelativeImport]),
