@@ -117,13 +117,19 @@ describe('tRPC input deserialize', () => {
         meta: { values: { buf: [['typed-array', 'Uint8Array']] } },
       },
     ],
-  ])('rejects a %s before allocating', (_label, payload) => {
+  ])('does not allocate a %s', (_label, payload) => {
     const start = performance.now()
 
     expect(() => {
       inputTransformer.deserialize(payload)
-    }).toThrow('Input must not contain a typed array')
+    }).toThrow(TypeError)
     expect(performance.now() - start).toBeLessThan(100)
+  })
+
+  it('still restores a real typed array', () => {
+    const value = new Float64Array([1, 2, 3])
+
+    expect(inputTransformer.deserialize(serialize(value))).toStrictEqual(value)
   })
 
   it('deserializes input that has no meta', () => {
