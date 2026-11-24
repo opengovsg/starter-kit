@@ -15,7 +15,8 @@ const isBranch = (
 
 // superjson rebuilds a Set or Map one key at a time (getNthKey), so many paths
 // into that container are O(N^2). It also copies each annotation key path once
-// per child, so one deep path is O(depth * children).
+// per child, so one deep path is O(depth * children). A typed-array annotation
+// does `new ctor(json)`, so `{ length: n }` or a bare number allocates n items.
 const MAX_ANNOTATION_DEPTH = 20
 const MAX_ANNOTATION_NODES = 10_000
 
@@ -39,9 +40,15 @@ const annotationError = (
     }
 
     const children = Array.isArray(tree) ? tree[1] : tree
+    const annotation = Array.isArray(tree) ? tree[0] : undefined
+    const kind = Array.isArray(annotation) ? annotation[0] : annotation
 
-    if (Array.isArray(tree) && (tree[0] === 'set' || tree[0] === 'map')) {
+    if (kind === 'set' || kind === 'map') {
       return 'Input must not contain a Set or Map'
+    }
+
+    if (kind === 'typed-array') {
+      return 'Input must not contain a typed array'
     }
 
     if (!isBranch(children)) {
