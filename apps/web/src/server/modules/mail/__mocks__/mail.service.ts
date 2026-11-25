@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 vi.mock(import('../mail.service'), async (importOriginal) => {
   const actual = await importOriginal()
 
