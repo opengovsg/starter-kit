@@ -15,7 +15,7 @@ const signOut = async () => {
   try {
     await fetch(SIGN_OUT_API_ROUTE, { method: 'POST' })
   } finally {
-    globalThis.window.location.assign(LOGIN_ROUTE)
+    window.location.assign(LOGIN_ROUTE)
   }
 }
 
