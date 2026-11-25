@@ -13,7 +13,7 @@ try {
   await main()
 } catch (error: unknown) {
   console.error(error)
-  process.exit(1)
+  throw error
 } finally {
   await db.$disconnect()
 }

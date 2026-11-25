@@ -28,6 +28,17 @@ export default defineConfig({
     },
   ],
   rules: {
+    // Ultracite leaves these off. They are correctness or module-shape
+    // checks, and this tree is clean or a small fix once they are errors.
+    'import/no-anonymous-default-export': 'error',
+    'import/no-commonjs': 'error',
+    'import/no-dynamic-require': 'error',
+    'import/unambiguous': 'error',
+    'typescript/no-require-imports': 'error',
+    'typescript/no-var-requires': 'error',
+    'unicorn/no-array-callback-reference': 'error',
+    'unicorn/no-process-exit': 'error',
+    'unicorn/prefer-global-this': 'error',
     'max-depth': ['error', { max: 4 }],
     'no-implicit-coercion': 'error',
     'typescript/consistent-type-imports': [
