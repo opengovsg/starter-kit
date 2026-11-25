@@ -1,41 +1,25 @@
 'use client'
 
-import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import type { PropsWithChildren } from 'react'
 
-import { createContext, useContext, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { useInterval } from 'usehooks-ts'
+
+import type { VfnStepData } from './sign-in-state'
+
+import { SignInWizardContext } from './sign-in-state'
 
 import {
   browserCreatePkceChallenge,
   browserCreatePkceVerifier,
 } from '~/lib/pkce/browser-pkce'
 
-interface SignInState {
-  timer: number
-  resetTimer: () => void
-  vfnStepData: VfnStepData | undefined
-  setVfnStepData: Dispatch<SetStateAction<VfnStepData | undefined>>
-  getVerifier: (challenge: string) => string | undefined
-  newChallenge: () => Promise<string | undefined>
-  clearVerifierMap: () => void
-}
+export type { VfnStepData } from './sign-in-state'
 
-export const SignInWizardContext = createContext<SignInState | undefined>(
-  undefined
-)
+export { SignInWizardContext } from './sign-in-state'
 
-export const useSignInWizard = () => {
-  const context = useContext(SignInWizardContext)
-
-  if (context === undefined) {
-    throw new Error(
-      `useSignInWizard must be used within a SignInWizardProvider.`
-    )
-  }
-
-  return context
-}
+export { useSignInWizard } from './use-sign-in-wizard'
 
 interface SignInWizardProviderProps {
   /**
@@ -43,12 +27,6 @@ interface SignInWizardProviderProps {
    * @default 60
    */
   delayForResendSeconds?: number
-}
-
-export interface VfnStepData {
-  email: string
-  otpPrefix: string
-  codeChallenge: string
 }
 
 export const SignInWizardProvider = ({

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@opengovsg/oui'
 import { Button } from '@opengovsg/oui/button'
@@ -8,7 +6,7 @@ import { useQueryState } from 'nuqs'
 import { Controller, useForm } from 'react-hook-form'
 
 import type { VfnStepData } from '../context'
-import { useSignInWizard } from '../context'
+import { useNewCodeChallenge } from '../use-new-code-challenge'
 
 import { TextField } from '@acme/ui/text-field'
 import { useTRPC } from '~/trpc/react'
@@ -19,8 +17,7 @@ interface EmailStepProps {
 }
 
 export const EmailStep = ({ onNext }: EmailStepProps) => {
-  const { newChallenge } = useSignInWizard()
-  const [newChallengePending, setNewChallengePending] = useState(false)
+  const { create, pending: newChallengePending } = useNewCodeChallenge()
 
   const { handleSubmit, setError, control } = useForm({
     defaultValues: {
@@ -60,16 +57,7 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
       return
     }
 
-    setNewChallengePending(true)
-    let codeChallenge: string | undefined
-
-    try {
-      codeChallenge = await newChallenge()
-    } catch (error) {
-      console.error(error)
-    }
-
-    setNewChallengePending(false)
+    const codeChallenge = await create()
 
     if (codeChallenge === undefined) {
       toast.error(
