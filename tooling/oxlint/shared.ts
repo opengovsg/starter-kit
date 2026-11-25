@@ -34,14 +34,7 @@ export default defineConfig({
     'import/no-dynamic-require': 'error',
     'import/unambiguous': 'error',
     'max-depth': ['error', { max: 4 }],
-    'max-params': ['error', { max: 4 }],
-    'no-continue': 'error',
     'no-implicit-coercion': 'error',
-    'no-negated-condition': 'error',
-    'unicorn/explicit-length-check': 'error',
-    'unicorn/no-nested-ternary': 'error',
-    'unicorn/prefer-global-this': 'error',
-    'unicorn/prefer-top-level-await': 'error',
     'typescript/consistent-type-imports': [
       'error',
       { fixStyle: 'separate-type-imports', prefer: 'type-imports' },
@@ -50,7 +43,6 @@ export default defineConfig({
       'error',
       { checksVoidReturn: { attributes: true } },
     ],
-    'typescript/no-require-imports': 'error',
     'typescript/prefer-optional-chain': 'error',
     'typescript/no-unnecessary-condition': [
       'error',

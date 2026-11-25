@@ -13,11 +13,7 @@ export const browserCreatePkceChallenge = async (
 ): Promise<string> => {
   const encoder = new TextEncoder()
   const data = encoder.encode(codeVerifier)
-
-  const hashBuffer = await globalThis.window.crypto.subtle.digest(
-    'SHA-256',
-    data
-  )
+  const hashBuffer = await window.crypto.subtle.digest('SHA-256', data)
 
   const hashArray = [...new Uint8Array(hashBuffer)]
   const base64 = btoa(String.fromCodePoint(...hashArray))

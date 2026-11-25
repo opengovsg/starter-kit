@@ -31,7 +31,7 @@ const VersionModal = (props: ModalProps) => (
         </Button>
         <Button
           onPress={() => {
-            globalThis.window.location.reload()
+            window.location.reload()
           }}
         >
           Refresh
@@ -55,16 +55,10 @@ export const VersionCheckWrapper = () => {
       setIsOpen(true)
     }
 
-    globalThis.window.addEventListener(
-      REQUIRE_UPDATE_EVENT,
-      handleRequireUpdateEvent
-    )
+    window.addEventListener(REQUIRE_UPDATE_EVENT, handleRequireUpdateEvent)
 
     return () => {
-      globalThis.window.removeEventListener(
-        REQUIRE_UPDATE_EVENT,
-        handleRequireUpdateEvent
-      )
+      window.removeEventListener(REQUIRE_UPDATE_EVENT, handleRequireUpdateEvent)
     }
   }, [])
 

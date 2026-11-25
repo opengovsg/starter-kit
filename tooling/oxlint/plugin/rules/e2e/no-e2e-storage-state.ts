@@ -23,14 +23,16 @@ export const noE2eStorageStateRule = defineRule({
         }
 
         for (const arg of node.arguments) {
-          if (arg.type === 'ObjectExpression') {
-            for (const property of arg.properties) {
-              if (
-                property.type === 'Property' &&
-                getName(property) === 'storageState'
-              ) {
-                context.report({ messageId: 'storageState', node: property })
-              }
+          if (arg.type !== 'ObjectExpression') {
+            continue
+          }
+
+          for (const property of arg.properties) {
+            if (
+              property.type === 'Property' &&
+              getName(property) === 'storageState'
+            ) {
+              context.report({ messageId: 'storageState', node: property })
             }
           }
         }

@@ -42,9 +42,11 @@ const generateCspHeader = (policies: CspPolicy[]): string => {
     for (const key of cspPolicyKeys) {
       const sources = policy[key]
 
-      if (sources !== undefined) {
-        merged[key] = [...new Set([...(merged[key] ?? []), ...sources])]
+      if (sources === undefined) {
+        continue
       }
+
+      merged[key] = [...new Set([...(merged[key] ?? []), ...sources])]
     }
   }
 
