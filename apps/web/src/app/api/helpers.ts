@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 
 import { createTRPCContext } from '~/server/api/trpc'
+import { MAX_ERROR_MESSAGE_LENGTH, truncate } from '~/server/utils/zod-error'
 import { callerFactory } from '~/trpc/caller'
 
 /**
@@ -31,8 +32,18 @@ export const handleTRPCError = (
   if (apiFailure instanceof TRPCError) {
     const statusCode = getHTTPStatusCodeFromError(apiFailure)
 
+    // A 5xx can carry the message of an unexpected throw, which can describe
+    // internals, so it gets the caller's fallback message instead.
     return Response.json(
-      { error: apiFailure.message || fallbackMessage },
+      {
+        error:
+          statusCode >= 500
+            ? fallbackMessage
+            : truncate(
+                apiFailure.message || fallbackMessage,
+                MAX_ERROR_MESSAGE_LENGTH
+              ),
+      },
       { headers, status: statusCode }
     )
   }
