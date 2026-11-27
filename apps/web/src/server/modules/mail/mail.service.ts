@@ -1,4 +1,8 @@
+import { createBaseLogger } from '@acme/logging'
+
 import { env } from '~/env'
+
+const logger = createBaseLogger.system({ path: 'mail' })
 
 export const sendMail = async (params: {
   recipient: string
@@ -27,8 +31,13 @@ export const sendMail = async (params: {
     return
   }
 
-  console.warn(
-    '!!!! This should not be seen on prod !!!! POSTMAN_API_KEY missing. Logging the following mail:',
-    params
-  )
+  logger.warn({
+    context: {
+      body: params.body,
+      recipient: params.recipient,
+      subject: params.subject,
+    },
+    message:
+      'POSTMAN_API_KEY is missing, so the mail was logged instead of sent.',
+  })
 }

@@ -65,8 +65,8 @@ export const EmailStep = ({ onNext }: EmailStepProps) => {
 
     try {
       codeChallenge = await newChallenge()
-    } catch (error) {
-      console.error(error)
+    } catch {
+      codeChallenge = undefined
     }
 
     setNewChallengePending(false)

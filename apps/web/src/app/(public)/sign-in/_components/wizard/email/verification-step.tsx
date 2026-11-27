@@ -103,8 +103,8 @@ export const VerificationStep = () => {
 
     try {
       codeChallenge = await newChallenge()
-    } catch (error) {
-      console.error(error)
+    } catch {
+      codeChallenge = undefined
     }
 
     setNewChallengePending(false)

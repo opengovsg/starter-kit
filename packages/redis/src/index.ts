@@ -1,6 +1,10 @@
 import Redis from 'ioredis'
 
+import { createBaseLogger } from '@acme/logging'
+
 import { env } from './env'
+
+const logger = createBaseLogger.system({ path: 'redis' })
 
 declare global {
   var redis: ReturnType<typeof createRedisClient> | undefined
@@ -8,9 +12,9 @@ declare global {
 
 const createRedisClient = (): Redis | null => {
   if (env.CACHE_HOSTNAME === undefined || env.CACHE_HOSTNAME === '') {
-    console.warn(
-      '!!!! CACHE_HOSTNAME is not set, Redis client will not be created. !!!!'
-    )
+    logger.warn({
+      message: 'CACHE_HOSTNAME is not set. Redis client will not be created.',
+    })
 
     return null
   }
@@ -27,7 +31,10 @@ const createRedisClient = (): Redis | null => {
   })
 
   redisClient.on('error', (err) => {
-    console.error('Redis client error:', err.message)
+    logger.error({
+      error: err,
+      message: 'Redis client error',
+    })
   })
 
   return redisClient

@@ -67,11 +67,9 @@ export const SignInWizardProvider = ({
       challengeToVerifierMap.current.set(challenge, verifier)
 
       return challenge
-    } catch (error) {
-      console.error(error)
+    } catch {
+      return undefined
     }
-
-    return undefined
   }
 
   const getVerifier = (challenge: string) =>

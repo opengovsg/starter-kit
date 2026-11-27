@@ -20,11 +20,7 @@ const handleCallerError = (error: { code: string }) => {
 
   if (error.code === 'FORBIDDEN') {
     forbidden()
-
-    return
   }
-
-  console.error('>>> tRPC Error in RSC caller', error)
 }
 
 /**

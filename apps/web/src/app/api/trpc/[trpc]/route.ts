@@ -1,13 +1,11 @@
 import type { NextRequest } from 'next/server'
 
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
-import { z } from 'zod'
 
 import { APP_VERSION_HEADER_KEY } from '~/constants'
 import { env } from '~/env'
 import { appRouter } from '~/server/api/root'
 import { createTRPCContext } from '~/server/api/trpc'
-import { summarizeZodError } from '~/server/utils/zod-error'
 
 /**
  * Configure basic CORS headers
@@ -39,18 +37,10 @@ const handler = async (req: NextRequest) => {
         resHeaders,
       }),
     endpoint: '/api/trpc',
-    onError({ error, path, ctx }) {
+    onError({ error, ctx }) {
       if (error.code === 'UNAUTHORIZED') {
         ctx?.session.destroy()
       }
-
-      // A ZodError lists every issue, so its size follows the request's.
-      console.error(
-        `>>> tRPC Error on '${path}'`,
-        error.cause instanceof z.core.$ZodError
-          ? summarizeZodError(error.cause)
-          : error
-      )
     },
     req,
     router: appRouter,

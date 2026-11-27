@@ -67,9 +67,6 @@ export const createQueryClient = () =>
             return
           }
 
-          // Log the error to an error reporting service
-          console.error('>>> Error in mutation', error)
-
           if (isTRPCClientError(error)) {
             const result = trpcHandleableErrorCodeSchema.safeParse(error)
 
