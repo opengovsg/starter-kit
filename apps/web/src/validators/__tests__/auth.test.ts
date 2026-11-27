@@ -20,5 +20,22 @@ describe('auth', () => {
 
       expect(results.every(Boolean)).toBeTruthy()
     })
+
+    const valid = ssCreatePkceChallenge(ssCreatePkceVerifier())
+
+    it.each([
+      ['padded', `${valid}=`],
+      ['too long', `${valid}A`],
+      ['too short', valid.slice(1)],
+      ['standard base64 +', `+${valid.slice(1)}`],
+      ['standard base64 /', `/${valid.slice(1)}`],
+      ['hex encoded', 'a'.repeat(64)],
+    ])('should reject a %s challenge', (_, challenge) => {
+      const result = emailSignInSchema.shape.codeChallenge.safeParse(challenge)
+
+      expect(result.error?.issues[0]?.message).toBe(
+        'Must be a valid base64url-encoded SHA-256 hash (32 bytes)',
+      )
+    })
   })
 })
