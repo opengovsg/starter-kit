@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import { getHTTPStatusCodeFromError } from '@trpc/server/http'
 import { RateLimiterRes } from 'rate-limiter-flexible'
 import { deserialize, serialize } from 'superjson'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 
 import {
   checkRateLimit,
@@ -19,6 +19,12 @@ import {
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
 import { getSession } from '../session'
 import { extractIpAddress } from '../utils/request'
+import {
+  flattenZodError,
+  MAX_ERROR_MESSAGE_LENGTH,
+  summarizeZodError,
+  truncate,
+} from '../utils/zod-error'
 import { deserializeInput } from './deserialize-input'
 import { tracingMiddleware } from './tracing'
 
@@ -63,6 +69,8 @@ export const createTRPCContext = async ({
   }
 }
 
+const INTERNAL_SERVER_ERROR_MESSAGE = 'Internal server error'
+
 interface Meta {
   // Rate limit options for this procedure. If null, rate limiting is disabled.
   // Defaults to empty object, which applies default rate limiting.
@@ -87,14 +95,26 @@ const t = initTRPC
       const { error } = opts
       const formattedError = opts.shape
 
+      const zodError =
+        error.cause instanceof z.core.$ZodError ? error.cause : undefined
+
+      // Outside production tRPC adds the stack, which for a validation error
+      // repeats every issue in its message, so its size follows the request's.
+      const { stack, ...data } = formattedError.data
+
       return {
         ...formattedError,
+        // tRPC wraps an unexpected throw, such as a Prisma or runtime error, in
+        // an INTERNAL_SERVER_ERROR that carries the thrown message, which can
+        // describe internals. The full error is still logged.
+        message:
+          data.httpStatus >= 500
+            ? INTERNAL_SERVER_ERROR_MESSAGE
+            : truncate(formattedError.message, MAX_ERROR_MESSAGE_LENGTH),
         data: {
-          ...formattedError.data,
-          zodError:
-            error.cause instanceof ZodError
-              ? z.flattenError(error.cause)
-              : null,
+          ...data,
+          ...(stack !== undefined && !zodError && { stack }),
+          zodError: zodError ? flattenZodError(zodError) : null,
         },
       }
     },
@@ -162,10 +182,25 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
   } else {
     const statusCode = getHTTPStatusCodeFromError(result.error)
 
+    // A validation error's message and cause list every issue, so their size
+    // follows the request's. Log a bounded summary in place of the ZodError.
+    const zodError =
+      result.error.cause instanceof z.core.$ZodError
+        ? result.error.cause
+        : undefined
+
     // Keep the message stable for aggregation; the error (and its message)
     // travel in the `error` field.
     const logPayload = {
-      error: result.error,
+      ...(zodError && {
+        context: { validation: summarizeZodError(zodError) },
+      }),
+      error: zodError
+        ? new TRPCError({
+            code: result.error.code,
+            message: truncate(result.error.message, MAX_ERROR_MESSAGE_LENGTH),
+          })
+        : result.error,
       merged: {
         durationInMs,
         statusCode,

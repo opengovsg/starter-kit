@@ -95,6 +95,43 @@ describe('tRPC input deserialize', () => {
     }).toThrow('Input must not contain a Set or Map')
   })
 
+  it.each([
+    [
+      'root {length:n} typed-array',
+      {
+        json: { length: 1_000_000 },
+        meta: { values: [['typed-array', 'Float64Array']] },
+      },
+    ],
+    [
+      'numeric length typed-array',
+      {
+        json: 1_000_000,
+        meta: { values: [['typed-array', 'Float64Array']] },
+      },
+    ],
+    [
+      'nested typed-array',
+      {
+        json: { buf: { length: 1_000_000 } },
+        meta: { values: { buf: [['typed-array', 'Uint8Array']] } },
+      },
+    ],
+  ])('does not allocate a %s', (_label, payload) => {
+    const start = performance.now()
+
+    expect(() => {
+      inputTransformer.deserialize(payload)
+    }).toThrow(TypeError)
+    expect(performance.now() - start).toBeLessThan(100)
+  })
+
+  it('still restores a real typed array', () => {
+    const value = new Float64Array([1, 2, 3])
+
+    expect(inputTransformer.deserialize(serialize(value))).toStrictEqual(value)
+  })
+
   it('deserializes input that has no meta', () => {
     const output: unknown = inputTransformer.deserialize({ json: { a: 1 } })
 
