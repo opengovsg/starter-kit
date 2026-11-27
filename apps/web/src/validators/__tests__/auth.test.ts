@@ -34,7 +34,7 @@ describe('auth', () => {
       const result = emailSignInSchema.shape.codeChallenge.safeParse(challenge)
 
       expect(result.error?.issues[0]?.message).toBe(
-        'Must be a valid base64url-encoded SHA-256 hash (32 bytes)',
+        'Must be a valid base64url-encoded SHA-256 hash (32 bytes)'
       )
     })
   })
