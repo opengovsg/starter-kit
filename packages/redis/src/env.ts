@@ -7,7 +7,7 @@ export const env = createEnv({
   server: {
     CACHE_HOSTNAME: z.string().trim().min(1).optional(),
     CACHE_PASSWORD: z.string().optional(),
-    CACHE_PORT: z.coerce.number().default(6379).optional(),
+    CACHE_PORT: z.coerce.number().default(6379),
     CACHE_USERNAME: z.string().optional(),
     NODE_ENV: z
       .enum(['development', 'production', 'test'])

@@ -3,6 +3,7 @@ import { vercel } from '@t3-oss/env-nextjs/presets-zod'
 import { z } from 'zod'
 
 export const env = createEnv({
+  emptyStringAsUndefined: true,
   /**
    * Specify your client-side environment variables schema here.
    * For them to be exposed to the client, prefix them with `NEXT_PUBLIC_`.
@@ -35,7 +36,7 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
     // OTP expiry time in seconds
-    OTP_EXPIRY: z.coerce.number().positive().optional().default(600),
+    OTP_EXPIRY: z.coerce.number().positive().default(600),
     PORT: z.coerce.number().default(3000),
     POSTMAN_API_KEY: z.string().optional(),
     SESSION_SECRET: z.string().min(32),
