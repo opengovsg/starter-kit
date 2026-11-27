@@ -17,7 +17,7 @@ import {
   createRateLimitFingerprint,
 } from '../modules/rate-limit/rate-limit.service'
 import type { RateLimiterConfig } from '../modules/rate-limit/types'
-import { getSession } from '../session'
+import { getSession, isSessionAuthed } from '../session'
 import { extractIpAddress } from '../utils/request'
 import {
   flattenZodError,
@@ -160,7 +160,7 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, path }) => {
     headers: ctx.headers,
     path,
     sessionId: ctx.session.sessionId,
-    userId: ctx.session.userId,
+    userId: isSessionAuthed(ctx.session) ? ctx.session.userId : undefined,
   }).scope({ action: 'request' })
 
   // oxlint-disable-next-line node/callback-return -- tRPC middleware must await before logging the result.
@@ -265,14 +265,13 @@ const rateLimitMiddleware = t.middleware(async ({ ctx, next, meta, path }) => {
 })
 
 const authMiddleware = t.middleware(async ({ ctx, next }) => {
-  if (ctx.session.userId === undefined || ctx.session.userId === '') {
+  if (!isSessionAuthed(ctx.session)) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   return await next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, userId: ctx.session.userId },
+      session: ctx.session,
     },
   })
 })

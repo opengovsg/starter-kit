@@ -10,3 +10,8 @@ export const getSession = async () => {
 
   return await getIronSession<SessionData>(cookieStore, sessionOptions)
 }
+
+export const isSessionAuthed = (
+  session: SessionData
+): session is SessionData & { userId: string } =>
+  session.userId !== undefined && session.userId !== ''
